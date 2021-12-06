@@ -329,7 +329,13 @@
     stroke:#fff;
     stroke-linecap:round;
     stroke-linejoin:round;
-    stroke-width:2px;
+    stroke-width:3px;
+}
+.redo-mark {
+    width: 1.25rem;
+    height: 1.25rem;
+    
+    fill: whitesmoke;
 }
 
 
