@@ -1726,7 +1726,7 @@
                                             <use xlink:href="#redo"></use> 
                                         </svg>
                                     </label>    <!-- REDO show-edit-btn -red -->
-                                    <div class='column-view' id='payment'>
+                                    <div class='column-view' id='payment' data-value='<%= user.agreement.payment %>'>
                                         <% const pmts = user.agreement.payment.split(',') %>
 
                                         <% const headers = ['Cash Payment', 'Credit Card', 'Scholarship', 'Financial Aid', 'Third Party (e.g.VA;<br>Voc.Rehab.; LnI; Employer)'] %>
@@ -1762,6 +1762,24 @@
                                 </div>  <!-- data-id hidden area -->
                             </div>
                         </section>  <!-- thirdPartyList -->
+
+                        <section class="row-item-85">
+                            <div class="fields-set">
+                                <div class="field-title">Down Payment:</div>
+                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.downPayment) %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='downPayment' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="agr-edits" data-id='downPayment'>
+                                    <label class="show-edit-btn -red" for='downPayment' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="downPayment" id="downPayment" />
+                                </div>  <!-- data-id hidden area -->
+                            </div>
+                        </section>  <!-- downPayment -->
     
                         
 
@@ -1941,7 +1959,14 @@
         }
 
 
-        async function checkAllGroupHiddenDivs(divsToCheck, needResults) {
+        // compares two 1v arrays
+        const equals = (a, b) =>
+        a.length === b.length &&
+        a.every((v, i) => v === b[i])
+
+
+        // checks if any of inputs were updated
+        async function checkAllGroupHiddenDivs(divsToCheck) {
             let changedFields = []
 
             for (let i=0; i<divsToCheck.length; i++) {
@@ -1949,12 +1974,29 @@
                 let labelItem = divsToCheck[i].previousElementSibling
                 let inputItem = document.getElementById(divsToCheck[i].dataset.id)
 
-                if (inputItem.value != '' && inputItem.value != 'DNU') {
-                    labelItem.style.setProperty('--color-calm', globalColorHover)
-                    labelItem.style.setProperty('--color-hover', globalColorCalm)
-                    divsToCheck[i].classList.remove('-hidden')
+                // there is a difference when checking update status of INPUT and DIV with inputs
+                if (inputItem.hasChildNodes() && inputItem.tagName != 'SELECT') {
+                    
+                    const childInputs = inputItem.getElementsByTagName('INPUT')     //  receiving all inputs
+                    const inputItemDataValue = inputItem.dataset.value.split(',')    //  divs data-value should contain pmts: cast,check,third part etc.
+                    let currentValues = []      //  empty array to compare with divs data-value
 
-                    changedFields.push(labelItem.htmlFor.toUpperCase())
+                    if (childInputs && inputItemDataValue) {
+                        for (let i=0; i < childInputs.length; i++) {
+                            if (childInputs[i].checked) { currentValues.push(childInputs[i].value) }
+                        }
+                        if (!equals(inputItemDataValue, currentValues)) {
+                            changedFields.push(labelItem.htmlFor.toUpperCase())     // add to updates fields only if not equal with it's start value string
+                        }
+                    }
+                } else {
+                    if (inputItem.value != '' && inputItem.value != 'DNU') {
+                        labelItem.style.setProperty('--color-calm', globalColorHover)
+                        labelItem.style.setProperty('--color-hover', globalColorCalm)
+                        divsToCheck[i].classList.remove('-hidden')
+    
+                        changedFields.push(labelItem.htmlFor.toUpperCase())
+                    }
                 }
             }
             return changedFields    // returning fields changed
@@ -1969,7 +2011,6 @@
             const divsToCheck = document.getElementsByName(`${divHidden.getAttribute('name')}`)     // selecting all divs with the same name
             setTimeout(async() => {
                 let a = await checkAllGroupHiddenDivs(divsToCheck)
-                
             }, 1000)      // struggling with forms autofill. After 1s as usual all autofill data appears
         }
 
