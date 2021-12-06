@@ -1,0 +1,379 @@
+/* @GENERAL */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+    font-family: 'BrixSlab-Regular';
+    font-size: 15px;
+    font-weight: normal;
+
+    color: var(--blue-slate)
+}
+
+:root {
+    --max-content-width: 1650px
+}
+
+.main-box {
+    --bk-color1: white;
+    --bk-color2: var(--blue15-slate);
+    
+    width: 100%;
+    padding: 1rem 0;
+
+    background: -webkit-linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
+    background: -moz-linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
+    background: linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
+    background-color: var(--bk-color1);
+}
+
+.main-info-box {
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+.head-name-info {
+    width: 100%;
+    background-color: var(--blue-slate);
+    position: relative;
+}
+.head-name-info::after {
+    content: "";
+    
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 30%;
+
+    background-color: var(--blue-slate);
+    mix-blend-mode:overlay;
+
+    border-radius: 0 0 100% 0;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.student-full-name {
+    padding-bottom: 1rem;
+    line-height: 1.2rem;
+
+    font-family: "Industrial Bold";
+    font-size: 3rem;
+    text-align: center;
+
+    text-shadow: 0px -1px 2px var(--blue-slate);
+
+    color: white; 
+}
+.student-address {
+    font-family: "BrixSlab-Light";
+    font-size: 1.35rem;
+    text-align: center;
+    text-transform: capitalize;
+
+    letter-spacing: 0.05rem;
+
+    color: white;
+}
+
+
+.head-user-info {
+    width: 100%;
+    padding: 0.3rem 0;
+
+    background-color: var(--blue-slate);
+
+    border-radius: 0 0 2rem 2rem;
+    text-align: center;
+}
+
+.user-nick-name, .user-email, .email-verify {
+    font-family: "BrixSlab-Light";
+    font-size: 1.15rem;
+    color: white;
+}
+.user-email {
+    color: var(--sand-coastal);
+}
+.-trusted {
+    color: lightgreen;
+}
+.-unsafe {
+    color: lightcoral;
+}
+
+.user-profile-created, .user-last-session {
+    font-family: "BrixSlab-ExtraLightItalic";
+    line-height: 1.75rem;
+    color: whitesmoke;
+}
+
+
+/* NAVBAR */
+.nav-menu {
+    width: 90%;
+    margin: 1rem auto;
+
+    background-color: var(--orange-high-desert);
+    border-radius: 1.5rem;
+}
+.nav-menu-box {
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    flex-wrap: nowrap;
+}
+
+.block-title {
+    min-width: 150px;
+    font-size: 1.35rem;
+    line-height: 2;
+    text-align: center;
+
+    color: var(--black-worn);
+
+    cursor: pointer;
+}
+.block-title:hover:not(.-nav-item-active) {
+    color: white;
+    background-color: var(--blue80-slate);
+
+    transition: color 0.2s ease-in, background-color 0.2s ease-in
+}
+.-nav-item-active {
+    color: white;
+    background-color: var(--blue-slate);
+}
+
+
+/* TOGGLER BODY */
+.block-box {
+    width: 90%;
+    min-height: 78vh;
+    margin: 0 auto;
+
+    background-color: var(--sand15-coastal);
+    border-radius: 1rem 1rem 0 0;
+
+    position: relative;
+    z-index: 1;
+}
+.block-box::after {
+    content: "";
+    
+    width: 95%;
+    max-width: calc(var(--max-content-width) * 0.75);
+    margin: 1rem auto;
+    
+    background-image: url('/static/images/water-mark.png');
+
+    background-size:contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    z-index: -1;
+    opacity: 0.035;
+}
+.block-header {
+    font-family: "BrixSlab-LightItalic";
+    font-size: 1.5rem;
+    color: var(--blue-slate);
+
+    text-align: center;
+    border-bottom: 1px solid var(--blue20-slate);
+}
+
+.block-box-inner {
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+}
+
+.row-item-65, .row-item-75, .row-item-85, .row-item-95 {
+    width: 65%;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.row-item-75 {
+    width: 75%;
+}
+.row-item-85 {
+    width: 85%;
+}
+.row-item-95 {
+    width: 95%;
+}
+
+.fields-set {
+    display: flex;
+    align-items: center;
+}
+
+.field-title, .field-value {
+    font-family: "BrixSlab-Medium";
+    font-size: 1.3rem;
+    text-align: left;
+    text-transform: capitalize;
+
+    padding: 0.25rem;
+}
+.field-title {
+    min-width: 15rem;
+}
+.field-value {
+    min-width: 100px;
+    font-family: "BrixSlab-Light";
+}
+.-orange {
+    color: var(--orange-high-desert);
+}
+.-email {
+    text-transform: lowercase;
+}
+.-italic {
+    font-style: italic;
+}
+
+.gap-line {
+    width: 97%;
+    margin: 0.35rem auto;
+    border-bottom: 1px solid var(--blue20-slate);
+}
+.-right-side {
+    justify-content: right;
+}
+.-windblow {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.75rem;
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
+.-button-box {
+    max-width: 550px;
+    margin-right: 0;
+    justify-content: space-around;
+}
+.-btn, .show-edit-btn {
+    --color-calm: var(--blue-slate);
+    --color-hover: var(--orange80-high-desert);
+
+    width: 140px;
+    min-width: 140px;
+
+    border-radius: 25px;
+
+    font-size: 1rem;
+    text-transform: capitalize;
+    text-decoration: none;
+    text-align: center;
+    
+    color: white;
+    background-color: var(--color-calm);
+    border: none;
+
+    padding: 0.5em;
+    cursor: pointer;
+}
+.-btn:hover, .show-edit-btn:hover {
+    background-color: var(--color-hover);
+    transform: scale(1.05);
+    transition: background-color 0.2s ease-in, transform 0.2s ease-in;
+}
+
+
+/* EDIT element */
+.edit-set {
+    display: flex;
+    align-items: center;
+}
+
+.show-edit-btn {
+    width: auto;
+    min-width:unset;
+
+    font-family: "BrixSlab-ExtraLightItalic";
+    text-transform:unset;
+
+    margin: 0 .5rem;
+    padding: 5px 10px;
+}
+.-red {
+    --color-hover: tomato;
+    margin: 0 5px 0 0;
+    padding: 4px 4px 0 4px;
+}
+.delete-mark {
+    width: 1.25rem;
+    height: 1.25rem;
+    
+    stroke:#fff;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-width:2px;
+}
+
+
+.input-box {
+    width: 17rem;
+    padding: .5rem;
+    background-color: transparent;
+
+    font-family: 'Brix', sans-serif;
+    font-size: 1rem;
+    text-transform: capitalize;
+    color: rgba(34, 60, 80, 0.8);
+    
+    border: 1px solid  var(--blue20-slate);
+    border-radius: 5px;
+}
+.input-box[type='date'] {
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.input-box[type='text']:hover,
+.input-box[type='date']:hover {
+    background-color: var(--blue20-slate);
+    transition: background-color .2s ease-in;
+}
+
+
+
+/* 
+@BRIX font family
+
+font-family: "BrixSlab-ExtraLight";
+font-family: "BrixSlab-ExtraLightItalic";
+
+font-family: "BrixSlab-Light";
+font-family: "BrixSlab-LightItalic";
+
+font-family: "BrixSlab-Regular";
+font-family: "BrixSlab-RegularItalic";
+
+font-family: "BrixSlab-Medium";
+font-family: "BrixSlab-MediumItalic";
+
+font-family: "BrixSlab-BlackItalic";
+font-family: "BrixSlab-Bold";
+
+*/
+
+.-hidden, .-hidden-sprite {
+    display: none;
+}

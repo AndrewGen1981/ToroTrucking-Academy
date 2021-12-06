@@ -1,0 +1,72 @@
+* {
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+html, body {
+    font-size: 15px;
+}
+
+.landing-main-box {
+    width: 100%;
+
+    width: 100vw;
+    height: 100vh;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.main-title {
+    font-family: "Industrial Bold";
+    font-size: 5rem;
+
+    color: var(--worn-black);
+    
+    padding: 1rem 0;
+
+    text-align: center;
+}
+
+.main-menu{
+    padding: 2rem;
+
+    font-family: "Industrial Medium";
+    font-size: 2rem;
+
+    color: var(--slate-blue);
+    background-color: rgba(0, 0, 0, 0.1);
+    
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
+    -webkit-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
+    -moz-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
+}
+.nav-item {
+    font-family: "Brix";
+    font-size: 1.3rem;
+    line-height: 2rem;
+}
+
+.main-image-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    margin: 0 auto;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+}
+.main-image {
+    width: 100%;
+
+    max-width: 1050px;
+
+    opacity: 0.15;
+    object-fit: scale-down;
+}

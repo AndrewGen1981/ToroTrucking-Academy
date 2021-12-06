@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/static/css/colors.css">
+    <link rel="stylesheet" href="/admin/views/showSchema.css">
+
+</head>
+<body>
+    
+    
+
+    <%- HTML %>
+
+
+    <script type="module">
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+        
+        // server emits, so have to check if changes are related to this particular client
+        socket.on('users-collection-update', user => {
+            if (user) {
+                // document.querySelector('#reload-user-area').click()
+                const id = user.documentKey._id
+
+                if (user.operationType === "update") {
+                    // USER exists in the list
+                    const fields = user.updateDescription.updatedFields
+                    const updatedRow = document.querySelector(`#row-${id}`)
+                    if (updatedRow != null) {
+                        if (fields.name || fields.email || fields.created || fields.lastSESS ||
+                            fields.dataCollection != undefined || fields.application != undefined || fields.agreement || fields.key > -1) {
+                            // conditions acoide animation 'blinking' when toker resent or passw changed
+                            updatedRow.classList.add('-hightight-update-row')
+                            setTimeout(() => { updatedRow.classList.remove('-hightight-update-row') }, 500)
+                        }
+
+                        if (fields.name) { document.querySelector(`#name-${id}`).textContent = fields.name }
+                        if (fields.email) { document.querySelector(`#email-${id}`).textContent = fields.email }
+                        if (fields.created) { document.querySelector(`#created-${id}`).textContent = new Date(fields.created).toLocaleDateString() }
+                        if (fields.lastSESS) { document.querySelector(`#lastSESS-${id}`).textContent = `${new Date(fields.lastSESS).toLocaleDateString()} ${new Date(fields.lastSESS).toLocaleTimeString()}` }
+                        if (fields.token) {
+                            const token = document.querySelector(`#token-${id}`)
+                            if (fields.token === 'not sent') {
+                                token.textContent = "not sent"
+                                token.classList.add('token-not-sent')
+                                token.classList.remove('token-verified')
+                                token.classList.remove('token-not-confirmed')
+                                token.classList.remove('-step-done')
+                                token.classList.remove('-step-todo')
+                            } else {
+                                if (fields.token === 'verified') {
+                                    token.textContent = "trusted"
+                                    token.classList.remove('token-not-sent')
+                                    token.classList.add('token-verified')
+                                    token.classList.remove('token-not-confirmed')
+                                    token.classList.add('-step-done')
+                                    token.classList.remove('-step-todo')
+                                } else {
+                                    token.textContent = "unsafe"
+                                    token.classList.remove('token-not-sent')
+                                    token.classList.remove('token-verified')
+                                    token.classList.add('token-not-confirmed')
+                                    token.classList.remove('-step-done')
+                                    token.classList.add('-step-todo')
+                                }
+                            }
+                        }   //  token
+                        
+
+                        // + and -
+                        function toggleStepCheck(form, ifStatement) {       // general service function
+                            if (ifStatement) {
+                                form.textContent = '+'
+                                form.classList.remove('-step-todo')
+                                form.classList.add('-step-done')
+                            } else {
+                                form.textContent = '-'
+                                form.classList.remove('-step-done')
+                                form.classList.add('-step-todo')
+                            }
+                        }
+                        
+                        if (fields.dataCollection != undefined) { toggleStepCheck(document.querySelector(`#form1-step-${id}`), fields.dataCollection.length) }     // dataCollection
+                        if (fields.application != undefined) { toggleStepCheck(document.querySelector(`#form2-step-${id}`), fields.application.length) }     // application
+                        if (fields.agreement != undefined) { toggleStepCheck(document.querySelector(`#form3-step-${id}`), fields.agreement.length) }     // agreement
+                        if (fields.key > -1) { toggleStepCheck(document.querySelector(`#student-step-${id}`), fields.key > 0) }     // if student
+                        
+                    }   // updatedRow != null
+                }   // user.operationType === "update"
+
+                if (user.operationType === "delete") {
+                    // USER exists in the list & should be deleted
+                    const updatedRow = document.querySelector(`#row-${id}`)
+                    if (updatedRow != null) {
+                        updatedRow.classList.add('-hightight-delete-row')
+                        setTimeout(() => { 
+                            updatedRow.classList.remove('-hightight-delete-row')
+                            updatedRow.remove()
+                            // recount #
+                            const indexes = document.querySelectorAll('.schema-col-index')
+                            for (let i=0; i<indexes.length; i++) { if (i > 0) { indexes[i].textContent = i } }
+                        }, 500)
+                    }   // updatedRow != null
+                }   // user.operationType === "delete"
+
+                if (user.operationType === "insert") {
+                    // USER doesn't exist & should be inserted
+                    const fields = user.fullDocument
+
+                    function addField(tag, field, value, href) {
+                        const el = document.createElement(tag)
+                        el.classList.add(`schema-col-${field}`)
+                        el.id = `${field}-${id}`
+                        el.innerHTML = value
+                        if (href) { el.href = href }
+                        return el
+                    }   //addField
+
+                    const n = document.getElementsByClassName('schema-row').length
+
+                    const row = document.createElement('section')
+                    row.classList.add('schema-row')
+                    row.setAttribute("name", `schema-row${n}`)
+                    row.id = `row-${id}`
+
+                    row.appendChild(addField('div', 'index', n))        // index
+                    row.appendChild(addField('a', 'name', fields.name, `/user/${id}`))       // name
+                    row.appendChild(addField('div', 'email', fields.email))     // email
+
+                    function getToken(token) {       
+                        if (token === 'not sent') { return `<p class='token-not-sent'>not sent</p>` }
+                        if (token === 'verified') { return `<p class='token-verified'>trusted</p>` }
+                        return `<p class='token-not-confirmed'>unsafe</p>`
+                    }
+
+                    row.appendChild(addField('div', 'token', getToken(fields.token)))      // token
+                    row.appendChild(addField('div', 'created', new Date(fields.created).toLocaleDateString()))     // created
+                    row.appendChild(addField('div', 'lastSESS', `${new Date(fields.lastSESS).toLocaleDateString()} ${new Date(fields.lastSESS).toLocaleTimeString()}`))     // lastSESS
+
+                    function getStepCheck(check, form) {       // general service function
+                        return check 
+                        ? `<div class="step -step-done" id="${form}-step-${id}">+</div>`
+                        : `<div class="step -step-todo" id="${form}-step-${id}">-</div>` 
+                    }
+                    
+                    row.appendChild(addField('div', 'dataCollection', getStepCheck(fields.dataCollection, 'form1')))      // dataCollection
+                    row.appendChild(addField('div', 'application', getStepCheck(fields.application, 'form2')))      // application
+                    row.appendChild(addField('div', 'agreement', getStepCheck(fields.agreement, 'form3')))      // agreement
+                    row.appendChild(addField('div', 'student', getStepCheck(fields.student, 'student')))      // student
+
+                    document.querySelector('#schema-headers-users').after(row)
+
+                    row.classList.add('-hightight-insert-row')
+                    setTimeout(() => { 
+                        row.classList.remove('-hightight-insert-row')
+                        // recount #
+                        const indexes = document.querySelectorAll('.schema-col-index')
+                        for (let i=0; i<indexes.length; i++) { if (i > 0) { indexes[i].textContent = i } }
+                    }, 500)
+
+                }   // user.operationType === "insert"
+            }   // if user
+        })  // socket.on 'users-collection-update'
+    </script>
+
+</body>
+</html>

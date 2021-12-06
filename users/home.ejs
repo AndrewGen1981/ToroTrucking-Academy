@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+        @keyframes Moving {
+            0% { color: red }
+            50% {color: white}
+            100% { color: blue }
+        }
+        .moving {
+            animation: Moving 2s ease-in-out alternate infinite
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Home</h1>
+    <a href="/user">Main</a>
+ 
+    <% if (user) { %>
+        <section>
+            <h2>Profile</h2>
+            <ul>
+                <li>Name: <%= user.name %></li>
+                <li>Email: <%= user.email %></li>
+
+                <% if(!user.token || user.token === 'not sent') { %>
+                    <li id="emailStatus">
+                        <p>Your email is not verified.</p>
+                        <p>Verification email wasn't sent to you automatically.</p>
+                        <form action="/user/sendToken" method="POST">
+                            <small>You can send it manually</small>
+                            <input type="hidden" name="name" value="<%= user.name %>" readonly>
+                            <input type="hidden" name="email" value="<%= user.email %>" readonly>
+                            <button type="submit">Send</button>
+                        </form>
+                    </li>
+                <% } else { %>
+                    <% if(user.token === 'verified') { %>
+                        <li id="emailStatus">trusted email</li>
+                    <% } else { %>
+                        <li id="emailStatus">
+                            <p>Your email is not verified yet.</p>
+                            <p>Verification email was sent to you.</p>
+                            <small>Follow the instructions in it to accomplish a verification process.</small><br>
+                            <small>Or you can send it one more time, but first check your INBOX or SPAM if needed.</small><br>
+                            <small>Meanwhile forms below and other data will be unavailable for you.</small><br>
+                            <p>Can't wait to show you what we have. Please comeback asap</p>
+                            <% if(user.msg.e != 'verTokenSent') { %>
+                                <form action="/user/sendToken" method="POST">
+                                    <small>Resend verification email</small>
+                                    <input type="hidden" name="name" value="<%= user.name %>" readonly>
+                                    <input type="hidden" name="email" value="<%= user.email %>" readonly>
+                                    <button type="submit">Send</button>
+                                </form>
+                            <% } %>
+                        </li>
+                    <% } %>
+                <% } %>
+
+                <li>
+                    Created:
+                    <span><%= new Date(user.created).toLocaleDateString() %></span>
+                    <span><%= new Date(user.created).toLocaleTimeString() %></span>
+                </li>
+                <li>
+                    Session started:
+                    <span><%= new Date(user.lastSESS).toLocaleDateString() %></span>
+                    <span><%= new Date(user.lastSESS).toLocaleTimeString() %></span>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Update Password Section</h3>
+            <form action="/user/password" method="POST">
+                <input type="password" name='currentPassword' placeholder="Current Password" required />
+                <input type="password" name='newPassword' placeholder="New Password" required />
+                <label for="showPasswords">
+                    <input type="checkbox" id='showPasswords'/>
+                    show passwords
+                </label>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+        
+        <section>
+            <h4><%= user.msg.class.toUpperCase() %></h4>
+            <p class="<%= user.msg.class %>"><%= user.msg.txt %></p>
+        </section>
+
+        <section>
+            <h3>Applicants Area</h3>
+            <div>
+                <% if(user.token === 'verified') { %>
+                    <!-- if email is verified, then show forms -->
+                    <% if (user.applicantProgress.form1) { %>
+                        <div>
+                            <span>#1 STUDENT DATA COLLECTION FORM</span><span> + </span>
+                        </div>
+                        <% if (user.applicantProgress.form2) { %>
+                            <div>
+                                <span>#2 APPLICATION FOR ENROLLMENT</span><span> + </span>
+                            </div>
+                            <% if (user.applicantProgress.form3) { %>
+                                <div>
+                                    <span>#3 ENROLLMENT AGREEMENT</span><span> + </span>
+                                </div>
+                            <% } else { %>
+                                <div>
+                                    <a href='/user/form3'>#3 ENROLLMENT AGREEMENT</a><span class="moving"> <= </span>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div>
+                                <a href='/user/form2'>#2 APPLICATION FOR ENROLLMENT</a><span class="moving"> <= </span>
+                            </div>
+                            <div>
+                                <span>#3 ENROLLMENT AGREEMENT</span><span> - </span>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <div>
+                            <a href='/user/form1'>#1 STUDENT DATA COLLECTION FORM</a><span class="moving"> <= </span>
+                        </div>
+                        <div>
+                            <span>#2 APPLICATION FOR ENROLLMENT</span><span> - </span>
+                        </div>
+                        <div>
+                            <span>#3 ENROLLMENT AGREEMENT</span><span> - </span>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <!-- email is NOT verified, show warning -->
+                    <h4>
+                        Enrollment forms cannot be available for you because of your email still stays unverified. Please find our verification letter among your incoming emails (check spam folder, if needed) and stick to instructions given in it. Or you can generate one more verification letter, but be aware that only last generated will be valid one.
+                    </h4>
+                    <div>
+                        <span>#1 STUDENT DATA COLLECTION FORM</span>
+                    </div>
+                    <div>
+                        <span>#2 APPLICATION FOR ENROLLMENT</span>
+                    </div>
+                    <div>
+                        <span>#3 ENROLLMENT AGREEMENT</span>
+                    </div>
+                <% } %>
+
+            </div>
+        </section>
+
+    <% } else { %>
+        <p>No info about user has been found...</p>
+    <% } %>
+
+    <script defer>
+        localStorage.setItem('id', '<%- user._id %>')
+                
+        // 'show password' reaction
+        document.querySelector('#showPasswords').addEventListener('change', (e) => {
+            document.querySelector('input[name="currentPassword"]').type = e.target.checked ? 'text' : 'password'
+            document.querySelector('input[name="newPassword"]').type = e.target.checked ? 'text' : 'password'
+        })
+    </script>
+
+
+    <script type="module">
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+        
+        // server emits, so have to check if changes are related to this particular client
+        socket.on('users-collection-update', user => {
+            if (user) {
+                if (user.documentKey._id === localStorage.getItem('id')) {
+                    if (user.updateDescription.updatedFields.token === "verified") {
+                        document.querySelector('#emailStatus').textContent = "Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you."
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

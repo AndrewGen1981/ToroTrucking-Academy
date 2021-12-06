@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        .reset-box {
+            width: 250px;
+            margin-top: 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .-hidden {
+            display: none
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Login</h1>
+
+    <div>
+        <section>
+            <% if (info) { %>
+                <h2>Info</h2>
+                <p><%= (info) %></p>
+            <% } %>
+            <% if (error) { %>
+                <h2>Error founded</h2>
+                <p><%= (error) %></p>
+            <% } %>
+            <% if (registErrorObj.isThere) { %>
+                <h2>Errors founded</h2>
+                <ol type='1'>
+                    <% registErrorObj.errors.map(err => { %>
+                        <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
+                    <% }) %>
+                </ol>
+            <% } %>
+        </section>      <!-- message box -->
+
+        <form action="/user/login" method="POST">
+            <input type="email" name='email' id='email' placeholder="Email" required />
+            <input type="password" name='password' id='password' placeholder="Password" required />
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    
+    <div>
+        <section class='reset-box'>
+            <h2>Reset password</h2><button onclick="toggleResetMenu(this)">+</button>
+        </section>
+        <form action="/user/passwordreset" method="POST" id="resetPassword" class='-hidden'>
+            <p>Let us know what your login-email is. A new generated password will be sent to the provided email.</p>
+            <input type="email" name='email' placeholder="Email" value="" required />
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <br><br><a href="/user/register">Register</a>
+
+</body>
+
+    <script defer>
+
+        document.querySelector('#resetPassword').addEventListener('submit', (e) => {
+            if (!confirm("This will reset your current password. Are you sure?")) {
+                e.preventDefault()
+            }
+        })
+
+        function toggleResetMenu(toggler) {
+            const reset = document.querySelector('#resetPassword')
+            if (reset.classList.contains('-hidden')) {
+                reset.classList.remove('-hidden')
+                toggler.textContent = 'x'
+            } else {
+                reset.classList.add('-hidden')
+                toggler.textContent = '+'
+            }
+        }
+
+    </script>
+
+</html>

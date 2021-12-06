@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/static/css/colors.css">
+    <link rel="stylesheet" href="/admin/views/showSchema.css">
+
+</head>
+<body>
+    
+    <%- html %>
+
+
+    <script type="module">
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("http://localhost:3000")
+        
+        // server emits, so have to check if changes are related to this particular client
+        socket.on('dbchange', user => {
+            if (user) {
+                console.log(user)
+                window.location.reload()
+                // if (user.documentKey._id === localStorage.getItem('id')) {
+                //     if (user.updateDescription.updatedFields.token === "verified") {
+                //         document.querySelector('#emailStatus').textContent = "Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you."
+                //     }
+                // }
+            }
+        })
+    </script>
+
+</body>
+</html>
