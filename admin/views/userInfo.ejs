@@ -1921,12 +1921,25 @@
                     
                     <!-- #2 SCHOOL SIGNATURE FORM -->
                     <% if(user.agreement.schoolSignRep) { %>
-                        <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
-                        <h3>Signed on TTA's behalf by: <strong><%= signer.name %></strong> at <%= new Date(user.agreement.schoolSignDate).toLocaleDateString() %></h3>
+
+                        <section class="row-item-85"><div class="gap-line"></div></section>
+
+                        <section class="row-item-95">
+                            <div class="field-title">Signed on TTA's behalf by:</div>
+                            <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
+                            <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString() %></div>
+                        </section>
+
                     <% } else { %>
                         <form action='/admin/sign/<%= user.agreement._id %>' method="post">
-                            <h3>NOT signed on TTA's behalf yet</h3>
-                            <h4>Agreement cannot be signed zero cost. Please indicate its cost and additional fees.</h4>
+
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-title -orange -italic">NOT signed on TTA's behalf yet</div>
+                                    <div class="field-value">Agreement cannot be signed zero cost. Please indicate its cost and additional fees.</div>
+                                </div>
+                            </section>
+
                             
                             <label for="tuitionCost">Cost of Tuition
                                 <input type="number" name='tuitionCostItem' id='tuitionCost' min=1 value=0.00 step='.01' oninput='updateSpan(this)' required>
