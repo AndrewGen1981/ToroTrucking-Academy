@@ -62,7 +62,10 @@ function getForm1Object(body, userEmail) {
         veteran: body.veteran,
         sex: body.sex,
         
-        grade: body.grade
+        grade: body.grade,
+
+        updatedAdmin: String,
+        updatedDate: Date
     }
 }
 

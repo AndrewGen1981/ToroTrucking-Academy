@@ -158,7 +158,10 @@ function getForm2Object(body, userEmail) {
         employers: employersBody,
         
         certificate1: body.certificate1,
-        certificate2: body.certificate2
+        certificate2: body.certificate2,
+
+        updatedAdmin: String,
+        updatedDate: Date
     }
 }
 

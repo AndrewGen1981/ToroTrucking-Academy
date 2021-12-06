@@ -25,8 +25,12 @@ const form3 = new mongoose.Schema({
     parentFirstName: String,
     parentLastName: String,
 
+    updatedAdmin: String,
+    updatedDate: Date,
+
     schoolSignRep: String,
     schoolSignDate: Date
+    
 }, {
     collection: 'agreements'
 })

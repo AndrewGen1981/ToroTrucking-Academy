@@ -274,6 +274,29 @@ admRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
 })
 
 
+
+
+admRouter.post('/update-form1/:id', redirectToLogin, async(req, res) => {
+    const obj = {
+        firstName, lastName, middleName,
+        street, city, state, zip,
+        phone, DOB, SSN,
+        race, hispanic, disabled, veteran, sex, grade
+    } = req.body
+    res.send(req.body[req.body.whatWasUpdated])
+})
+
+admRouter.post('/update-form2/:id', redirectToLogin, async(req, res) => {
+    res.send(req.body.whatWasUpdated)
+})
+
+admRouter.post('/update-form3/:id', redirectToLogin, async(req, res) => {
+    res.send(req.body[req.body.whatWasUpdated])
+})
+
+
+
+
 admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
     // signs Agreement with Admin's credentials passed from client side
 
@@ -304,23 +327,7 @@ admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
 })
 
 
-admRouter.post('/update-form1/:id', redirectToLogin, async(req, res) => {
-    const obj = {
-        firstName, lastName, middleName,
-        street, city, state, zip,
-        phone, DOB, SSN,
-        race, hispanic, disabled, veteran, sex, grade
-    } = req.body
-    res.send(JSON.stringify(obj))
-})
 
-admRouter.post('/update-form2/:id', redirectToLogin, async(req, res) => {
-    res.send('updating form2')
-})
-
-admRouter.post('/update-form3/:id', redirectToLogin, async(req, res) => {
-    res.send(req.body.payment)
-})
 
 
 

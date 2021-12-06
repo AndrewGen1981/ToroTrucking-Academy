@@ -473,12 +473,28 @@
                         </div>
                     </section>  <!-- grade -->
 
+                    <!-- contains all updated MODELS fields -->
+                    <input type="hidden" name='whatWasUpdated'  data-updated='data-coll-edits' />
 
+                    <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
                         <div class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString() %> <%= new Date(user.dataCollection.created).toLocaleTimeString() %></div>
                     </section>
+                    
+                    <!-- @ADMIN CHANGED -->
+                    <% if(user.dataCollection.updatedAdmin) { %>
+                        <% let updater = user.dataCollection.updatedAdmin %>
+                        <% updater += new Date(user.dataCollection.updatedDate).toLocaleDateString() %>
+                        <% updater += new Date(user.dataCollection.updatedDate).toLocaleTimeString() %>
 
+                        <section class="row-item-85 -right-side">
+                            <div class="field-title -windblow -orange">updated by</div>
+                            <div class="field-value"><%= updater %></div>
+                        </section>
+                    <% } %>
+
+                    <!-- @BUTTONS -->
                     <section class="row-item-85 -button-box">
                         <span class='-btn' onclick="print('<%= pdfObj %>')">Download</span>
                         <a class='-btn' href='/admin/print-form/<%= user._id %>?form=form1'>Print</a>
@@ -1589,11 +1605,28 @@
                         </section>  <!-- employer1-position -->
                     <% } %>
 
+                    <!-- contains all updated MODELS fields -->
+                    <input type="hidden" name='whatWasUpdated'  data-updated='appl-edits' />
+
+                    <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
                         <div class="field-value"><%= new Date(user.application.created).toLocaleDateString() %> <%= new Date(user.application.created).toLocaleTimeString() %></div>
                     </section>
+                    
+                    <!-- @ADMIN CHANGED -->
+                    <% if(user.application.updatedAdmin) { %>
+                        <% let updater = user.application.updatedAdmin %>
+                        <% updater += new Date(user.application.updatedDate).toLocaleDateString() %>
+                        <% updater += new Date(user.application.updatedDate).toLocaleTimeString() %>
 
+                        <section class="row-item-85 -right-side">
+                            <div class="field-title -windblow -orange">updated by</div>
+                            <div class="field-value"><%= updater %></div>
+                        </section>
+                    <% } %>
+
+                    <!-- @BUTTONS -->
                     <section class="row-item-85 -button-box">
                         <span class='-btn' onclick="print('<%= pdfObj %>')">Download</span>
                         <a class='-btn' href='/admin/print-form/<%= user._id %>?form=form2'>Print</a>
@@ -1780,43 +1813,110 @@
                                 </div>  <!-- data-id hidden area -->
                             </div>
                         </section>  <!-- downPayment -->
-    
-                        
 
-                        
-                        <% if(user.agreement.downPayment.length) { %>
-                            <p class='agreement-down-payment'>Down Payment: <span class="appl-down-payment"><%= user.agreement.downPayment %></span></p>
-                        <% } %>
-                        <% if(user.agreement.monthlyPayment.length) { %>
-                            <p class='agreement-monthly-payment'>Monthly Payment: <span class="appl-monthly-payment"><%= user.agreement.monthlyPayment %></span></p>
-                        <% } %>
-                        <% if(user.agreement.loanPayment.length) { %>
-                            <p class='agreement-loan-payment'>Loan Payment: <span class="appl-loan-payment"><%= user.agreement.loanPayment %></span></p>
-                        <% } %>
-                        <% if(user.agreement.parentFirstName.length || user.agreement.parentLastName.length) { %>
-                            <p class='agreement-parent-name'>Parent Or Guardian Name: 
-                                <span class="appl-parent-first-name"><%= user.agreement.parentFirstName %></span>
-                                <span class="appl-parent-last-name"><%= user.agreement.parentLastName %></span>
-                            </p>
-                        <% } %>
+                        <section class="row-item-85">
+                            <div class="fields-set">
+                                <div class="field-title">Monthly Payment:</div>
+                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.monthlyPayment) %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='monthlyPayment' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="agr-edits" data-id='monthlyPayment'>
+                                    <label class="show-edit-btn -red" for='monthlyPayment' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="monthlyPayment" id="monthlyPayment" />
+                                </div>  <!-- data-id hidden area -->
+                            </div>
+                        </section>  <!-- monthlyPayment -->
+
+                        <section class="row-item-85">
+                            <div class="fields-set">
+                                <div class="field-title">Loan Payment:</div>
+                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.loanPayment) %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='loanPayment' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="agr-edits" data-id='loanPayment'>
+                                    <label class="show-edit-btn -red" for='loanPayment' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="loanPayment" id="loanPayment" />
+                                </div>  <!-- data-id hidden area -->
+                            </div>
+                        </section>  <!-- loanPayment -->
     
-                        
-    
-                        <br>
-    
-    
-                        
-    
+                        <section class="row-item-85"><div class="gap-line"></div></section>
+
+                        <section class="row-item-85">
+                            <div class="fields-set">
+                                <div class="field-title">Parent Or Guardian First Name</div>
+                                <div class="field-value"><%= user.agreement.parentFirstName %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='parentFirstName' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="agr-edits" data-id='parentFirstName'>
+                                    <label class="show-edit-btn -red" for='parentFirstName' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentFirstName" id="parentFirstName" />
+                                </div>  <!-- data-id hidden area -->
+                            </div>
+                        </section>  <!-- parentFirstName -->
+
+                        <section class="row-item-85">
+                            <div class="fields-set">
+                                <div class="field-title">Parent Or Guardian Last Name</div>
+                                <div class="field-value"><%= user.agreement.parentFirstName %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='parentLastName' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="agr-edits" data-id='parentLastName'>
+                                    <label class="show-edit-btn -red" for='parentLastName' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentLastName" id="parentLastName" />
+                                </div>  <!-- data-id hidden area -->
+                            </div>
+                        </section>  <!-- parentLastName -->
+
+
+                        <!-- contains all updated MODELS fields -->
+                        <input type="hidden" name='whatWasUpdated'  data-updated='agr-edits' />
+
+                        <!-- @SIGNATURE -->
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow">completed as of</div>
-                            <div class="field-value"><%= new Date(user.application.created).toLocaleDateString() %> <%= new Date(user.agreement.created).toLocaleTimeString() %></div>
+                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> <%= new Date(user.agreement.created).toLocaleTimeString() %></div>
                         </section>
+
+                        <!-- @UPDATED by whom and when -->
+                        <% if(user.agreement.updatedAdmin) { %>
+                            <% let updater = user.agreement.updatedAdmin %>
+                            <% updater += new Date(user.agreement.updatedDate).toLocaleDateString() %>
+                            <% updater += new Date(user.agreement.updatedDate).toLocaleTimeString() %>
+
+                            <section class="row-item-85 -right-side">
+                                <div class="field-title -windblow -orange">updated by</div>
+                                <div class="field-value"><%= updater %></div>
+                            </section>
+                        <% } %>
     
+                        <!-- @BUTTONS -->
                         <section class="row-item-85 -button-box">
                             <span class='-btn' onclick="print('<%= pdfObj %>')">Download</span>
                             <a class='-btn' href='/admin/print-form/<%= user._id %>?form=form3'>Print</a>
                             <button type='submit' class='-btn'>Update</button>
                         </section>
+
                     </form>     <!-- /admin/update-form3 -->
                     
                     <!-- #2 SCHOOL SIGNATURE FORM -->
@@ -1986,7 +2086,7 @@
                             if (childInputs[i].checked) { currentValues.push(childInputs[i].value) }
                         }
                         if (!equals(inputItemDataValue, currentValues)) {
-                            changedFields.push(labelItem.htmlFor.toUpperCase())     // add to updates fields only if not equal with it's start value string
+                            changedFields.push(labelItem.htmlFor)     // add to updates fields only if not equal with it's start value string
                         }
                     }
                 } else {
@@ -1995,7 +2095,7 @@
                         labelItem.style.setProperty('--color-hover', globalColorCalm)
                         divsToCheck[i].classList.remove('-hidden')
     
-                        changedFields.push(labelItem.htmlFor.toUpperCase())
+                        changedFields.push(labelItem.htmlFor)
                     }
                 }
             }
@@ -2049,13 +2149,18 @@
         async function checkUpdates(name) {
             // general middleware before updating
             const changed = await checkAllGroupHiddenDivs(document.querySelectorAll(`[name='${name}']`))
+
             if (changed.length === 0) {
                 alert("There is nothing to change. You didn't update any field")
                 return false
             }
-            if(!confirm(`This will update current record with fields: ${changed.toString()}. Are you sure?`)) {
+            if(!confirm(`This will update current record with fields(${changed.length}):\n+ ${changed.join(',\n+ ').toUpperCase()}.\nAre you sure?`)) {
                 return false
             }
+            
+            // updating INPUT name='whatWasUpdated' before getting back to server
+            document.querySelector(`[data-updated=${name}]`).value = changed.toString()
+
             return true
         }
 
