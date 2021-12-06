@@ -248,6 +248,10 @@
 .-italic {
     font-style: italic;
 }
+.column-view {
+    display: flex;
+    flex-direction: column;
+}
 
 .gap-line {
     width: 97%;

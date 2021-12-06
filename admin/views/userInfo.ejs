@@ -1714,7 +1714,7 @@
                                             <use xlink:href="#delete"></use> 
                                         </svg>
                                     </label>    <!-- show-edit-btn -red -->
-                                    <div id='payment'>
+                                    <div class='column-view' id='payment'>
                                         <% const pmts = user.agreement.payment.split(',') %>
 
                                         <% const headers = ['Cash Payment', 'Credit Card', 'Scholarship', 'Financial Aid', 'Third Party (e.g.VA;<br>Voc.Rehab.; LnI; Employer)'] %>
@@ -1724,7 +1724,7 @@
                                             <% const checked =  pmts.includes(item) ? 'checked' : '' %>
                                             <label for="payment-Choice<%= index %>">
                                                 <input type="checkbox" id="payment-Choice<%= index %>" name="payment" value="<%= item %>" <%= checked %> >
-                                                <span><%= headers[index]%></span>
+                                                <span><%- headers[index] %></span>
                                             </label>
                                         <% }) %>
 
@@ -1916,7 +1916,7 @@
                     divHidden.classList.add('-hidden')
                 }
 
-                if (input.value === '' || input.value === 'DNU') {
+                if (input.value === '' || input.value === 'DNU' || input.tagName === 'DIV') {
                     // cange calm and hover styles
                     const labelStyle = getComputedStyle(label)
                     const colorCalm = labelStyle.getPropertyValue('--color-calm')
@@ -1997,7 +1997,6 @@
         })
 
         document.getElementById('form3').addEventListener('submit', async (e) => {
-            console.log("Hi")
             const anyChanges = await checkUpdates('agr-edits')
             if (!anyChanges) { e.preventDefault() }
         })
