@@ -26,7 +26,7 @@ const { User } = require('./userModel')
 const { dataCollectionForm, getForm1Object } = require('./applicants/form1Model')
 const { applicationForm, getForm2Object } = require('./applicants/form2Model')
 const { agreementForm, getForm3Object } = require('./applicants/form3Model')
-const { Student, StudentCONFIG } = require('./students/studentModel')
+
 
 // for forms filling out tracking
 const applicantProgress = {

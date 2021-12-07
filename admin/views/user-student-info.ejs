@@ -32,6 +32,15 @@
         <section class="row-item-85">
             <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
         </section>
+        <% if(!user.agreement.schoolSignRep) { %>
+            <section class="row-item-85">
+                <div class="field-warning">Agreement hasn't been signed by School's manager!!!</div>
+            </section>
+        <% } else { %>
+            <section class="row-item-85">
+                <div class="field-accomplished">Agreement has been signed also from School's behalf.</div>
+            </section>
+        <% } %>  
     <% } else { %>
         <section class="row-item-85">
             <div class="field-warning">#3 Agreement has not been signed yet.</div>
@@ -41,23 +50,80 @@
 <% } else {%>
 
     <!-- TODO: if already a Student then skip this -->
-
-    <section class="row-item-85">
-        <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
-    </section>
-    <section class="row-item-85">
-        <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
-    </section>
-    <section class="row-item-85">
-        <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
-    </section>
-
-    <section class="row-item-85"><div class="gap-line"></div></section>
-
-    <section class="row-item-85">
-        <div class="field-accomplished">All ready to create a Student on Applicant Profile basis</div>
-        <button class='-btn' type="submit">Make a Student</button>
-    </section>
+    <% if(!user.student) { %>
+        
+        <section class="row-item-85">
+            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+        </section>
+        <section class="row-item-85">
+            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+        </section>
+        <section class="row-item-85">
+            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
+        </section>
     
-<% } %>
+        <section class="row-item-85"><div class="gap-line"></div></section>
 
+        <% if(!user.agreement.schoolSignRep) { %>
+            <section class="row-item-85">
+                <div class="field-warning">Agreement hasn't been signed by School's manager!!!</div>
+            </section>
+        <% } else { %>
+            <section class="row-item-85">
+                <div class="field-accomplished">Agreement has been signed also from School's behalf.</div>
+            </section>
+
+            <form action="/admin/student/new/<%= user._id %>" method="post">
+    
+                <section class="row-item-85">
+                    <div class="field-accomplished">Everything is ready to create a new Student on Applicant Profile basis</div>
+                    <button class='-btn' type="submit">Make a Student</button>
+                </section>
+        
+            </form>
+        <% } %> 
+       
+    <% } else { %>
+
+        <section class="row-item-85">
+            <div class="fields-set">
+                <div class="field-title">Student Key:</div>
+                <div class="field-value"><%= user.student.key %></div>
+            </div>
+        </section>
+        <section class="row-item-85">
+            <div class="fields-set">
+                <div class="field-title">Record Created:</div>
+                <div class="field-value"><%= new Date(user.student.created).toLocaleDateString() %> (<%= new Date(user.student.created).toLocaleTimeString() %>)</div>
+            </div>
+        </section>
+
+        <section class="row-item-85">
+            <div class="fields-set">
+                <div class="field-title">hooked up email:</div>
+                <div class="field-value -email"><%= user.student.email %></div>
+            </div>
+            <div class="fields-set">
+                <div class="field-title">equals to user email:</div>
+                <% if(user.student.email === user.email) { %>
+                    <div class="field-accomplished">YES</div>
+                <% } else { %>
+                    <div class="field-warning">NO</div>
+                <% } %> 
+            </div>
+        </section>
+
+        <section class="row-item-85">
+            <div class="fields-set">
+                <div class="field-title">user inner #id:</div>
+                <div class="field-value"><%= user.student.user %></div>
+            </div>
+            <div class="fields-set">
+                <div class="field-title">student inner #id:</div>
+                <div class="field-value"><%= user.student._id %></div>
+            </div>
+        </section>
+
+    <% } %>     <!-- already a Student -->
+    
+<% } %>     <!-- if all forms are ready -->

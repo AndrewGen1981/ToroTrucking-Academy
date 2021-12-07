@@ -8,10 +8,10 @@ const adminTools = require('./adminTools')
 
 // MODELS for mongoose
 const { User } = require('../users/userModel')
-const { dataCollectionForm, getForm1Object } = require('../users/applicants/form1Model')
-const { applicationForm, getForm2Object } = require('../users/applicants/form2Model')
-const { agreementForm, getForm3Object } = require('../users/applicants/form3Model')
-const { Student, StudentCONFIG } = require('../users/students/studentModel')
+const { dataCollectionForm } = require('../users/applicants/form1Model')
+const { applicationForm } = require('../users/applicants/form2Model')
+const { agreementForm } = require('../users/applicants/form3Model')
+
 
 // PDF
 const pdf = require('../static/pdf/pdf')
@@ -187,6 +187,7 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
         .populate('dataCollection')
         .populate('application')
         .populate('agreement')
+        .populate('student')        // <- is this slows a process
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
@@ -212,36 +213,6 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
         res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
     }
 
-
-
-
-
-    // @next cpde is for converting APPLICANT to a STUDENT
-
-    // working with Student-List cofigurations
-    // try {
-    //     const studentConfigurations = await StudentCONFIG.findOne({ configType: 'student-list' })
-    //     const lastStudentKey = studentConfigurations.lastStudentKey + 1
-    //     await StudentCONFIG.updateOne({ configType: 'student-list' }, { lastStudentKey })
-        
-
-    //     // if (await Student.findOneAndUpdate({ email }, { user: newUser._id }) === null) {      // #3 Updating/Saving reference to an Applicant model
-    //     //     new Student({ email, user: newUser._id }).save()
-    //     // }
-
-    //     Student({
-    //         key: lastStudentKey,
-    //         email: "test@gmail.com",
-    //         user: req.params.id
-    //     }).save().then(async(newStudent) => {
-    //         User.findOneAndUpdate({ email: req.session.userId }, { key: lastStudentKey })      // saving backlink User -> Student
-    //     })
-
-    // } catch(e) {
-    //     return res.send(`Student List configuration issue: ${e.message}`)
-    // }
-
-    // res.send('done')
 })
 
 
@@ -384,7 +355,7 @@ admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
 
 
 // @ admin/Student routes
-admRouter.use('/students', redirectToLogin, require('../users/students/studentRouter'))
+admRouter.use('/student', redirectToLogin, require('../users/students/studentRouter'))
 
 
 module.exports = admRouter

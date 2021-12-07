@@ -89,7 +89,7 @@ async function getUsers(filter, limit, skip) {
             }
 
 
-            if (item.key > 0) {
+            if (item.student) {
                 html += `<div class='schema-col-student' id='student-${item._id}'><div class='step -step-done' id='student-step-${item._id}'>+</div></div>`
             } else {
                 html += `<div class='schema-col-student' id='student-${item._id}'><div class='step -step-todo' id='student-step-${item._id}'>-</div></div>`

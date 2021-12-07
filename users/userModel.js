@@ -12,6 +12,7 @@ const { agreementForm } = require('./applicants/form3Model')     // FORM3 Model
 //     .populate('dataCollection')
 //     .populate('application')
 //     .populate('agreement')
+//     .populate('student')
 
 
 // @UserSchema for mongoose
@@ -36,6 +37,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: agreementForm
     },
+    student: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Student'
+    },
 
     // @Student part, refrence on STUDENT record ans StudentKey
     key: { type: Number, default: 0 }
@@ -45,7 +50,32 @@ const userSchema = new mongoose.Schema({
 
 
 
+// __CONFIG collection is user for configurations
+const configSchema = new mongoose.Schema({
+    configType: { type: String, required: true },
+    lastStudentKey: Number      // autoINC pre.save
+}, {
+    collection: "__CONFIG"
+})
+
+
+const studentSchema = new mongoose.Schema({
+    key: { type: Number, required: true },
+    email: { type: String, required: true },
+    created: { type: Date, default: new Date() },
+    user: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'userSchema'
+    },
+}, {
+    collection: "Student List"
+})
+
+
+
 module.exports = { 
-    User: mongoose.model('userSchema', userSchema)
+    User: mongoose.model('userSchema', userSchema),
+    Student: mongoose.model('Student', studentSchema),
+    StudentCONFIG: mongoose.model('StudentCONFIG', configSchema)
 }
 
