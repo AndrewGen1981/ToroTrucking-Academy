@@ -82,9 +82,11 @@
         
         <section class="block-box -hidden" name='blockBox' id='block1'>
             <h2 class="block-header">Data Collection Form</h2>
-            <form action='/admin/update-form1/<%= user.dataCollection._id %>' method="post" class='block-box-inner' id='form1'>
-                <!-- dataCollection info more data -->
-                <% if(user.dataCollection) { %>
+            
+            <!-- dataCollection info more data -->
+            <% if(user.dataCollection) { %>
+
+                <form action='/admin/update-form1/<%= user.dataCollection._id %>' method="post" class='block-box-inner' id='form1'>
 
                     <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
@@ -503,8 +505,20 @@
                         <button type='submit' class='-btn'>Update</button>
                     </section>
 
-                <% } %>     <!-- if(user.dataCollection) -->
-            </form>   <!-- block1 -->
+                </form>   <!-- block1 -->
+            
+            <% } else { %>
+                <section class="row-item-85">
+                    <div class="field-title -small">Data Collection form is not completed yet.</div>
+                </section>
+                <section class="row-item-85">
+                    <div class="field-warning">Data Collection is one of the <span class="field-warning -bold">basic state required</span> enrollment forms. User should start with one to become an Applicant...</div>
+                </section>
+                <section class="row-item-85">
+                    <div class="field-value -small">First of all, Users have to create their account and go through procedure of email verification to make forms available.</div>
+                </section>
+            <% } %>     <!-- if(user.dataCollection) -->
+
         </section>  <!-- block-box -->
 
 
@@ -516,10 +530,11 @@
 
         <section class="block-box -hidden" name='blockBox' id='block2'>
             <h2 class="block-header">Application Enrollment Form</h2>
-            <form action='/admin/update-form2/<%= user.application._id %>' method="post" class='block-box-inner' id='form2'>
             
-                <% if(user.application) { %>
-
+            <% if(user.application) { %>
+                
+                <form action='/admin/update-form2/<%= user.application._id %>' method="post" class='block-box-inner' id='form2'>
+            
                     <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
                     <section class="row-item-85">
@@ -1637,15 +1652,34 @@
                         <button type='submit' class='-btn'>Update</button>
                     </section>
 
+                </form>   <!-- block2 -->
+
+            <% } else { %>
+                <section class="row-item-85">
+                    <div class="field-title -small">Application Form was not filled out yet</div>
+                </section>
+
+                <% if(user.dataCollection) { %>
+                    <section class="row-item-85">
+                        <div class="field-warning">Data Collection has been completed, so Application form is a next user's step.  Application is one of the biggest forms, it takes time to fill it out accurately, so be patient)) Actually,<span class="field-warning -bold"> as an ADMIN you can advice user how to make it right.</span> This approach will save your further work time when fixing mistakes will be needed.</div>
+                    </section>
                 <% } else { %>
-                    <h3 class="student-application">Application Form was not filled out yet</h3>
+                    <section class="row-item-85">
+                        <div class="field-warning">Data Collection hasn't been completed by user yet. They should stick with Data Collection first of all, since that form is a basic one.</div>
+                    </section>
                 <% } %>
 
-            </form>   <!-- block2 -->
+            <% } %>
+
         </section>  <!-- block-box -->
 
+        
 
 
+
+        
+        <!-- @AGREEMENT  id=block3 -->
+        <!-- EDIT group 'agr-edits' -->
 
         <section class="block-box -hidden" name='blockBox' id='block3'>
             <h2 class="block-header">Agreement Form</h2>
@@ -2106,7 +2140,29 @@
                     <% } %>     <!-- if not signed -->
 
                 <% } else { %>
-                    <h3 class="student-agreement">Agreement was not signed yet</h3>
+                    <section class="row-item-85">
+                        <div class="field-value -small">Agreement was not signed on user's behalf yet.</div>
+                    </section>
+                    <% if(user.dataCollection) { %>
+                        <section class="row-item-85">
+                            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+                        </section>
+                    <% } else { %>
+                        <section class="row-item-85">
+                            <div class="field-warning">#1 Data Collection hasn't been completed by User.</div>
+                        </section>
+                    <% } %>
+                    
+                    <% if(user.application) { %>
+                        <section class="row-item-85">
+                            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+                        </section>
+                    <% } else { %>
+                        <section class="row-item-85">
+                            <div class="field-warning">#2 Application form is not ready yet.</div>
+                        </section>
+                    <% } %>
+
                 <% } %> 
 
             </div>  <!-- block-box-inner -->
@@ -2117,6 +2173,7 @@
         <section class="block-box -hidden" name='blockBox' id='block4'>
             <h2 class="block-header">Student Info Block</h2>
             <div class='block-box-inner'>coming soon...</div>   <!-- block4 -->
+            <%- include('user-student-info.ejs') %>
         </section>  <!-- block-box -->
 
     </div>  <!-- main-box -->
@@ -2320,23 +2377,23 @@
             return true
         }
 
-        document.getElementById('form1').addEventListener('submit', async (e) => {
-            const anyChanges = await checkUpdates('data-coll-edits')
-            if (!anyChanges) { e.preventDefault() }
-        })
 
-        document.getElementById('form2').addEventListener('submit', async (e) => {
-            const anyChanges = await checkUpdates('appl-edits')
-            if (!anyChanges) { e.preventDefault() }
-        })
+        function initializeFormWithUpdateListener(formId, inputGroup) {
+            const form = document.getElementById(formId)
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    const anyChanges = await checkUpdates(inputGroup)
+                    if (!anyChanges) { e.preventDefault() }
+                })
+            }
+        }
 
-        document.getElementById('form3').addEventListener('submit', async (e) => {
-            const anyChanges = await checkUpdates('agr-edits')
-            if (!anyChanges) { e.preventDefault() }
-        })
-        
-     
-
+        // @ENTRY POINT
+        // Init all forms and setup update listeners for each
+        initializeFormWithUpdateListener('form1', 'data-coll-edits')
+        initializeFormWithUpdateListener('form2', 'appl-edits')
+        initializeFormWithUpdateListener('form3', 'agr-edits')
+      
 
         // @MIAN Block's toggler
         function toggleBlock(navItem) {
@@ -2362,14 +2419,13 @@
         }   // toggleBlock
 
 
-        // @ENTRY POINT
+        
         // saving colorschemes for edit fields to enable its RESET
-        const showEditBtn = document.querySelector('.show-edit-btn')
-        const globalColorCalm = getComputedStyle(showEditBtn).getPropertyValue('--color-calm')
-        const globalColorHover = getComputedStyle(showEditBtn).getPropertyValue('--color-hover')
+        const globalColorCalm = getComputedStyle(document.body).getPropertyValue('--color-calm')
+        const globalColorHover = getComputedStyle(document.body).getPropertyValue('--color-hover')
 
         // showing block #1 as default
-        document.querySelector('[name=block3]').click()
+        document.querySelector('[name=block4]').click()
 
 
     </script>

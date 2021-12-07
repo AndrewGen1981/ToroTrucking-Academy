@@ -12,7 +12,10 @@
 }
 
 :root {
-    --max-content-width: 1650px
+    --max-content-width: 1650px;
+
+    --color-calm: var(--blue-slate);
+    --color-hover: var(--orange80-high-desert);
 }
 
 .main-box {
@@ -239,6 +242,18 @@
     min-width: 100px;
     font-family: "BrixSlab-Light";
 }
+.field-warning, .field-accomplished {
+    min-width: 100px;
+    
+    font-family: "BrixSlab-LightItalic";
+    font-size: 1.15rem;
+
+    color: var(--bad-todo1)
+}
+.field-accomplished {
+    color: var(--good-done1)
+}
+
 .-orange {
     color: var(--orange-high-desert);
 }
@@ -247,6 +262,9 @@
 }
 .-italic {
     font-style: italic;
+}
+.-bold {
+    font-weight: bolder;
 }
 .-small {
     font-family: "BrixSlab-MediumItalic";
@@ -279,9 +297,6 @@
     justify-content: space-around;
 }
 .-btn, .show-edit-btn {
-    --color-calm: var(--blue-slate);
-    --color-hover: var(--orange80-high-desert);
-
     width: 140px;
     min-width: 140px;
 

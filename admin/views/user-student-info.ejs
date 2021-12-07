@@ -1,0 +1,63 @@
+<!-- PARTIAL view -->
+<!-- included into userInfo.ejs -->
+
+<% if (!user.dataCollection || !user.application || !user.agreement) { %>
+    <section class="row-item-85">
+        <div class="fields-set">
+            <div class="field-warning">Student Section is unavailable, because enrollment forms are not completed yet</div>
+        </div>
+    </section>
+    
+    <% if(user.dataCollection) { %>
+        <section class="row-item-85">
+            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+        </section>
+    <% } else { %>
+        <section class="row-item-85">
+            <div class="field-warning">#1 Data Collection hasn't been completed by User.</div>
+        </section>
+    <% } %>
+
+    <% if(user.application) { %>
+        <section class="row-item-85">
+            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+        </section>
+    <% } else { %>
+        <section class="row-item-85">
+            <div class="field-warning">#2 Application form is not ready yet.</div>
+        </section>
+    <% } %>
+
+    <% if(user.agreement) { %>
+        <section class="row-item-85">
+            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
+        </section>
+    <% } else { %>
+        <section class="row-item-85">
+            <div class="field-warning">#3 Agreement has not been signed yet.</div>
+        </section>
+    <% } %>
+
+<% } else {%>
+
+    <!-- TODO: if already a Student then skip this -->
+
+    <section class="row-item-85">
+        <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+    </section>
+    <section class="row-item-85">
+        <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+    </section>
+    <section class="row-item-85">
+        <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
+    </section>
+
+    <section class="row-item-85"><div class="gap-line"></div></section>
+
+    <section class="row-item-85">
+        <div class="field-accomplished">All ready to create a Student on Applicant Profile basis</div>
+        <button class='-btn' type="submit">Make a Student</button>
+    </section>
+    
+<% } %>
+

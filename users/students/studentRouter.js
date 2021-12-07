@@ -1,4 +1,4 @@
-// Handles all dmin/students routes
+// Handles all admin/students routes
 // used in ADMIN.JS
 
 const express = require('express')
