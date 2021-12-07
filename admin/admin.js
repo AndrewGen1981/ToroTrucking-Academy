@@ -370,7 +370,8 @@ admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
 
         if (agreement === null) { return res.status(400).send(`Wrong request: ${agreementId}`) }
 
-        return res.status(200).redirect('/admin/user-area')   // all ok
+        const { postedPath } = req.body
+        return res.status(200).redirect(postedPath)    // redirecting back to the posting page
 
     } catch(e) {
         res.status(500).send(`Signing issue... ${e.message}. Try later please.`)
