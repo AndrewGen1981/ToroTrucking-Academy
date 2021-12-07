@@ -22,7 +22,11 @@ const form1 = new mongoose.Schema({
     veteran: { type: String, required: true },
     sex: { type: String, required: true },
 
-    grade: { type: String, required: true }
+    grade: { type: String, required: true },
+
+    updatedAdmin: String,
+    updatedDate: Date
+    
 }, {
     collection: 'data-collection-forms'
 })
@@ -62,10 +66,8 @@ function getForm1Object(body, userEmail) {
         veteran: body.veteran,
         sex: body.sex,
         
-        grade: body.grade,
-
-        updatedAdmin: String,
-        updatedDate: Date
+        grade: body.grade
+        
     }
 }
 

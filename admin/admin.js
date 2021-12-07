@@ -190,6 +190,17 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
+        // Preparing updaters fields - original from db have onli admin's id, I' like to pass a name instead
+        const forms = ['dataCollection', 'application', 'agreement']
+        forms.map(form => {
+            if (user[form]) {
+                if (user[form].updatedAdmin) {
+                    let updater = admin.findAdminById(user[form].updatedAdmin)
+                    if (updater) { user[form].updatedAdmin = updater.name }      //  getting an admin's name by id
+                }
+            }
+        })
+
         // getting info about signer on School's behalf
         const signer = getDocsSigner(user.agreement)
         // getting pdf object for DPF printing
@@ -276,26 +287,66 @@ admRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
 
 
 
-admRouter.post('/update-form1/:id', redirectToLogin, async(req, res) => {
-    const obj = {
-        firstName, lastName, middleName,
-        street, city, state, zip,
-        phone, DOB, SSN,
-        race, hispanic, disabled, veteran, sex, grade
-    } = req.body
-    res.send(req.body[req.body.whatWasUpdated])
+// @FORMS UPDATING
+
+// middleware for updating
+async function checkAndUpdate(req, res, next) {
+    const id = req.params.id    //  _id of updated Model
+    const url = req.url     // url contains form's reference, used to undestand what form is being updated
+    const { whatWasUpdated } = req.body     // string with updated Model fields - userInfo.ejs defines what fields to update
+
+    if (whatWasUpdated && id && url) {
+
+        const form = url.replace(`/${id}`, '').replace('/', '')     // substructing form type from url
+        
+        const Model = form === 'update-form1' ? dataCollectionForm
+        : form === 'update-form2' ? applicationForm
+        : form === 'update-form3' ? agreementForm
+        : undefined
+
+        if (Model) {    // if we found a Model, then update it with given fields
+            try {
+                let updatedRecord = {}
+                whatWasUpdated.split(',').map(fieldName => {
+                    updatedRecord[fieldName] = Array.isArray(req.body[fieldName]) ? req.body[fieldName].toString() : req.body[fieldName]
+                })
+                updatedRecord.updatedAdmin = req.session.userId
+                updatedRecord.updatedDate = new Date()
+
+                await Model.findByIdAndUpdate(id, updatedRecord)
+
+                next()  // updatet successfully
+            } catch(e) {
+                res.send(`Oops... We almost did it! Issue: ${e.message}`)
+            }
+        } else {
+            res.send(`Issue: cannot define Model to update... URL='${url}'. Form '${form}'`)
+        }
+    } else {
+        res.send("Issue: nothing to update. Check fields you've updated... ")
+    }
+}
+
+
+admRouter.post('/update-form1/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
+    const { postedPath } = req.body
+    res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form2/:id', redirectToLogin, async(req, res) => {
-    res.send(req.body.whatWasUpdated)
+admRouter.post('/update-form2/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
+    const { postedPath } = req.body
+    res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form3/:id', redirectToLogin, async(req, res) => {
-    res.send(req.body[req.body.whatWasUpdated])
+admRouter.post('/update-form3/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
+    const { postedPath } = req.body
+    res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
 
 
+
+// @SIGNING of the agreement
 
 admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
     // signs Agreement with Admin's credentials passed from client side

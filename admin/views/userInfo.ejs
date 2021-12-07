@@ -82,9 +82,11 @@
         
         <section class="block-box -hidden" name='blockBox' id='block1'>
             <h2 class="block-header">Data Collection Form</h2>
-            <form action='/admin/update-form1/<%= user._id %>' method="post" class='block-box-inner' id='form1'>
+            <form action='/admin/update-form1/<%= user.dataCollection._id %>' method="post" class='block-box-inner' id='form1'>
                 <!-- dataCollection info more data -->
                 <% if(user.dataCollection) { %>
+
+                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
                     <section class="row-item-85">
                         <div class="fields-set">
@@ -479,14 +481,14 @@
                     <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
-                        <div class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString() %> <%= new Date(user.dataCollection.created).toLocaleTimeString() %></div>
+                        <div class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString() %> (<%= new Date(user.dataCollection.created).toLocaleTimeString() %>)</div>
                     </section>
                     
                     <!-- @ADMIN CHANGED -->
                     <% if(user.dataCollection.updatedAdmin) { %>
-                        <% let updater = user.dataCollection.updatedAdmin %>
+                        <% let updater = user.dataCollection.updatedAdmin+' ' %>
                         <% updater += new Date(user.dataCollection.updatedDate).toLocaleDateString() %>
-                        <% updater += new Date(user.dataCollection.updatedDate).toLocaleTimeString() %>
+                        <% updater += '('+new Date(user.dataCollection.updatedDate).toLocaleTimeString()+')' %>
 
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow -orange">updated by</div>
@@ -514,9 +516,11 @@
 
         <section class="block-box -hidden" name='blockBox' id='block2'>
             <h2 class="block-header">Application Enrollment Form</h2>
-            <form action='/admin/update-form2/<%= user._id %>' method="post" class='block-box-inner' id='form2'>
+            <form action='/admin/update-form2/<%= user.application._id %>' method="post" class='block-box-inner' id='form2'>
             
                 <% if(user.application) { %>
+
+                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
                     <section class="row-item-85">
                         <div class="fields-set">
@@ -1611,14 +1615,14 @@
                     <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
-                        <div class="field-value"><%= new Date(user.application.created).toLocaleDateString() %> <%= new Date(user.application.created).toLocaleTimeString() %></div>
+                        <div class="field-value"><%= new Date(user.application.created).toLocaleDateString() %> (<%= new Date(user.application.created).toLocaleTimeString() %>)</div>
                     </section>
                     
                     <!-- @ADMIN CHANGED -->
                     <% if(user.application.updatedAdmin) { %>
-                        <% let updater = user.application.updatedAdmin %>
-                        <% updater += new Date(user.application.updatedDate).toLocaleDateString() %>
-                        <% updater += new Date(user.application.updatedDate).toLocaleTimeString() %>
+                        <% let updater = user.application.updatedAdmin+' ' %>
+                        <% updater += new Date(user.application.updatedDate).toLocaleDateString()+' ' %>
+                        <% updater += '('+new Date(user.application.updatedDate).toLocaleTimeString()+')' %>
 
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow -orange">updated by</div>
@@ -1649,7 +1653,9 @@
                 <% if(user.agreement) { %>
 
                     <!-- #1 UPDATE FORM -->
-                    <form action='/admin/update-form3/<%= user._id %>' method="post" id='form3'>
+                    <form action='/admin/update-form3/<%= user.agreement._id %>' method="post" id='form3'>
+
+                        <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
                         <section class="row-item-85">
                             <div class="fields-set">
@@ -1873,7 +1879,7 @@
                         <section class="row-item-85">
                             <div class="fields-set">
                                 <div class="field-title">Parent Or Guardian Last Name</div>
-                                <div class="field-value"><%= user.agreement.parentFirstName %></div>
+                                <div class="field-value"><%= user.agreement.parentLastName %></div>
                             </div>
                             <div class="fields-set">
                                 <label class="show-edit-btn" for='parentLastName' onclick='toggleEditField(this)'>edit</label>
@@ -1889,20 +1895,111 @@
                         </section>  <!-- parentLastName -->
 
 
+                        <% if(user.agreement.schoolSignRep) { %>        <!-- Agreement signed, show fields for editing -->
+
+                            <section class="row-item-85"><div class="gap-line"></div></section>
+
+                            <section class="row-item-85">
+                                <div class="field-title -orange">Agreement is Signed on TTA's behalf by:</div>
+                                <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
+                                <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString() %></div>
+                            </section>
+    
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-value -small">Admins can change financials terms of Agreement</div>
+                                </div>
+                            </section>
+    
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-title">Cost of Tuition</div>
+                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.tuitionCost) %></div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='tuitionCost' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="agr-edits" data-id='tuitionCost'>
+                                        <label class="show-edit-btn -red" for='tuitionCost' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="tuitionCost" id="tuitionCost" min=0 step='.01' />
+                                    </div>  <!-- data-id hidden area -->
+                                </div>
+                            </section>  <!-- tuitionCost -->
+    
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-title">Registration Fee</div>
+                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.regisrFee) %></div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='regisrFee' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="agr-edits" data-id='regisrFee'>
+                                        <label class="show-edit-btn -red" for='regisrFee' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="regisrFee" id="regisrFee" min=0 step='.01' />
+                                    </div>  <!-- data-id hidden area -->
+                                </div>
+                            </section>  <!-- regisrFee -->
+    
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-title">Supplies and Materials Fee</div>
+                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.supplyFee) %></div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='supplyFee' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="agr-edits" data-id='supplyFee'>
+                                        <label class="show-edit-btn -red" for='supplyFee' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="supplyFee" id="supplyFee" min=0 step='.01' />
+                                    </div>  <!-- data-id hidden area -->
+                                </div>
+                            </section>  <!-- supplyFee -->
+    
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-title">Other Fees</div>
+                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.otherFee) %></div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='otherFee' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="agr-edits" data-id='otherFee'>
+                                        <label class="show-edit-btn -red" for='otherFee' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="otherFee" id="otherFee" min=0 step='.01' />
+                                    </div>  <!-- data-id hidden area -->
+                                </div>
+                            </section>  <!-- otherFee -->
+    
+                        <% } %>     <!-- Agreement signed -->
+
+
                         <!-- contains all updated MODELS fields -->
                         <input type="hidden" name='whatWasUpdated'  data-updated='agr-edits' />
 
                         <!-- @SIGNATURE -->
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow">completed as of</div>
-                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> <%= new Date(user.agreement.created).toLocaleTimeString() %></div>
+                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> (<%= new Date(user.agreement.created).toLocaleTimeString() %>)</div>
                         </section>
 
                         <!-- @UPDATED by whom and when -->
                         <% if(user.agreement.updatedAdmin) { %>
-                            <% let updater = user.agreement.updatedAdmin %>
+                            <% let updater = user.agreement.updatedAdmin+' ' %>
                             <% updater += new Date(user.agreement.updatedDate).toLocaleDateString() %>
-                            <% updater += new Date(user.agreement.updatedDate).toLocaleTimeString() %>
+                            <% updater += '('+new Date(user.agreement.updatedDate).toLocaleTimeString()+')' %>
 
                             <section class="row-item-85 -right-side">
                                 <div class="field-title -windblow -orange">updated by</div>
@@ -1919,62 +2016,95 @@
 
                     </form>     <!-- /admin/update-form3 -->
                     
+
+                    <section class="row-item-95"><div class="gap-line"></div></section>
+
+
                     <!-- #2 SCHOOL SIGNATURE FORM -->
-                    <% if(user.agreement.schoolSignRep) { %>
+                    <% if(!user.agreement.schoolSignRep) { %>
 
-                        <section class="row-item-85"><div class="gap-line"></div></section>
-
-                        <section class="row-item-95">
-                            <div class="field-title">Signed on TTA's behalf by:</div>
-                            <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
-                            <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString() %></div>
-                        </section>
-
-                    <% } else { %>
                         <form action='/admin/sign/<%= user.agreement._id %>' method="post">
+
+                            <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
 
                             <section class="row-item-85">
                                 <div class="fields-set">
                                     <div class="field-title -orange -italic">NOT signed on TTA's behalf yet</div>
-                                    <div class="field-value">Agreement cannot be signed zero cost. Please indicate its cost and additional fees.</div>
+                                </div>
+                            </section>
+                            <section class="row-item-85">
+                                <div class="fields-set">
+                                    <div class="field-value -small">Agreement cannot be signed zero cost. Please indicate its cost and additional fees.</div>
                                 </div>
                             </section>
 
-                            
-                            <label for="tuitionCost">Cost of Tuition
-                                <input type="number" name='tuitionCostItem' id='tuitionCost' min=1 value=0.00 step='.01' oninput='updateSpan(this)' required>
-                                <span name='tuitionCost'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                            </label><br>
+                            <section class="row-item-85">
+                                <div class="field-title">Cost of Tuition</div>
+                                <div class="field-value">
+                                    <span name='tuitionCost'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
+                                    <input type="number" class='input-box' name='tuitionCostItem' id='tuitionCost' min=1 value=0.00 step='.01' oninput='updateSpan(this)' required>
+                                </div>
+                            </section>
 
-                            <label for="regisrFee">Registration Fee
-                                <input type="number" name='regisrFeeItem' id='regisrFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
-                                <span name='regisrFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                            </label><br>
+                            <section class="row-item-85">
+                                <div class="field-title">Registration Fee</div>
+                                <div class="field-value">
+                                    <span name='regisrFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
+                                    <input type="number" class='input-box' name='regisrFeeItem' id='regisrFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
+                                </div>
+                            </section>
 
-                            <label for="supplyFee">Supplies and Materials Fee
-                                <input type="number" name='supplyFeeItem' id='supplyFee' min=0 value=0.00 step='.01' oninput='updateSpan(this)' required>
-                                <span name='supplyFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                            </label><br>
+                            <section class="row-item-85">
+                                <div class="field-title">Supplies and Materials Fee</div>
+                                <div class="field-value">
+                                    <span name='supplyFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
+                                    <input type="number" class='input-box' name='supplyFeeItem' id='supplyFee' min=0 value=0.00 step='.01' oninput='updateSpan(this)' required>
+                                </div>
+                            </section>
 
-                            <label for="otherFee">Other Fees
-                                <input type="number" name='otherFeeItem' id='otherFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
-                                <span name='otherFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                            </label><br>
+                            <section class="row-item-85">
+                                <div class="field-title">Other Fees</div>
+                                <div class="field-value">
+                                    <span name='otherFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
+                                    <input type="number" class='input-box' name='otherFeeItem' id='otherFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
+                                </div>
+                            </section>
 
-                            <p>Agreement's Total: <span name='agrTotal'><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span></p><br>
+                            <section class="row-item-85 -right-side">
+                                <div class="field-title -orange">Agreement's Total:</div>
+                                <div class="field-value">
+                                    <span name='agrTotal'><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
+                                </div>
+                            </section>
 
-                            <input type='password' name='signerPassword' id='signerPassword' placeholder="Admin's Password" required/>*
-                            
-                            <label for="toggler">
-                                <input type="checkbox" id="toggler" onchange="toggleVisibility(this, signerPassword)">
-                                <span>Show Password</span>
-                            </label>
+                            <section class="row-item-85">
+                                <div class="field-title -small">To sign an Agreement please put in cost and all required fees, also enter your admin's password</div>
+                            </section>
+                            <section class="row-item-85">
+                                <!-- signer.first, signer.last, signer.title can be used here -->
+                                <div class="fields-set">
+                                    <div class="field-title">*agreement will be signed</div>
+                                    <div class="field-value -orange">as of today by <%= signer.name %></div>
+                                </div>
+                            </section>
 
-                            <button type="submit">Sign</button>
-                            <!-- signer.first, signer.last, signer.title can be used here -->
-                            <p>*agreement will be signed as of today by <strong><%= signer.name %></strong></p>     
-                        </form>
-                    <% } %>
+                            <section class="row-item-85 -button-box">
+                                <div class="fields-set">
+                                    <div class="field-value">
+                                        <input type='password' class='input-box' name='signerPassword' id='signerPassword' placeholder="Admin's Password" required/>*
+                                    </div>
+                                    <label for="toggler">
+                                        <input type="checkbox" id="toggler" onchange="toggleVisibility(this, signerPassword)">
+                                        <span class='show-password'>Show</span>
+                                    </label>
+                                    <button class='-btn' type="submit">Sign</button>
+                                </div>
+                            </section>
+
+                        </form>     <!-- sign Agreement form -->
+
+                    <% } %>     <!-- if not signed -->
+
                 <% } else { %>
                     <h3 class="student-agreement">Agreement was not signed yet</h3>
                 <% } %> 
@@ -2032,6 +2162,13 @@
             const num = Number.isNaN(parseFloat(text)) ? 0 : parseFloat(text)
             
             span.textContent = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(num)
+            
+            // adding/removing PARROT class to SPAN
+            if (num) {
+                span.classList.add('parrot')
+            } else {
+                span.classList.remove('parrot')
+            }
 
             // calc. total
             const spanTotal = document.querySelector('[name=agrTotal]') // span has NAME equals input's ID
@@ -2042,6 +2179,12 @@
             })
 
             spanTotal.textContent = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(sum)
+            // adding/removing PARROT class to TOTAL
+            if (sum) {
+                spanTotal.classList.add('parrot')
+            } else {
+                spanTotal.classList.remove('parrot')
+            }
 
         }
 

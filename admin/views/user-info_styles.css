@@ -233,7 +233,7 @@
     padding: 0.25rem;
 }
 .field-title {
-    min-width: 15rem;
+    min-width: 17rem;
 }
 .field-value {
     min-width: 100px;
@@ -247,6 +247,10 @@
 }
 .-italic {
     font-style: italic;
+}
+.-small {
+    font-family: "BrixSlab-MediumItalic";
+    font-size: 1rem;
 }
 .column-view {
     display: flex;
@@ -271,6 +275,7 @@
 .-button-box {
     max-width: 550px;
     margin-right: 0;
+    margin-bottom: 1rem;
     justify-content: space-around;
 }
 .-btn, .show-edit-btn {
@@ -362,6 +367,18 @@
     transition: background-color .2s ease-in;
 }
 
+.parrot {
+    font-family: "BrixSlab-RegularItalic";
+    color: var(--good-done1);
+}
+
+.show-password {
+    font-family: "BrixSlab-ExtraLight";
+    font-size: 1rem;
+    text-transform: uppercase;
+
+    margin-right: 2rem;
+}
 
 
 /* 

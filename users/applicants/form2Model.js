@@ -62,7 +62,11 @@ const form2 = new mongoose.Schema({
     ],
     
     certificate1: { type: String, required: true },
-    certificate2: { type: String, required: true }
+    certificate2: { type: String, required: true },
+
+    updatedAdmin: String,
+    updatedDate: Date
+
 }, {
     collection: 'application-forms'
 })
@@ -158,10 +162,8 @@ function getForm2Object(body, userEmail) {
         employers: employersBody,
         
         certificate1: body.certificate1,
-        certificate2: body.certificate2,
-
-        updatedAdmin: String,
-        updatedDate: Date
+        certificate2: body.certificate2
+        
     }
 }
 
