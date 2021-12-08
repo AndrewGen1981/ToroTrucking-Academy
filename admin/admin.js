@@ -114,7 +114,10 @@ admRouter.get('/', (req, res) => {
 })
 
 admRouter.get('/profile', redirectToLogin, (req, res) => {
-    res.render(path.join(__dirname+'/admProfile.ejs'), user = res.locals.user)
+    res.render(path.join(__dirname+'/admProfile.ejs'), {
+        user: res.locals.user,
+        SESS_EXPIRES: req.session.cookie._expires
+    })
 })
 
 
