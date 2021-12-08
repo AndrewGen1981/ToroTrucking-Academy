@@ -18,7 +18,7 @@ const pdf = require('../static/pdf/pdf')
 
 
 // @SESSION config
-const ADM_SESS_DURATION = 1000 * 60 * 60    //  60 minutes
+const ADM_SESS_DURATION = 1000 * 60 * 60 * 3    //  3 hours
 
 // extracting from process.env
 const {
@@ -94,7 +94,6 @@ function redirectToHome (req, res, next) {
 admRouter.use((req, res, next) => {   // !!! general middleware - will be used before EACH ROUTE!!!
     if (req.session.userId) {   // if there is one, then tries to find it in users array and inject it to LOCALS - spec.obj. for sharing data between functions
         
-        // const profile = admin.  PROFILES. find(admin => admin.id.toUpperCase() === req.session.userId.toUpperCase())
         const profile = admin.findAdminById(req.session.userId)
 
         res.locals.user = profile
@@ -351,6 +350,25 @@ admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
 
 
 
+// @QR-codes work - NOT in specific module, becauses uses same session identification for assignWithAdminsMachine option
+// * main principle is - to enable qr work admin has to login first, this defines location as well
+// * this is why /qr/:id route requires admins auth first of all
+
+// qr configuration options
+const qrCONFIG = {
+    // can be in .env or specific json file if needed, so assecc can be provided from admin
+    // specifies different modes of QR work
+    assignWithAdminsMachine: true,
+    requiresGeoLocationCheck: true,
+    checkFullPartTimeStudents: true
+}
+
+// route /admin/qr/:id
+admRouter.get('/qr/:id', redirectToLogin, (req, res) => {
+    console.log(req.session.userId)
+    const studentId = req.params.id    // receiving user _id from posting form
+    res.send(studentId)
+})
 
 
 

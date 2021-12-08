@@ -67,8 +67,25 @@ const studentSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'userSchema'
     },
+
+    TTT: { type: Number, default: 0 },
+    clocks: [ { type: mongoose.SchemaTypes.ObjectId, ref: 'clocksSchema' } ]
 }, {
     collection: "Student List"
+})
+
+
+// Schema for Clocks
+const clocksSchema = new mongoose.Schema({
+    student: { type: mongoose.SchemaTypes.ObjectId, ref: 'Student' },
+    clocks: [ Date ],       // array of Date-Times
+    lon: [ Number ],        // array of logntitudes
+    lat: [ Number ],        // array of latitudes
+    loc: [ String ],        // array of locations
+
+    next: { type: mongoose.SchemaTypes.ObjectId, ref: 'clocksSchema' }
+}, {
+    collection: "Clocks"
 })
 
 
@@ -76,6 +93,7 @@ const studentSchema = new mongoose.Schema({
 module.exports = { 
     User: mongoose.model('userSchema', userSchema),
     Student: mongoose.model('Student', studentSchema),
-    StudentCONFIG: mongoose.model('StudentCONFIG', configSchema)
+    StudentCONFIG: mongoose.model('StudentCONFIG', configSchema),
+    Clocks: mongoose.model('clocksSchema', clocksSchema),
 }
 
