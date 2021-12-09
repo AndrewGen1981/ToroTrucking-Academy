@@ -12,6 +12,7 @@
     "express-validator": "^6.13.0",
     "mongoose": "^6.0.13",
     "node-fetch": "^2.6.6",
+    "object-sizeof": "^1.6.1",
     "pdfmake": "^0.2.4",
     "socket.io": "^4.4.0",
     "socket.io-client": "^4.4.0"

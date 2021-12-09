@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .block {
+        width: 256px;
+        height: 256px;
+
+        border-radius: 10px;
+        border: 2px solid hsla(21, 76%, 55%, 100%);
+        overflow: hidden;
+
+        position: relative;
+        z-index: -1;
+    }
+
+    .block::after {
+        content: "";
+    
+        background-image: url('/static/images/water-mark.png');
+
+        background-size: 100px;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        
+        opacity: 0.945;
+    }
+
+    .block::before {
+        content: "";
+    
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        
+        z-index: -2;
+    }
+
+    img {
+        margin-top: -22px;
+        margin-left: -22px;
+    }
+
+</style>
+
+<body>
+    <div class='block'>
+        <img id='foo' src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=http://localhost:5000/admin/qr/61af71a2b657c17cc70516eb?choe=UTF-8&chld=Q" alt="">
+    </div>
+</body>
+
+
+
+</html>

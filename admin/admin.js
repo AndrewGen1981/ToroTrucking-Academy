@@ -7,7 +7,7 @@ const admin = require('./config')
 const adminTools = require('./adminTools')
 
 // MODELS for mongoose
-const { User } = require('../users/userModel')
+const { User, Student } = require('../users/userModel')
 const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
@@ -366,11 +366,138 @@ const qrCONFIG = {
     checkFullPartTimeStudents: true
 }
 
+// Middleware due to qrCONFIG.assignWithAdminsMachine
+function qrRedirectToLogin (req, res, next) {
+    // if user is NOT logged in, then redirect user to Login page if qrCONFIG.assignWithAdminsMachine
+    if (!qrCONFIG.assignWithAdminsMachine) { return next() }
+
+    if (!req.session.userId) {
+        res.redirect('/admin')
+    } else { next() }
+}
+
+
 // route /admin/qr/:id
-admRouter.get('/qr/:id', redirectToLogin, (req, res) => {
-    console.log(req.session.userId)
+admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
+    
     const studentId = req.params.id    // receiving user _id from posting form
-    res.send(studentId)
+    let location    // this will be passed as 'location' to a clock
+
+    if (qrCONFIG.assignWithAdminsMachine) {     // allowed from admin's machine only?
+        if (req.session.userId) {     // let's check machine, if admin authorized
+            const adminId = req.session.userId
+            const currentAdmin = admin.findAdminById(adminId)
+            location = currentAdmin.location
+        } else {    // this is not an admin
+            return res.status(400).send("Issue: Unrecognized admin. Login and try again.")
+        }
+    } else {    // or allowed from any machine?
+        location = 'TURNED OFF'
+    }
+    
+    try {
+        //  getting dateKey prefix
+        const diffTime = Math.abs( new Date() - new Date("01-01-1900") )
+        const diffDays = Math.ceil(1 + diffTime / 86400000)
+        
+        const student = await Student.findById(studentId)
+        if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
+
+        // check min time after last clock - 5 min to avoid doubling
+        // counting todays clocks
+        let todaysClocks = []
+        student.clocks.map(clock => {
+            if (clock.key == diffDays) {
+                todaysClocks.push(clock)
+            }
+        })
+
+        if (todaysClocks.length !== 0) {    // if this is NOT a 1st clock for today, then go further, if not - check 5 mins and full/part option
+            const time1 = new Date(todaysClocks[todaysClocks.length-1].date)
+            const time2 = new Date()
+            const hours_between_clocks = Math.abs(time2 - time1) / (3600000)
+
+            // check if less, than 5 mins - DOUBLING
+            if (hours_between_clocks < 0.08333) {   // double clock, less than 5 mins
+                return res.status(200).send("Less than 5 mins from last one. Ignored")
+            }
+            
+            let minTime = 0     // there are no restrictions when to Clock OUT
+
+            // checking if passed 4/6 hours if qrCONFIG.checkFullPartTimeStudents && this is Clock OUT
+            if (qrCONFIG.checkFullPartTimeStudents && ((todaysClocks.length % 2) !== 0)) { 
+                const user = await User.findById(student.user).populate('agreement')
+                minTime = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+                
+                if (hours_between_clocks < minTime*0.97) {    //    duration is LESS, than minimum required time * 0.97(ratio to skip last minutes)
+                    const h = Math.trunc(hours_between_clocks)
+                    const m = Math.round((hours_between_clocks - h) * 60)
+                    const mt = m === 1 ? `0${m} minute` : m < 10 ? `0${m} minutes` : `${m} minutes`
+                    const ht = h > 0 ? `only ${h} hour(s) and ${mt}` : `less than hour - ${mt} only`
+                    
+                    let minTimeMsg = `According to the Agreement, this student minimum attendance at classes must be at least ${minTime} hours.`
+                    minTimeMsg += ` ${user.agreement.visiting.toUpperCase()}. `
+                    minTimeMsg += `Student is trying to make a clock OUT on the passage ${ht}. ClockOUT is NOT added, try later please.`
+
+                    return res.status(200).send(minTimeMsg)
+                }
+            }
+        }
+
+        if(qrCONFIG.requiresGeoLocationCheck) {
+            // GEO required, if forbiden by client, then 'na' will return to /admin/geo-update
+            student.clocks.push({ date: new Date(), key: diffDays, lat: 'na', lon: 'na', location })
+        } else {
+            // GEO NOT required, 'nr' will return to /admin/geo-update
+            student.clocks.push({ date: new Date(), key: diffDays, lat: 'nr', lon: 'nr', location })
+        }
+
+        await student.save()
+
+        const clockBacklink = student.clocks[student.clocks.length-1]._id
+
+        return res.render(path.join(__dirname+'/views/qr.ejs'), { 
+            student,
+            qrCONFIG,
+            key: diffDays,
+            clockBacklink
+        })
+
+    } catch(e) {
+        return res.status(400).send(`Issue occursed: ${e.message}`)
+    }
+
+    
+
+})
+
+
+// receives "callback" from page after /admin/qr/:id with geo data
+admRouter.post('/qr-update-geo', async (req, res) => {
+    const { studentId, clockBacklink, error, lat, lon } = req.body
+
+    if (qrCONFIG.requiresGeoLocationCheck) {     //   if GEO required, then check result
+        if (error != 'ok') { return res.status(400).send(`GEO location issue: ${error}`) }
+    }
+    if (error === 'ok') {   // can be 'not required' also
+        try {
+            const student = await Student.findById(studentId)
+
+            for(let i=0; i<student.clocks.length; i++) {
+                if(student.clocks[i]._id.toString() === clockBacklink) {
+                    student.clocks[i].lat = lat
+                    student.clocks[i].lon = lon
+                    await student.save()
+                    break
+                }
+            }
+
+        } catch(e) {
+            return res.status(400).send(`Issue occursed in UPDATE-GEO: ${e.message}`)
+        }
+        
+    }
+    res.status(200).send(`GEO location OK: lat=${lat}, lon=${lon}`)
 })
 
 
