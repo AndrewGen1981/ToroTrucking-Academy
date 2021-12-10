@@ -7,10 +7,11 @@ const admin = require('./config')
 const adminTools = require('./adminTools')
 
 // MODELS for mongoose
-const { User, Student } = require('../users/userModel')
+const { User, Student, tools } = require('../users/userModel')
 const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
+const { qrCONFIG } = require('./config-qr')
 
 
 // PDF
@@ -357,15 +358,6 @@ admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
 // * main principle is - to enable qr work admin has to login first, this defines location as well
 // * this is why /qr/:id route requires admins auth first of all
 
-// qr configuration options
-const qrCONFIG = {
-    // can be in .env or specific json file if needed, so assecc can be provided from admin
-    // specifies different modes of QR work
-    assignWithAdminsMachine: true,
-    requiresGeoLocationCheck: true,
-    checkFullPartTimeStudents: true
-}
-
 // Middleware due to qrCONFIG.assignWithAdminsMachine
 function qrRedirectToLogin (req, res, next) {
     // if user is NOT logged in, then redirect user to Login page if qrCONFIG.assignWithAdminsMachine
@@ -375,6 +367,24 @@ function qrRedirectToLogin (req, res, next) {
         res.redirect('/admin')
     } else { next() }
 }
+
+
+
+// test route
+admRouter.get('/test', async (req, res)=> {
+    
+    const student = await Student.findById('61af71a2b657c17cc70516eb').populate({
+        path: 'user',
+        populate: {
+            path: 'agreement'
+        }
+    })
+
+    return res.status(200).render(path.join(__dirname+'/views/qr_success-clock.ejs'), { 
+        student,
+        TODClocks: tools.getTodayClocksInfo(student.clocks)
+    })
+})
 
 
 // route /admin/qr/:id
@@ -396,9 +406,8 @@ admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
     }
     
     try {
-        //  getting dateKey prefix
-        const diffTime = Math.abs( new Date() - new Date("01-01-1900") )
-        const diffDays = Math.ceil(1 + diffTime / 86400000)
+        //  getting today's date-prefix
+        const diffDays = tools.getDatePrefix(new Date())
         
         const student = await Student.findById(studentId)
         if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
@@ -467,8 +476,6 @@ admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
         return res.status(400).send(`Issue occursed: ${e.message}`)
     }
 
-    
-
 })
 
 
@@ -481,23 +488,38 @@ admRouter.post('/qr-update-geo', async (req, res) => {
     }
     if (error === 'ok') {   // can be 'not required' also
         try {
-            const student = await Student.findById(studentId)
+            // const student = await Student.findById(studentId)
+            const student = await Student.findById(studentId).populate({
+                path: 'user',
+                populate: {
+                    path: 'agreement'
+                }
+            })
 
-            for(let i=0; i<student.clocks.length; i++) {
+            minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+
+            for(let i=0; i<student.clocks.length; i++) {    // updates lat and lon in a clock referred as 'clockBacklink'
                 if(student.clocks[i]._id.toString() === clockBacklink) {
                     student.clocks[i].lat = lat
                     student.clocks[i].lon = lon
+                    student.TTT = tools.reCalculateTTT(student.clocks, minVisitingRequirements) / (1000 * 60 *60)
                     await student.save()
                     break
                 }
             }
+
+            return res.status(200).render(path.join(__dirname+'/views/qr_success-clock.ejs'), { 
+                student,
+                TODClocks: tools.getTodayClocksInfo(student.clocks)
+            })
 
         } catch(e) {
             return res.status(400).send(`Issue occursed in UPDATE-GEO: ${e.message}`)
         }
         
     }
-    res.status(200).send(`GEO location OK: lat=${lat}, lon=${lon}`)
+
+    
 })
 
 

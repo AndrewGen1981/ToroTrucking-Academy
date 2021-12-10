@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Clock Success | <%= student.user.name %> </title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+    
+    <link rel="stylesheet" href="/admin/views/_view-forms-styles.css">
+
+</head>
+<body>
+
+    <% console.log(TODClocks) %>
+
+    <% if (student && TODClocks) { %>
+
+        <h1><%= TODClocks.lastClock.type %> was successfully performed</h1>
+        
+        <section>
+            <h2>Student Info</h2>
+            <p>Key #<%= student.key %></p>
+            <p>Inner id#<%= student._id %></p>
+            <p>email: <%= student.email %></p>
+            <p>TTT <%= student.TTT %></p>
+        </section>
+        <section>
+            <h2>Today's Activity <%= new Date(TODClocks.lastClock.date).toLocaleDateString() %></h2>
+            <% TODClocks.todayClocks.map((clock, index) => { %>
+                <span>#<%= index + 1 %>.</span>
+                <span><%= clock.type %></span>
+                <span>[<%= new Date(TODClocks.lastClock.date).toLocaleTimeString() %>]</span>
+                <span>LAT:<%= clock.lat %>,</span>
+                <span>LON:<%= clock.lon %></span>
+                <span>(location <%= clock.location %>)</span>
+                <% if (clock.duration) { %>
+                    <p>Session Duration: <%= clock.duration / (1000 * 60 * 60) %></p>
+                <% } %>
+                <br>
+            <% }) %>
+            
+        </section>
+
+    <% } else { %>
+        <p>Something is wrong...</p>
+    <% } %>
+
+</body>
+</html>

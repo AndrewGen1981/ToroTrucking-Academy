@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const { dataCollectionForm } = require('./applicants/form1Model')     // FORM1 Model
 const { applicationForm } = require('./applicants/form2Model')     // FORM2 Model
 const { agreementForm } = require('./applicants/form3Model')     // FORM3 Model
+const { qrCONFIG } = require('../admin/config-qr')
 
 
 // @HOW TO USE:
@@ -83,9 +84,122 @@ const studentSchema = new mongoose.Schema({
 })
 
 
+
+
+
+// @TOOLS SECTION
+function getDatePrefix(date) {
+    //  returns date-prefix
+    const diffTime = Math.abs( date - new Date("01-01-1900") )
+    return Math.ceil(1 + diffTime / 86400000)
+}
+
+
+
+function sortClocksArray(clocksArray) {
+    return clocksArray.sort((a, b) => {
+        if (parseInt(a.key) > parseInt(b.key)) { return 1 }
+        if (parseInt(a.key) < parseInt(b.key)) { return -1 }
+        // if keys are equal, then compare by clock time
+        if (new Date(a.date) > new Date(b.date)) { return 1 }
+        if (new Date(a.date) < new Date(b.date)) { return -1 }
+        return 0; // impossble variant, but has to be mentioned here if minTime will be set=0, default 5 mins
+    })
+}
+
+
+
+function getTodayClocksInfo(clocks) {
+    // returns info object about last Clock
+
+    const todDatePrefix = getDatePrefix(new Date())     // getting today's date-prefix
+    
+    const todayClocks = sortClocksArray( clocks.filter(clock => clock.key == todDatePrefix) )
+    if (todayClocks.length === 0) { return false }
+
+    let lastClockIN
+
+    todayClocks.map((clock, index) => {
+        if (index % 2 === 0) {      // this is IN, because startiung from 0
+            clock.type = 'Clock IN'
+            lastClockIN = clock.date
+        } else {
+            clock.type = 'Clock OUT'
+            clock.duration = new Date(clock.date) - new Date(lastClockIN)
+        }
+    })
+
+    return {
+        lastClock: todayClocks[todayClocks.length - 1],
+        todayClocks
+    }
+
+}
+
+
+
+function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisitingRequirements has to be 4 or 6 for part and full-time respectively
+    // recalculates TTT, uses array of clocks as a base
+    // RULE: tadays clocks will be encounted only tommorow
+    
+    // clocks should be a sorted array, because clocks appear one by one. But I'm sorting them one more time
+    const clocks = sortClocksArray(clocksArray)
+
+    let TTT = 0
+    if (clocks.length === 0) { return TTT }
+
+    const minSessionDuration = qrCONFIG.checkFullPartTimeStudents ? minVisitingRequirements * 1000 * 60 * 60 : 1 * 1000 *60 *60      // 1h, if checkFullPartTimeStudents = false and 4/6 if true
+    
+    let sessionDuration = 0
+    let dayClocksCount = 0
+    let todaysKey = clocks[0].key
+    let lastClockIN
+    
+
+    for(let i=0; i < clocks.length; i++) {
+        dayClocksCount += 1     // found a clock
+        if (clocks[i].key === todaysKey) {      // still in the same day
+            if (dayClocksCount % 2 === 1) {     // this is a clock IN
+                lastClockIN = clocks[i].date    // saving last clock IN
+                sessionDuration = minSessionDuration    // and assume there will be no clock OUT
+            } else {    // this is a clock OUT
+                TTT += new Date(clocks[i].date) - new Date(lastClockIN)
+                sessionDuration = 0
+            }
+        } else {  // next day
+            
+            if (sessionDuration > 0) {      // there was no clock OUT
+                TTT += sessionDuration
+            }
+            
+            dayClocksCount = 1  // not 0, because this is a 1st clock - clock IN
+            lastClockIN = clocks[i].date    // saving last clock IN
+            sessionDuration = minSessionDuration    // and assume there will be no clock OUT
+            todaysKey = clocks[i].key
+        }
+        
+    }   //  end of for
+
+    if (sessionDuration > 0) {      // there was no LAST clock OUT
+        TTT += sessionDuration
+    }
+
+    return TTT
+
+}
+
+
+
+
+
 module.exports = { 
     User: mongoose.model('userSchema', userSchema),
     Student: mongoose.model('Student', studentSchema),
-    StudentCONFIG: mongoose.model('StudentCONFIG', configSchema)
+    StudentCONFIG: mongoose.model('StudentCONFIG', configSchema),
+    tools: {
+        getDatePrefix,
+        getTodayClocksInfo,
+        reCalculateTTT
+    }
 }
 

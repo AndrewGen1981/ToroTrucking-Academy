@@ -23,8 +23,23 @@ studentRouter.get('/', (req, res) => {
 })
 
 
-// @POST admin/student/new/id
+// filter to find Students with
+let filter = {}
+// @GET admin/student/list
+studentRouter.get('/list', async (req, res) => {
+    const students = await Student.find(filter).populate({
+        path: 'user',
+        populate: {
+            path: 'agreement'
+        }
+    })
 
+    const studentList = []
+    res.send(students)
+})
+
+
+// @POST admin/student/new/id
 studentRouter.post('/new/:id', async (req, res) => {
     // next code is for creating a new STUDENT
 
