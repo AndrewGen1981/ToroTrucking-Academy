@@ -60,16 +60,24 @@
             </div>  <!-- student-list-row -->
 
 
-            <form action="/admin/student/print-bulk-qr" method="POST">
+            <form action="/admin/student/print-bulk-qr" method="POST" id='qrBulkPrintForm'>
 
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
                     <div class="student-list-row">
                         <div class='field -name'><%= student.user.dataCollection.lastName %></div>
                         <div class='field -name'><%= student.user.dataCollection.firstName %></div>
                         <div class='field -name'><%= student.user.dataCollection.middleName %></div>
-                        
+
                         <div class='field -key'><%= student.key %></div>
-                        <div class='field -qr'><input type="checkbox" name='qrsToPrint' value='<%= student._id %>' /></div>
+
+                        <!-- form elements to be passed to QRs bulk print -->
+                            <label class='field -qr'>
+                                <input class='qr-check' type="checkbox" name='qrsToPrint' data-ids='<%= student._id %>' value='<%= student._id %>' onchange="toggleTheRestToo(this)" />
+                                <input class='-hidden' type="checkbox" name='qrsNamesToPrint' data-id='<%= student._id %>' value="<%= student.user.dataCollection.lastName %> <%= student.user.dataCollection.firstName %>" />
+                                <input class='-hidden' type="checkbox" name='qrsKeysToPrint' data-id='<%= student._id %>' value="<%= student.key %>" />
+                                <input class='-hidden' type="checkbox" name='qrsClassesToPrint' data-id='<%= student._id %>' value="<%= student.user.agreement.class %>" />
+                            </label>
+                        <!-- form elements to be passed to QRs bulk print -->
 
                         <div class='field -email'><%= student.email %></div>
                         <% let ifVerified = student.user.token === 'verified' ? '-email-trusted' : '-email-unsafe' %>
@@ -118,6 +126,38 @@
             <h1>Cannot retrieve data from database...</h1>
         <% } %>
     </div>      <!-- student-list-box -->
+
+
+    <script>
+
+        function toggleTheRestToo(qr) {
+            // checks/unchecks also all fields needed for QR bulk printing
+            const buddies = document.querySelectorAll(`[data-id='${qr.dataset.ids}']`)
+            for (let i=0; i < buddies.length; i++) {
+                buddies[i].checked = qr.checked
+            }
+        }
+
+
+        document.getElementById('qrBulkPrintForm').addEventListener('submit', (e) => {
+            // checks if at least one selected to be printed
+            const chks = document.getElementsByName('qrsToPrint')
+            let flagNoOneChecked = true
+            
+            for (let i=0; i < chks.length; i++) {
+                if (chks[i].checked) {
+                    flagNoOneChecked = false
+                    break
+                }
+            }
+
+            if (flagNoOneChecked) {
+                e.preventDefault()
+                alert('This button for QRs bulk printing. To use select at least one and try again.')
+            }
+        })
+
+    </script>
 
 </body>
 </html>

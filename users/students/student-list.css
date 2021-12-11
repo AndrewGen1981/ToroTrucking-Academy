@@ -7,21 +7,17 @@
     font-family: 'BrixSlab-Regular';
     font-size: 15px;
     font-weight: normal;
-
-    color: var(--black-worn)
+    
+    color: black;
 }
 
 .student-list-row {
-    /* display: grid;
-    grid-template-columns: repeat(29, 1fr); */
     display: flex;
     flex-wrap: nowrap;
 
-    border-bottom: 1px solid var(--gray60-pacific-cloud);
+    border-bottom: 1px solid var(--black40-worn);
 }
-.student-list-row:nth-child(even) {
-    opacity: 0.9;
-}
+
 
 .field {
     padding: 0.2rem;
@@ -32,7 +28,7 @@
 
     overflow-x: hidden;
 
-    opacity: 0.9
+    opacity: 0.95
 }
 .-header {
     font-family: "BrixSlab-Medium";
@@ -42,28 +38,42 @@
 }
 .-name {
     --width: 6.3rem;
-    background-color: var(--gray-pacific-cloud);
+    background-color: var(--black60-worn);
 }
 .-key {
     --width: 3rem;
-    background-color: var(--gray80-pacific-cloud);
+    background-color: var(--black60-worn);
     text-align: center;
+}
+.-qr {
+    --width: 3rem;
+    background-color: var(--black60-worn);
+    text-align: center;
+}
+.qr-check {
+    --chbx-size: 1.2;
+
+    -ms-transform: scale(var(--chbx-size)); /* IE */
+    -moz-transform: scale(var(--chbx-size)); /* FF */
+    -webkit-transform: scale(var(--chbx-size)); /* Safari and Chrome */
+    -o-transform: scale(var(--chbx-size)); /* Opera */
+    transform: scale(var(--chbx-size));
 }
 .-email {
     --width: 15rem;
-    background-color: var(--sand40-coastal);
+    background-color: var(--black60-worn);
     text-transform: lowercase;
 }
 .-email-verified {
     --width: 5rem;
-    background-color: var(--sand40-coastal);
+    background-color: var(--black60-worn);
     text-align: center;
 }
 .-email-trusted {
-    color: var(--good-done1);
+    color: var(--good-done);
 }
 .-email-unsafe {
-    color: var(--bad-todo1);
+    color: var(--bad-todo);
 }
 .-TTT {
     --width: 5rem;
@@ -76,11 +86,7 @@
     border-right: 1px solid var(--gray60-pacific-cloud);
     text-transform: uppercase;
 }
-.-qr {
-    --width: 3rem;
-    border-right: 1px solid var(--gray60-pacific-cloud);
-    text-align: center;
-}
+
 
 
 /* 
@@ -102,3 +108,7 @@ font-family: "BrixSlab-Bold";
 font-family: "BrixSlab-BlackItalic";
 
 */
+
+.-hidden {
+    display: none;
+}

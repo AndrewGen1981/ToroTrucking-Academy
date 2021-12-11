@@ -92,8 +92,16 @@ studentRouter.post('/new/:id', async (req, res) => {
 // @POST admin/student/print-bulk-qr
 studentRouter.post('/print-bulk-qr', (req, res) => {
     // BULK QRs printing
-    const { qrsToPrint } = req.body
-    res.render(path.join(__dirname+'/qr_bulk-print.ejs'), { qrsToPrint })
+    let { qrsToPrint, qrsNamesToPrint, qrsKeysToPrint, qrsClassesToPrint } = req.body
+
+    if(!Array.isArray(qrsToPrint)) { 
+        qrsToPrint = [qrsToPrint]
+        qrsNamesToPrint = [qrsNamesToPrint]
+        qrsKeysToPrint = [qrsKeysToPrint]
+        qrsClassesToPrint = [qrsClassesToPrint]
+    }
+
+    res.render(path.join(__dirname+'/qr_bulk-print.ejs'), { qrsToPrint, qrsNamesToPrint, qrsKeysToPrint, qrsClassesToPrint })
 })
 
 

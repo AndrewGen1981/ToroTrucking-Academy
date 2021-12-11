@@ -22,9 +22,10 @@ Legal	8.5 × 14	    216 × 356               816.5 × 1345.5
 
 
 :root {
-    --LETTER: 816.5px;
+    --LETTERw: 816.5px;
+    --LETTERh: 1054.5px;
 
-    --width: calc( (var(--LETTER) / 5) - 5*2px);     /* 2px right and bottom margins */
+    --width: calc( (var(--LETTERw) / 5));     /* 2px right and bottom margins */
     --space: 24px;
 }
 
@@ -32,15 +33,16 @@ Legal	8.5 × 14	    216 × 356               816.5 × 1345.5
 /* BULK QR CODES PRINTING */
 
 .qr-bulk-print-box {
-    width: calc(5*(2px + var(--width)));
-    min-width: calc(5*(2px + var(--width)));
+    width: var(--LETTERw);
+    /* min-height: var(--LETTERh); */
 
     margin: 0 auto;
 
     display: flex;
-    align-items: center;
+    align-items:flex-start;
     justify-content: left;
 
+    /* border: 1px solid var(--gray20-pacific-cloud); */
 }
 
 
@@ -69,7 +71,7 @@ Legal	8.5 × 14	    216 × 356               816.5 × 1345.5
 
 
 .qr-code {
-    --qr-width: calc(var(--width) - 3px);
+    --qr-width: calc(var(--width) - 10px);
 
     width: var(--qr-width);
     height: var(--qr-width);
@@ -141,8 +143,8 @@ Legal	8.5 × 14	    216 × 356               816.5 × 1345.5
     color: var(--black80-worn);
 }
 .qr-card-name {
-    padding-top: calc(var(--space) / 4);
-    padding-bottom: calc(var(--space) / 4);
+    padding-top: calc(var(--space) / 1.6);
+    padding-bottom: calc(var(--space) / 2);
 
     font-family: "BrixSlab-Regular";
     font-size: calc(var(--space) / 2);
@@ -160,8 +162,8 @@ Legal	8.5 × 14	    216 × 356               816.5 × 1345.5
 
 
 .qr-code-img {
-    margin-top: calc( -1 * var(--space)*0.55);
-    margin-left: calc( -1 * var(--space)*0.55);
+    margin-top: calc( -1 * var(--space)*0.5);
+    margin-left: calc( -1 * var(--space)*0.5);
         
     mix-blend-mode: lighten;
 }

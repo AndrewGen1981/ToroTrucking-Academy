@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="/users/students/qr_bulk-print.css">
 
 </head>
-
-
 <body>
 
     <div class="qr-bulk-print-box">
@@ -27,31 +25,24 @@
             <h2>Inner issue: have nothing to print...</h2>
         <% } else { %>
 
-            <% if(!Array.isArray(qrsToPrint)) { qrsToPrint = [qrsToPrint] } %>
-
-            <% qrsToPrint.map(qr => { %>
+            <% qrsToPrint.map((qr, index) => { %>
 
                 <div class="qr-card">
                     <div class="qr-card-title">TTA</div>
                     <div class="qr-card-title-line"></div>
                     <div class="qr-card-subtitle">Toro Trucking Academy</div>
-                    <div class="qr-card-name">Student Name</div>
-                    <div class="qr-card-key">111</div>
-                    <div class="qr-card-class">CDL Class A</div>
+                    <div class="qr-card-name"><%= qrsNamesToPrint[index] %></div>
+                    <div class="qr-card-key"><%= qrsKeysToPrint[index] %></div>
+                    <div class="qr-card-class"><%= qrsClassesToPrint[index] %></div>
                     <div class='qr-code'>
                         <img class='qr-code-img' src="https://chart.googleapis.com/chart?chs=177x177&cht=qr&chl=https://toro-trucking.herokuapp.com/admin/qr/<%= qr %>?choe=UTF-8&chld=H" alt="QR <%= qr %>">
                     </div>
                 </div>
 
             <% }) %>
-
         <% } %>
-
         
     </div>
 
 </body>
-
-
-
 </html>
