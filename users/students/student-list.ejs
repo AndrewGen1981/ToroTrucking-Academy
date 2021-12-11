@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TTA | Student List</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+
+    <link rel="stylesheet" href="/users/students/student-list.css">
+
+</head>
+<body>
+    
+    <div class="student-list-box">
+        <% if (students) { %>
+
+            <div class="student-list-row">
+                <div class='field -name -header'>Last Name</div>
+                <div class='field -name -header'>First Name</div>
+                <div class='field -name -header'>Middle</div>
+                <div class='field -key -header'>Key</div>
+                <div class='field -qr -header'>Need QR?</div>
+                <div class='field -email -header'>Email</div>
+                <div class='field -email-verified -header'>Verified</div>
+                <div class='field -TTT -header'>TTT</div>
+                <div class='field -street -header'>Street</div>
+                <div>City</div>
+                <div>State</div>
+                <div>Zip</div>
+                <div>Phone</div>
+                <div>DOB</div>
+                <div>SSN</div>
+                <div>Program</div>
+                <div>Class</div>
+                <div>Transmission</div>
+                <div>Visiting</div>
+
+                <div>Cost Of Tuition</div>
+                <div>Regisration Fee</div>
+                <div>Supply&Material Fee</div>
+                <div>Other Fees</div>
+                
+                <div>Declared Payment Type</div>
+                <div>3rd Party Payeer</div>
+                
+                <div>Record Created</div>
+                <div>Agreement Signed by</div>
+                <div>Date of Sign</div>
+                <div>Agreement Updated by</div>
+                <div>Date of Update</div>
+            </div>  <!-- student-list-row -->
+
+
+            <form action="/admin/student/print-bulk-qr" method="POST">
+
+                <% students.map((student, index) => { %>    <!-- main showing loop -->
+                    <div class="student-list-row">
+                        <div class='field -name'><%= student.user.dataCollection.lastName %></div>
+                        <div class='field -name'><%= student.user.dataCollection.firstName %></div>
+                        <div class='field -name'><%= student.user.dataCollection.middleName %></div>
+                        
+                        <div class='field -key'><%= student.key %></div>
+                        <div class='field -qr'><input type="checkbox" name='qrsToPrint' value='<%= student._id %>' /></div>
+
+                        <div class='field -email'><%= student.email %></div>
+                        <% let ifVerified = student.user.token === 'verified' ? '-email-trusted' : '-email-unsafe' %>
+                        <div class='field -email-verified <%= ifVerified %>'><%= student.user.token %></div>
+
+                        <div class='field -TTT'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
+
+                        <div class='field -street'><%= student.user.dataCollection.street %></div>
+                        <div><%= student.user.dataCollection.city %></div>
+                        <div><%= student.user.dataCollection.state %></div>
+                        <div><%= student.user.dataCollection.zip %></div>
+
+                        <div><%= student.user.dataCollection.phone %></div>
+                        <div><%= new Date(student.user.dataCollection.DOB).toLocaleDateString() %></div>
+                        <div><%= student.user.dataCollection.SSN %></div>
+
+                        <div><%= student.user.agreement.program %></div>
+                        <div><%= student.user.agreement.class %></div>
+                        <div><%= student.user.agreement.transmission %></div>
+                        <div><%= student.user.agreement.visiting %></div>
+
+                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.tuitionCost) %></div>
+                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.regisrFee) %></div>
+                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.supplyFee) %></div>
+                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.otherFee) %></div>
+                        
+                        <div><%= student.user.agreement.payment %></div>
+                        <div><%= student.user.agreement.thirdPartyList %></div>
+                        
+                        <div><%= new Date(student.created).toLocaleDateString() %></div>
+                        <div><%= student.user.agreement.schoolSignRep %></div>
+                        <div><%= new Date(student.user.agreement.schoolSignDate).toLocaleDateString() %></div>
+                        <div><%= student.user.agreement.updatedAdmin %></div>
+                        <div><%= new Date(student.user.agreement.updatedDate).toLocaleDateString() %></div>
+                    </div>  <!-- student-list-row -->
+                <% }) %>
+
+                <div class="button-box">
+                    <button type="reset">Uncheck All</button>
+                    <button type="submit">Print QRs</button>
+                </div>
+
+            </form>     <!-- bulk qr printing form -->
+
+        <% } else { %>      <!-- students array is not OK -->
+            <h1>Cannot retrieve data from database...</h1>
+        <% } %>
+    </div>      <!-- student-list-box -->
+
+</body>
+</html>

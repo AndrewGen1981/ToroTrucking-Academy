@@ -4,13 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>TTA QR | GEO-Location Page </title>
+    
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+    
+    <link rel="stylesheet" href="/admin/views/qr-styles.css">
 </head>
 <body>
-    <h1>Your Clock module is setup with required GEO-location option</h1>
-    <h2>Please allow GEO-location check on your browser's request</h2>
+    <section class="geo-box">
+        <h1 class='main-geo-title'>Your Clock module is setup with required GEO-location option</h1>
+        <h2 class='main-geo-subtitle'>Please allow GEO-location check on your browser's request</h2>
+    </section>
 
-    <form action="/admin/qr-update-geo" id='updateGeo' method="post">
+    <form class='-hidden' action="/admin/qr-update-geo" id='updateGeo' method="post">
         <input type="text" name='studentId' id='studentId' value='<%= student._id %>' readonly>
         <input type="text" name='clockBacklink' id='clockBacklink' value='<%= clockBacklink %>' readonly>
         <input type="text" name='error' id='error' readonly>

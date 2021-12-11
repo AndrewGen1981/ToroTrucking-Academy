@@ -369,24 +369,6 @@ function qrRedirectToLogin (req, res, next) {
 }
 
 
-
-// test route
-admRouter.get('/test', async (req, res)=> {
-    
-    const student = await Student.findById('61af71a2b657c17cc70516eb').populate({
-        path: 'user',
-        populate: {
-            path: 'agreement'
-        }
-    })
-
-    return res.status(200).render(path.join(__dirname+'/views/qr_success-clock.ejs'), { 
-        student,
-        TODClocks: tools.getTodayClocksInfo(student.clocks)
-    })
-})
-
-
 // route /admin/qr/:id
 admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
     
@@ -488,13 +470,14 @@ admRouter.post('/qr-update-geo', async (req, res) => {
     }
     if (error === 'ok') {   // can be 'not required' also
         try {
-            // const student = await Student.findById(studentId)
-            const student = await Student.findById(studentId).populate({
-                path: 'user',
-                populate: {
-                    path: 'agreement'
+            const student = await Student.findById(studentId).populate([
+                {
+                    path: 'user', populate: { path: 'dataCollection' }
+                },
+                {
+                    path: 'user', populate: { path: 'agreement' }
                 }
-            })
+            ])
 
             minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
 

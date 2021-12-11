@@ -1,0 +1,104 @@
+/* @GENERAL */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+    font-family: 'BrixSlab-Regular';
+    font-size: 15px;
+    font-weight: normal;
+
+    color: var(--black-worn)
+}
+
+.student-list-row {
+    /* display: grid;
+    grid-template-columns: repeat(29, 1fr); */
+    display: flex;
+    flex-wrap: nowrap;
+
+    border-bottom: 1px solid var(--gray60-pacific-cloud);
+}
+.student-list-row:nth-child(even) {
+    opacity: 0.9;
+}
+
+.field {
+    padding: 0.2rem;
+
+    --width: 6rem;
+    width: var(--width);
+    min-width: var(--width);
+
+    overflow-x: hidden;
+
+    opacity: 0.9
+}
+.-header {
+    font-family: "BrixSlab-Medium";
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 1
+}
+.-name {
+    --width: 6.3rem;
+    background-color: var(--gray-pacific-cloud);
+}
+.-key {
+    --width: 3rem;
+    background-color: var(--gray80-pacific-cloud);
+    text-align: center;
+}
+.-email {
+    --width: 15rem;
+    background-color: var(--sand40-coastal);
+    text-transform: lowercase;
+}
+.-email-verified {
+    --width: 5rem;
+    background-color: var(--sand40-coastal);
+    text-align: center;
+}
+.-email-trusted {
+    color: var(--good-done1);
+}
+.-email-unsafe {
+    color: var(--bad-todo1);
+}
+.-TTT {
+    --width: 5rem;
+    background-color: var(--orange-high-desert);
+    color: white;
+    text-align: center;
+}
+.-street {
+    --width: 12.5rem;
+    border-right: 1px solid var(--gray60-pacific-cloud);
+    text-transform: uppercase;
+}
+.-qr {
+    --width: 3rem;
+    border-right: 1px solid var(--gray60-pacific-cloud);
+    text-align: center;
+}
+
+
+/* 
+@BRIX font family
+
+font-family: "BrixSlab-ExtraLight";
+font-family: "BrixSlab-ExtraLightItalic";
+
+font-family: "BrixSlab-Light";
+font-family: "BrixSlab-LightItalic";
+
+font-family: "BrixSlab-Regular";
+font-family: "BrixSlab-RegularItalic";
+
+font-family: "BrixSlab-Medium";
+font-family: "BrixSlab-MediumItalic";
+
+font-family: "BrixSlab-Bold";
+font-family: "BrixSlab-BlackItalic";
+
+*/

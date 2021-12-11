@@ -27,15 +27,32 @@ studentRouter.get('/', (req, res) => {
 let filter = {}
 // @GET admin/student/list
 studentRouter.get('/list', async (req, res) => {
-    const students = await Student.find(filter).populate({
-        path: 'user',
-        populate: {
-            path: 'agreement'
-        }
-    })
 
-    const studentList = []
-    res.send(students)
+    const studentPopulated = ['key', 'email', 'TTT', 'created']
+    const userPopulated = ['token']
+
+    const dataCollPopulated = [
+        'firstName', 'lastName', 'middleName', 'street', 'city', 'state', 'zip', 'phone', 'DOB', 'SSN'
+    ]
+
+    const agrPopulated = [
+        'program', 'class', 'transmission', 'visiting', 'tuitionCost', 'regisrFee', 'supplyFee', 'otherFee', 
+        'payment', 'thirdPartyList', 'schoolSignDate', 'schoolSignRep', 'updatedAdmin', 'updatedDate'
+    ]
+
+
+    const students = await Student.find(filter).select(studentPopulated).populate([
+        {
+            path: 'user', select: userPopulated,
+            populate: { path: 'dataCollection', select: dataCollPopulated }
+        },
+        {
+            path: 'user', select: userPopulated, 
+            populate: { path: 'agreement', select: agrPopulated }
+        }
+    ])
+
+    res.render(path.join(__dirname+'/student-list.ejs'), { students })
 })
 
 
@@ -69,6 +86,14 @@ studentRouter.post('/new/:id', async (req, res) => {
     }
 
     res.status(200).redirect('/admin/user-area')     // ok, redirecting to users area
+})
+
+
+// @POST admin/student/print-bulk-qr
+studentRouter.post('/print-bulk-qr', (req, res) => {
+    // BULK QRs printing
+    const { qrsToPrint } = req.body
+    res.render(path.join(__dirname+'/qr_bulk-print.ejs'), { qrsToPrint })
 })
 
 
