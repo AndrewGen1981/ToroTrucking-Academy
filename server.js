@@ -56,9 +56,24 @@ const io = require('socket.io')(server, {
     }
 })
 
-// Has to bring in a USER model, just to create a WATCHER with SOCKET inside
-const { User } = require('./users/userModel')
+// Has to bring in a MODELS here, just to create a WATCHER with SOCKET inside
+const { User, Student } = require('./users/userModel')
+const { dataCollectionForm } = require('./users/applicants/form1Model')
+const { applicationForm } = require('./users/applicants/form2Model')
+const { agreementForm } = require('./users/applicants/form3Model')
 // turning on USER changes watch with mongoose
 User.watch().on('change', data => {
     io.emit('users-collection-update', data)
+})
+Student.watch().on('change', data => {
+    io.emit('students-update', data)
+})
+dataCollectionForm.watch().on('change', data => {
+    io.emit('dataCollections-update', data)
+})
+applicationForm.watch().on('change', data => {
+    io.emit('applications-update', data)
+})
+agreementForm.watch().on('change', data => {
+    io.emit('agreements-update', data)
 })

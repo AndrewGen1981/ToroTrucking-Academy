@@ -23,52 +23,59 @@
     <div class="student-list-box">
         <% if (students) { %>
 
-            <div class="student-list-row">
-                <div class='field -name -header'>Last Name</div>
-                <div class='field -name -header'>First Name</div>
-                <div class='field -name -header'>Middle</div>
-                <div class='field -key -header'>Key</div>
-                <div class='field -qr -header'>Need QR?</div>
-                <div class='field -email -header'>Email</div>
-                <div class='field -email-verified -header'>Verified</div>
-                <div class='field -TTT -header'>TTT</div>
-                <div class='field -street -header'>Street</div>
-                <div>City</div>
-                <div>State</div>
-                <div>Zip</div>
-                <div>Phone</div>
-                <div>DOB</div>
-                <div>SSN</div>
-                <div>Program</div>
-                <div>Class</div>
-                <div>Transmission</div>
-                <div>Visiting</div>
+            <div class="student-list-row" id="fixed-headers-row">
+                <div class='field -name -header -left-color-group -fixed1'>Last Name</div>
+                <div class='field -name -header -left-color-group -fixed2'>First Name</div>
+                <div class='field -name -header -left-color-group'>Middle</div>
+                <div class='field -key -header -left-color-group -fixed3'>Key</div>
+                <div class='field -qr -header -left-color-group'>Need QR?</div>
+                <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
 
-                <div>Cost Of Tuition</div>
-                <div>Regisration Fee</div>
-                <div>Supply&Material Fee</div>
-                <div>Other Fees</div>
+                <div class='field -email -header -left-color-group'>Email</div>
+                <div class='field -email-verified -header -left-color-group'>Verified</div>
                 
-                <div>Declared Payment Type</div>
-                <div>3rd Party Payeer</div>
+                <div class='field -street -header -dataCol-color-group'>Street</div>
+                <div class='field -city -header -dataCol-color-group'>City</div>
+                <div class='field -state -header -dataCol-color-group'>State</div>
+                <div class='field -zip -header -dataCol-color-group'>Zip</div>
+                <div class='field -phone -header -dataCol-color-group'>Phone</div>
+
+                <div class='field -DOB -header -dataCol-color-group'>DOB</div>
+                <div class='field -SSN -header -dataCol-color-group'>SSN</div>
+
+                <div class='field -program -header -agr-color-group'>Program</div>
+                <div class='field -class -header -agr-color-group'>Class</div>
+                <div class='field -transmission -header -agr-color-group'>Transmission</div>
+                <div class='field -visiting -header -agr-color-group'>Visiting</div>
+
+                <div class='field -tuitionCost -header -cost-color-group'>Cost Of Tuition</div>
+                <div class='field -regisrFee -header -cost-color-group'>Regisration Fee</div>
+                <div class='field -supplyFee -header -cost-color-group'>Supply & Material Fee</div>
+                <div class='field -otherFee -header -cost-color-group'>Other Fees</div>
                 
-                <div>Record Created</div>
-                <div>Agreement Signed by</div>
-                <div>Date of Sign</div>
-                <div>Agreement Updated by</div>
-                <div>Date of Update</div>
+                <div class='field -payment -header -cost-color-group'>Declared Payment Type</div>
+                <div class='field -thirdPartyList -header -cost-color-group'>3rd Party Payeer</div>
+                
+                <div class='field -created -header -sign-color-group'>Student Since</div>
+                <div class='field -schoolSignRep -header -sign-color-group'>Agreement Signed by</div>
+                <div class='field -schoolSignDate -header -sign-color-group'>Date of Sign</div>
+                <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
+                <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
             </div>  <!-- student-list-row -->
 
 
             <form action="/admin/student/print-bulk-qr" method="POST" id='qrBulkPrintForm'>
 
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
-                    <div class="student-list-row">
-                        <div class='field -name'><%= student.user.dataCollection.lastName %></div>
-                        <div class='field -name'><%= student.user.dataCollection.firstName %></div>
+
+                    <!-- dataset for all db changes (student, dataCol, agr) -->
+                    <div class="student-list-row" data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>'>
+
+                        <a href='/admin/user/<%= student.user._id %>' class='field -name -fixed1'><%= student.user.dataCollection.lastName %></a>
+                        <div class='field -name -fixed2'><%= student.user.dataCollection.firstName %></div>
                         <div class='field -name'><%= student.user.dataCollection.middleName %></div>
 
-                        <div class='field -key'><%= student.key %></div>
+                        <div class='field -key -fixed3'><%= student.key %></div>
 
                         <!-- form elements to be passed to QRs bulk print -->
                             <label class='field -qr'>
@@ -78,40 +85,45 @@
                                 <input class='-hidden' type="checkbox" name='qrsClassesToPrint' data-id='<%= student._id %>' value="<%= student.user.agreement.class %>" />
                             </label>
                         <!-- form elements to be passed to QRs bulk print -->
+                        
+                        <div class='field -TTT -fixed4'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
 
-                        <div class='field -email'><%= student.email %></div>
+                        <div class='field -email''><%= student.email %></div>
                         <% let ifVerified = student.user.token === 'verified' ? '-email-trusted' : '-email-unsafe' %>
                         <div class='field -email-verified <%= ifVerified %>'><%= student.user.token %></div>
 
-                        <div class='field -TTT'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
-
                         <div class='field -street'><%= student.user.dataCollection.street %></div>
-                        <div><%= student.user.dataCollection.city %></div>
-                        <div><%= student.user.dataCollection.state %></div>
-                        <div><%= student.user.dataCollection.zip %></div>
+                        <div class='field -city'><%= student.user.dataCollection.city %></div>
+                        <div class='field -state'><%= student.user.dataCollection.state %></div>
+                        <div class='field -zip'><%= student.user.dataCollection.zip %></div>
 
-                        <div><%= student.user.dataCollection.phone %></div>
-                        <div><%= new Date(student.user.dataCollection.DOB).toLocaleDateString() %></div>
-                        <div><%= student.user.dataCollection.SSN %></div>
+                        <div class='field -phone'><%= student.user.dataCollection.phone %></div>
 
-                        <div><%= student.user.agreement.program %></div>
-                        <div><%= student.user.agreement.class %></div>
-                        <div><%= student.user.agreement.transmission %></div>
-                        <div><%= student.user.agreement.visiting %></div>
+                        <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString() : '-' } %>
 
-                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.tuitionCost) %></div>
-                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.regisrFee) %></div>
-                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.supplyFee) %></div>
-                        <div><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(student.user.agreement.otherFee) %></div>
+                        <div class='field -DOB'><%= formatDate(student.user.dataCollection.DOB) %></div>
+                        <div class='field -SSN'><%= student.user.dataCollection.SSN %></div>
+
+                        <div class='field -program'><%= student.user.agreement.program %></div>
+                        <div class='field -class'><%= student.user.agreement.class %></div>
+                        <div class='field -transmission'><%= student.user.agreement.transmission %></div>
+                        <div class='field -visiting'><%= student.user.agreement.visiting %></div>
+
+                        <% function toCurrency(textNum) { return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(textNum).toString().replace('USD','') }%>
+
+                        <div class='field -tuitionCost'>$ <%= toCurrency(student.user.agreement.tuitionCost) %></div>
+                        <div class='field -regisrFee'>$ <%= toCurrency(student.user.agreement.regisrFee) %></div>
+                        <div class='field -supplyFee'>$ <%= toCurrency(student.user.agreement.supplyFee) %></div>
+                        <div class='field -otherFee'>$ <%= toCurrency(student.user.agreement.otherFee) %></div>
                         
-                        <div><%= student.user.agreement.payment %></div>
-                        <div><%= student.user.agreement.thirdPartyList %></div>
+                        <div class='field -payment'><%= student.user.agreement.payment %></div>
+                        <div class='field -thirdPartyList'><%= student.user.agreement.thirdPartyList %></div>
                         
-                        <div><%= new Date(student.created).toLocaleDateString() %></div>
-                        <div><%= student.user.agreement.schoolSignRep %></div>
-                        <div><%= new Date(student.user.agreement.schoolSignDate).toLocaleDateString() %></div>
-                        <div><%= student.user.agreement.updatedAdmin %></div>
-                        <div><%= new Date(student.user.agreement.updatedDate).toLocaleDateString() %></div>
+                        <div class='field -created'><%= formatDate(student.created) %></div>
+                        <div class='field -schoolSignRep'><%= student.user.agreement.schoolSignRep %></div>
+                        <div class='field -schoolSignDate'><%= formatDate(student.user.agreement.schoolSignDate) %></div>
+                        <div class='field -updatedAdmin'><%= student.user.agreement.updatedAdmin %></div>
+                        <div class='field -updatedDate'><%= formatDate(student.user.agreement.updatedDate) %></div>
                     </div>  <!-- student-list-row -->
                 <% }) %>
 
@@ -156,6 +168,115 @@
                 alert('This button for QRs bulk printing. To use select at least one and try again.')
             }
         })
+
+
+        // toggles fixed headers to change color when position 'sticky' works
+        // array of fixed elements
+        const fixedHeaders = [
+           document.getElementsByClassName('-fixed1')[0],
+           document.getElementsByClassName('-fixed2')[0],
+           document.getElementsByClassName('-fixed3')[0],
+           document.getElementsByClassName('-fixed4')[0]
+        ]
+    
+        // listener on SCROLL adds/removes class 'isSticky'
+        window.addEventListener('scroll', (e) => {
+            if(fixedHeaders[0].getBoundingClientRect().left < 5) {
+                fixedHeaders.map(fixed => { fixed.classList.add('isSticky') })
+            } else {
+                fixedHeaders.map(fixed => { fixed.classList.remove('isSticky') })
+            }
+        })
+
+    </script>
+
+
+    <script type="module" defer>
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+
+        // server emits, so have to check if changes are related to this particular client
+        // @WHEN Students changed
+        socket.on('students-update', student => {
+            if (student) {
+                const id = student.documentKey._id
+                if (student.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-student='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = student.updateDescription.updatedFields
+                        for (const [key, value] of Object.entries(fields)) {
+                            let el = updatedRow.getElementsByClassName(`-${key}`)[0]
+                            switch (key) {
+                                case 'TTT':
+                                    el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
+                                break
+                                case 'created':
+                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                break
+                                default: el.textContent = value
+                            }
+                        }
+                    }   // updatedRow != null
+                }   // operation is update
+            }   // if student is defined
+        })  // socket.on('students-update')
+
+
+        // @WHEN dataCollection Forms changed
+        socket.on('dataCollections-update', data => {
+            if (data) {
+                const id = data.documentKey._id
+                if (data.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-dataColl='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = data.updateDescription.updatedFields
+                        for (const [key, value] of Object.entries(fields)) {
+                            let el = updatedRow.getElementsByClassName(`-${key}`)[0]
+                            switch (key) {
+                                case 'DOB':
+                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                break
+                                default: el.textContent = value
+                            }
+                        }
+                    }   // updatedRow != null
+                }   // operation is update
+            }   // if data is defined
+        })  // socket.on('dataCollections-update')
+
+
+        // @WHEN dataCollection Forms changed
+        socket.on('agreements-update', data => {
+            if (data) {
+                const id = data.documentKey._id
+                if (data.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-agreement='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = data.updateDescription.updatedFields
+                        for (const [key, value] of Object.entries(fields)) {
+                            let el = updatedRow.getElementsByClassName(`-${key}`)[0]
+                            switch (key) {
+                                case 'downPayment':
+                                case 'monthlyPayment':
+                                case 'loanPayment':
+                                case 'tuitionCost':
+                                case 'regisrFee':
+                                case 'supplyFee':
+                                case 'otherFee':
+                                    el.textContent = `$ ${new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(value).toString().replace('USD','').replace('$','')}`
+                                break
+                                case 'updatedDate':
+                                case 'schoolSignDate':
+                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                break
+                                default: el.textContent = value
+                            }
+                        }
+                    }   // updatedRow != null
+                }   // operation is update
+            }   // if data is defined
+        })  // socket.on('dataCollections-update')
 
     </script>
 

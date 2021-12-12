@@ -4,20 +4,95 @@
     padding: 0;
     box-sizing: border-box;
     
-    font-family: 'BrixSlab-Regular';
+    font-family: 'BrixSlab-Light' !important;
     font-size: 15px;
     font-weight: normal;
     
     color: black;
 }
 
+:root {
+    --left-cols-color: #c7c7c7;
+    --borders-color: var(--gray60-pacific-cloud);
+    --name-fixed-col-width: 6.5rem;
+    --key-fixed-col-width: 3.5rem;
+}
+
+
+/* HEADERS COLOR GROUPS */
+.-left-color-group {
+    background-color: #333 !important;
+    color: white !important;
+}
+.-dataCol-color-group {
+    background: #785e9f !important;
+    color: white !important;
+}
+.-agr-color-group {
+    background: #505050 !important;
+    color: white !important;
+}
+.-cost-color-group {
+    background: #676767;
+    color: white !important;
+}
+.-sign-color-group {
+    background: #9f5e85;
+    color: white !important;
+}
+
+.student-list-box {
+    --brd-width: 5px;
+    width: fit-content;
+    border-top: var(--brd-width) solid var(--left-cols-color);
+    border-left: var(--brd-width) solid var(--left-cols-color);
+    border-right: var(--brd-width) solid var(--left-cols-color);
+    border-bottom: 1px solid var(--left-cols-color);
+}
+
 .student-list-row {
+    width:fit-content;
     display: flex;
     flex-wrap: nowrap;
 
-    border-bottom: 1px solid var(--black40-worn);
+    border-bottom: 1px solid var(--borders-color);
+}
+.student-list-row:nth-child(even) {
+    background-color: #ebebeb;
 }
 
+.-fixed1, .-fixed2, .-fixed3, .-fixed4 {
+    position: sticky;
+    z-index: 1;
+}
+.-fixed1 {
+    left: 0;
+}
+.-fixed2 {
+    left: var(--name-fixed-col-width);
+}
+.-fixed3 {
+    left: calc(2 * var(--name-fixed-col-width) - 1px);
+}
+.-fixed4 {
+    left: calc(2 * var(--name-fixed-col-width) + var(--key-fixed-col-width) - 1px);
+}
+
+.isSticky{
+    color:wheat !important;
+}
+
+#fixed-headers-row {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.-header {
+    font-family: "BrixSlab-Light" !important;
+    font-size: 0.9rem !important;
+    text-align: center !important;
+    text-transform: capitalize !important;
+}
 
 .field {
     padding: 0.2rem;
@@ -27,27 +102,20 @@
     min-width: var(--width);
 
     overflow-x: hidden;
-
-    opacity: 0.95
-}
-.-header {
-    font-family: "BrixSlab-Medium";
-    font-size: 0.9rem;
-    text-align: center;
-    opacity: 1
+    border-right: 1px solid var(--borders-color);
 }
 .-name {
-    --width: 6.3rem;
-    background-color: var(--black60-worn);
+    --width: var(--name-fixed-col-width);
+    background-color: var(--left-cols-color);
 }
 .-key {
-    --width: 3rem;
-    background-color: var(--black60-worn);
+    --width: var(--key-fixed-col-width);
+    background-color: var(--left-cols-color);
     text-align: center;
 }
 .-qr {
     --width: 3rem;
-    background-color: var(--black60-worn);
+    background-color: var(--left-cols-color);
     text-align: center;
 }
 .qr-check {
@@ -61,19 +129,19 @@
 }
 .-email {
     --width: 15rem;
-    background-color: var(--black60-worn);
+    background-color: var(--left-cols-color);
     text-transform: lowercase;
 }
 .-email-verified {
     --width: 5rem;
-    background-color: var(--black60-worn);
+    background-color: var(--left-cols-color);
     text-align: center;
 }
 .-email-trusted {
-    color: var(--good-done);
+    color: var(--good-done1);
 }
 .-email-unsafe {
-    color: var(--bad-todo);
+    color: var(--bad-todo1);
 }
 .-TTT {
     --width: 5rem;
@@ -83,10 +151,83 @@
 }
 .-street {
     --width: 12.5rem;
-    border-right: 1px solid var(--gray60-pacific-cloud);
     text-transform: uppercase;
 }
+.-city {
+    --width: 7rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+.-state {
+    --width: 7.5rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+.-zip {
+    --width: 4rem;
+    text-align: center;
+}
+.-phone {
+    --width: 6.7rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+.-DOB {
+    --width: 6rem;
+    text-align: center;
+}
+.-SSN {
+    --width: 6.7rem;
+    text-align: center;
+}
 
+.-program {
+    --width: 8.45rem;
+    white-space: nowrap;
+}
+.-class {
+    --width: 7rem;
+    text-align: center;
+}
+.-transmission {
+    --width: 7rem;
+    text-align: center;
+}
+.-visiting {
+    --width: 8rem;
+    text-align: center;
+}
+
+.-tuitionCost {
+    --width: 7rem;
+    text-align: right;
+}
+
+.-regisrFee, .-supplyFee, .-otherFee {
+    --width: 6rem;
+    text-align: right;
+}
+
+.-payment {
+    --width: 16rem;
+    white-space: nowrap;
+}
+.-thirdPartyList {
+    --width: 8rem;
+    white-space: nowrap;
+}
+
+.-created,
+.-schoolSignDate,
+.-updatedDate {
+    --width: 6rem;
+    text-align: center;
+}
+.-schoolSignRep,
+.-updatedAdmin {
+    --width: 6rem;
+    text-align: center;
+}
 
 
 /* 
