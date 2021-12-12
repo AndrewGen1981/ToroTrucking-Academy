@@ -109,7 +109,7 @@
                         <div class='field -transmission'><%= student.user.agreement.transmission %></div>
                         <div class='field -visiting'><%= student.user.agreement.visiting %></div>
 
-                        <% function toCurrency(textNum) { return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(textNum).toString().replace('USD','') }%>
+                        <% function toCurrency(textNum) { return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(textNum).toString() }%>
 
                         <div class='field -tuitionCost'>$ <%= toCurrency(student.user.agreement.tuitionCost) %></div>
                         <div class='field -regisrFee'>$ <%= toCurrency(student.user.agreement.regisrFee) %></div>
@@ -264,7 +264,7 @@
                                 case 'regisrFee':
                                 case 'supplyFee':
                                 case 'otherFee':
-                                    el.textContent = `$ ${new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(value).toString().replace('USD','').replace('$','')}`
+                                    el.textContent = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(value).toString().replace('USD','')
                                 break
                                 case 'updatedDate':
                                 case 'schoolSignDate':
