@@ -48,11 +48,11 @@
                 <div class='field -transmission -header -agr-color-group'>Transmission</div>
                 <div class='field -visiting -header -agr-color-group'>Visiting</div>
 
-                <div class='field -tuitionCost -header -cost-color-group'>Cost Of Tuition</div>
-                <div class='field -regisrFee -header -cost-color-group'>Regisration Fee</div>
-                <div class='field -supplyFee -header -cost-color-group'>Supply & Material Fee</div>
-                <div class='field -otherFee -header -cost-color-group'>Other Fees</div>
-                <div class='field -totalCost -header -cost-color-group'>Total Cost</div>
+                <div class='field -tuitionCost -header -cost-color-group'>Cost Of<br>Tuition, $</div>
+                <div class='field -regisrFee -header -cost-color-group'>Regisration Fee, $</div>
+                <div class='field -supplyFee -header -cost-color-group'>Supply & Material Fee, $</div>
+                <div class='field -otherFee -header -cost-color-group'>Other<br>Fees, $</div>
+                <div class='field -totalCost -header -cost-color-group'>Total<br>Cost, $</div>
                 
                 <div class='field -payment -header -cost-color-group'>Declared Payment Type</div>
                 <div class='field -thirdPartyList -header -cost-color-group'>3rd Party Payeer</div>
@@ -110,19 +110,20 @@
                         <div class='field -transmission'><%= student.user.agreement.transmission %></div>
                         <div class='field -visiting'><%= student.user.agreement.visiting %></div>
 
-                        <% function toCurrency(textNum) { return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(textNum) }%>
+                        
+                        <% const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
 
-                        <div class='field -tuitionCost' data-amount='<%= student.user.agreement.tuitionCost %>'><%= toCurrency(student.user.agreement.tuitionCost) %></div>
-                        <div class='field -regisrFee' data-amount='<%= student.user.agreement.regisrFee %>'><%= toCurrency(student.user.agreement.regisrFee) %></div>
-                        <div class='field -supplyFee' data-amount='<%= student.user.agreement.supplyFee %>'><%= toCurrency(student.user.agreement.supplyFee) %></div>
-                        <div class='field -otherFee' data-amount='<%= student.user.agreement.otherFee %>'><%= toCurrency(student.user.agreement.otherFee) %></div>
+                        <div class='field -tuitionCost' data-amount='<%= student.user.agreement.tuitionCost %>'><%= usNumberFormat.format(student.user.agreement.tuitionCost) %></div>
+                        <div class='field -regisrFee' data-amount='<%= student.user.agreement.regisrFee %>'><%= usNumberFormat.format(student.user.agreement.regisrFee) %></div>
+                        <div class='field -supplyFee' data-amount='<%= student.user.agreement.supplyFee %>'><%= usNumberFormat.format(student.user.agreement.supplyFee) %></div>
+                        <div class='field -otherFee' data-amount='<%= student.user.agreement.otherFee %>'><%= usNumberFormat.format(student.user.agreement.otherFee) %></div>
 
                         <% let total = parseFloat(student.user.agreement.tuitionCost) %>
                         <% total += parseFloat(student.user.agreement.regisrFee) %>
                         <% total += parseFloat(student.user.agreement.supplyFee) %>
                         <% total += parseFloat(student.user.agreement.otherFee) %>
 
-                        <div class='field -totalCost'><%= toCurrency(total) %></div>
+                        <div class='field -totalCost'><%= usNumberFormat.format(total) %></div>
                         
                         <div class='field -payment'><%= student.user.agreement.payment %></div>
                         <div class='field -thirdPartyList'><%= student.user.agreement.thirdPartyList %></div>
@@ -148,7 +149,12 @@
     </div>      <!-- student-list-box -->
 
 
+
+
     <script type="module" defer>
+
+        const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
 
         function toggleTheRestToo(qr) {
             // checks/unchecks also all fields needed for QR bulk printing
@@ -208,7 +214,7 @@
                     result += parseFloat(updatedRow.getElementsByClassName(item)[0].dataset.amount)
                 })
             }
-            return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(result)
+            return usNumberFormat.format(result)
         }
 
   
@@ -282,14 +288,14 @@
                                 case 'downPayment':
                                 case 'monthlyPayment':
                                 case 'loanPayment':
-                                    el.textContent = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(value)
+                                    el.textContent = usNumberFormat.format(value)
                                 break
                                 
                                 case 'tuitionCost':
                                 case 'regisrFee':
                                 case 'supplyFee':
                                 case 'otherFee':
-                                    el.textContent = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(value)
+                                    el.textContent = usNumberFormat.format(value)
                                     el.dataset.amount = value
                                     updatedRow.getElementsByClassName(`-totalCost`)[0].textContent = reCalcTotal(id)
                                 break

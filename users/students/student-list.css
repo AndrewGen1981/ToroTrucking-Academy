@@ -204,7 +204,7 @@
 }
 
 .-regisrFee, .-supplyFee, .-otherFee {
-    --width: 6rem;
+    --width: 6.5rem;
     text-align: right;
 }
 
