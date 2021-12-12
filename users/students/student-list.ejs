@@ -111,10 +111,10 @@
 
                         <% function toCurrency(textNum) { return new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(textNum).toString() }%>
 
-                        <div class='field -tuitionCost'>$ <%= toCurrency(student.user.agreement.tuitionCost) %></div>
-                        <div class='field -regisrFee'>$ <%= toCurrency(student.user.agreement.regisrFee) %></div>
-                        <div class='field -supplyFee'>$ <%= toCurrency(student.user.agreement.supplyFee) %></div>
-                        <div class='field -otherFee'>$ <%= toCurrency(student.user.agreement.otherFee) %></div>
+                        <div class='field -tuitionCost'><%= toCurrency(student.user.agreement.tuitionCost) %></div>
+                        <div class='field -regisrFee'><%= toCurrency(student.user.agreement.regisrFee) %></div>
+                        <div class='field -supplyFee'><%= toCurrency(student.user.agreement.supplyFee) %></div>
+                        <div class='field -otherFee'><%= toCurrency(student.user.agreement.otherFee) %></div>
                         
                         <div class='field -payment'><%= student.user.agreement.payment %></div>
                         <div class='field -thirdPartyList'><%= student.user.agreement.thirdPartyList %></div>
