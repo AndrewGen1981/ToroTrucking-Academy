@@ -39,6 +39,7 @@
 
                 <header class="student-list-header">
                     <div class="button-box">
+                        <div class="lighthouse" title='Data update indicator'></div>      <!-- indicates when db updates -->
                         <button type="reset" class='-btn' title='Deselect All'>
                             <svg class="button-ico">
                                 <use xlink:href='#deselect'></use>
@@ -54,9 +55,9 @@
 
                 <!-- draw column titles -->
                 <div class="student-list-row" id="fixed-headers-row">
-                    <div class='field -name -header -left-color-group -fixed1'>Last Name</div>
-                    <div class='field -name -header -left-color-group -fixed2'>First Name</div>
-                    <div class='field -name -header -left-color-group'>Middle</div>
+                    <div class='field -lastName -header -left-color-group -fixed1'>Last Name</div>
+                    <div class='field -firstName -header -left-color-group -fixed2'>First Name</div>
+                    <div class='field -middleName -header -left-color-group'>Middle</div>
                     <div class='field -key -header -left-color-group -fixed3'>Key</div>
                     <div class='field -qr -header -left-color-group'>Need QR?</div>
                     <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
@@ -99,9 +100,9 @@
                     <!-- dataset for all db changes (student, dataCol, agr) -->
                     <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>'>
 
-                        <a href='/admin/user/<%= student.user._id %>' class='field -name -fixed1'><%= student.user.dataCollection.lastName %></a>
-                        <div class='field -name -fixed2'><%= student.user.dataCollection.firstName %></div>
-                        <div class='field -name'><%= student.user.dataCollection.middleName %></div>
+                        <a href='/admin/user/<%= student.user._id %>' class='field -lastName -fixed1'><%= student.user.dataCollection.lastName %></a>
+                        <div class='field -firstName -fixed2'><%= student.user.dataCollection.firstName %></div>
+                        <div class='field -middleName'><%= student.user.dataCollection.middleName %></div>
 
                         <div class='field -key -fixed3'><%= student.key %></div>
 
@@ -247,6 +248,16 @@
         import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
         const socket = io("/")
 
+        // indicator to react when db updates
+        const lighthouse = document.getElementsByClassName('lighthouse')[0]
+        function indicateChanges() {
+            lighthouse.classList.add('-jump')
+            setTimeout(()=>{
+                lighthouse.classList.remove('-jump')
+            }, 2500)
+        }
+
+
         // server emits, so have to check if changes are related to this particular client
         // @WHEN Students changed
         socket.on('students-update', student => {
@@ -256,16 +267,19 @@
                     const updatedRow = document.querySelector(`[data-student='${id}']`)
                     if (updatedRow != null) {
                         const fields = student.updateDescription.updatedFields
+                        indicateChanges()   //  show reaction on changes
                         for (const [key, value] of Object.entries(fields)) {
                             let el = updatedRow.getElementsByClassName(`-${key}`)[0]
-                            switch (key) {
-                                case 'TTT':
-                                    el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
-                                break
-                                case 'created':
-                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
-                                break
-                                default: el.textContent = value
+                            if (el) {
+                                switch (key) {
+                                    case 'TTT':
+                                        el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
+                                    break
+                                    case 'created':
+                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                    break
+                                    default: el.textContent = value
+                                }
                             }
                         }
                     }   // updatedRow != null
@@ -282,20 +296,22 @@
                     const updatedRow = document.querySelector(`[data-dataColl='${id}']`)
                     if (updatedRow != null) {
                         const fields = data.updateDescription.updatedFields
+                        indicateChanges()   //  show reaction on changes
                         for (const [key, value] of Object.entries(fields)) {
                             let el = updatedRow.getElementsByClassName(`-${key}`)[0]
-                            switch (key) {
-                                case 'DOB':
-                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
-                                break
-                                default: el.textContent = value
+                            if (el) {
+                                switch (key) {
+                                    case 'DOB':
+                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                    break
+                                    default: el.textContent = value
+                                }
                             }
                         }
                     }   // updatedRow != null
                 }   // operation is update
             }   // if data is defined
         })  // socket.on('dataCollections-update')
-
 
 
         // @WHEN dataCollection Forms changed
@@ -306,30 +322,33 @@
                     const updatedRow = document.querySelector(`[data-agreement='${id}']`)
                     if (updatedRow != null) {
                         const fields = data.updateDescription.updatedFields
+                        indicateChanges()   //  show reaction on changes
                         for (const [key, value] of Object.entries(fields)) {
                             let el = updatedRow.getElementsByClassName(`-${key}`)[0]
-                            switch (key) {
-                                case 'downPayment':
-                                case 'monthlyPayment':
-                                case 'loanPayment':
-                                    el.textContent = usNumberFormat.format(value)
-                                break
-                                
-                                case 'tuitionCost':
-                                case 'regisrFee':
-                                case 'supplyFee':
-                                case 'otherFee':
-                                    el.textContent = usNumberFormat.format(value)
-                                    el.dataset.amount = value
-                                    updatedRow.getElementsByClassName(`-totalCost`)[0].textContent = reCalcTotal(id)
-                                break
+                            if (el) {
+                                switch (key) {
+                                    case 'downPayment':
+                                    case 'monthlyPayment':
+                                    case 'loanPayment':
+                                        el.textContent = usNumberFormat.format(value)
+                                    break
+                                    
+                                    case 'tuitionCost':
+                                    case 'regisrFee':
+                                    case 'supplyFee':
+                                    case 'otherFee':
+                                        el.textContent = usNumberFormat.format(value)
+                                        el.dataset.amount = value
+                                        updatedRow.getElementsByClassName(`-totalCost`)[0].textContent = reCalcTotal(id)
+                                    break
 
-                                case 'updatedDate':
-                                case 'schoolSignDate':
-                                    el.textContent = value ? new Date(value).toLocaleDateString() : '-'
-                                break
+                                    case 'updatedDate':
+                                    case 'schoolSignDate':
+                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                    break
 
-                                default: el.textContent = value
+                                    default: el.textContent = value
+                                }
                             }
                         }
                     }   // updatedRow != null

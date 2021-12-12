@@ -122,9 +122,12 @@
     overflow-x: hidden;
     border-right: 1px solid var(--borders-color);
 }
-.-name {
+.-firstName, .-lastName, .-middleName {
     --width: var(--name-fixed-col-width);
     background-color: var(--left-cols-color);
+}
+a.-name {
+    color:rgb(15, 15, 138)
 }
 .-key {
     --width: var(--key-fixed-col-width);
@@ -269,16 +272,45 @@
     cursor: pointer;
     border: none;
 }
+.-btn:hover {
+    opacity: 0.9;
+    transition: opacity .15s ease-in;
+}
 
 .button-ico {
     width: 1.35rem;
     height: 1.35rem;
 
-    fill: #005fcc;
+    fill: #785e9f;
 }
 .button-ico:hover {
-    fill: var(--orange-high-desert);
+    fill: #5324d4;
     transition: fill .15s ease-in;
+}
+
+
+@keyframes lighthouse-work {
+    0% { transform: translate(0, 0) scale(1.25, 0.75); }
+    50% { transform: translate(0, -40%) scale(1, 1); }
+    55% { transform: translate(0, -40%) rotate(15deg); }
+    60% { transform: translate(0, -40%) rotate(-15deg); }
+    65% { transform: translate(0, -40%) rotate(15deg); }
+    70% { transform: translate(0, -40%) rotate(-15deg); }
+    100% { transform: translate(0, 50%) scale(1.25, 0.75); }
+}
+.-jump {
+    -webkit-animation: lighthouse-work 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
+    animation: lighthouse-work 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
+}
+.lighthouse {
+    margin: 0 5px 0 2px;
+    width: 1.35rem;
+    height: 1.35rem;
+
+    background: -webkit-linear-gradient(135deg, #5324d4, #785e9f);
+    background: -moz-linear-gradient(135deg, #5324d4, #785e9f);
+    background: linear-gradient(135deg, #5324d4, #785e9f);
+    border-radius: 20%;
 }
 
 
