@@ -12,6 +12,8 @@
 }
 
 :root {
+    --header-height: 2.5rem;
+    --titles-row-height: 3.2rem;
     --left-cols-color: #c7c7c7;
     --borders-color: var(--gray60-pacific-cloud);
     --name-fixed-col-width: 6.5rem;
@@ -42,12 +44,23 @@
 }
 
 .student-list-box {
-    --brd-width: 5px;
     width: fit-content;
-    border-top: var(--brd-width) solid var(--left-cols-color);
-    border-left: var(--brd-width) solid var(--left-cols-color);
-    border-right: var(--brd-width) solid var(--left-cols-color);
-    border-bottom: 1px solid var(--left-cols-color);
+}
+
+.student-list-header {
+    width: 100%;
+    height: var(--header-height);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    padding: 3px;
+
+    background-color: #333;
+    border-bottom: 1px solid var(--borders-color);
+
+    z-index: 3;
 }
 
 .student-list-row {
@@ -59,6 +72,10 @@
 }
 .student-list-row:nth-child(even) {
     background-color: #ebebeb;
+}
+
+#student-row-0 {
+    margin-top: var(--header-height);
 }
 
 .-fixed1, .-fixed2, .-fixed3, .-fixed4 {
@@ -83,8 +100,9 @@
 }
 
 #fixed-headers-row {
+    height: var(--titles-row-height);
     position: sticky;
-    top: 0;
+    top: var(--header-height);
     z-index: 2;
 }
 .-header {
@@ -227,6 +245,40 @@
 .-updatedAdmin {
     --width: 6rem;
     text-align: center;
+}
+
+
+/* Buttons in top menu */
+.button-box {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+}
+.-btn {
+    padding: 0;
+    margin: 0 2px;
+
+    width: 2rem;
+    height: 1.95rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    border: none;
+}
+
+.button-ico {
+    width: 1.35rem;
+    height: 1.35rem;
+
+    fill: #005fcc;
+}
+.button-ico:hover {
+    fill: var(--orange-high-desert);
+    transition: fill .15s ease-in;
 }
 
 

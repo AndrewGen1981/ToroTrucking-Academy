@@ -19,58 +19,85 @@
 
 </head>
 <body>
+
+    <!-- sprite -->
+    <svg class='-hidden'>
+        <symbol id='deselect' viewBox="0 0 128 128">
+            <path d="M114,128H2a2,2,0,0,1-2-2V14a2,2,0,0,1,2-2H114a2,2,0,0,1,2,2V126A2,2,0,0,1,114,128ZM4,124H112V16H4Z"/><path d="M126,118a2,2,0,0,1-2-2V4H12a2,2,0,0,1,0-4H126a2,2,0,0,1,2,2V116A2,2,0,0,1,126,118Z"/>
+        </symbol>
+        <symbol id='qr' viewBox="0 0 401.994 401.994">
+            <path d="M0,401.991h182.724V219.265H0V401.991z M36.542,255.813h109.636v109.352H36.542V255.813z"/><rect x="73.089" y="292.355" width="36.544" height="36.549"/><rect x="292.352" y="365.449" width="36.553" height="36.545"/><rect x="365.442" y="365.449" width="36.552" height="36.545"/><polygon points="365.446,255.813 328.904,255.813 328.904,219.265 219.265,219.265 219.265,401.991 255.813,401.991 255.813,292.355 292.352,292.355 292.352,328.904 401.991,328.904 401.991,219.265 401.991,219.265 365.446,219.265"/><path d="M0,182.728h182.724V0H0V182.728z M36.542,36.542h109.636v109.636H36.542V36.542z"/><rect x="73.089" y="73.089" width="36.544" height="36.547"/><path d="M219.265,0v182.728h182.729V0H219.265z M365.446,146.178H255.813V36.542h109.633V146.178z"/><rect x="292.352" y="73.089" width="36.553" height="36.547"/>
+        </symbol>
+    </svg>
     
+
+
     <div class="student-list-box">
         <% if (students) { %>
-
-            <div class="student-list-row" id="fixed-headers-row">
-                <div class='field -name -header -left-color-group -fixed1'>Last Name</div>
-                <div class='field -name -header -left-color-group -fixed2'>First Name</div>
-                <div class='field -name -header -left-color-group'>Middle</div>
-                <div class='field -key -header -left-color-group -fixed3'>Key</div>
-                <div class='field -qr -header -left-color-group'>Need QR?</div>
-                <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
-
-                <div class='field -email -header -left-color-group'>Email</div>
-                <div class='field -email-verified -header -left-color-group'>Verified</div>
-                
-                <div class='field -street -header -dataCol-color-group'>Street</div>
-                <div class='field -city -header -dataCol-color-group'>City</div>
-                <div class='field -state -header -dataCol-color-group'>State</div>
-                <div class='field -zip -header -dataCol-color-group'>Zip</div>
-                <div class='field -phone -header -dataCol-color-group'>Phone</div>
-
-                <div class='field -DOB -header -dataCol-color-group'>DOB</div>
-                <div class='field -SSN -header -dataCol-color-group'>SSN</div>
-
-                <div class='field -program -header -agr-color-group'>Program</div>
-                <div class='field -class -header -agr-color-group'>Class</div>
-                <div class='field -transmission -header -agr-color-group'>Transmission</div>
-                <div class='field -visiting -header -agr-color-group'>Visiting</div>
-
-                <div class='field -tuitionCost -header -cost-color-group'>Cost Of<br>Tuition, $</div>
-                <div class='field -regisrFee -header -cost-color-group'>Regisration Fee, $</div>
-                <div class='field -supplyFee -header -cost-color-group'>Supply & Material Fee, $</div>
-                <div class='field -otherFee -header -cost-color-group'>Other<br>Fees, $</div>
-                <div class='field -totalCost -header -cost-color-group'>Total<br>Cost, $</div>
-                
-                <div class='field -payment -header -cost-color-group'>Declared Payment Type</div>
-                <div class='field -thirdPartyList -header -cost-color-group'>3rd Party Payeer</div>
-                
-                <div class='field -created -header -sign-color-group'>Student Since</div>
-                <div class='field -schoolSignRep -header -sign-color-group'>Agreement Signed by</div>
-                <div class='field -schoolSignDate -header -sign-color-group'>Date of Sign</div>
-                <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
-                <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
-            </div>  <!-- student-list-row -->
-
-
+            
             <form action="/admin/student/print-bulk-qr" method="POST" id='qrBulkPrintForm'>
+
+                <header class="student-list-header">
+                    <div class="button-box">
+                        <button type="reset" class='-btn' title='Deselect All'>
+                            <svg class="button-ico">
+                                <use xlink:href='#deselect'></use>
+                            </svg>
+                        </button>
+                        <button type="submit" class='-btn' title='Print Selected QRs'>
+                            <svg class="button-ico">
+                                <use xlink:href='#qr'></use>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- draw column titles -->
+                <div class="student-list-row" id="fixed-headers-row">
+                    <div class='field -name -header -left-color-group -fixed1'>Last Name</div>
+                    <div class='field -name -header -left-color-group -fixed2'>First Name</div>
+                    <div class='field -name -header -left-color-group'>Middle</div>
+                    <div class='field -key -header -left-color-group -fixed3'>Key</div>
+                    <div class='field -qr -header -left-color-group'>Need QR?</div>
+                    <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
+
+                    <div class='field -email -header -left-color-group'>Email</div>
+                    <div class='field -email-verified -header -left-color-group'>Verified</div>
+                    
+                    <div class='field -street -header -dataCol-color-group'>Street</div>
+                    <div class='field -city -header -dataCol-color-group'>City</div>
+                    <div class='field -state -header -dataCol-color-group'>State</div>
+                    <div class='field -zip -header -dataCol-color-group'>Zip</div>
+                    <div class='field -phone -header -dataCol-color-group'>Phone</div>
+
+                    <div class='field -DOB -header -dataCol-color-group'>DOB</div>
+                    <div class='field -SSN -header -dataCol-color-group'>SSN</div>
+
+                    <div class='field -program -header -agr-color-group'>Program</div>
+                    <div class='field -class -header -agr-color-group'>Class</div>
+                    <div class='field -transmission -header -agr-color-group'>Transmission</div>
+                    <div class='field -visiting -header -agr-color-group'>Visiting</div>
+
+                    <div class='field -tuitionCost -header -cost-color-group'>Cost Of<br>Tuition, $</div>
+                    <div class='field -regisrFee -header -cost-color-group'>Regisration Fee, $</div>
+                    <div class='field -supplyFee -header -cost-color-group'>Supply & Material Fee, $</div>
+                    <div class='field -otherFee -header -cost-color-group'>Other<br>Fees, $</div>
+                    <div class='field -totalCost -header -cost-color-group'>Total<br>Cost, $</div>
+                    
+                    <div class='field -payment -header -cost-color-group'>Declared Payment Type</div>
+                    <div class='field -thirdPartyList -header -cost-color-group'>3rd Party Payeer</div>
+                    
+                    <div class='field -created -header -sign-color-group'>Student Since</div>
+                    <div class='field -schoolSignRep -header -sign-color-group'>Agreement Signed by</div>
+                    <div class='field -schoolSignDate -header -sign-color-group'>Date of Sign</div>
+                    <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
+                    <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
+                </div>  <!-- student-list-row -->
 
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
 
                     <!-- dataset for all db changes (student, dataCol, agr) -->
-                    <div class="student-list-row" data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>'>
+                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>'>
 
                         <a href='/admin/user/<%= student.user._id %>' class='field -name -fixed1'><%= student.user.dataCollection.lastName %></a>
                         <div class='field -name -fixed2'><%= student.user.dataCollection.firstName %></div>
@@ -109,7 +136,6 @@
                         <div class='field -class'><%= student.user.agreement.class %></div>
                         <div class='field -transmission'><%= student.user.agreement.transmission %></div>
                         <div class='field -visiting'><%= student.user.agreement.visiting %></div>
-
                         
                         <% const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
 
@@ -136,11 +162,6 @@
                     </div>  <!-- student-list-row -->
                 <% }) %>
 
-                <div class="button-box">
-                    <button type="reset">Uncheck All</button>
-                    <button type="submit">Print QRs</button>
-                </div>
-
             </form>     <!-- bulk qr printing form -->
 
         <% } else { %>      <!-- students array is not OK -->
@@ -151,7 +172,7 @@
 
 
 
-    <script type="module" defer>
+    <script>
 
         const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
@@ -195,7 +216,7 @@
     
         // listener on SCROLL adds/removes class 'isSticky'
         window.addEventListener('scroll', (e) => {
-            if(fixedHeaders[0].getBoundingClientRect().left < 5) {
+            if(fixedHeaders[2].getBoundingClientRect().left < 290) {
                 fixedHeaders.map(fixed => { fixed.classList.add('isSticky') })
             } else {
                 fixedHeaders.map(fixed => { fixed.classList.remove('isSticky') })
@@ -217,7 +238,10 @@
             return usNumberFormat.format(result)
         }
 
-  
+    </script>
+
+
+    <script type="module" defer>
 
         // @NOTIFICATIONS from db
         import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
