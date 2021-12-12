@@ -7,7 +7,7 @@ const path = require('path')
 
 
 // MODELS for mongoose
-const { User, Student, StudentCONFIG } = require('../userModel')
+const { User, Student, StudentCONFIG, tools } = require('../userModel')
 
 // do I need this here?
 // const { dataCollectionForm } = require('../applicants/form1Model')
@@ -18,8 +18,32 @@ const { User, Student, StudentCONFIG } = require('../userModel')
 
 // @Students ROUTES
 
-studentRouter.get('/', (req, res) => {
-    res.send('Student Data')
+// INs route is a root one
+studentRouter.get('/', async (req, res) => {
+
+    const studentPopulated = ['key', 'TTT', 'clocks']
+    const userPopulated = ['dataCollection']
+    const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
+
+    const students = await Student.find({}).select(studentPopulated).populate([
+        {
+            path: 'user', select: userPopulated,
+            populate: { path: 'dataCollection', select: dataCollPopulated }
+        }
+    ])
+
+    let inStudents = []
+    const today = tools.getDatePrefix(new Date()).toString()
+
+    students.map(student => {
+        let todayClocks = student.clocks.filter(clock => { return clock.key == today })
+        if (todayClocks.length) {
+            student.clocks = todayClocks
+            inStudents.push(student)
+        }
+    })
+
+    res.render(path.join(__dirname+'/INs.ejs'), { inStudents })
 })
 
 

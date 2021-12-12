@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | INs</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+
+    <link rel="stylesheet" href="/users/students/student-list.css">
+    <link rel="stylesheet" href="/users/students/INs.css">
+
+</head>
+<body>
+    
+
+
+    <div class="ins-list-box">
+
+        <% if(inStudents) { %>
+            <header class="ins-list-header">
+                <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString() %></h2>
+            </header>
+            <% if(inStudents.length > 0) { %>
+
+                <div class="student-list-row" id="fixed-headers-row">
+                    <div class='field -lastName -header -left-color-group'>Last Name</div>
+                    <div class='field -firstName -header -left-color-group'>First Name</div>
+                    <div class='field -middleName -header -left-color-group'>Middle</div>
+                    <div class='field -key -header -left-color-group'>Key</div>
+                    <div class='field -TTT -header -left-color-group'>TTT</div>
+                    <div class="field -in -header -clock-color-group">Clock IN</div>
+                    <div class="field -out -header -clock-color-group">Clock OUT</div>
+                </div>  <!-- titles -->
+
+                <% inStudents.map((student, index) => { %>
+                    
+                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>'>
+
+                        <a href='/admin/user/<%= student.user._id %>' class='field -lastName'><%= student.user.dataCollection.lastName %></a>
+                        <div class='field -firstName'><%= student.user.dataCollection.firstName %></div>
+                        <div class='field -middleName'><%= student.user.dataCollection.middleName %></div>
+                        <div class='field -key'><%= student.key %></div>
+                        <div class='field -TTT'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
+                        
+                        <% if (student.clocks.length % 2 === 0) { %>
+                            <!-- EVEN: last is clock out -->
+                            <div class='field -in'><%= new Date(student.clocks[student.clocks.length - 2].date).toLocaleTimeString() %></div>
+                            <div class='field -out'><%= new Date(student.clocks[student.clocks.length - 1].date).toLocaleTimeString() %></div>
+                        <% } else { %>
+                            <div class='field -in'><%= new Date(student.clocks[student.clocks.length - 1].date).toLocaleTimeString() %></div>
+                            <div class='field -out'>...</div>
+                        <% } %>
+
+
+                    </div>  <!-- student-list-row -->
+                <% }) %>
+
+            <% } else { %>
+                <div>so far no one is there...</div>
+            <% } %>
+        <% } %>     <!-- if inStudents is defined -->
+
+    </div>  <!-- ins-list-box -->
+
+</body>
+</html>

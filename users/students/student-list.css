@@ -4,7 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     
-    font-family: 'BrixSlab-Light' !important;
+    font-family: 'BrixSlab-Light';
     font-size: 15px;
     font-weight: normal;
     
@@ -312,27 +312,6 @@ a.-name {
     background: linear-gradient(135deg, #5324d4, #785e9f);
     border-radius: 20%;
 }
-
-
-/* 
-@BRIX font family
-
-font-family: "BrixSlab-ExtraLight";
-font-family: "BrixSlab-ExtraLightItalic";
-
-font-family: "BrixSlab-Light";
-font-family: "BrixSlab-LightItalic";
-
-font-family: "BrixSlab-Regular";
-font-family: "BrixSlab-RegularItalic";
-
-font-family: "BrixSlab-Medium";
-font-family: "BrixSlab-MediumItalic";
-
-font-family: "BrixSlab-Bold";
-font-family: "BrixSlab-BlackItalic";
-
-*/
 
 .-hidden {
     display: none;

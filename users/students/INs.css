@@ -1,0 +1,81 @@
+/* WORKS paired with 'student-list.css' */
+
+
+/* HEADERS COLOR GROUPS */
+.-clock-color-group {
+    background-color: #785e9f !important;
+    color: white !important;
+}
+
+
+.ins-list-box {
+    width: 95%;
+    max-width: 1024px;
+
+    margin: 0 auto;
+}
+
+.ins-list-header {
+    width: 100%;
+    max-width: 1024px;
+    height: var(--header-height);
+
+    position: fixed;
+    top: 0;
+
+    padding: 3px;
+
+    background-color: #333;
+    border-bottom: 1px solid var(--borders-color);
+
+    z-index: 3;
+}
+
+.ins-title {
+    font-family: "BrixSlab-ExtraLightItalic";
+    font-size: 2rem;
+    line-height: 2rem;
+    color: white;
+}
+
+
+
+.student-list-row {
+    width: 100%;
+}
+
+.-firstName, .-lastName, .-middleName {
+    width: 16%;
+}
+.-key {
+    width: 9%;
+}
+.-TTT {
+    width: 13%;
+}
+.-in, .-out {
+    width: 15%;
+    text-align: center;
+}
+
+
+
+/* 
+@BRIX font family
+
+font-family: "BrixSlab-ExtraLight";
+font-family: "BrixSlab-ExtraLightItalic";
+
+font-family: "BrixSlab-Light";
+font-family: "BrixSlab-LightItalic";
+
+font-family: "BrixSlab-Regular";
+font-family: "BrixSlab-RegularItalic";
+
+font-family: "BrixSlab-Medium";
+font-family: "BrixSlab-MediumItalic";
+
+font-family: "BrixSlab-Bold";
+font-family: "BrixSlab-BlackItalic";
+
+*/
