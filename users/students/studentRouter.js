@@ -43,6 +43,7 @@ studentRouter.get('/', async (req, res) => {
         }
     })
 
+
     res.render(path.join(__dirname+'/INs.ejs'), { inStudents })
 })
 

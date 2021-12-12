@@ -50,15 +50,43 @@
                         <div class='field -key'><%= student.key %></div>
                         <div class='field -TTT'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
                         
-                        <% if (student.clocks.length % 2 === 0) { %>
-                            <!-- EVEN: last is clock out -->
-                            <div class='field -in'><%= new Date(student.clocks[student.clocks.length - 2].date).toLocaleTimeString() %></div>
-                            <div class='field -out'><%= new Date(student.clocks[student.clocks.length - 1].date).toLocaleTimeString() %></div>
-                        <% } else { %>
-                            <div class='field -in'><%= new Date(student.clocks[student.clocks.length - 1].date).toLocaleTimeString() %></div>
+                        <% if (student.clocks.length % 2 === 0) { %>    <!-- EVEN: last is clock out -->
+                            
+                            <% let clockIN = student.clocks[student.clocks.length - 2] %>
+                            <% let clockOUT = student.clocks[student.clocks.length - 1] %>
+
+                            <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
+                                <a class='field -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
+                                    <%= new Date(clockIN.date).toLocaleTimeString() %>
+                                </a>
+                            <% } else { %>
+                                <div class='field -in'><%= new Date(clockIN.date).toLocaleTimeString() %></div>
+                            <% } %>
+
+
+                            <% if (!isNaN(clockOUT.lat) && !isNaN(clockOUT.lon)) { %>
+                                <a class='field -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
+                                    <%= new Date(clockOUT.date).toLocaleTimeString() %>
+                                </a>
+                            <% } else { %>
+                                <div class='field -out -not-present'><%= new Date(clockOUT.date).toLocaleTimeString() %></div>
+                            <% } %>
+
+
+                        <% } else { %>  <!-- ODD: last is clock in -->
+
+                            <% let clockIN = student.clocks[student.clocks.length - 1] %>
+
+                            <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
+                                <a class='field -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
+                                    <%= new Date(clockIN.date).toLocaleTimeString() %>
+                                </a>
+                            <% } else { %>
+                                <div class='field -in'><%= new Date(clockIN.date).toLocaleTimeString() %></div>
+                            <% } %>
+
                             <div class='field -out'>...</div>
                         <% } %>
-
 
                     </div>  <!-- student-list-row -->
                 <% }) %>
@@ -69,6 +97,24 @@
         <% } %>     <!-- if inStudents is defined -->
 
     </div>  <!-- ins-list-box -->
+
+
+    <script>
+        
+        // @ENTERY POINT
+        // selecting not present already
+        const allOUTs = document.querySelectorAll('.-out')
+        if (allOUTs) {
+            for (let i=allOUTs.length-1; i > -1; i--) {     // backwards fastest
+                if (allOUTs[i].classList.contains('-not-present')) {
+                    allOUTs[i].parentElement.classList.add('-not-present')
+                } else {
+                    allOUTs[i].parentElement.classList.remove('-not-present')
+                }
+            }
+        }
+
+    </script>
 
 </body>
 </html>

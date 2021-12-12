@@ -46,9 +46,14 @@
 
 .-firstName, .-lastName, .-middleName {
     width: 16%;
+    background-color: unset;
+}
+.-lastName {
+    border-left: 1px solid var(--borders-color);
 }
 .-key {
     width: 9%;
+    background-color: unset;
 }
 .-TTT {
     width: 13%;
@@ -56,6 +61,10 @@
 .-in, .-out {
     width: 15%;
     text-align: center;
+}
+
+.-not-present {
+    background-color: #999999;
 }
 
 
