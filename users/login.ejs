@@ -4,84 +4,96 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
 
-    <style>
-        .reset-box {
-            width: 250px;
-            margin-top: 25px;
+    <title>TTA | Sign In</title>
 
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-        }
-        .-hidden {
-            display: none
-        }
-    </style>
+    <link rel="shortcut icon" href="../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/css/fonts.css">
+    <link rel="stylesheet" href="../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../static/css/colors.css">
+
+    <link rel="stylesheet" href="/users/login.css">
 
 </head>
 <body>
-    <h1>Login</h1>
-
-    <div>
-        <section>
-            <% if (info) { %>
-                <h2>Info</h2>
-                <p><%= (info) %></p>
-            <% } %>
-            <% if (error) { %>
-                <h2>Error founded</h2>
-                <p><%= (error) %></p>
-            <% } %>
-            <% if (registErrorObj.isThere) { %>
-                <h2>Errors founded</h2>
-                <ol type='1'>
-                    <% registErrorObj.errors.map(err => { %>
-                        <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
-                    <% }) %>
-                </ol>
-            <% } %>
-        </section>      <!-- message box -->
-
-        <form action="/user/login" method="POST">
-            <input type="email" name='email' id='email' placeholder="Email" required />
-            <input type="password" name='password' id='password' placeholder="Password" required />
-            <button type="submit">Submit</button>
-        </form>
-    </div>
     
-    <div>
-        <section class='reset-box'>
-            <h2>Reset password</h2><button onclick="toggleResetMenu(this)">+</button>
-        </section>
-        <form action="/user/passwordreset" method="POST" id="resetPassword" class='-hidden'>
-            <p>Let us know what your login-email is. A new generated password will be sent to the provided email.</p>
-            <input type="email" name='email' placeholder="Email" value="" required />
-            <button type="submit">Send</button>
-        </form>
-    </div>
+    <div class='login-box'>
 
-    <br><br><a href="/user/register">Register</a>
+        <div class="login-inner">
 
+            <div class="logo-box">
+                <a href="/">
+                    <img class="login-logo" src="/static/images/water-mark.png" alt="Main TTA Logo">
+                </a>
+            </div>
+
+            <div class="register-box">Don't have an account?<a href="/user/register">Register</a></div>
+            
+            <section class='message-box'>
+                <% if (info) { %>
+                    <h2>Info</h2>
+                    <p><%= (info) %></p>
+                <% } %>
+                <% if (error) { %>
+                    <h2>Error founded</h2>
+                    <p><%= (error) %></p>
+                <% } %>
+                <% if (registErrorObj.isThere) { %>
+                    <h2>Errors founded</h2>
+                    <ol type='1'>
+                        <% registErrorObj.errors.map(err => { %>
+                            <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
+                        <% }) %>
+                    </ol>
+                <% } %>
+            </section>      <!-- message box -->
+
+            <div class="sign-regist-form-box">
+
+                <form class='sign-form-box' action="/user/login" method="POST" id="signIn">
+                    <input class="sign-input" type="email" name='email' id='email' placeholder="Email" value='@' required />
+                    <input class="sign-input" type="password" name='password' id='password' placeholder="Password" required />
+                    <button class="sign-btn" type="submit">Log In</button>
+                </form>
+
+                <form class='regist-form-box -hidden' action="/user/passwordreset" method="POST" id="resetPassword" class='-hidden'>
+                    <p class='register-box'>Let us know what is your login-email. A new generated password will be sent to the provided one.</p>
+                    <input class="sign-input" type="email" name='email' placeholder="Email" value="" required />
+                    <button class="sign-btn" type="submit">Send</button>
+                </form>
+
+                <div class='reset-box' onclick="toggleResetMenu(this)">reset a password</div>
+
+            </div>      <!-- login-form-box -->
+        </div>  <!-- login-inner -->
+    </div>      <!-- login-box -->
+  
 </body>
 
     <script defer>
-
+        
         document.querySelector('#resetPassword').addEventListener('submit', (e) => {
             if (!confirm("This will reset your current password. Are you sure?")) {
                 e.preventDefault()
             }
         })
 
+
+        const reset = document.querySelector('#resetPassword')
+        const signin = document.querySelector('#signIn')
+
         function toggleResetMenu(toggler) {
-            const reset = document.querySelector('#resetPassword')
             if (reset.classList.contains('-hidden')) {
                 reset.classList.remove('-hidden')
-                toggler.textContent = 'x'
+                signin.classList.add('-hidden')
+                toggler.textContent = 'back to login'
             } else {
+                signin.classList.remove('-hidden')
                 reset.classList.add('-hidden')
-                toggler.textContent = '+'
+                toggler.textContent = 'reset a password'
             }
         }
 

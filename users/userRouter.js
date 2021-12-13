@@ -99,7 +99,8 @@ userRouter.use(async (req, res, next) => {   // !!! general middleware - will be
 
 // @GET REQUESTS
 userRouter.get('/', (req, res) => {
-    res.render(path.join(__dirname+'/welcome.ejs'), sess = req.session)
+    res.redirect('/user/login')
+    // res.render(path.join(__dirname+'/welcome.ejs'), sess = req.session)
 })
 
 userRouter.get('/home', redirectToLogin, async(req, res) => {

@@ -20,13 +20,17 @@
 </head>
 <body>
     <h1>Home</h1>
-    <a href="/user">Main</a>
+    <!-- <a href="/user">Main</a> -->
+    <a href="/">Main</a>
+    <form action="/user/logout" method="POST">
+        <button type="submit">Logout</button>
+    </form>
  
     <% if (user) { %>
         <section>
             <h2>Profile</h2>
             <ul>
-                <li>Name: <%= user.name %></li>
+                <li>User Nickname: <%= user.name %></li>
                 <li>Email: <%= user.email %></li>
 
                 <% if(!user.token || user.token === 'not sent') { %>
