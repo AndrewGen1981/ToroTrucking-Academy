@@ -119,6 +119,7 @@
 
     background: transparent;
 }
+
 .sign-input {
     all: unset;
 
@@ -132,14 +133,18 @@
     font-size: 1.25rem;
     color: var(--gray80-pacific-cloud);
     text-align: center;
-}
-.sign-input {
+
     background: var(--black20-worn);
     border: none;
     outline: none;
 
     border-bottom: 1px solid var(--gray60-pacific-cloud);
 }
+.sign-input:not(empty) {
+    background: var(--black20-worn);
+    color: var(--gray-pacific-cloud);
+}
+
 .sign-btn {
     padding: 5px 0;
 
