@@ -34,10 +34,10 @@
             
             <section class='message-box'>
                 <% if (registErrorObj.isThere) { %>
-                    <h2>Errors founded</h2>
+                    <h2>Error(s) found</h2>
                     <ol type='1'>
                         <% registErrorObj.errors.map(err => { %>
-                            <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
+                            <li><span><%= err.param.toUpperCase() %>: </span><strong><%= err.msg %></strong></li>
                         <% }) %>
                     </ol>
                 <% } %>
