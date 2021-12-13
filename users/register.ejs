@@ -4,28 +4,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+
+    <title>TTA | Register A User</title>
+
+    <link rel="shortcut icon" href="../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/css/fonts.css">
+    <link rel="stylesheet" href="../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../static/css/colors.css">
+
+    <link rel="stylesheet" href="/users/login.css">
+
 </head>
 <body>
-    <h1>Register</h1>
+    
+    <div class='login-box'>
 
-    <section>
-        <% if (registErrorObj.isThere) { %>
-            <h2>Errors founded</h2>
-            <ol type='1'>
-                <% registErrorObj.errors.map(err => { %>
-                    <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
-                <% }) %>
-            </ol>
-        <% } %>
-    </section>      <!-- errors box -->
+        <div class="login-inner">
 
-    <form action="/user/register" method="POST">
-        <input type="text" name='name' placeholder="Name" required />
-        <input type="email" name='email' placeholder="Email" required />
-        <input type="password" name='password' placeholder="Password" required />
-        <button type="submit">Submit</button>
-    </form>
-    <a href="/user/login">Login</a>
+            <div class="logo-box">
+                <a href="/">
+                    <img class="login-logo" src="/static/images/water-mark.png" alt="Main TTA Logo">
+                </a>
+            </div>
+
+            <div class="register-box">Already have an account?<a href="/user/login">Log In</a></div>
+            
+            <section class='message-box'>
+                <% if (registErrorObj.isThere) { %>
+                    <h2>Errors founded</h2>
+                    <ol type='1'>
+                        <% registErrorObj.errors.map(err => { %>
+                            <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
+                        <% }) %>
+                    </ol>
+                <% } %>
+            </section>      <!-- message box -->
+
+            <div class="sign-regist-form-box">
+
+                <form class='sign-form-box' action="/user/register" method="POST" id="signIn">
+                    <input class="sign-input" type="text" name='name' placeholder="Name" required />
+                    <input class="sign-input" type="email" name='email' placeholder="Email" value='@' required />
+                    <input class="sign-input" type="password" name='password' placeholder="Password" required />
+                    <button class="sign-btn" type="submit">Register</button>
+                </form>
+
+            </div>      <!-- login-form-box -->
+        </div>  <!-- login-inner -->
+    </div>      <!-- login-box -->
+  
 </body>
+
+
 </html>
