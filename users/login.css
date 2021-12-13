@@ -123,12 +123,13 @@
     all: unset;
 
     margin-bottom: 1vh;
+    padding: 5px 0;
 
     width: 100%;
     height: 7vh;
 
     font-family: "BrixSlab-ExtraLight";
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     color: var(--gray80-pacific-cloud);
     text-align: center;
 }
@@ -140,6 +141,8 @@
     border-bottom: 1px solid var(--gray60-pacific-cloud);
 }
 .sign-btn {
+    padding: 5px 0;
+
     width: 100%;
     height: 7vh;
 
@@ -153,6 +156,10 @@
     border: none;
     outline: none;
     border-radius: 5vh;
+
+    display:inline-flex;
+    align-items: center;
+    justify-content: center;
 
     cursor: pointer;
 }
@@ -219,6 +226,13 @@ font-family: "BrixSlab-Bold";
 @media (max-width: 612px){
     .login-box {
         background-image: url("/static/images/pages/login_truck-612.jpg");
+    }
+}
+
+@media (orientation: portrait) {
+    .sign-regist-form-box {
+        width: 90%;
+        height: 25vh;
     }
 }
 
