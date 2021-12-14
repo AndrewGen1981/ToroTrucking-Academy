@@ -26,7 +26,7 @@
 
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: nowrap;
 
     background-image: url('/static/images/logo-badge-black.png');
@@ -38,7 +38,7 @@
     z-index: 1;
 }
 .nav-item-box {
-    margin: 0 2rem;
+    margin: 0 2.5rem;
 }
 .nav-item {
     font-family: "Industrial Bold";
@@ -50,16 +50,13 @@
     color: #ffffff;
 }
 .nav-item:not(.-inac):hover {
-    /* color: var(--orange-high-desert); */
-    
     text-shadow: 0px 0px 10px var(--orange-high-desert);
     transition: text-shadow .25s ease-in;
 }
-/* .-active:hover {
 
-} */
 .-inac {
     color: rgb(201, 201, 201);
+    cursor: not-allowed;
 }
 
 .main-box {
