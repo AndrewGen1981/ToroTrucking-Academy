@@ -1,72 +1,103 @@
-* {
+/* @GENERAL */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
-
     box-sizing: border-box;
+    
+    font-family: "BrixSlab-Regular";
+    font-size: 15px;
+    font-weight: normal;
 }
 
-html, body {
-    font-size: 15px;
-}
 
 .landing-main-box {
     width: 100%;
-
-    width: 100vw;
-    height: 100vh;
-
     position: relative;
-    overflow: hidden;
 }
 
-.main-title {
-    font-family: "Industrial Bold";
-    font-size: 5rem;
-
-    color: var(--worn-black);
-    
-    padding: 1rem 0;
-
-    text-align: center;
-}
-
-.main-menu{
-    padding: 2rem;
-
-    font-family: "Industrial Medium";
-    font-size: 2rem;
-
-    color: var(--slate-blue);
-    background-color: rgba(0, 0, 0, 0.1);
-    
-    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
-    -webkit-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
-    -moz-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.24);
-}
-.nav-item {
-    font-family: "Brix";
-    font-size: 1.3rem;
-    line-height: 2rem;
-}
-
-.main-image-box {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    margin: 0 auto;
+.main-nav-menu {
     width: 100%;
+    height: 10.67rem;
 
-    display: flex;
+    position: absolute;
+
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    z-index: -1;
+    flex-wrap: nowrap;
+
+    background-image: url('/static/images/logo-badge-black.png');
+    background-repeat: no-repeat;
+    background-size: 7.5rem;
+    background-position-y: center;
+    background-position-x: 4rem;
+
+    z-index: 1;
 }
-.main-image {
+.nav-item-box {
+    margin: 0 2rem;
+}
+.nav-item {
+    font-family: "Industrial Bold";
+    font-size: 1.53rem;
+    line-height: 2.67rem;
+
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+.nav-item:not(.-inac):hover {
+    /* color: var(--orange-high-desert); */
+    
+    text-shadow: 0px 0px 10px var(--orange-high-desert);
+    transition: text-shadow .25s ease-in;
+}
+/* .-active:hover {
+
+} */
+.-inac {
+    color: rgb(201, 201, 201);
+}
+
+.main-box {
     width: 100%;
-
-    max-width: 1050px;
-
-    opacity: 0.15;
-    object-fit: scale-down;
 }
+
+header {
+    width: 100%;
+}
+.header-img {
+    width: 100%;
+    
+}
+
+
+
+
+/* 
+@Industrial
+font-family: "Industrial Medium";
+font-family: "Industrial Bold";
+
+
+@BRIX font family
+
+font-family: "BrixSlab-ExtraLight";
+font-family: "BrixSlab-ExtraLightItalic";
+
+font-family: "BrixSlab-Light";
+font-family: "BrixSlab-LightItalic";
+
+font-family: "BrixSlab-Regular";
+font-family: "BrixSlab-RegularItalic";
+
+font-family: "BrixSlab-Medium";
+font-family: "BrixSlab-MediumItalic";
+
+font-family: "BrixSlab-BlackItalic";
+font-family: "BrixSlab-Bold";
+
+*/

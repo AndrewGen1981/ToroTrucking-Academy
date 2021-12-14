@@ -185,31 +185,12 @@
 }
 
 
-
-/* 
-@BRIX font family
-
-font-family: "BrixSlab-ExtraLight";
-font-family: "BrixSlab-ExtraLightItalic";
-
-font-family: "BrixSlab-Light";
-font-family: "BrixSlab-LightItalic";
-
-font-family: "BrixSlab-Regular";
-font-family: "BrixSlab-RegularItalic";
-
-font-family: "BrixSlab-Medium";
-font-family: "BrixSlab-MediumItalic";
-
-font-family: "BrixSlab-BlackItalic";
-font-family: "BrixSlab-Bold";
-
-*/
+.-hidden {
+    display: none
+}
 
 
-
-
-
+/* MEDIA REQUESTS */
 @media (max-width: 2660px){
     .login-box {
         background-image: url("/static/images/pages/login_truck-2660.jpg");
@@ -239,12 +220,4 @@ font-family: "BrixSlab-Bold";
         width: 90%;
         height: 25vh;
     }
-}
-
-
-
-/* old */
-
-.-hidden {
-    display: none
 }

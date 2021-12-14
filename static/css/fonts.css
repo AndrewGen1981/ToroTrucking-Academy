@@ -14,8 +14,3 @@ font-family: 'WindSong', cursive; */
     src: url('../fonts/Industry-Bold.ttf');
     font-display: swap;
 }
-@font-face {
-    font-family: "Brix";
-    src: url('../fonts/BrixSlab-Regular.otf');
-    font-display: swap;
-}
