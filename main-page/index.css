@@ -612,6 +612,8 @@ footer {
     margin-bottom: 1rem;
 }
 .social-icon {
+    padding: 8.5px;
+
     width: 40px;
     height: 40px;
     margin-right: 20px;
@@ -620,7 +622,7 @@ footer {
     cursor: pointer;
 }
 .social-icon:hover {
-    fill:#545c66;
+    fill:#bbbbbb;
     transition: fill 0.2s linear;
 }
 .-facebook-icon {
@@ -628,7 +630,6 @@ footer {
     background-color: #ef5a29;
 }
 .-twitter-icon {
-    padding: 3px;
     fill: #ffffff;
     background-color: #ef5a29;
 }
@@ -638,8 +639,8 @@ footer {
 }
 
 .twitter {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
 
     fill: #ef5a29;
