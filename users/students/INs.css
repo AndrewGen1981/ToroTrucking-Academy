@@ -28,14 +28,46 @@
     background-color: #333;
     border-bottom: 1px solid var(--borders-color);
 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     z-index: 3;
 }
-
 .ins-title {
     font-family: "BrixSlab-ExtraLightItalic";
     font-size: 2rem;
     line-height: 2rem;
     color: white;
+}
+nav {
+    display: inline-flex;
+}
+.-btn {
+    margin: 0 0.5rem;
+    padding: 0 1rem;
+    min-width: 8rem;
+    
+    font-family: "BrixSlab-LightItalic";
+    font-size: 1.5rem;
+    line-height: 1.9rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    
+    color: #333;
+    
+    border-radius: 1rem;
+}
+.-btn:hover {
+    transform: scaleX(1.1);
+    transition: transform 0.2s linear;
+}
+.reload-ins {
+    background-color: tomato;
+}
+.back-home {
+    background-color: white;
 }
 
 
@@ -65,6 +97,12 @@
 
 .-not-present {
     background-color: #999999;
+}
+
+.empty-list {
+    font-family: "BrixSlab-ExtraLightItalic";
+    font-size: 2rem;
+    color: var(--bad-todo)
 }
 
 

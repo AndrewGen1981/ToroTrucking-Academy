@@ -21,24 +21,29 @@
 <body>
     
 
-
     <div class="ins-list-box">
 
         <% if(inStudents) { %>
             <header class="ins-list-header">
                 <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString() %></h2>
+                <nav>
+                    <a class='-btn reload-ins' id='reload-ins' href="/admin/student/">reload</a>
+                    <a class='-btn back-home' href="/admin/profile/">home</a>
+                </nav>
             </header>
+
+            <div class="student-list-row" id="fixed-headers-row">
+                <div class='field -lastName -header -left-color-group'>Last Name</div>
+                <div class='field -firstName -header -left-color-group'>First Name</div>
+                <div class='field -middleName -header -left-color-group'>Middle</div>
+                <div class='field -key -header -left-color-group'>Key</div>
+                <div class='field -TTT -header -left-color-group'>TTT</div>
+                <div class="field -in -header -clock-color-group">Clock IN</div>
+                <div class="field -out -header -clock-color-group">Clock OUT</div>
+            </div>  <!-- titles -->
+
             <% if(inStudents.length > 0) { %>
 
-                <div class="student-list-row" id="fixed-headers-row">
-                    <div class='field -lastName -header -left-color-group'>Last Name</div>
-                    <div class='field -firstName -header -left-color-group'>First Name</div>
-                    <div class='field -middleName -header -left-color-group'>Middle</div>
-                    <div class='field -key -header -left-color-group'>Key</div>
-                    <div class='field -TTT -header -left-color-group'>TTT</div>
-                    <div class="field -in -header -clock-color-group">Clock IN</div>
-                    <div class="field -out -header -clock-color-group">Clock OUT</div>
-                </div>  <!-- titles -->
 
                 <% inStudents.map((student, index) => { %>
                     
@@ -56,20 +61,20 @@
                             <% let clockOUT = student.clocks[student.clocks.length - 1] %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
-                                <a class='field -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
+                                <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
                                     <%= new Date(clockIN.date).toLocaleTimeString() %>
                                 </a>
                             <% } else { %>
-                                <div class='field -in'><%= new Date(clockIN.date).toLocaleTimeString() %></div>
+                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString() %></a>
                             <% } %>
 
 
                             <% if (!isNaN(clockOUT.lat) && !isNaN(clockOUT.lon)) { %>
-                                <a class='field -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
+                                <a class='field -clocks -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
                                     <%= new Date(clockOUT.date).toLocaleTimeString() %>
                                 </a>
                             <% } else { %>
-                                <div class='field -out -not-present'><%= new Date(clockOUT.date).toLocaleTimeString() %></div>
+                                <a class='field -clocks -out -not-present' target="_blank"><%= new Date(clockOUT.date).toLocaleTimeString() %></a>
                             <% } %>
 
 
@@ -78,21 +83,23 @@
                             <% let clockIN = student.clocks[student.clocks.length - 1] %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
-                                <a class='field -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
+                                <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
                                     <%= new Date(clockIN.date).toLocaleTimeString() %>
                                 </a>
                             <% } else { %>
-                                <div class='field -in'><%= new Date(clockIN.date).toLocaleTimeString() %></div>
+                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString() %></a>
                             <% } %>
 
-                            <div class='field -out'>...</div>
+                            <a class='field -clocks -out' target="_blank">...</a>
                         <% } %>
 
                     </div>  <!-- student-list-row -->
                 <% }) %>
 
             <% } else { %>
-                <div>so far no one is there...</div>
+                <div class="student-list-row" id='student-row-0' name='empty-list'>
+                    <div class="empty-list">so far no one is there...</div>
+                </div>
             <% } %>
         <% } %>     <!-- if inStudents is defined -->
 
@@ -113,6 +120,84 @@
                 }
             }
         }
+
+    </script>
+
+
+    <script type="module" defer>
+
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+
+
+        // server emits, so have to check if changes are related to this particular client
+        // @WHEN Students changed
+        socket.on('students-update', student => {
+            if (student) {
+
+                console.log(student)
+
+                // if list was empty, then 1st row 'so far no one is there...' should be deleted
+                const emptyList = document.getElementsByClassName('empty-list')[0]
+                if (emptyList) {
+                    document.querySelector('#reload-ins').click()
+                    return
+                }
+
+                // document.querySelector('#reload-user-area').click()
+
+                const id = student.documentKey._id
+                if (student.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-student='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = student.updateDescription.updatedFields
+                        for (const [key, value] of Object.entries(fields)) {
+                            let el = updatedRow.getElementsByClassName(`-${key}`)[0]
+                            if (el) {
+                                switch (key) {
+                                    case 'TTT':
+                                        el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
+                                    break
+                                    case 'clocks':
+                                        // el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                        let elIN = updatedRow.getElementsByClassName('-in')[0]
+                                        let elOUT = updatedRow.getElementsByClassName('-out')[0]
+
+                                        let lastClock = value[value.length - 1]
+                                        let todaysClocks = value.filter(item => { return item.key === lastClock.key })
+                                        console.log(todaysClocks)
+
+                                        if (todaysClocks.length % 2 === 0) {    //  EVEN: last is clock out
+                                            if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
+                                                elOUT.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
+                                            } else {
+                                                elOUT.href = ''
+                                            }
+                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString()
+                                            updatedRow.classList.add('-not-present')
+                                        } else {
+                                            if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
+                                                elIN.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
+                                            } else {
+                                                elIN.href = ''
+                                            }
+                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString()
+                                            updatedRow.classList.remove('-not-present')
+                                            elOUT.textContent ='...'
+                                        }
+                                    break
+                                    default: el.textContent = value
+                                }
+                            }
+                        }
+                    }  else {    // new one came, indicate him
+                        document.querySelector('#reload-ins').click()
+                    }  // updatedRow != null
+
+                }   // operation is update
+            }   // if student is defined
+        })  // socket.on('students-update')
 
     </script>
 
