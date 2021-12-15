@@ -378,16 +378,234 @@ ol .why-us-text {
 .students-review {
     width: 100%;
     padding: 6.67rem 0;
+    background-color: #ffffff;
 }
 .review-inner {
     width: 61%;
     margin: 0 auto;
-    
-    background-color: #ffffff;
+    display: block;
+}
+.review-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.review-photo {
+    width: 43%;
+    position: relative;
+    margin-bottom: 9rem;
+}
+.main-photo {
+    width: 100%;
+    object-fit: contain;
+    border: 3px solid var(--orange-high-desert);
+}
+.sub-photo {
+    width: 39%;
+    object-fit: contain;
+    border: 3px solid lightgrey;
+
+    position: absolute;
+    left: 75.6%;
+    top: 81%;
+
+    z-index: 1;
+}
+
+.review-info {
+    width: 43%;
+}
+.review-score {
+    color: var(--orange-high-desert);
+}
+.review-title {
+    font-family: "Industrial Bold";
+    font-size: 1.2rem;
+    line-height: 2.4rem;
+    text-transform: uppercase;
+    text-align: left;
+
+    color: #2e2e2e;
+}
+.review-text1, .review-text2, .review-who-grad {
+    width: 100%;
+
+    font-family: "BrixSlab-Regular";
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+    text-align: justify;
+
+    display: block;
+
+    color: #2e2e2e;
+}
+.review-text2 {
+    text-indent: 2.67rem;
+    margin-bottom: 2.4rem;
+}
+
+.review-quote {
+    width: 100%;
+    position: relative;
+}
+.quote {
+    width: 1.27rem;
+    height: 1.27rem;
+
+    transform: rotate(180deg);
+
+    fill: var(--orange-high-desert);
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.review-who {
+    font-family: "Industrial Bold";
+    font-size: 1.07rem;
+    line-height: 1.6rem;
+    text-transform: uppercase;
+    text-align: left;
+
+    color: #2e2e2e;
+}
+
+.review-load-more {
+    width: 200px;
+    margin: 50px auto 0 auto;
+
+    font-family: "Industrial Bold";
+    font-size: 1.07rem;
+    line-height: 2.8rem;
+    text-transform: uppercase;
+    text-align: center;
+
+    color: var(--orange-high-desert);
+
+    border: 3px solid var(--orange-high-desert);
 }
 
 
+/* @FOOTER */
+footer {
+    width: 100%;
+}
+.ceo-box {
+    position: relative;
+}
+.ceo {
+    width: 100vw;
+    height: 21.5vw;
+    
+    position: relative;
+    background-image: url('/main-page/footer/ceo.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.ceo::after {
+    content: "";
+    position: absolute;
 
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+
+    background-color: #ef5a29;
+    opacity: 0.8;
+
+    width: 100%;
+    z-index: 1;
+}
+
+.ceo-person {
+    position: absolute;
+
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    z-index: 2;
+}
+
+.ceo-person img {
+    width: 5%;
+    border-radius: 100%;
+    margin-bottom: 2rem;
+}
+
+.ceo-quote {
+    font-family: "Industrial Bold";
+    font-size: 1.53rem;
+    line-height: 2.67rem;
+    text-align: center;
+    color: #ffffff;
+}
+.ceo-title {
+    font-family: "BrixSlab-RegularItalic";
+    font-size: 1.1333rem;
+    line-height: 2.4rem;
+    text-align: center;
+    color: #ffffff;
+}
+
+
+.social {
+    width: 100%;
+    padding-top: 2rem;
+    background-color: #545c66;
+}
+.social-inner {
+    width: 61%;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.social-block {
+    display: block;
+    margin-right: 3rem;
+}
+.social-block-title {
+    font-family: "Industrial Bold";
+    font-size: 0.93rem;
+    line-height: 3.2rem;
+    text-align: left;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+.social-block-text, .social-block-link {
+    font-family: "BrixSlab-light";
+    font-size: 0.867rem;
+    line-height: 1.2rem;
+    text-align: left;
+    
+    color: #bbbbbb;
+    margin-bottom: 1rem;
+}
+.social-block-link {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.social-block-row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.twitter {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+
+    fill: #ef5a29;
+}
 
 /* 
 @Industrial
