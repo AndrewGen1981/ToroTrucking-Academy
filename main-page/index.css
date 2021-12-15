@@ -12,6 +12,7 @@
 
 /* Hide Scrollbars But Keep Functionality */
 html, body {
+    width: 100vw;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -134,6 +135,7 @@ header {
 
     border: 4px solid var(--orange-high-desert);
     cursor: pointer;
+    z-index: 10;
 }
 .enroll-now:hover {
     color: #ffffff;
@@ -362,6 +364,7 @@ ol .why-us-text {
 }
 .footer-signup {
     width: 21.37%;
+    min-width: 200px;
 
     font-family: "Industrial Bold";
     font-size: 1.07rem;
@@ -734,5 +737,391 @@ font-family: "BrixSlab-BlackItalic";
 @media (max-width: 612px) {
     header {
         background-image: url('/main-page/header/header-612.jpg');
+    }
+}
+
+
+@media (max-width: 1610px) {
+    .nav-item-box {
+        margin: 0 2rem;
+    }
+}
+@media (max-width: 1510px) {
+    .nav-item-box {
+        margin: 0 1.5rem;
+    }
+    .nav-right-item {
+        margin-right: 0;
+    }
+    .why-us {
+        background-position-x: 75%;
+    }
+    /* FIRST INNER sections resize from 61% to 70% */
+    .blog-posts-box, .why-us-inner, .wdwo-services-box,
+    .wdwo-footer-inner, .review-inner, .social-inner,
+    .nav-bottom-box {
+        width: 70%;
+    }
+    .wdwo-footer-text-big {
+        font-size: 2.55rem;
+    }
+}
+@media (max-width: 1410px) {
+    .nav-item-box {
+        margin: 0 1rem;
+    }
+    .why-us {
+        background-position-x: 80%;
+    }
+    /* 2ND INNER sections resize from 70% to 80% */
+    .blog-posts-box, .why-us-inner, .wdwo-services-box,
+    .wdwo-footer-inner, .review-inner, .social-inner,
+    .nav-bottom-box {
+        width: 80%;
+    }
+
+    .nav-item {
+        font-size: 1.4rem;
+    }
+    .header-titles {
+        width: 74%;
+        height: 78%;
+    }
+    .wdwo-footer-text-big {
+        font-size: 2.35rem;
+    }
+}
+
+@media (max-width: 1210px) {
+    .nav-item-box {
+        margin: 0 0.7rem;
+    }
+    .why-us {
+        background-position-x: 95%;
+    }
+    /* 3ND INNER sections resize */
+    .blog-posts-box, .why-us-inner, .wdwo-services-box,
+    .wdwo-footer-inner, .review-inner, .social-inner,
+    .nav-bottom-box {
+        width: 90%;
+    }
+
+    .nav-item {
+        font-size: 1.2rem;
+    }
+    .header-titles {
+        width: 80%;
+        height: 85%;
+    }
+    .ceo-person img {
+        width: 8%;
+    }
+}
+
+@media (max-width: 1010px) {
+    :root { font-size: 13.5px; }
+    .title {
+        font-size: 5rem;
+        line-height: 5.5rem;
+    }
+    /* LAST INNER sections resize */
+    .blog-posts-box, .why-us-inner, .wdwo-services-box,
+    .wdwo-footer-inner, .review-inner, .social-inner,
+    .nav-bottom-box {
+        width: 97%;
+    }
+    .why-us-inner {
+        padding-left: 2rem;
+    }
+    .ceo-person img {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 910px) {
+    header, .main-nav-menu {
+        height: calc(60vw);
+    }
+    .main-nav-menu {
+        align-items: flex-end;
+        justify-content: space-between;
+
+        background-position-y: 2vw;
+        background-position-x: 2vw;
+
+        padding: 0 1rem;
+    }
+    .nav-item-box {
+        margin: 0;
+    }
+    .header-titles {
+        width: 95%;
+    }
+
+    .blog-posts-box {
+        margin: 3rem auto;
+    }
+    .blog-post {
+        width: 70%;
+    }
+
+    .why-us {
+        padding: 5rem 0;
+    }
+
+    .wdwo-wall {
+        flex-wrap: wrap;
+    }
+    .wall-item {
+        width: 50%;
+    }
+
+    .review-photo, .review-info {
+        width: 48%;
+    }
+    .sub-photo {
+        left: 64.5%
+    }
+
+    .ceo-quote {
+        font-family: "BrixSlab-ExtraLightItalic";
+        font-size: 1.35rem;
+        line-height: 1.5rem;
+    }
+
+    .students-review {
+        padding: 3rem 0;
+    }
+    .review-load-more {
+        margin: 0 auto;
+    }
+
+    .social-block {
+        width: 25%;
+        margin-right: 1rem;
+    }
+    .-small-block {
+        width: 15%;
+    }
+}
+
+
+@media (max-width: 710px) {
+    .main-nav-menu {
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        background-position-y: 2vw;
+        background-position-x: 85vw;
+
+        padding: 50vw 0 0 0;
+    }
+    .nav-item-box {
+        width: 25%;
+        text-align: center;
+    }
+    .nav-item {
+        line-height: 2rem;
+    }
+
+    .header-titles {
+        height: 100%;
+        justify-content: flex-start;
+        padding-top: 2vw;
+    }
+    .subtitle {
+        color: #2d2d2d
+    }
+    .blog-post {
+        width: 75%;
+    }
+    .why-us {
+        padding: 2.5rem 0;
+        background-position-x: 121%;
+    }
+
+    .wdwo-title {
+        margin: 3rem 0;
+        font-size: 2.5rem;
+        line-height: 3rem;
+    }
+    .wdwo-services-box {
+        width: 65%;
+        flex-wrap: wrap;
+    }
+    .wdwo-service-item {
+        width: 50%;
+        display: block;
+        margin-bottom: 3rem;
+    }
+
+    .wdwo-footer {
+        padding: 1.5rem;
+    }
+    .wdwo-footer-text-box {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .ceo {
+        height: 35vw;
+    }
+    .ceo-person img {
+        width: 12%;
+    }
+    .social-inner {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    .social-block {
+        width: 65%;
+    }
+    .social-block-title {
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 610px) {
+    header, .main-nav-menu {
+        height: calc(55vw);
+    }
+    .main-nav-menu {
+        background-position-x: 80vw;
+        padding-top: 45vw;
+    }
+    .title {
+        font-size: 3rem;
+        line-height: 3.2rem;
+    }
+    .subtitle {
+        font-family: "Industrial Bold";
+        font-size: 1rem;
+    }
+    .blog-post {
+        width: 85%;
+    }
+    .why-us {
+        background-image: url(/main-page/main-blog/why-us-manager-600.png);
+    }
+    .why-us-inner {
+        padding-left: 1.5rem;
+        margin-left: 0;
+        width: 100%;
+        max-width: 350px;
+    }
+    .wdwo-services-box {
+        width: 80%;
+    }
+    .review-top {
+        justify-content: center;
+    }
+    .review-photo, .review-info {
+        width: 95%;
+    }
+    .review-info {
+        margin-bottom: 2rem;
+    }
+    .sub-photo {
+        left: 31%;
+    }
+
+    .nav-bottom-box {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .nav-left, .nav-right {
+        width: 95%;
+    }
+    .nav-left-item {
+        width: 100%;
+        text-align: center;
+    }
+    .-small-block .social-block-text {
+        text-align: center;
+    }
+    .-big-block .social-block-text {
+        text-align: center;
+    }
+    .social-icons {
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    .social-icon {
+        margin-right: 0;
+    }
+    .ceo-quote br {
+        display: none;
+    }
+    .why-us-text {
+        line-height: 1.25rem;
+    }
+}
+
+@media (max-width: 510px) {
+    .title {
+        font-size: 2.5rem;
+        line-height: 2.7rem;
+    }
+    .nav-item {
+        font-size: 1rem;
+    }
+    .why-us {
+        background-position-x: 300%;
+    }
+    .ceo {
+        height: 50vw;
+    }
+    .ceo-person img {
+        width: 20%;
+    }
+    .ceo-quote {
+        width: 95%;
+        font-size: 1rem;
+        line-height: 1.15rem;
+    }
+    .social-block {
+        width: 75%;
+        margin-right: 0;
+    }
+    .wdwo-services-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 415px) {
+    .main-nav-menu {
+        background-position-y: 6vw;
+        padding-top: 42vw;
+    }
+    .nav-item {
+        font-family: "Industrial Medium";
+        font-size: 0.9rem;
+        letter-spacing: -1px;
+    }
+    .title {
+        margin-bottom: 0.35rem;
+    }
+    .why-us {
+        background-image: none;
+    }
+    .why-us-inner {
+        padding: 0;
+        margin: 0 auto;
+        width: 90%;
+        max-width: none;
+    }
+    .why-us-text {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+    .wdwo-item-text {
+        font-family: "Industrial Bold";
+        font-size: 0.83rem;
+        line-height: 1rem;
+    }
+    .social-block {
+        width: 85%;
     }
 }
