@@ -191,29 +191,48 @@
 
 
 /* MEDIA REQUESTS */
-@media (max-width: 2660px){
+@media (min-width: 1800px){
     .login-box {
-        background-image: url("/static/images/pages/login_truck-2660.jpg");
+        background-image: url("/static/images/pages/login_back_2400-min.jpg");
     }
 }
 
-@media (max-width: 2048px){
+@media (max-width: 1800px){
     .login-box {
-        background-image: url("/static/images/pages/login_truck-2048.jpg");
+        background-image: url("/static/images/pages/login_back_1800-min.jpg");
     }
 }
 
-@media (max-width: 1024px){
+@media (max-width: 1500px){
     .login-box {
-        background-image: url("/static/images/pages/login_truck-1024.jpg");
+        background-image: url("/static/images/pages/login_back_1500-min.jpg");
     }
 }
 
-@media (max-width: 612px){
+@media (max-width: 1200px){
     .login-box {
-        background-image: url("/static/images/pages/login_truck-612.jpg");
+        background-image: url("/static/images/pages/login_back_1200-min.jpg");
     }
 }
+
+@media (max-width: 1000px){
+    .login-box {
+        background-image: url("/static/images/pages/login_back_1000-min.jpg");
+    }
+}
+
+@media (max-width: 800px){
+    .login-box {
+        background-image: url("/static/images/pages/login_back_800-min.jpg");
+    }
+}
+
+@media (max-width: 600px){
+    .login-box {
+        background-image: url("/static/images/pages/login_back_600-min.jpg");
+    }
+}
+
 
 @media (orientation: portrait) {
     .sign-regist-form-box {
