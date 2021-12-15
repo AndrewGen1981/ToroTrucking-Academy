@@ -570,8 +570,15 @@ footer {
 }
 
 .social-block {
+    width: 25%;
     display: block;
-    margin-right: 3rem;
+    margin-right: 2rem;
+}
+.-big-block {
+    width: 35%;
+}
+.-small-block {
+    width: 15%;
 }
 .social-block-title {
     font-family: "Industrial Bold";
@@ -585,7 +592,7 @@ footer {
     font-family: "BrixSlab-light";
     font-size: 0.867rem;
     line-height: 1.2rem;
-    text-align: left;
+    text-align: justify;
     
     color: #bbbbbb;
     margin-bottom: 1rem;
@@ -599,13 +606,90 @@ footer {
     display: flex;
     flex-wrap: nowrap;
 }
+.social-icons {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: 1rem;
+}
+.social-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+    border-radius: 100%;
+
+    cursor: pointer;
+}
+.social-icon:hover {
+    fill:#545c66;
+    transition: fill 0.2s linear;
+}
+.-facebook-icon {
+    fill: #ffffff;
+    background-color: #ef5a29;
+}
+.-twitter-icon {
+    padding: 3px;
+    fill: #ffffff;
+    background-color: #ef5a29;
+}
+.-google-plus-icon {
+    fill: #ffffff;
+    background-color: #ef5a29;
+}
+
 .twitter {
-    width: 1rem;
-    height: 1rem;
-    margin-right: 1rem;
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
 
     fill: #ef5a29;
 }
+
+
+
+/* nav-bottom */
+.nav-bottom {
+    width: 100%;
+    padding: 2rem 0;
+    background-color: #2e2e2e;
+}
+.nav-bottom-box {
+    width: 61%;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.nav-left, .nav-right {
+    width: 50%;
+    display: flex;
+}
+.nav-right {
+    justify-content: space-between;
+}
+
+.nav-left-item {
+    font-family: "Industrial Bold";
+    font-size: 0.867rem;
+    line-height: 1.867rem;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+.nav-right-item {
+    font-family: "Industrial Medium";
+    font-size: 0.933rem;
+    line-height: 1.6rem;
+    text-align: left;
+    text-transform: uppercase;
+    color: #bbbbbb;
+
+    margin-right: 2rem;
+}
+
+
 
 /* 
 @Industrial
