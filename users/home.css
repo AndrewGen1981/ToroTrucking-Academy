@@ -587,4 +587,7 @@ header::after {
         font-size: 1.35rem;
         line-height: 1.5rem;
     }
+    .nav-right-item {
+        margin: 0 0.25rem;
+    }
 }
