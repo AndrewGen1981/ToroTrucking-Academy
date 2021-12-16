@@ -380,7 +380,6 @@ header::after {
 
 
 /* NAV BOTTOM */
-/* nav-bottom */
 .nav-bottom {
     width: 100%;
     padding: 2rem 0;
@@ -420,4 +419,163 @@ header::after {
     color: #bbbbbb;
 
     margin-right: 2rem;
+}
+
+
+@media (max-width: 1510px) {
+    .profile-box, .nav-bottom-box {
+        width: 75%;
+    }
+}
+@media (max-width: 1250px) {
+    .profile-box, .nav-bottom-box {
+        width: 85%;
+    }
+}
+@media (max-width: 1100px) {
+    .profile-box, .nav-bottom-box {
+        width: 95%;
+    }
+    .nav-menu {
+        left: 6rem;
+    }
+    .nav-item {
+        font-size: 1.35rem;
+        line-height: 2rem;
+    }
+    .welcome-box {
+        left: 5rem;
+    }
+    .welcome-name {
+        font-size: 3rem;
+        line-height: 3.5rem;
+    }
+    header::after {
+        background-size: 5.5rem;
+        background-position-x: 1rem;
+    }
+}
+@media (max-width: 970px) {
+    .nav-item {
+        font-size: 1.2rem;
+    }
+    .welcome-name {
+        font-size: 2.5rem;
+        line-height: 3rem;
+    }
+    .block-title {
+        text-align: center;
+    }
+    .profile-box {
+        width: 65%;
+        flex-direction: column;
+    }
+    .applicants-area {
+        align-items: center;
+    }
+    .left-side, .right-side {
+        width: 100%;
+    }
+    .block-item {
+        margin-left: 20%;
+    }
+    form {
+        display: flex;
+        justify-content: center;
+    }
+    .update-form {
+        width: 65%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .-infobox {
+        margin-left: 0;
+    }
+    .nav-bottom-box {
+        flex-direction: column;
+    }
+    .nav-left, .nav-right {
+        width: 95%;
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 735px) {
+    header {
+        height: 35vw;
+    }
+    header::after {
+        background-image: none;
+    }
+    .nav-menu {
+        left: 0;
+    }
+    .welcome-box {
+        left: 0;
+    }
+    .welcome-name, .welcome-text {
+        text-align: center;
+    }
+    .profile-box {
+        width: 95%;
+        position: relative;
+        z-index: 2;
+    }
+    .profile-box:before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0;
+        right: 0; bottom:0;
+
+        background-image: url(/static/images/logo-badge-black.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        opacity: 0.1;
+        z-index: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .update-form {
+        width: 90%;
+    }
+    .inputs {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+    .welcome-name {
+        font-size: 2rem;
+        line-height: 2.2rem;
+    }
+    .welcome-text {
+        font-size: 1.25rem;
+        line-height: 1.5rem;
+    }
+    .nav-item {
+        font-family: "Industrial Medium";
+        line-height: 1.4rem;
+        font-size: 0.933rem;
+    }
+    .profile-box {
+        margin: 2rem auto;
+    }
+    .inputs input {
+        margin-top: 10px;
+        width: 75%;
+    }
+    .nav-right-item {
+        text-align: center;
+        line-height: 1rem;
+    }
+    .nav-menu {
+        flex-wrap: wrap;
+        bottom: 100%;
+    }
+    .nav-item {
+        width: 33%;
+        text-align: center;
+        /* font-size: 0.933rem; */
+    }
 }
