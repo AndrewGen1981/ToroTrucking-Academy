@@ -579,3 +579,12 @@ header::after {
         /* font-size: 0.933rem; */
     }
 }
+@media (max-width: 400px) {
+    .block-item {
+        margin-left: 5%;
+    }
+    .welcome-name {
+        font-size: 1.35rem;
+        line-height: 1.5rem;
+    }
+}
