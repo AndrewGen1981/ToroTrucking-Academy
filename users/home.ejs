@@ -4,163 +4,249 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>TTA / Student Profile</title>
 
-    <style>
-        @keyframes Moving {
-            0% { color: red }
-            50% {color: white}
-            100% { color: blue }
-        }
-        .moving {
-            animation: Moving 2s ease-in-out alternate infinite
-        }
-    </style>
+    <link rel="shortcut icon" href="/static/images/thumb.png">
+        
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/css/fonts.css">
+    <link rel="stylesheet" href="../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../static/css/colors.css">
+        
+    <link rel="stylesheet" href="/users/home.css">
 
 </head>
 <body>
-    <h1>Home</h1>
-    <!-- <a href="/user">Main</a> -->
-    <a href="/">Main</a>
-    <form action="/user/logout" method="POST">
-        <button type="submit">Logout</button>
-    </form>
- 
-    <% if (user) { %>
-        <section>
-            <h2>Profile</h2>
-            <ul>
-                <li>User Nickname: <%= user.name %></li>
-                <li>Email: <%= user.email %></li>
 
-                <% if(!user.token || user.token === 'not sent') { %>
-                    <li id="emailStatus">
-                        <p>Your email is not verified.</p>
-                        <p>Verification email wasn't sent to you automatically.</p>
-                        <form action="/user/sendToken" method="POST">
-                            <small>You can send it manually</small>
-                            <input type="hidden" name="name" value="<%= user.name %>" readonly>
-                            <input type="hidden" name="email" value="<%= user.email %>" readonly>
-                            <button type="submit">Send</button>
-                        </form>
-                    </li>
-                <% } else { %>
-                    <% if(user.token === 'verified') { %>
-                        <li id="emailStatus">trusted email</li>
-                    <% } else { %>
-                        <li id="emailStatus">
-                            <p>Your email is not verified yet.</p>
-                            <p>Verification email was sent to you.</p>
-                            <small>Follow the instructions in it to accomplish a verification process.</small><br>
-                            <small>Or you can send it one more time, but first check your INBOX or SPAM if needed.</small><br>
-                            <small>Meanwhile forms below and other data will be unavailable for you.</small><br>
-                            <p>Can't wait to show you what we have. Please comeback asap</p>
-                            <% if(user.msg.e != 'verTokenSent') { %>
-                                <form action="/user/sendToken" method="POST">
-                                    <small>Resend verification email</small>
-                                    <input type="hidden" name="name" value="<%= user.name %>" readonly>
-                                    <input type="hidden" name="email" value="<%= user.email %>" readonly>
-                                    <button type="submit">Send</button>
-                                </form>
-                            <% } %>
-                        </li>
-                    <% } %>
-                <% } %>
+    <!-- sprite -->
+    <svg class='-hidden-sprite'>
+        <symbol id="next" viewBox="0 0 489 489">
+            <path d="M59.7,255.005c-44,53.5-59.7,116.5-59.7,157.6c0,5.6,3.7,10.4,9.1,11.8c1,0.3,2.1,0.4,3.1,0.4c4.3,0,8.4-2.3,10.7-6.2 c62.3-109.8,179.8-115.6,256.5-115.9v79.5c0,4.7,2.7,9.1,7,11.1s9.4,1.4,13-1.6l185.2-153.2c2.8-2.3,4.4-5.8,4.4-9.4 c0-3.7-1.6-7.1-4.5-9.4l-185-152.7c-3.7-3-8.7-3.7-13-1.6c-4.3,2-7,6.3-7,11.1v79.8C161.7,160.605,95.1,211.905,59.7,255.005z M291.8,180.405c6.7-0.1,12.1-5.5,12.1-12.3v-65.7l153.6,126.7l-153.6,127.1v-65.7c0-3.2-1.3-6.4-3.6-8.7c-2.3-2.3-5.4-3.6-8.7-3.6 c-71.3,0-184.7,0-260.6,86.6C50.1,289.405,115.8,182.105,291.8,180.405z"/>
+        </symbol>
+    </svg>
 
-                <li>
-                    Created:
-                    <span><%= new Date(user.created).toLocaleDateString() %></span>
-                    <span><%= new Date(user.created).toLocaleTimeString() %></span>
-                </li>
-                <li>
-                    Session started:
-                    <span><%= new Date(user.lastSESS).toLocaleDateString() %></span>
-                    <span><%= new Date(user.lastSESS).toLocaleTimeString() %></span>
-                </li>
-            </ul>
-        </section>
+    <header>
+        <nav class="nav-menu">
+           <a class="nav-item" href="/">Home</a>
+           <a class="nav-item -inac" href="">About Us</a>
+           <a class="nav-item -inac" href="">CDL Programs</a>
+           <a class="nav-item -inac" href="">FAQs</a>
+           <a class="nav-item -inac" href="">CLP</a>
+           <a class="nav-item -inac" href="">Contact Us</a>
+           <span class="nav-item -contact">833-867-6235</span>
+        </nav>
 
-        <section>
-            <h3>Update Password Section</h3>
-            <form action="/user/password" method="POST">
-                <input type="password" name='currentPassword' placeholder="Current Password" required />
-                <input type="password" name='newPassword' placeholder="New Password" required />
-                <label for="showPasswords">
-                    <input type="checkbox" id='showPasswords'/>
-                    show passwords
-                </label>
-                <button type="submit">Submit</button>
-            </form>
+        <% const prompt = user ? `Hello, ${user.name}` : 'Hello!' %>
+
+        <section class="welcome-box">
+            <h2 class="welcome-name"> <%= prompt %> </h2>
+            <h1 class="welcome-text">Welcome to your personal account</h1>
         </section>
         
-        <section>
-            <h4><%= user.msg.class.toUpperCase() %></h4>
-            <p class="<%= user.msg.class %>"><%= user.msg.txt %></p>
-        </section>
+    </header>
 
-        <section>
-            <h3>Applicants Area</h3>
-            <div>
-                <% if(user.token === 'verified') { %>
-                    <!-- if email is verified, then show forms -->
+    
+    <div class="profile-box">
+
+        <% if (!user) { %>
+            <p class="no-user-issue">No info about user has been found...</p>
+            <p class="no-user-issue">try to login please properly</p>
+        <% } else { %>
+
+            <div class="left-side">
+                <h3 class="block-title">Applicants Area</h3>
+                <section class="applicants-area">
+                
+                <% if(user.token === 'verified') { %>     <!-- if email is verified, then show forms -->
                     <% if (user.applicantProgress.form1) { %>
-                        <div>
-                            <span>#1 STUDENT DATA COLLECTION FORM</span><span> + </span>
-                        </div>
+                        <a class="form-done" href="/user/print-form/1">STUDENT DATA COLLECTION FORM</a>
                         <% if (user.applicantProgress.form2) { %>
-                            <div>
-                                <span>#2 APPLICATION FOR ENROLLMENT</span><span> + </span>
-                            </div>
+                            <a class="form-done" href="/user/print-form/2">APPLICATION FOR ENROLLMENT</a>
                             <% if (user.applicantProgress.form3) { %>
-                                <div>
-                                    <span>#3 ENROLLMENT AGREEMENT</span><span> + </span>
-                                </div>
+                                <a class="form-done" href="/user/print-form/3">ENROLLMENT AGREEMENT</a>
                             <% } else { %>
-                                <div>
-                                    <a href='/user/form3'>#3 ENROLLMENT AGREEMENT</a><span class="moving"> <= </span>
-                                </div>
+                                <a class="form-todo" href="/user/form3">
+                                    <svg class="next-mark">
+                                        <use xlink:href="#next"></use> 
+                                    </svg>ENROLLMENT AGREEMENT
+                                </a>
                             <% } %>
                         <% } else { %>
-                            <div>
-                                <a href='/user/form2'>#2 APPLICATION FOR ENROLLMENT</a><span class="moving"> <= </span>
-                            </div>
-                            <div>
-                                <span>#3 ENROLLMENT AGREEMENT</span><span> - </span>
-                            </div>
+                                <a class="form-todo" href="/user/form2">
+                                    <svg class="next-mark">
+                                        <use xlink:href="#next"></use> 
+                                    </svg>APPLICATION FOR ENROLLMENT
+                                </a>
+                                <a class="form-not-done">ENROLLMENT AGREEMENT</a>
                         <% } %>
                     <% } else { %>
-                        <div>
-                            <a href='/user/form1'>#1 STUDENT DATA COLLECTION FORM</a><span class="moving"> <= </span>
-                        </div>
-                        <div>
-                            <span>#2 APPLICATION FOR ENROLLMENT</span><span> - </span>
-                        </div>
-                        <div>
-                            <span>#3 ENROLLMENT AGREEMENT</span><span> - </span>
-                        </div>
+                        <a class="form-todo" href="/user/form1">
+                            <svg class="next-mark">
+                                <use xlink:href="#next"></use> 
+                            </svg>STUDENT DATA COLLECTION FORM
+                        </a>
+                        <a class="form-not-done">APPLICATION FOR ENROLLMENT</a>
+                        <a class="form-not-done">ENROLLMENT AGREEMENT</a>
                     <% } %>
-                <% } else { %>
-                    <!-- email is NOT verified, show warning -->
-                    <h4>
-                        Enrollment forms cannot be available for you because of your email still stays unverified. Please find our verification letter among your incoming emails (check spam folder, if needed) and stick to instructions given in it. Or you can generate one more verification letter, but be aware that only last generated will be valid one.
-                    </h4>
-                    <div>
-                        <span>#1 STUDENT DATA COLLECTION FORM</span>
-                    </div>
-                    <div>
-                        <span>#2 APPLICATION FOR ENROLLMENT</span>
-                    </div>
-                    <div>
-                        <span>#3 ENROLLMENT AGREEMENT</span>
+                <% } else { %>      <!-- email is NOT verified, show warning -->
+                    <a class="form-not-done">STUDENT DATA COLLECTION FORM</a>
+                    <a class="form-not-done">APPLICATION FOR ENROLLMENT</a>
+                    <a class="form-not-done">ENROLLMENT AGREEMENT</a>
+                    <div class="block-item">
+                        <span class="block-value">Enrollment forms cannot be available because your email still stays unverified. Please find our verification letter among your incoming emails (check spam folder, if needed) and stick with instructions given in it. Or you can generate one more verification letter, but be aware that only last generated will be valid one.</span>
                     </div>
                 <% } %>
+                </section>  <!-- applicants-area -->
+            </div>   <!-- left-side -->
 
+            
+            <div class="right-side">
+                <section class="profile-info">
+                    <h3 class="block-title">Profile info</h3>
+
+                    <div class="block-item">    <!-- nickname -->
+                        <svg class="ico -user" viewBox="0 0 24 24">
+                            <g transform="translate(0 -1028.4)">
+                                <path d="m8.4062 1041.1c-2.8856 1.3-4.9781 4-5.3437 7.3 0 1.1 0.8329 2 1.9375 2h14c1.105 0 1.938-0.9 1.938-2-0.366-3.3-2.459-6-5.344-7.3-0.649 1.3-2.011 2.3-3.594 2.3s-2.9453-1-3.5938-2.3z"/>
+                                <path d="m17 4a5 5 0 1 1 -10 0 5 5 0 1 1 10 0z" transform="translate(0 1031.4)"/>
+                                <path d="m12 11c-1.277 0-2.4943 0.269-3.5938 0.75-2.8856 1.262-4.9781 3.997-5.3437 7.25 0 1.105 0.8329 2 1.9375 2h14c1.105 0 1.938-0.895 1.938-2-0.366-3.253-2.459-5.988-5.344-7.25-1.1-0.481-2.317-0.75-3.594-0.75z" transform="translate(0 1028.4)"/>
+                            </g>
+                        </svg>
+                        <span class="block-key">User Nickname<span class="block-value"><%= user.name %></span></span>
+                    </div>  <!-- nickname -->
+
+                    <div class="block-item">    <!-- email -->
+                        <svg class="ico -email" viewBox="0 0 512 512">
+                            <path d="M67,148.7c11,5.8,163.8,89.1,169.5,92.1c5.7,3,11.5,4.4,20.5,4.4c9,0,14.8-1.4,20.5-4.4c5.7-3,158.5-86.3,169.5-92.1   c4.1-2.1,11-5.9,12.5-10.2c2.6-7.6-0.2-10.5-11.3-10.5H257H65.8c-11.1,0-13.9,3-11.3,10.5C56,142.9,62.9,146.6,67,148.7z"/>
+                            <path d="M455.7,153.2c-8.2,4.2-81.8,56.6-130.5,88.1l82.2,92.5c2,2,2.9,4.4,1.8,5.6c-1.2,1.1-3.8,0.5-5.9-1.4l-98.6-83.2   c-14.9,9.6-25.4,16.2-27.2,17.2c-7.7,3.9-13.1,4.4-20.5,4.4c-7.4,0-12.8-0.5-20.5-4.4c-1.9-1-12.3-7.6-27.2-17.2l-98.6,83.2   c-2,2-4.7,2.6-5.9,1.4c-1.2-1.1-0.3-3.6,1.7-5.6l82.1-92.5c-48.7-31.5-123.1-83.9-131.3-88.1c-8.8-4.5-9.3,0.8-9.3,4.9   c0,4.1,0,205,0,205c0,9.3,13.7,20.9,23.5,20.9H257h185.5c9.8,0,21.5-11.7,21.5-20.9c0,0,0-201,0-205   C464,153.9,464.6,148.7,455.7,153.2z"/>
+                        </svg>
+                        <span class="block-key">Email<span class="block-value"><%= user.email %></span></span>
+                    </div>  <!-- email -->
+
+                    <div class="block-area" id="emailStatus">    <!-- token -->
+                        <% if(!user.token || user.token === 'not sent') { %>
+                            
+                            <svg class="ico -caution" viewBox="0 0 554.2 554.199">
+                                <path d="M538.5,386.199L356.5,70.8c-16.4-28.4-46.7-45.9-79.501-45.9c-32.8,0-63.1,17.5-79.5,45.9L12.3,391.6c-16.4,28.4-16.4,63.4,0,91.8C28.7,511.8,59,529.3,91.8,529.3H462.2c0.101,0,0.2,0,0.2,0c50.7,0,91.8-41.101,91.8-91.8C554.2,418.5,548.4,400.8,538.5,386.199z M316.3,416.899c0,21.7-16.7,38.3-39.2,38.3s-39.2-16.6-39.2-38.3V416c0-21.601,16.7-38.301,39.2-38.301S316.3,394.3,316.3,416V416.899z M317.2,158.7L297.8,328.1c-1.3,12.2-9.4,19.8-20.7,19.8s-19.4-7.7-20.7-19.8L237,158.6c-1.3-13.1,5.801-23,18-23H299.1C311.3,135.7,318.5,145.6,317.2,158.7z"/>
+                            </svg>
+                            <span class="block-key">Authorized<span class="block-value -caution">Your email is not verified</span></span>
+                            <p class="block-value -caution">Verification email wasn't sent you yet</p>
+                            <form action="/user/sendToken" method="POST">
+                                <small class="block-value">You can send it manually</small>
+                                <input type="hidden" name="name" value="<%= user.name %>" readonly>
+                                <input type="hidden" name="email" value="<%= user.email %>" readonly>
+                                <button class="-btn" type="submit">Send</button>
+                            </form>
+
+                        <% } else { %>
+                            <% if(user.token === 'verified') { %>
+                                <div class="block-item">    <!-- token -->
+                                    <svg class="ico -trusted" viewBox="0 0 455 455">
+                                        <path d="M0,0v455h455V0H0z M194.93,319.897l-87.837-87.837l21.213-21.213l66.625,66.624l131.764-131.763l21.213,21.213 L194.93,319.897z"/>
+                                    </svg>
+                                    <span class="block-key">Authorized<span class="block-value -trusted">Trusted email</span></span>
+                                </div>  <!-- token -->
+                            <% } else { %>
+                                <svg class="ico -warning" viewBox="0 0 554.2 554.199">
+                                    <path d="M538.5,386.199L356.5,70.8c-16.4-28.4-46.7-45.9-79.501-45.9c-32.8,0-63.1,17.5-79.5,45.9L12.3,391.6c-16.4,28.4-16.4,63.4,0,91.8C28.7,511.8,59,529.3,91.8,529.3H462.2c0.101,0,0.2,0,0.2,0c50.7,0,91.8-41.101,91.8-91.8C554.2,418.5,548.4,400.8,538.5,386.199z M316.3,416.899c0,21.7-16.7,38.3-39.2,38.3s-39.2-16.6-39.2-38.3V416c0-21.601,16.7-38.301,39.2-38.301S316.3,394.3,316.3,416V416.899z M317.2,158.7L297.8,328.1c-1.3,12.2-9.4,19.8-20.7,19.8s-19.4-7.7-20.7-19.8L237,158.6c-1.3-13.1,5.801-23,18-23H299.1C311.3,135.7,318.5,145.6,317.2,158.7z"/>
+                                </svg>
+                                <span class="block-key">Authorized<span class="block-value -warning">Your email is not verified</span></span>
+                                <p class="block-value -warning">Verification email was sent to you</p>
+                               
+                                <% if(user.msg.e != 'verTokenSent') { %>
+                                    <form action="/user/sendToken" method="POST">
+                                        <small class="block-value">Resend verification email</small>
+                                        <input type="hidden" name="name" value="<%= user.name %>" readonly>
+                                        <input type="hidden" name="email" value="<%= user.email %>" readonly>
+                                        <button class="-btn" type="submit">Resend</button>
+                                    </form>
+                                <% } %>
+                            <% } %>
+                        <% } %>
+                    </div>  <!-- token -->
+
+                    <div class="block-item">    <!-- created -->
+                        <svg class="ico -clock" viewBox="0 0 125.668 125.668">
+                            <path d="M84.17,76.55l-16.9-9.557V32.102c0-2.541-2.061-4.601-4.602-4.601s-4.601,2.061-4.601,4.601v37.575c0,0.059,0.016,0.115,0.017,0.174c0.006,0.162,0.025,0.319,0.048,0.479c0.021,0.146,0.042,0.291,0.076,0.433c0.035,0.141,0.082,0.277,0.129,0.414c0.051,0.146,0.1,0.287,0.164,0.426c0.061,0.133,0.134,0.257,0.208,0.383c0.075,0.127,0.148,0.254,0.234,0.374c0.088,0.122,0.188,0.235,0.288,0.349c0.097,0.11,0.192,0.217,0.299,0.317c0.107,0.101,0.222,0.19,0.339,0.28c0.126,0.098,0.253,0.191,0.39,0.276c0.052,0.031,0.092,0.073,0.145,0.102L79.64,84.562c0.716,0.404,1.493,0.597,2.261,0.597c1.605,0,3.163-0.841,4.009-2.337C87.161,80.608,86.381,77.801,84.17,76.55z"/>	
+                            <path d="M62.834,0C28.187,0,0,28.187,0,62.834c0,34.646,28.187,62.834,62.834,62.834c34.646,0,62.834-28.188,62.834-62.834C125.668,28.187,97.48,0,62.834,0z M66.834,115.501v-9.167h-8v9.167c-24.77-1.865-44.823-20.872-48.292-45.167h9.459v-8h-9.988c0.258-27.558,21.716-50.126,48.821-52.167v9.167h8v-9.167c27.104,2.041,48.563,24.609,48.821,52.167h-9.487v8h8.958C111.657,94.629,91.605,113.636,66.834,115.501z"/>
+                        </svg>
+                        <span class="block-key">Profile Created<span class="block-value"><%= new Date(user.created).toLocaleDateString() %> • <%= new Date(user.created).toLocaleTimeString() %></span></span>
+                    </div>  <!-- created -->
+
+                    <div class="block-item">    <!-- session -->
+                        <svg class="ico -session" viewBox="0 0 16 16">
+                            <path d="M6.16 4.6c1.114 0.734 1.84 1.979 1.84 3.394 0 0.002 0 0.004 0 0.006v-0c0-0.002 0-0.004 0-0.006 0-1.415 0.726-2.66 1.825-3.384 0.573-0.385 0.984-0.939 1.17-1.589l-5.995-0.020c0.191 0.67 0.603 1.225 1.15 1.594z"></path>
+                            <path d="M11.18 6.060c1.107-0.808 1.819-2.101 1.82-3.56v-0.5h1v-2h-12v2h1v0.5c0.001 1.459 0.713 2.752 1.808 3.551 0.672 0.43 1.121 1.13 1.192 1.939-0.093 0.848-0.551 1.564-1.209 2.003-1.081 0.814-1.772 2.078-1.79 3.503l-0 0.503h-1v2h12v-2h-1v-0.5c-0.018-1.429-0.709-2.692-1.769-3.492-0.68-0.454-1.138-1.169-1.23-1.996 0.071-0.831 0.52-1.532 1.169-1.946zM9 8c0.072 1.142 0.655 2.136 1.519 2.763 0.877 0.623 1.445 1.61 1.481 2.732l0 0.505h-8v-0.5c0.036-1.127 0.604-2.114 1.459-2.723 0.886-0.642 1.468-1.635 1.54-2.766-0.063-1.124-0.641-2.091-1.498-2.683-0.914-0.633-1.499-1.662-1.502-2.827v-0.5h8v0.5c-0.003 1.166-0.587 2.195-1.479 2.813-0.88 0.607-1.458 1.574-1.521 2.678z"></path>
+                        </svg>
+                        <span class="block-key">Session Started<span class="block-value"><%= new Date(user.lastSESS).toLocaleDateString() %> • <%= new Date(user.lastSESS).toLocaleTimeString() %></span></span>
+                    </div>  <!-- session -->
+
+                    <div class="block-item">    <!-- expired -->
+                        <svg class="ico -expired" viewBox="0 0 16 16">
+                            <path d="M6.16 4.6c1.114 0.734 1.84 1.979 1.84 3.394 0 0.002 0 0.004 0 0.006v-0c0-0.002 0-0.004 0-0.006 0-1.415 0.726-2.66 1.825-3.384 0.573-0.385 0.984-0.939 1.17-1.589l-5.995-0.020c0.191 0.67 0.603 1.225 1.15 1.594z"></path>
+                            <path d="M11.18 6.060c1.107-0.808 1.819-2.101 1.82-3.56v-0.5h1v-2h-12v2h1v0.5c0.001 1.459 0.713 2.752 1.808 3.551 0.672 0.43 1.121 1.13 1.192 1.939-0.093 0.848-0.551 1.564-1.209 2.003-1.081 0.814-1.772 2.078-1.79 3.503l-0 0.503h-1v2h12v-2h-1v-0.5c-0.018-1.429-0.709-2.692-1.769-3.492-0.68-0.454-1.138-1.169-1.23-1.996 0.071-0.831 0.52-1.532 1.169-1.946zM9 8c0.072 1.142 0.655 2.136 1.519 2.763 0.877 0.623 1.445 1.61 1.481 2.732l0 0.505h-8v-0.5c0.036-1.127 0.604-2.114 1.459-2.723 0.886-0.642 1.468-1.635 1.54-2.766-0.063-1.124-0.641-2.091-1.498-2.683-0.914-0.633-1.499-1.662-1.502-2.827v-0.5h8v0.5c-0.003 1.166-0.587 2.195-1.479 2.813-0.88 0.607-1.458 1.574-1.521 2.678z"></path>
+                        </svg>
+                        <span class="block-key">Session will be expired at<span class="block-value"><%= new Date(SESS_EXP).toLocaleTimeString() %></span></span>
+                    </div>  <!-- expired -->
+
+
+                    <form action="/user/logout" method="POST">
+                        <button class="-btn -big-btn" type="submit">Logout</button>
+                    </form>
+
+                </section>  <!-- profile-info -->
+            </div>  <!-- right-side -->
+
+
+            <!-- 2ND ROW -->
+            <div class="left-side">
+                <h3 class="block-title">Update Password</h3>
+                <form class="update-form" action="/user/password" method="POST">
+                    <div class="inputs">
+                        <input type="password" name='currentPassword' placeholder="Current Password" required />
+                        <input type="password" name='newPassword' placeholder="New Password" required />
+                    </div>
+                    <label class="show-password" for="showPasswords">
+                        <input type="checkbox" id='showPasswords'/>
+                        show passwords
+                    </label>
+                    <button class="-btn -big-btn -hlt" type="submit">Submit</button>
+                </form>
+            </div>   <!-- left-side -->
+            
+            <div class="right-side">
+                <h3 class="block-title">INFOBOX</h3>
+                <div class="block-item">    <!-- INFO -->
+                    <span class="block-key"><%= user.msg.class.toUpperCase() %><span class="block-value -<%= user.msg.class %>"><%= user.msg.txt %></span></span>
+                </div>  <!-- INFO -->
+
+            </div>  <!-- right-side -->
+
+                    
+
+        <% } %>     <!-- USER is OK -->
+
+
+    </div>  <!--- profile-box -->
+
+
+    <div class="nav-bottom">
+        <div class="nav-bottom-box">
+            <div class="nav-left">
+                <div class="nav-left-item">Toro Trucking Academy</div>
             </div>
-        </section>
+            <div class="nav-right">
+                <div class="nav-right-item">About Us</div>
+                <div class="nav-right-item">CDL Programs</div>
+                <div class="nav-right-item">FAQs</div>
+                <div class="nav-right-item">CLP</div>
+                <div class="nav-right-item">Contact Us</div>
+            </div>
+        </div>
+    </div>      <!-- nav-bottom -->
 
-    <% } else { %>
-        <p>No info about user has been found...</p>
-    <% } %>
+
 
     <script defer>
         localStorage.setItem('id', '<%- user._id %>')
@@ -183,7 +269,8 @@
             if (user) {
                 if (user.documentKey._id === localStorage.getItem('id')) {
                     if (user.updateDescription.updatedFields.token === "verified") {
-                        document.querySelector('#emailStatus').textContent = "Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you."
+                        alert("Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you.")
+                        document.location.reload();
                     }
                 }
             }

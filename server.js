@@ -17,6 +17,8 @@ if (process.env.NODE_ENV === 'production') {
     HTTPDOMAIN = 'http://localhost'
 }
 
+// saving ROOT DIR into globals to use in other routes
+global.__basedir = __dirname
 
 // set the view engine to ejs
 app.set('view engine', 'ejs')

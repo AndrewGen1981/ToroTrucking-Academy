@@ -123,7 +123,10 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
     : status === 'info' ? { class: 'info', txt: getInfoMessage(e), e }
     : { class: 'info', txt: "Wellcome back" }
 
-    res.render(path.join(__dirname+'/home.ejs'), { user :  res.locals.user } )
+    res.render(path.join(__dirname+'/home.ejs'), { 
+        user:  res.locals.user,
+        SESS_EXP: req.session.cookie._expires
+    })
 })
 
 userRouter.get('/login', redirectToHome, (req, res) => {
@@ -451,6 +454,49 @@ userRouter.post('/token/:token', async (req, res) => {
         } catch(e) { return res.status(500).send("Server error, try later please...") }
     }
     res.status(500).send("Sorry, email verification was unsuccessful. Try again later")
+})
+
+
+
+// copy of admin's method, prints a form for student
+userRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
+    
+    const formID = req.params.id
+
+    if (!formID) { return res.status(400).send(`Wrong form # request: ${formID}`) }
+
+    try {
+
+        const user = await User.findOne({ email: req.session.userId })
+        .populate('dataCollection')
+        .populate('application')
+        .populate('agreement')
+
+        if (user === null) { return res.status(400).send(`Wrong request: ${formID}`) }
+
+        const signer = {
+            name: "TTA Signer",
+            title: "Manager",
+            last: "Siger",
+            first: "Manager"
+        }
+
+        if (formID === '1') {
+            return res.render(path.join(global.__basedir+'/admin/views/_view-form1.ejs'), { user, signer })
+        } else {
+            if (formID === '2') {
+                return res.render(path.join(global.__basedir+'/admin/views/_view-form2.ejs'), { user, signer })
+            } else {
+                if (formID === '3') {
+                    return res.render(path.join(global.__basedir+'/admin/views/_view-form3.ejs'), { user, signer })
+                } else {
+                    return res.status(400).send(`Wrong request: ${formID}`)
+                }
+            }
+        }
+    } catch(e) {
+        res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
+    }
 })
 
 
