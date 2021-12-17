@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Profile</h1>
-    <a href="/admin">Main</a>
+    <a href="/">Main Page</a>
 
     <% if (user) { %>
         <ul>
@@ -27,6 +27,10 @@
                 <li><a href="/admin/student/">INs</a></li>
             </ul>
         </nav>
+        <form action="/admin/logout" method="POST">
+            <h3>Would you like to logout?</h3>
+            <button type="submit">Logout</button>
+        </form>
     <% } else { %>
         <p>no data about admin</p>
     <% } %>

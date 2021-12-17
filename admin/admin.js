@@ -107,7 +107,7 @@ admRouter.use((req, res, next) => {   // !!! general middleware - will be used b
 
 
 // LOGIN, MAIN, PROFILE ROUTES
-admRouter.get('/', (req, res) => {
+admRouter.get('/', redirectToHome, (req, res) => {
     res.render(path.join(__dirname+'/admWelcome.ejs'), {
         id: req.session.userId,
         issue: admin.ISSUES[req.query.logIssue]

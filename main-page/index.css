@@ -695,33 +695,6 @@ footer {
 
 
 
-/* 
-@Industrial
-font-family: "Industrial Medium";
-font-family: "Industrial Bold";
-
-
-@BRIX font family
-
-font-family: "BrixSlab-ExtraLight";
-font-family: "BrixSlab-ExtraLightItalic";
-
-font-family: "BrixSlab-Light";
-font-family: "BrixSlab-LightItalic";
-
-font-family: "BrixSlab-Regular";
-font-family: "BrixSlab-RegularItalic";
-
-font-family: "BrixSlab-Medium";
-font-family: "BrixSlab-MediumItalic";
-
-font-family: "BrixSlab-Bold";
-font-family: "BrixSlab-BlackItalic";
-
-*/
-
-
-
 @media (min-width: 1024px) {
     /* MORE than 1024px */
     header {

@@ -1,0 +1,203 @@
+/* @GENERAL */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+    font-family: "BrixSlab-Regular";
+    font-size: 15px;
+    font-weight: normal;
+}
+
+:root {
+    --cred-area-width: 33%;
+
+    --primary: #11998e;
+    --secondary: #13b4a7;
+}
+
+
+.adm-login-main {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #333;
+}
+.adm-login-inner {
+    width: 90%;
+    max-width: 1500px;
+    height: 75%;
+
+    display: flex;
+
+    box-shadow: 0px 0px 15px #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.adm-login-left {
+    width: calc(100% - var(--cred-area-width));
+    background-color: #e2e2e2;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.adm-login-right {
+    width: var(--cred-area-width);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background-color: #ffffff;
+}
+
+.log-title {
+    font-family: "Industrial Bold";
+    font-size: 2.5rem;
+
+    text-transform: uppercase;
+    text-align: center;
+    color: #4e4e4e;
+
+    margin-bottom: 1rem;
+}
+.log-subtitle {
+    font-family: "BrixSlab-LightItalic";
+    font-size: 1.5rem;
+
+    text-align: center;
+    color: var(--primary);
+
+    margin-bottom: 1rem;
+}
+
+.log-form {
+    text-align: center;
+}
+.log-input, .log-button {
+    width: 75%;
+    padding: 10px 0;
+
+    border: none;
+    background: none;
+    background-color: unset;
+
+    font-size: 1.35rem;
+    text-align: center;
+    color: var(--primary);
+
+    border-radius: 5px;
+    margin-bottom: 1.2rem;
+}
+.log-input:focus {
+    outline: none;
+    background: transparent;
+}
+.log-button {
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: var(--primary);
+    cursor: pointer;
+}
+.log-button:hover {
+    background-color: var(--secondary);
+    transition: background-color 0.2s linear;
+}
+
+.log-issue {
+    font-family: "BrixSlab-LightItalic";
+    text-align: center;
+    color: var(--bad-todo);
+}
+
+.home {
+    width: 75%;
+    text-align: right;
+}
+.home a {
+    font-family: "BrixSlab-LightItalic";
+    font-size: 0.83rem;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+
+/* 
+@Industrial
+font-family: "Industrial Medium";
+font-family: "Industrial Bold";
+
+
+@BRIX font family
+
+font-family: "BrixSlab-ExtraLight";
+font-family: "BrixSlab-ExtraLightItalic";
+
+font-family: "BrixSlab-Light";
+font-family: "BrixSlab-LightItalic";
+
+font-family: "BrixSlab-Regular";
+font-family: "BrixSlab-RegularItalic";
+
+font-family: "BrixSlab-Medium";
+font-family: "BrixSlab-MediumItalic";
+
+font-family: "BrixSlab-Bold";
+font-family: "BrixSlab-BlackItalic";
+
+*/
+
+
+@media (min-width: 1200px) {
+    .adm-login-left {
+        background-image: url('/static/images/pages/adm-login/adm-login-1500.jpg');
+    }
+}
+@media (max-width: 1200px) {
+    .adm-login-left {
+        background-image: url('/static/images/pages/adm-login/adm-login-1200.jpg');
+    }
+    :root {
+        --cred-area-width: 45%;
+    }
+}
+@media (max-width: 1000px) {
+    .adm-login-left {
+        background-image: url('/static/images/pages/adm-login/adm-login-1000.jpg');
+    }
+}
+@media (max-width: 900px) {
+    :root {
+        --cred-area-width: 50%;
+    }
+}
+@media (max-width: 700px) {
+    .adm-login-left {
+        background-image: url('/static/images/pages/adm-login/adm-login-700.jpg');
+    }
+}
+@media (max-width: 630px) {
+    .adm-login-main {
+        background-image: url('/static/images/pages/adm-login/adm-login-700.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .adm-login-left {
+        display: none;
+    }
+    .adm-login-right {
+        width: 100%;
+    }
+}
+@media (max-width: 500px) {
+    .adm-login-main {
+        background-image: url('/static/images/pages/adm-login/adm-login-500.jpg');
+    }
+}
