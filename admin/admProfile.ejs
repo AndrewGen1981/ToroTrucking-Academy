@@ -4,36 +4,94 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>TTA | Admin '<%= user.id %>' Profile</title>
+
+    <link rel="shortcut icon" href="/static/images/thumb.png">
+        
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/css/fonts.css">
+    <link rel="stylesheet" href="../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../static/css/colors.css">
+        
+    <link rel="stylesheet" href="/admin/admProfile.css">
 </head>
 <body>
-    <h1>Profile</h1>
-    <a href="/">Main Page</a>
 
-    <% if (user) { %>
-        <ul>
-            <li>Name: <%= user.name %></li>
-            <li>ID: <%= user.id %></li>
-            <li>Email: <%= user.email %></li>
-            <li>Auth: <%= user.authString %></li>
-            <li>QR location: <%= user.location %></li>
-            <li>Session expires after: <%= new Date(SESS_EXPIRES).toLocaleTimeString() %></li>
-        </ul>
-        <nav>
-            <h2>Navigation</h2>
-            <ul>
-                <li><a href="/admin/user-area">Users Area</a></li>
-                <li><a href="/admin/student/list">Student List</a></li>
-                <li><a href="/admin/student/">INs</a></li>
-            </ul>
-        </nav>
-        <form action="/admin/logout" method="POST">
-            <h3>Would you like to logout?</h3>
-            <button type="submit">Logout</button>
-        </form>
-    <% } else { %>
-        <p>no data about admin</p>
-    <% } %>
+    <div class="main-adm-box">
+        <% if (user) { %>
+
+            <div class="left-panel">
+                <div class="navigation">
+                    <a class="-btn -main-page" href="/">Main Page</a>
+                    <div class="adm-profile">
+                        <p><%= user.email %></p>
+                        <p>Auth: <%= user.authString %></p>
+                        <p>QR location: <%= user.location %></p>
+                    </div>  <!-- adm-profile -->
+                    <form class="log-out-form" action="/admin/logout" method="POST">
+                        <button class="-btn -log-out" type="submit">Logout</button>
+                    </form>
+                </div>
+
+                <div class="navigation">
+                    <a class="-btn" href="/admin/user-area">Users Area</a>
+                    <a class="-btn" href="/admin/student/list">Student List</a>
+                    <a class="-btn" href="/admin/student/">INs</a>
+                </div>  <!-- navigation -->
+            </div>  <!-- left-panel -->
+
+            <div class="adm-desktop">
+                <div class="top-side">
+                    <div class="top-side-name"><%= user.name %></div>
+                    <div class="top-side-id"><%= user.id %></div>
+                </div>  <!-- top-side -->
+                <% if(analyticsArray) { %>
+                    <div class="chart-title">New Students Involving Chart</div>
+                    <div class="analythicsChart">
+                        <% for (const [key, value] of Object.entries(analyticsArray)) { %>
+                            <div class="chart-column" data-key="<%= value.month %>.<%= value.year %>" data-value="<%= value.newStudents %>"></div>
+                        <% } %>
+                    </div>  <!-- analythicsChart -->
+        
+                <% } %>
+            </div>  <!-- desktop -->
+
+        <% } %>     <!-- admin is defined -->
+    </div>  <!-- main-adm-box -->
+
+
+
+    <script>
+
+        // @drawing chart
+        // get chart div height depending on vh
+        const chart = document.querySelector(".analythicsChart")
+
+        if (chart) {
+            const maxHeight = parseFloat(getComputedStyle(chart).height)
+            const cols = document.querySelectorAll(".chart-column")
+            
+            // cols[1].dataset.value = '10'
+            // cols[2].dataset.value = '12'
+            // cols[4].dataset.value = '5'
+
+            if (maxHeight && cols) {
+                // find max value
+                let max = 0
+                for (let i=0; i<cols.length; i++) {
+                    if (parseInt(cols[i].dataset.value) > max) { max = parseInt(cols[i].dataset.value) }
+                }
+                if (max) {
+                    // setting values espectively to max
+                    for (let i=0; i<cols.length; i++) {
+                        cols[i].style.height = `${ parseInt(cols[i].dataset.value) * maxHeight / max }px`
+                    }
+                }
+            }
+        }
+
+    </script>
 
 </body>
 </html>
