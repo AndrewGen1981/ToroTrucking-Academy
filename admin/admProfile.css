@@ -11,7 +11,11 @@
 
 :root {
     --left-panel-width: 15vw;
+    --desktop-width: calc(100vw - var(--left-panel-width));
     --top-side-heihgt: 70px;
+
+    --chart-width: calc(var(--desktop-width) * 0.85);
+    --chart-column-width: calc(var(--chart-width) / 14);
 
     --main-color: #263544;
     --main-color60: #26354499;
@@ -22,6 +26,7 @@
 }
 .left-panel {
     width: var(--left-panel-width);
+    min-width: 175px;
     height: 100vh;
 
     background-color: var(--main-color);
@@ -31,7 +36,7 @@
     left: 0;
 }
 .adm-desktop {
-    width: calc(100vw - var(--left-panel-width));
+    width: var(--desktop-width);
     min-height: calc(100vh - var(--top-side-heihgt));
 
     margin-top: var(--top-side-heihgt);
@@ -41,12 +46,12 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    
+        
     background-color: #f2f7fb;
     color: #333;
 }
 .top-side {
-    width: calc(100vw - var(--left-panel-width));
+    width: var(--desktop-width);
     height: var(--top-side-heihgt);
 
     display: inline-flex;
@@ -152,15 +157,18 @@ font-family: "BrixSlab-BlackItalic";
 
 
 .analythicsChart {
-    width: 100%;
+    width: var(--chart-width);
     height: 30vh;
 
     display: flex;
     align-items: flex-end;
     justify-content: center;
+
+    /* align-self:flex-start; */
 }
 .chart-column {
-    width: 75px;
+    width: var(--chart-column-width);
+    max-width: 75px;
     margin-right: 3px;
 
     background-color: rgb(86, 181, 184);
@@ -187,6 +195,8 @@ font-family: "BrixSlab-BlackItalic";
     content: attr(data-key);
 
     width: 100%;
+    min-width: 75px;
+   
     text-align: center;
 
     position: absolute;
@@ -196,4 +206,29 @@ font-family: "BrixSlab-BlackItalic";
 .chart-column[data-value='0']::before {
     top: -1rem; 
     color: lightgray;
+}
+
+
+@media (max-width: 1170px) {
+    :root {
+        --left-panel-width: 175px;
+        
+    }
+    .chart-column::after {
+        transform: rotate(-90deg);
+        min-width: 1rem;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+
+        top: calc(100% + 2rem);
+
+    }
+}
+@media (max-width: 400px) {
+    :root {
+        font-size: 13px;
+        --chart-width: calc(var(--desktop-width) * 0.95);
+    }
 }
