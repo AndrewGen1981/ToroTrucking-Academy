@@ -145,8 +145,9 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
     // clocks should be a sorted array, because clocks appear one by one. But I'm sorting them one more time
     const clocks = sortClocksArray(clocksArray)
 
+    let studentClocks = []   // structured array of clock objects [{ date, dateKey, in, out, duration }]
     let TTT = 0
-    if (clocks.length === 0) { return TTT }
+    if (clocks.length === 0) { return { TTT, studentClocks } }     // studentClocks length will be 0 when no clocks!!! check this before use
 
     const minSessionDuration = qrCONFIG.checkFullPartTimeStudents ? minVisitingRequirements * 1000 * 60 * 60 : 1 * 1000 *60 *60      // 1h, if checkFullPartTimeStudents = false and 4/6 if true
     
@@ -162,9 +163,26 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
             if (dayClocksCount % 2 === 1) {     // this is a clock IN
                 lastClockIN = clocks[i].date    // saving last clock IN
                 sessionDuration = minSessionDuration    // and assume there will be no clock OUT
+                
+                // init new clock object
+                studentClocks.push({ 
+                    date: clocks[i].date, dateKey: clocks[i].key, 
+                    in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, 
+                    out: '-', outlat: '-', outlon: '-',
+                    duration: minSessionDuration
+                })
+
             } else {    // this is a clock OUT
-                TTT += new Date(clocks[i].date) - new Date(lastClockIN)
+                let timeDelta = new Date(clocks[i].date) - new Date(lastClockIN)
+                TTT += timeDelta
                 sessionDuration = 0
+
+                // updating last clock object
+                let n = studentClocks.length - 1
+                studentClocks[n].out = clocks[i].date
+                studentClocks[n].outlat = clocks[i].lat
+                studentClocks[n].outlon = clocks[i].lon
+                studentClocks[n].duration = timeDelta
             }
         } else {  // next day
             
@@ -176,6 +194,14 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
             lastClockIN = clocks[i].date    // saving last clock IN
             sessionDuration = minSessionDuration    // and assume there will be no clock OUT
             todaysKey = clocks[i].key
+
+            // init new clock object
+            studentClocks.push({ 
+                date: clocks[i].date, dateKey: clocks[i].key, 
+                in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, 
+                out: '-', outlat: '-', outlon: '-',
+                duration: minSessionDuration
+            })
         }
         
     }   //  end of for
@@ -184,7 +210,7 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
         TTT += sessionDuration
     }
 
-    return TTT
+    return { TTT, studentClocks }
 
 }
 

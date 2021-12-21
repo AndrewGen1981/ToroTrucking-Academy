@@ -289,6 +289,18 @@
     margin-top: 6px;
     margin-bottom: 0;
 }
+.-sm1 {
+    font-size: 1rem;
+}
+.-date-title {
+    min-width: 10rem;
+}
+.-coord, .-no-coord {
+    min-width: 11rem;
+}
+.-coord {
+    color: var(--good-done1);
+}
 
 .-button-box {
     max-width: 550px;

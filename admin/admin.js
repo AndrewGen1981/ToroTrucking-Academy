@@ -228,7 +228,7 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
-        // Preparing updaters fields - original from db have onli admin's id, I' like to pass a name instead
+        // Preparing updaters fields - original from db have only admin's id, I' like to pass a name instead
         const forms = ['dataCollection', 'application', 'agreement']
         forms.map(form => {
             if (user[form]) {
@@ -243,6 +243,22 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
         const signer = getDocsSigner(user.agreement)
         // getting pdf object for DPF printing
         const pdfObj = user.dataCollection ? JSON.stringify(pdf.form1ToPDF(user.dataCollection)) : {}
+        
+        // if user is a student and has clocks array already, then get student clocks's array - check tools to find out what is that
+        if (user.agreement && user.student) {       // only when Agreement is signed and full/part is determined AND user is a Student
+            if (user.agreement.visiting && user.student.clocks) {
+                
+                // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
+                const minVisitingRequirements = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+                const { TTT, studentClocks } = tools.reCalculateTTT(user.student.clocks, minVisitingRequirements)       //  destructuring results
+
+                return res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer,
+                    verTTT: TTT / (1000 * 60 *60),
+                    verClocks: studentClocks
+                })
+                            
+            }   //  type is determined AND clocks are present
+        }   //  Agreement is signed AND user is a Student
         
         res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer })
 
@@ -513,13 +529,14 @@ admRouter.post('/qr-update-geo', async (req, res) => {
                 }
             ])
 
-            minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+            // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
+            const minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
 
             for(let i=0; i<student.clocks.length; i++) {    // updates lat and lon in a clock referred as 'clockBacklink'
                 if(student.clocks[i]._id.toString() === clockBacklink) {
                     student.clocks[i].lat = lat
                     student.clocks[i].lon = lon
-                    student.TTT = tools.reCalculateTTT(student.clocks, minVisitingRequirements) / (1000 * 60 *60)
+                    student.TTT = tools.reCalculateTTT(student.clocks, minVisitingRequirements).TTT / (1000 * 60 *60)
                     await student.save()
                     break
                 }

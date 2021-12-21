@@ -124,6 +124,92 @@
             </div>
         </section>
 
+        <section class="row-item-85"><div class="gap-line"></div></section>
+
+        <!-- TTT -->
+        <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
+        <% function normTTT(TTT) { return `${ Math.round(TTT * 100) / 100 }h` } %>
+        <% function normCOORD(latlon) { return Math.round(latlon * 1000) / 1000 } %>
+
+        <% if (user.student.TTT) { %>
+            <section class="row-item-75">
+                <div class="fields-set">
+                    <div class="field-title">Total Tuition Time:</div>
+                    <div class="field-value -orange"><%= strTTT(user.student.TTT) %> | <%= normTTT(user.student.TTT) %> SAVED</div>
+                    <% if (verTTT) { %>
+                        <div class="field-value">( just recalculated <%= normTTT(verTTT) %>, should match)</div>
+                    <% } %>
+                </div>
+            </section>
+        <% } %>
+        
+        <section class="row-item-85"><div class="gap-line"></div></section>
+
+        <!-- QR Clocks -->
+        <% if (verClocks) { %>
+            
+            <section class="row-item-85">
+                <div class="fields-set">
+                    <div class="field-title -sm1 -date-title">DATE</div>
+                    <div class="field-value -sm1">KEY</div>
+                    <div class="field-value -sm1 -bold">IN</div>
+                    <div class="field-value -sm1 -no-coord">IN GEO</div>
+                    <div class="field-value -sm1 -bold">OUT</div>
+                    <div class="field-value -sm1 -no-coord">OUT GEO</div>
+                    <div class="field-value -sm1 -bold">Duration</div>
+                    <div class="field-value -sm1">| Ratio</div>
+                </div>
+            </section>
+
+            <% verClocks.map(clock => { %>
+
+                <% let duration = clock.duration / (1000 * 60 *60) %>
+                
+                <section class="row-item-85">
+                    <div class="fields-set">
+                        <!-- Date, key -->
+                        <div class="field-title -sm1 -date-title"><%= new Date(clock.date).toLocaleDateString() %></div>
+                        <div class="field-value -sm1"><%= clock.dateKey %></div>
+                        
+                        <!-- IN & coord -->
+                        <div class="field-value -sm1"><%= new Date(clock.in).toLocaleTimeString() %></div>
+                        <% if (!isNaN(clock.inlat) && !isNaN(clock.inlon)) { %>
+                            <a class="field-value -sm1 -coord" href="http://www.google.com/maps/place/<%= clock.inlat %>,<%= clock.inlon %>" target="_blank">
+                                <%= normCOORD(clock.inlat) %>,<%= normCOORD(clock.inlon) %>
+                            </a>
+                        <% } else { %>
+                            <div class="field-value -sm1 -no-coord"><%= clock.inlat %>,<%= clock.inlon %></div>
+                        <% } %>
+
+                        <!-- OUT & coord -->
+                        <% if( !isNaN(clock.out) ) { %>
+                            <div class="field-value -sm1"><%= new Date(clock.out).toLocaleTimeString() %></div>
+                        <% } else { %>
+                            <div class="field-value -sm1 -orange">NO</div>
+                        <% } %>
+
+                        <% if (!isNaN(clock.outlat) && !isNaN(clock.outlon)) { %>
+                            <a class="field-value -sm1 -coord" href="http://www.google.com/maps/place/<%= clock.outlat %>,<%= clock.outlon %>" target="_blank">
+                                <%= normCOORD(clock.outlat) %>,<%= normCOORD(clock.outlon) %>
+                            </a>
+                        <% } else { %>
+                            <div class="field-value -sm1 -no-coord"><%= clock.outlat %>,<%= clock.outlon %></div>
+                        <% } %>
+
+                        <!-- duration -->
+                        <% if( !isNaN(clock.out) ) { %>
+                            <div class="field-value -sm1"><%= strTTT(duration) %></div>
+                            <div class="field-value -sm1">| <%= normTTT(duration) %></div>
+                        <% } else { %>
+                            <div class="field-value -sm1 -orange"><%= strTTT(duration) %></div>
+                            <div class="field-value -sm1 -orange">| <%= normTTT(duration) %></div>
+                        <% } %>
+
+                    </div>
+                </section>
+            <% }) %>
+        <% } %>
+
     <% } %>     <!-- already a Student -->
     
 <% } %>     <!-- if all forms are ready -->
