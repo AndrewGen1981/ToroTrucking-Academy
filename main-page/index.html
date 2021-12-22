@@ -324,6 +324,37 @@
 
     </section>  <!-- landing-main -->
 
+
+    <script defer>
+        // observer adding
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entrie => {
+                if(entrie.isIntersecting) {
+                    entrie.target.classList.add("-pop-up")
+                    setTimeout(() => {
+                        entrie.target.classList.remove("-pop-up")
+                    }, 1250);
+                } else {
+                    entrie.target.classList.remove("-pop-up")
+                }
+            })
+        }, {
+            thresholds: 1,
+            rootMargin: '-20% 0px'
+        })
+
+        // pushing to ibserver with different delay
+        const wdwo = document.querySelectorAll(".wdwo-service-item")
+        let delay = 0
+        for (let i=0; i < wdwo.length; i++) {
+            delay += 0.25
+            wdwo[i].style.setProperty("--anim-delay", `${delay}s`);
+            observer.observe(wdwo[i])
+        }
+        
+
+    </script>
+
     
 </body>
 </html>

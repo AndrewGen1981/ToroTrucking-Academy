@@ -269,6 +269,8 @@ ol .why-us-text {
     justify-content: center;
 }
 .wdwo-service-item {
+    --anim-delay: 0.3s;
+
     width: 25%;
     display: block;
 }
@@ -290,10 +292,6 @@ ol .why-us-text {
     transform: rotate(-45deg);
     object-fit: contain;
 }
-.rounded-box:hover {
-    transform: rotate(60deg);
-    transition: transform .35s linear;
-}
 .wdwo-item-text {
     font-family: "Industrial Medium";
     font-size: 1.07rem;
@@ -302,6 +300,32 @@ ol .why-us-text {
     text-align: center;
 
     color: #2e2e2e;
+    cursor: pointer;
+}
+
+
+/* ANIMATION */
+@keyframes pop {
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+.wdwo-service-item:hover {
+    animation-name: pop;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+}
+/* class for observer adding */
+.-pop-up {
+    animation-name: pop;
+    animation-delay: var(--anim-delay);
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
 }
 
 
