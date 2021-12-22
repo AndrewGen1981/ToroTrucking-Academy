@@ -5,6 +5,8 @@ const express = require('express')
 const studentRouter = express.Router()
 const path = require('path')
 
+// CONFIG
+const admin = require('../../admin/config')
 
 // MODELS for mongoose
 const { User, Student, StudentCONFIG, tools } = require('../userModel')
@@ -20,7 +22,13 @@ const { User, Student, StudentCONFIG, tools } = require('../userModel')
 
 // INs route is a root one
 studentRouter.get('/', async (req, res) => {
+    // check Admin's Auth
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'read')) {
+        return res.send('Not enough authorities  for requested operation')
+    }
 
+    // auth is good
     const studentPopulated = ['key', 'TTT', 'clocks']
     const userPopulated = ['dataCollection']
     const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
@@ -52,7 +60,13 @@ studentRouter.get('/', async (req, res) => {
 let filter = {}
 // @GET admin/student/list
 studentRouter.get('/list', async (req, res) => {
+    // check Admin's Auth
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'read')) {
+        return res.send('Not enough authorities  for requested operation')
+    }
 
+    // auth is good
     const studentPopulated = ['key', 'email', 'TTT', 'created']
     const userPopulated = ['token']
 
@@ -85,10 +99,17 @@ studentRouter.get('/list', async (req, res) => {
 studentRouter.post('/new/:id', async (req, res) => {
     // next code is for creating a new STUDENT
 
+    // check Admin's Auth
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'write')) {
+        return res.send('Not enough authorities  for requested operation')
+    }
+
+    // auth is good
     const userId = req.params.id    // receiving user _id from posting form
     
     try {
-        const user = await User.findById(userId)    // finds a usere with given _id
+        const user = await User.findById(userId)    // finds a user with given _id
 
         // working with Student-List cofigurations - receiving 
         const studentConfigurations = await StudentCONFIG.findOne({ configType: 'student-list' })
@@ -102,7 +123,7 @@ studentRouter.post('/new/:id', async (req, res) => {
             user: userId
         }).save()
         
-        // // saving backlink in a User model on new Student
+        // saving backlink in a User model on new Student
         user.student = student
         await user.save()
 

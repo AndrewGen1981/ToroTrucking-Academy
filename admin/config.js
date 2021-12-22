@@ -6,11 +6,12 @@
 const AUTH = {
     viewOnly: 1,
     editor:   2,
-    admin:    3,
-    canREADset:    [this.viewOnly, this.editor, this.admin],
-    canWRITEset:   [this.editor, this.admin],
-    canSHAREset:   [this.admin]
+    admin:    3
 }
+
+const canREADset = [AUTH.viewOnly, AUTH.editor, AUTH.admin]
+const canWRITEset = [AUTH.editor, AUTH.admin]
+const canSHAREset = [AUTH.admin]
 
 // LIST of Auth names
 const AUTHNAMES = [ 'viewOnly', 'editor', 'admin' ]
@@ -21,7 +22,7 @@ const PROFILES = [
     { id: "BigG0001", name: "BigG Admin", title: "admin", email: "alphafleetacc@gmail.com", location: 'SEATTLE', password: process.env.BIGG0001_PASS, auth: AUTH.admin },
     { id: "Mike0001", name: "Mike Svoboda", title:'admin', email: "newsoundcdl@gmail.com", location: 'TEST', password: process.env.MIKE0001_PASS, auth: AUTH.editor },
     { id: "Ryan0001", name: "Ryan Kling", title:'president', email: "ryan@torocdl.com", location: 'LOCATION1', password: process.env.RYAN0001_PASS, auth: AUTH.editor },
-    { id: "Mariana0001", name: "Mariana Bulgaru", title:'manager', email: "nwcdlschool@gmail.com", location: 'LOCATION1', password: process.env.MARIANA0001_PASS }
+    { id: "Mariana0001", name: "Mariana Bulgaru", title:'manager', email: "nwcdlschool@gmail.com", location: 'LOCATION1', password: process.env.MARIANA0001_PASS, auth: AUTH.editor }
 ]
 
 
@@ -34,6 +35,25 @@ function findAdminById(id) {
     return PROFILES.find(admin => admin.id.toUpperCase() === id.toUpperCase())
 }
 
+function checkAdminsAuth(id, auth) {
+    const admin = findAdminById(id)
+    if (!admin) { return false }
+
+    if (auth === 'read') {
+        return canREADset.includes(admin.auth)
+    } else {
+        if (auth === 'write') {
+            return canWRITEset.includes(admin.auth)
+        } else {
+            if (auth === 'share') {
+                return canSHAREset.includes(admin.auth)
+            }   // share
+        }   // write
+    }   // read
+
+    return false    // all other requests
+}
+
 
 // INIT
 PROFILES.map(profile => {
@@ -43,5 +63,6 @@ PROFILES.map(profile => {
 module.exports = {
     PROFILES,
     ISSUES,
-    findAdminById
+    findAdminById,
+    checkAdminsAuth
 }
