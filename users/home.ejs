@@ -223,11 +223,86 @@
 
             </div>  <!-- right-side -->
 
-                    
+            <% if(user.student) { %>
+                <h3 class="block-title">Student Info</h3>
+                
+                <!-- TTT -->
+                <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
+                <% function normTTT(TTT) { return `${ Math.round(TTT * 100) / 100 }h` } %>
+                <% function normCOORD(latlon) { return Math.round(latlon * 1000) / 1000 } %>
 
+                <% if (verTTT) { %>
+                    <div class="block-item">    <!-- TTT -->
+                        <span class="block-key">Total Tuition Time<span class="block-value"><%= strTTT(verTTT) %> | <%= normTTT(verTTT) %></span></span>
+                    </div>  <!-- TTT -->
+                <% } %>
+
+                <div class="block-item">    <!-- Visiting Type -->
+                    <span class="block-key">Visiting Type<span class="block-value"><%= visiting %>*</span></span>
+                </div>  <!-- Visiting Type -->
+
+                
+                <!-- QR Clocks -->
+                <% if (verClocks) { %>
+
+                    <div class="clocks-table">
+                        <div class="clocks-table-cell -header">DATE</div>
+                        <div class="clocks-table-cell -header">KEY</div>
+                        <div class="clocks-table-cell -header">IN</div>
+                        <div class="clocks-table-cell -header">IN GEO</div>
+                        <div class="clocks-table-cell -header">OUT</div>
+                        <div class="clocks-table-cell -header">OUT GEO</div>
+                        <div class="clocks-table-cell -header">Duration</div>
+                        <div class="clocks-table-cell -header">Ratio</div>
+
+                        <% verClocks.map(clock => { %>
+                            <% let duration = clock.duration / (1000 * 60 *60) %>
+                            <!-- Date, key -->
+                            <div class="clocks-table-cell"><%= new Date(clock.date).toLocaleDateString() %></div>
+                            <div class="clocks-table-cell"><%= clock.dateKey %></div>
+                            
+                            <!-- IN & coord -->
+                            <div class="clocks-table-cell"><%= new Date(clock.in).toLocaleTimeString() %></div>
+                            <% if (!isNaN(clock.inlat) && !isNaN(clock.inlon)) { %>
+                                <a class="clocks-table-cell" href="http://www.google.com/maps/place/<%= clock.inlat %>,<%= clock.inlon %>" target="_blank">
+                                    <%= normCOORD(clock.inlat) %>,<%= normCOORD(clock.inlon) %>
+                                </a>
+                            <% } else { %>
+                                <div class="clocks-table-cell"><%= clock.inlat %>,<%= clock.inlon %></div>
+                            <% } %>
+    
+                            <!-- OUT & coord -->
+                            <% if( !isNaN(clock.out) ) { %>
+                                <div class="clocks-table-cell"><%= new Date(clock.out).toLocaleTimeString() %></div>
+                            <% } else { %>
+                                <div class="clocks-table-cell -orange">NO</div>
+                            <% } %>
+    
+                            <% if (!isNaN(clock.outlat) && !isNaN(clock.outlon)) { %>
+                                <a class="clocks-table-cell" href="http://www.google.com/maps/place/<%= clock.outlat %>,<%= clock.outlon %>" target="_blank">
+                                    <%= normCOORD(clock.outlat) %>,<%= normCOORD(clock.outlon) %>
+                                </a>
+                            <% } else { %>
+                                <div class="clocks-table-cell"><%= clock.outlat %>,<%= clock.outlon %></div>
+                            <% } %>
+    
+                            <!-- duration -->
+                            <% if( !isNaN(clock.out) ) { %>
+                                <div class="clocks-table-cell"><%= strTTT(duration) %></div>
+                                <div class="clocks-table-cell"><%= normTTT(duration) %></div>
+                            <% } else { %>
+                                <div class="clocks-table-cell -orange"><%= strTTT(duration) %></div>
+                                <div class="clocks-table-cell -orange"><%= normTTT(duration) %></div>
+                            <% } %>
+                        <% }) %>
+
+                    </div>  <!-- clocks-table -->
+
+                    <span class="block-value -info1">* The duration of your presence in the TTA when there is no clock-out is determined on the basis of the minimum required number of hours according to the Agreement signed by you. TTA reserves the right to review this number depending on the current Attendance Policy. We also inform you that the Student, as a party to the Agreement, is obliged to attend classes in case of abuse by the Student, the absence of clocks-out allows TTA not to take into account the hours for such a day.</span>
+
+                <% } %>
+            <% } %>     <!-- USER is a STUDENT -->
         <% } %>     <!-- USER is OK -->
-
-
     </div>  <!--- profile-box -->
 
 

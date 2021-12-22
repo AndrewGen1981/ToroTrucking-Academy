@@ -22,7 +22,7 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URI_USERS)
 
 // MODELS for mongoose
-const { User } = require('./userModel')
+const { User, Student, tools } = require('./userModel')
 const { dataCollectionForm, getForm1Object } = require('./applicants/form1Model')
 const { applicationForm, getForm2Object } = require('./applicants/form2Model')
 const { agreementForm, getForm3Object } = require('./applicants/form3Model')
@@ -123,11 +123,37 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
     : status === 'info' ? { class: 'info', txt: getInfoMessage(e), e }
     : { class: 'info', txt: "Wellcome back" }
 
-    res.render(path.join(__dirname+'/home.ejs'), { 
-        user:  res.locals.user,
-        SESS_EXP: req.session.cookie._expires
-    })
+    // if Student, then show TTT and Clocks
+    const user = res.locals.user
+    // if user is a student and has clocks array already, then get student clocks's array - check tools to find out what is that
+    if (user.agreement && user.student) {       // only when Agreement is signed and full/part is determined AND user is a Student
+        
+        const student = await Student.findById(user.student).populate([
+            {
+                path: 'user', select: 'agreement', 
+                populate: { path: 'agreement', select: 'visiting' }
+            }
+        ])
+        
+        if (student.user.agreement.visiting && student.clocks) {
+            
+            // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
+            const minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+            const { TTT, studentClocks } = tools.reCalculateTTT(student.clocks, minVisitingRequirements)       //  destructuring results
+
+            return res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires,
+                verTTT: TTT / (1000 * 60 *60),
+                verClocks: studentClocks,
+                visiting: student.user.agreement.visiting
+            })
+                        
+        }   //  type is determined AND clocks are present
+    }   //  Agreement is signed AND user is a Student
+
+    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires })
 })
+
+
 
 userRouter.get('/login', redirectToHome, (req, res) => {
     // checking for income messages

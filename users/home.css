@@ -379,6 +379,55 @@ header::after {
 }
 
 
+
+/* Clocks Table */
+.clocks-table {
+    margin: 1rem 0;
+
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr 1fr 2fr 1fr 1fr;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 3px;
+
+    overflow: hidden;
+}
+.clocks-table-cell {
+    --hgl-color: #f7f7f7;
+
+    padding: 0.2rem 0;
+    text-align: center;
+}
+.clocks-table-cell:not(.-header):nth-child(16n+1),
+.clocks-table-cell:not(.-header):nth-child(16n+2),
+.clocks-table-cell:not(.-header):nth-child(16n+3),
+.clocks-table-cell:not(.-header):nth-child(16n+4),
+.clocks-table-cell:not(.-header):nth-child(16n+5),
+.clocks-table-cell:not(.-header):nth-child(16n+6),
+.clocks-table-cell:not(.-header):nth-child(16n+7),
+.clocks-table-cell:not(.-header):nth-child(16n+8) {
+    background-color: var(--hgl-color);
+}
+
+.-header {
+    padding: 0.25rem 0;
+
+    font-size: 0.83rem;
+    text-transform: uppercase;
+
+    background-color: #ef5a29;
+    color: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+.-info1 {
+    color: #94a5bb;
+}
+.-orange {
+    color: #ef5a29;
+}
+
+
 /* NAV BOTTOM */
 .nav-bottom {
     width: 100%;

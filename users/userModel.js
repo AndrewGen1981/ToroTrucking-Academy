@@ -42,9 +42,6 @@ const userSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Student'
     },
-
-    // @Student part, refrence on STUDENT record ans StudentKey
-    key: { type: Number, default: 0 }
 }, {
     collection: 'users'
 })
