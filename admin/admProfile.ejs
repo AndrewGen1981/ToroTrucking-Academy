@@ -53,7 +53,6 @@
                             <div class="chart-column" data-key="<%= value.month %>.<%= value.year %>" data-value="<%= value.newStudents %>"></div>
                         <% } %>
                     </div>  <!-- analythicsChart -->
-        
                 <% } %>
             </div>  <!-- desktop -->
 
@@ -83,7 +82,7 @@
                     if (parseInt(cols[i].dataset.value) > max) { max = parseInt(cols[i].dataset.value) }
                 }
                 if (max) {
-                    // setting values espectively to max
+                    // setting values espectively to max                    
                     for (let i=0; i<cols.length; i++) {
                         cols[i].style.height = `${ parseInt(cols[i].dataset.value) * maxHeight / max }px`
                     }

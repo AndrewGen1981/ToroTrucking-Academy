@@ -136,8 +136,6 @@
         socket.on('students-update', student => {
             if (student) {
 
-                console.log(student)
-
                 // if list was empty, then 1st row 'so far no one is there...' should be deleted
                 const emptyList = document.getElementsByClassName('empty-list')[0]
                 if (emptyList) {

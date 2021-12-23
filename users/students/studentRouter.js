@@ -10,6 +10,7 @@ const admin = require('../../admin/config')
 
 // MODELS for mongoose
 const { User, Student, StudentCONFIG, tools } = require('../userModel')
+const { Tuition } = require('../tuition/tuitionModel')
 
 // do I need this here?
 // const { dataCollectionForm } = require('../applicants/form1Model')
@@ -124,8 +125,18 @@ studentRouter.post('/new/:id', async (req, res) => {
         }).save()
         
         // saving backlink in a User model on new Student
-        user.student = student
+        user.student = student._id
         await user.save()
+
+        // creating new Tuition record for this Student
+        const tuition = await new Tuition({
+            key: lastStudentKey,
+            email: user.email,
+            student_id_string: student._id
+        }).save()
+        // saving ref in Student for its lessons
+        student.tuition = tuition._id
+        await student.save()
 
     } catch(e) {
         return res.status(500).send(`Issue when saving a new sudent: ${e.message}`)

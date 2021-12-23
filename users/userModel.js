@@ -59,7 +59,7 @@ const configSchema = new mongoose.Schema({
 
 const studentSchema = new mongoose.Schema({
     key: { type: Number, required: true },
-    email: { type: String, required: true },
+    email: { type: String, lowercase: true, required: true },
     created: { type: Date, default: new Date() },
     user: {
         type: mongoose.SchemaTypes.ObjectId,
@@ -74,7 +74,12 @@ const studentSchema = new mongoose.Schema({
         lat: String,
         lon: String,
         location: String
-    }]
+    }],
+
+    tuition: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'tuitionSchema'
+    }
 
 }, {
     collection: "Student List"
