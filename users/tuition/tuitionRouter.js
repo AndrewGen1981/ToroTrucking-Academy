@@ -31,27 +31,26 @@ const listOfLessons = [
 
 // user/tuition
 tuitionRouter.get('/', (req, res) => {
-    res.render(path.join(__dirname+'/tuition-progress.ejs'), { listOfLessons })
+    res.render(path.join(__dirname+'/tuition-center.ejs'), { listOfLessons })
 })
 
 
 tuitionRouter.post('/', (req, res) => {
     
-    const video = req.body.video
+    const video = req.body.video    // video id is being passed in body
 
-    const testFileName = listOfLessons.indexOf(video) + 1
+    const testFileName = listOfLessons.indexOf(video) + 1   // try to find id in vidoe IDs array
     if (testFileName) {
-        const testFilePath = testFileName < 10 ? `0${testFileName}.json` : `${testFileName}.json`
-        fs.readFile(path.join(__dirname+`/tuition-tests/${testFilePath}`), (err, data) => {
+        const testFilePath = testFileName < 10 ? `0${testFileName}.json` : `${testFileName}.json`   //  adding '0' to filename ans extention
+        fs.readFile(path.join(__dirname+`/tuition-tests/${testFilePath}`), (err, data) => {     // adding folder to a path
             if (err) {
-                res.status(500).send(`Cannot open test file ${testFilePath}`)
+                res.status(500).send(`Cannot open test file ${testFilePath}`)       //  show error msg if needed
             } else {
                 const videoData = JSON.parse(data)
-                // questions for test and flag when to show quizze
-                videoData.questions.map(que => {
-                    // console.log(que.answers)
-                    que.answers = que.answers.sort(() => Math.random() - 0.5);   // shuffeling answers
-                    // console.log(que.answers)
+                videoData.questions.map(que => {    // shufling answers options inside question
+                    if (!que.fixedOrder) {      // if not fixed order is required
+                        que.answers = que.answers.sort(() => Math.random() - 0.5);   // shuffeling answers
+                    }
                 })
 
                 res.render(path.join(__dirname+'/tuition-player.ejs'), { 

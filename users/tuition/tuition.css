@@ -1,0 +1,62 @@
+/* Player */
+:root {
+    --player-box-width: 50vw;
+    --player-box-height: calc(var(--player-box-width)*0.5625);
+
+    --player-width: var(--player-box-width);
+    --player-height: calc(var(--player-width)*1.1);
+    --player-mt: calc((var(--player-box-height) - var(--player-height)) / 2);
+}
+.player-box {
+    width: var(--player-box-width);
+    height: var(--player-box-height);
+    overflow-y: hidden;
+
+    position: relative;
+}
+.player-box::after {
+    /* add transparent layer on youtube player & disable right click */
+    content: "";
+
+    position: absolute;
+    left: 0; top: 0;
+    right: 0; bottom: 0;
+
+    background-color: transparent;
+}
+
+#player {
+    width: var(--player-width);
+    height: var(--player-height);
+    margin-top: var(--player-mt);
+}
+
+
+
+
+
+
+
+
+/* CENTER */
+.videoListInner {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+}
+.videoThumb {
+    width: 100%;
+    cursor: pointer;
+}
+.videoRadio {
+    display: none;
+}
+.afterLine {
+    width: 95%;
+    margin: 5px auto;
+
+    border-bottom: 1px solid #dddddd;
+}
