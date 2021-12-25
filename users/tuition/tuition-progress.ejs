@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | Tuition Center</title>
+
+
+    <style>
+        .videoListInner {
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            column-gap: 1rem;
+            row-gap: 0.5rem;
+        }
+        .videoThumb {
+            width: 100%;
+            cursor: pointer;
+        }
+        .videoRadio {
+            display: none;
+        }
+        .afterLine {
+            width: 95%;
+            margin: 5px auto;
+
+            border-bottom: 1px solid #dddddd;
+        }
+    </style>
+
+
+</head>
+<body>
+    
+
+    <form action="/user/tuition" method="POST" class="videoListInner" id="videoListInner">
+
+        <% listOfLessons.forEach( (video, index) => { %>
+            <section class="videoItem">
+                <section class='videoSection'>
+                    
+                    <img class='videoThumb' src='//img.youtube.com/vi/<%= video %>/0.jpg' data-video='<%= video %>' onclick="videoClock(this)">
+                    <input class='videoRadio' type="radio" name='video' id='<%= video %>' value='<%= video %>' />
+                                        
+                    <section class='videoSection_info'>
+                        <span class='videoWatching'>Watching: 
+                            <span class='videoWatching_info'>0%</span>
+                        </span>
+                        <span class='videoTests'>Tests: 
+                            <span class="videoTests_info">-</span>
+                        </span>
+                    </section><!-- videoSection -->
+
+                </section>  <!-- videoSection_info -->
+                <section class="afterLine"></section>
+            </section>  <!-- videoItem -->
+        <% }) %> <!-- forEach -->
+
+    </form>    <!-- videoListInner -->
+
+
+    <script>
+
+        const inputs = document.querySelectorAll('[name="video"]')
+
+        function videoClock(videoThumb) {
+            // clear all inputs
+            for (let i=0; i < inputs.length; i++) {
+                inputs[i].checked = inputs[i].id === videoThumb.dataset.video
+
+            }
+            // submiting a form without a button
+            document.forms["videoListInner"].submit()
+        }
+
+    </script>
+
+
+</body>
+</html>

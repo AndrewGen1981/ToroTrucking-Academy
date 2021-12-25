@@ -531,5 +531,8 @@ userRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
 
 
 
+// @ user/tuituion routes
+userRouter.use('/tuition', redirectToLogin, require('./tuition/tuitionRouter'))
+
 
 module.exports = userRouter

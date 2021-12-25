@@ -162,5 +162,4 @@ studentRouter.post('/print-bulk-qr', (req, res) => {
 })
 
 
-
 module.exports = studentRouter
