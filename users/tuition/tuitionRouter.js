@@ -8,6 +8,7 @@ const tuitionRouter = express.Router()
 const path = require('path')
 
 // MODELS for mongoose
+const { User, Student } = require('../userModel')
 const { Tuition } = require('./tuitionModel')
 
 const fs = require('fs')
@@ -53,13 +54,71 @@ tuitionRouter.post('/', (req, res) => {
                     }
                 })
 
+                // console.log(res.locals.user)
                 res.render(path.join(__dirname+'/tuition-player.ejs'), { 
+                    user: res.locals.user,
                     videoData,
                     video
                 })
             }
         })
     }
+})
+
+
+
+// without this BODY is empty when just fetching from client-side
+tuitionRouter.use(express.json({
+    type: ['application/json', 'text/plain']
+ }))
+
+tuitionRouter.put('/update', async (req, res) => {
+    const user = res.locals.user
+    const { userId, videoId, correntRatio, currentTime } = req.body
+
+    if (user) {
+        // extra safety step, should be equal. Check if it is needed
+        if (user._id.toString() === userId) {
+            if (!user.student) { return res.status(400).send(`Looks like You are not a Student ${user.name}`) }
+            if ( videoId && correntRatio) {
+                try {
+                    const student = await Student.findById(user.student).select('tuition')
+                    if(student.tuition) {
+                        const tuition = await Tuition.findById(student.tuition).select('lessons')
+
+                        //  tuition is assigned, now check if lesson exists
+                        let done = false
+                        tuition.lessons.map(lesson => {
+                            if(lesson.videoID === videoId) {
+                                if(lesson.videoProgress < correntRatio) {
+                                    lesson.videoProgress = correntRatio
+                                }
+                                done = true
+                            }
+                        })
+                        // new lesson
+                        if (!done) {
+                            tuition.lessons.push({
+                                watchDate: new Date(),
+                                videoID: videoId,
+                                videoProgress: correntRatio,
+                                testProgress: 0
+                            })
+                        }
+                        await tuition.save()
+                        return res.status(200).end()
+                    }
+                    return res.status(400).send(`You don't have any lessons yet. Contact your administrator`)
+                } catch(e) {
+                    return res.status(500).send(`Oooppps... Database issue`)
+                }
+            }
+            return res.status(500).send(`Server bad request: LESSON=${videoId} COVERED=${correntRatio}`)
+        }
+        return res.status(500).send(`User mismatch`)
+    } else {
+        res.status(400).send("You are logged out...")
+    }    
 })
 
 

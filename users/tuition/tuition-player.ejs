@@ -28,9 +28,15 @@
   </div>
 
   <!-- PLAYER -->
-  <div class="player-box" onclick=ytPlayerClick(this)>
-    <div id="player"></div>
-  </div>
+  <div class="player-and-tools">
+    <div class="player-box" onclick=ytPlayerClick(this)>
+      <div id="player"></div>
+    </div>
+    <div class="tools-box">
+      <input type="range" min="0" max="100" name="volume" oninput="volumeChanged(this)">
+    </div>  <!-- tools-box -->
+    <form action="/user/tuition/update" method="POST"></form>
+  </div>  <!-- player-and-tools -->
 
   <!-- TEST -->
   <div class="test-box">
@@ -51,8 +57,22 @@
   </div>
 
 
-
   <script>
+
+    const lesson = {
+      userId: '<%= user._id %>',
+      videoId: '<%= video %>',
+
+      updateTimer: undefined,
+      fetchTimer: undefined,
+
+      duration: 0,
+      currentTime: 0,
+      
+      currRatio: 0,
+      prevRatio: 0
+    }
+
     const tag = document.createElement('script')
     tag.src = "https://www.youtube.com/iframe_api"
 
@@ -88,21 +108,52 @@
 
 
     function onPlayerReady(event) {
+      
+      event.target.setPlaybackRate(1)   // sets normal view speed
       event.target.playVideo()
+      
+      document.querySelector('[name="volume"]').value = player.getVolume()  // set a volume like user has already
+
+      lesson.duration = event.target.getDuration()  // saving videoDuration
+      if (lesson.duration === 0) { lesson.duration = 0.001 }  // cannot be 0, because of dividing
+
+      lesson.updateTimer = setInterval(() => {    // recalculate RATIO each second
+        lesson.currentTime = event.target.getCurrentTime()
+        lesson.currRatio = lesson.currentTime / lesson.duration
+      }, 1000)
+
+      lesson.fetchTimer = setInterval(() => {    // fetch to SERVER each 5 seconds
+        lesson.currentTime = event.target.getCurrentTime()
+        if (lesson.currRatio != lesson.prevRatio) {   // video not paused
+          lesson.prevRatio = lesson.currRatio
+          
+          fetch('/user/tuition/update', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: lesson.userId,
+                videoId: lesson.videoId,
+                correntRatio: Math.round(lesson.currRatio * 10000) / 10000,
+                currentTime: lesson.currentTime
+              })
+          })
+        }
+      }, 5000)
+
     }
 
 
     function onPlayerStateChange(event) {
-      if (event.data == YT.PlayerState.PLAYING) {
-      }
+      // getCurrentTime()
     }
 
-
+    
     function stopVideo() {
       player.stopVideo()
     }
 
 
+    // OWN functions
     function ytPlayerClick(playerBox) {
       if (player.getPlayerState()  == YT.PlayerState.PLAYING) {
         player.pauseVideo()
@@ -111,6 +162,10 @@
         player.playVideo()
         playerBox.classList.remove('-paused-state')
       }
+    }
+
+    function volumeChanged(volumeInput) {
+      player.setVolume(volumeInput.value)
     }
 
 
