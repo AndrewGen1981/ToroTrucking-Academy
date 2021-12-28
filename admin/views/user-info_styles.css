@@ -302,6 +302,33 @@
     color: var(--good-done1);
 }
 
+/* TUITION */
+.-top-align {
+    align-items: flex-start;
+}
+.-module {
+    min-width: 13rem;
+    max-width: 13rem;
+}
+.-title {
+    min-width: 14rem;
+    max-width: 14rem;
+}
+.-progress {
+    min-width: 6rem;
+    font-weight: bolder;
+    text-align: center;
+}
+.-test {
+    min-width: 4rem;
+    text-align: center;
+}
+.-test-accomplished {
+    min-width: 9rem;
+    text-align: center;
+}
+
+
 .-button-box {
     max-width: 550px;
     margin-right: 0;

@@ -6,6 +6,9 @@
     --player-width: var(--player-box-width);
     --player-height: calc(var(--player-width)*1.1);
     --player-mt: calc((var(--player-box-height) - var(--player-height)) / 2);
+
+    --true: hsl(110, 50%, 42%);
+    --false: hsl(349, 79%, 50%);
 }
 .player-box {
     --back-img: none;
@@ -47,6 +50,15 @@
     height: var(--player-height);
     margin-top: var(--player-mt);
 }
+/* styles to mark true and false answers with */
+.true {
+    color: var(--true);
+    transition: ease-in 0.3s;
+}
+.false {
+    color: var(--false);
+    transition: ease-in 0.3s;
+}
 
 
 
@@ -70,6 +82,16 @@
 }
 .videoRadio {
     display: none;
+}
+.ico {
+    width: 16px;
+    height: 16px;
+}
+.-star {
+    fill: var(--orange-high-desert);
+}
+.-check {
+    fill: hsl(110, 50%, 42%);
 }
 .afterLine {
     width: 95%;

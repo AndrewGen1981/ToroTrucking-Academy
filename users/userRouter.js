@@ -133,6 +133,9 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
                 {
                     path: 'user', select: 'agreement', 
                     populate: { path: 'agreement', select: 'visiting' }
+                },
+                {
+                    path: 'tuition', select: ["created", "isAllowed", "avLessonsRate", "lessons"]
                 }
             ])
             
@@ -142,7 +145,10 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
                 const minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
                 const { TTT, studentClocks } = tools.reCalculateTTT(student.clocks, minVisitingRequirements)       //  destructuring results
 
-                return res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires,
+                return res.render(path.join(__dirname+'/home.ejs'), { 
+                    user, SESS_EXP: req.session.cookie._expires,
+                    tuition: student.tuition,
+
                     verTTT: TTT / (1000 * 60 *60),
                     verClocks: studentClocks,
                     visiting: student.user.agreement.visiting
@@ -154,7 +160,7 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
         }
     }   //  Agreement is signed AND user is a Student
 
-    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires })
+    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires, tuition: student.tuition })
 })
 
 

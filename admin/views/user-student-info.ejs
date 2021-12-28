@@ -126,13 +126,84 @@
 
         <section class="row-item-85"><div class="gap-line"></div></section>
 
+        <section class="row-item-85">
+            <div class="fields-set">
+                <div class="field-title">Tuition Center</div>
+                <% if(user.student.tuition) { %>
+                    <div class="field-value">Course assigned: <%= new Date(user.student.tuition.created).toLocaleDateString() %></div>
+                <% } else { %>
+                    <div class="field-warning">Has no Access <a class="-btn" href="/admin/student/allow-tuition/<%= user.student._id %>">Allow</a></div>
+                <% } %>
+            </div>
+            <% if(user.student.tuition) { %>
+                <div class="fields-set">
+                    <div class="field-title">Permission</div>
+                    <% if(user.student.tuition.isAllowed) { %>
+                        <div class="field-accomplished">Access Granted <a class="-btn" href="/admin/student/change-tuition-access/<%= user.student._id %>?action=disable">Disable</a></div>
+                    <% } else { %>
+                        <div class="field-warning">Access is disabled <a class="-btn" href="/admin/student/change-tuition-access/<%= user.student._id %>?action=enable">Enable</a></div>
+                    <% } %>
+                </div>
+            <% } %>
+        </section>
+
+        <% if(user.student.tuition) { %>
+            <section class="row-item-75">
+                <div class="fields-set">
+                    <div class="field-value">Average progress: <%= Math.round(user.student.tuition.avLessonsRate * 1000) / 10 %>%</div>
+                </div>
+            </section>
+            <% if(user.student.tuition.lessons.length) { %>     <!-- begun tuition -->
+                <section class="row-item-75">
+                    <div class="fields-set">
+                        <div class="field-accomplished">Student has begun tuition</div>
+                    </div>
+                </section>
+                <section class="row-item-85">
+                    <div class="fields-set">
+                        <div class="field-title -sm1 -module">MODULE</div>
+                        <div class="field-value -sm1 -title">TITLE</div>
+                        <div class="field-value -sm1 -date-title">LAST TAKE</div>
+                        <div class="field-value -sm1 -progress">PROGRESS</div>
+                        <div class="field-value -sm1 -test">TEST</div>
+                        <div class="field-value -sm1 -test-accomplished">ACCOMPLISHED AT</div>
+                    </div>
+                </section>
+                <% user.student.tuition.lessons.map(lesson => { %>
+                    <section class="row-item-85">
+                        <div class="fields-set -top-align">
+                            <div class="field-title -sm1 -module"><%= lesson.lesson %></div>
+                            <div class="field-value -sm1 -title"><%= lesson.lessonTitle %></div>
+                            <div class="field-value -sm1 -date-title"><%= new Date(lesson.watchDate).toLocaleDateString() %> (<%= new Date(lesson.watchDate).toLocaleTimeString() %>)</div>
+                            <div class="field-value -sm1 -progress"><%= Math.round(lesson.videoProgress*1000) / 10 %>%</div>
+                            <% if(lesson.testProgress > 0) { %>
+                                <div class="field-value -sm1 -test">+</div>
+                                <div class="field-value -sm1 -test-accomplished"><%= Math.round(lesson.testProgress*1000) / 10 %>%</div>
+                            <% } else { %>
+                                <div class="field-value -sm1 -test -orange">-</div>
+                                <div class="field-value -sm1 -test-accomplished">-</div>
+                            <% } %>
+                        </div>
+                    </section>
+                <% }) %>
+            <% } else { %>
+                <section class="row-item-75">
+                    <div class="fields-set">
+                        <div class="field-warning">The course is scheduled but Student has not begun a tuition yet</div>
+                    </div>
+                </section>
+            <% } %>
+        <% } %>
+        
+        <section class="row-item-85"><div class="gap-line"></div></section>
+
         <!-- TTT -->
         <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
         <% function normTTT(TTT) { return `${ Math.round(TTT * 100) / 100 }h` } %>
         <% function normCOORD(latlon) { return Math.round(latlon * 1000) / 1000 } %>
 
         <% if (user.student.TTT) { %>
-            <section class="row-item-75">
+            <section class="row-item-85">
                 <div class="fields-set">
                     <div class="field-title">Total Tuition Time:</div>
                     <div class="field-value -orange"><%= strTTT(user.student.TTT) %> | <%= normTTT(user.student.TTT) %> SAVED</div>

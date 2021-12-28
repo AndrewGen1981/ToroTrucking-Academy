@@ -11,12 +11,18 @@ const tuitionSchema = new mongoose.Schema({
     email: { type: String, lowercase: true, required: true },
     student_id_string: { type: String, default: 'not assigned' },       // Student._id will be here, populate will not work - to make modules Student & Tuition separate
 
+    isAllowed: {type: Boolean, default: true},
+
     lessons: [{
         watchDate: Date,
         videoID: String,
+        lesson: String,
+        lessonTitle: String,
         videoProgress: Number,
         testProgress: Number
-    }]
+    }],
+
+    avLessonsRate: { type: Number, default: 0 }
 
 }, {
     collection: "Lessons"

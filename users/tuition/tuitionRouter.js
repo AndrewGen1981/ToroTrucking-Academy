@@ -31,15 +31,28 @@ const listOfLessons = [
 
 
 // user/tuition
-tuitionRouter.get('/', (req, res) => {
-    res.render(path.join(__dirname+'/tuition-center.ejs'), { listOfLessons })
+tuitionRouter.get('/', async(req, res) => {
+    const user = res.locals.user
+    if (user) {
+        if (user.student) {
+            const student = await Student.findById(user.student).select("tuition").populate("tuition")
+            if (student.tuition) {
+                if (student.tuition.isAllowed) {
+                    return res.render(path.join(__dirname+'/tuition-center.ejs'), { listOfLessons, tuition: student.tuition })
+                }
+            }
+            // if !student.tuition OR !student.tuition.isAllowed
+            return res.status(404).send('Tuition Center is not available: lessons were not scheduled for you by our manager')
+        }
+        return res.status(404).send('You are not a Student yet. Tuition Center is not available')
+    } else {
+        res.status(404).send('Unknown user. Try to login again')
+    }
 })
 
 
 tuitionRouter.post('/', (req, res) => {
-    
-    const video = req.body.video    // video id is being passed in body
-
+    const { video, videoProgress, testProgress } = req.body    // video id is being passed in body
     const testFileName = listOfLessons.indexOf(video) + 1   // try to find id in vidoe IDs array
     if (testFileName) {
         const testFilePath = testFileName < 10 ? `0${testFileName}.json` : `${testFileName}.json`   //  adding '0' to filename ans extention
@@ -48,13 +61,15 @@ tuitionRouter.post('/', (req, res) => {
                 res.status(500).send(`Cannot open test file ${testFilePath}`)       //  show error msg if needed
             } else {
                 const videoData = JSON.parse(data)
+                // modifying videoData object
                 videoData.questions.map(que => {    // shufling answers options inside question
                     if (!que.fixedOrder) {      // if not fixed order is required
                         que.answers = que.answers.sort(() => Math.random() - 0.5);   // shuffeling answers
                     }
                 })
+                videoData.videoProgress = videoProgress
+                videoData.testProgress = testProgress
 
-                // console.log(res.locals.user)
                 res.render(path.join(__dirname+'/tuition-player.ejs'), { 
                     user: res.locals.user,
                     videoData,
@@ -74,13 +89,13 @@ tuitionRouter.use(express.json({
 
 tuitionRouter.put('/update', async (req, res) => {
     const user = res.locals.user
-    const { userId, videoId, correntRatio, currentTime } = req.body
+    const { userId, videoId, lesson, lessonTitle, currentRatio, currentTime, testProgress } = req.body
 
     if (user) {
         // extra safety step, should be equal. Check if it is needed
         if (user._id.toString() === userId) {
             if (!user.student) { return res.status(400).send(`Looks like You are not a Student ${user.name}`) }
-            if ( videoId && correntRatio) {
+            if ( videoId && currentRatio) {
                 try {
                     const student = await Student.findById(user.student).select('tuition')
                     if(student.tuition) {
@@ -90,8 +105,13 @@ tuitionRouter.put('/update', async (req, res) => {
                         let done = false
                         tuition.lessons.map(lesson => {
                             if(lesson.videoID === videoId) {
-                                if(lesson.videoProgress < correntRatio) {
-                                    lesson.videoProgress = correntRatio
+                                // updating video ratio
+                                if(lesson.videoProgress < currentRatio) {
+                                    lesson.videoProgress = currentRatio
+                                }
+                                // updating quiz result
+                                if(testProgress > 0 && lesson.testProgress != testProgress) {
+                                    lesson.testProgress = testProgress
                                 }
                                 done = true
                             }
@@ -101,10 +121,26 @@ tuitionRouter.put('/update', async (req, res) => {
                             tuition.lessons.push({
                                 watchDate: new Date(),
                                 videoID: videoId,
-                                videoProgress: correntRatio,
-                                testProgress: 0
+                                lesson,
+                                lessonTitle,
+                                videoProgress: currentRatio,
+                                testProgress
+                            })
+                            // sort lessons by module id
+                            tuition.lessons.sort((a,b) => {
+                                return a.lesson > b.lesson ? 1 : a.lesson < b.lesson ? -1 : 0
                             })
                         }
+                        
+                        // recalc average progress
+                        let score = 0
+                        tuition.lessons.map(lesson => {
+                            score += lesson.videoProgress
+                            score += lesson.testProgress > 0 ? 1 : 0
+                        })
+                        const maxScore = listOfLessons.length * 2   // for ex. 35 lessons + 35 tests = maxScore = 70
+                        tuition.avLessonsRate = Math.round(score*1000 / maxScore) / 1000
+
                         await tuition.save()
                         return res.status(200).end()
                     }

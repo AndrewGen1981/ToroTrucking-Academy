@@ -24,6 +24,14 @@
     <% if (videoData) { %>
       <h1><%= videoData.lessonTitle %></h1>
       <h2><%= videoData.lesson %></h2>
+      <% if (videoData.videoProgress) { %>
+        <span>Progress on this lesson is <%= Math.round(parseFloat(videoData.videoProgress)*1000) / 10 %>%</span>
+        <% if (parseFloat(videoData.testProgress)) { %>
+          <span>Quiz done</span>
+        <% } else {%>
+          <span>Quiz is not passed</span>
+        <% } %>
+      <% } %>
     <% } %>
   </div>
 
@@ -34,6 +42,7 @@
     </div>
     <div class="tools-box">
       <input type="range" min="0" max="100" name="volume" oninput="volumeChanged(this)">
+      <select name="playbackQuality" id="playbackQuality" data-status='empty'></select>
     </div>  <!-- tools-box -->
     <form action="/user/tuition/update" method="POST"></form>
   </div>  <!-- player-and-tools -->
@@ -45,7 +54,7 @@
         <h3><%= question.question %></h3>
         <% question.answers.map((answer, index) => { %>
 
-          <label for="Q<%= question.id %>A<%= index %>">
+          <label for="Q<%= question.id %>A<%= index %>" data-answer='<%= answer %>'>
             <input type="radio" name="Q<%= question.id %>" id="Q<%= question.id %>A<%= index %>" />
             <%= answer %>
           </label>
@@ -54,11 +63,24 @@
 
       <% }) %>
     <% } %>
+    <button class="submitQuizze" onclick="submitQuizze()">Submit Quizze</button>
+    <div class="quizzeResult"></div>
   </div>
 
 
   <script>
 
+
+    const playbackQuality = document.getElementById('playbackQuality')
+    function addQualityOptions(item) {
+      const option = document.createElement('option')
+      option.value = item
+      option.textContent = item
+      playbackQuality.appendChild(option)
+    }
+
+
+    // playback info object
     const lesson = {
       userId: '<%= user._id %>',
       videoId: '<%= video %>',
@@ -70,8 +92,27 @@
       currentTime: 0,
       
       currRatio: 0,
-      prevRatio: 0
+      prevRatio: 0,
+
+      quiz: 0
     }
+
+    function updateOnServer() {
+      fetch('/user/tuition/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: lesson.userId,
+          videoId: lesson.videoId,
+          lesson: "<%= videoData.lesson %>",
+          lessonTitle: "<%= videoData.lessonTitle %>",
+          currentRatio: Math.round(lesson.currRatio * 10000) / 10000,
+          currentTime: lesson.currentTime,
+          testProgress: lesson.quiz
+        })
+      })
+    }
+
 
     const tag = document.createElement('script')
     tag.src = "https://www.youtube.com/iframe_api"
@@ -117,6 +158,8 @@
       lesson.duration = event.target.getDuration()  // saving videoDuration
       if (lesson.duration === 0) { lesson.duration = 0.001 }  // cannot be 0, because of dividing
 
+      
+      // setting up listeners
       lesson.updateTimer = setInterval(() => {    // recalculate RATIO each second
         lesson.currentTime = event.target.getCurrentTime()
         lesson.currRatio = lesson.currentTime / lesson.duration
@@ -127,16 +170,7 @@
         if (lesson.currRatio != lesson.prevRatio) {   // video not paused
           lesson.prevRatio = lesson.currRatio
           
-          fetch('/user/tuition/update', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: lesson.userId,
-                videoId: lesson.videoId,
-                correntRatio: Math.round(lesson.currRatio * 10000) / 10000,
-                currentTime: lesson.currentTime
-              })
-          })
+          updateOnServer()
         }
       }, 5000)
 
@@ -144,7 +178,27 @@
 
 
     function onPlayerStateChange(event) {
-      // getCurrentTime()
+      if (event.data  == YT.PlayerState.PLAYING) {
+        // setting up playbackQuality
+        if (playbackQuality) {
+          if (playbackQuality.dataset.status === 'empty') {
+            const modes = event.target.getAvailableQualityLevels()
+            const defaulMode = event.target.getPlaybackQuality()
+            if (defaulMode != 'unknown') {
+              addQualityOptions(defaulMode)
+              modes.map(mode => {
+                if (mode != defaulMode) {
+                  addQualityOptions(mode)
+                }
+              })
+              playbackQuality.addEventListener('change', (e) => {
+                if (player) { player.setPlaybackQuality(e.target.value) }
+              })
+              playbackQuality.dataset.status = 'filled-out'
+            }
+          }
+        }
+      }
     }
 
     
@@ -166,6 +220,41 @@
 
     function volumeChanged(volumeInput) {
       player.setVolume(volumeInput.value)
+    }
+
+
+
+    // Quizze
+    function submitQuizze() {
+      let correct = true  // assume all correct
+      let ifAnswered      // for check if aswer is given
+      let studentAnswer   // for each input
+
+      '<% videoData.questions.map((question, Q) => { %>'
+        ifAnswered = false
+        '<% question.answers.map((answer, A) => { %>'
+          studentAnswer = document.getElementById('Q<%= Q %>A<%= A %>')
+          if (studentAnswer) {
+            if (studentAnswer.checked) {
+              correct = correct ? studentAnswer.parentElement.dataset.answer === '<%= question.correctAnswer %>' : false
+              studentAnswer.parentElement.classList.remove(studentAnswer.parentElement.dataset.answer != '<%= question.correctAnswer %>')
+              studentAnswer.parentElement.classList.add(studentAnswer.parentElement.dataset.answer === '<%= question.correctAnswer %>')
+              ifAnswered = true
+            }
+          }
+        '<% }) %>'
+        correct = correct && ifAnswered
+      '<% }) %>'
+
+      if (correct) {
+        // save Quizze result
+        document.querySelector('.quizzeResult').textContent = "Congratulation!!! Your result has been saved"
+        lesson.quiz = Math.round(lesson.currRatio * 10000) / 10000    // saving current ratio when quiz done
+        updateOnServer()
+      } else {
+        document.querySelector('.quizzeResult').textContent = "You've missed somewhere"
+      }
+
     }
 
 

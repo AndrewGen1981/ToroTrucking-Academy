@@ -237,7 +237,10 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
         .populate('dataCollection')
         .populate('application')
         .populate('agreement')
-        .populate('student')        // <- is this slows a process
+        .populate({
+            path: 'student', 
+            populate: { path: 'tuition', select: ["created", "isAllowed", "avLessonsRate", "lessons"] }
+        })        // <- is this slows a process
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
