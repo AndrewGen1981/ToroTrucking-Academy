@@ -19,78 +19,90 @@
 </head>
 <body>
 
-  <!-- TITLES -->
-  <div class="title-box">
-    <% if (videoData) { %>
-      <h1><%= videoData.lessonTitle %></h1>
-      <h2><%= videoData.lesson %></h2>
-      <% if (videoData.videoProgress) { %>
-        <span class="progress-indicator">Progress on this lesson is <%= Math.round(parseFloat(videoData.videoProgress)*1000) / 10 %>%</span>
-      <% } else { %>
-        <span class="progress-indicator">Progress on this lesson is 0%</span>
+  <div class="left-side">
+    <!-- TITLES -->
+    <div class="title-box">
+      <% if (videoData) { %>
+        <h1 class="lesson-title"><%= videoData.lessonTitle %></h1>
+        <h2 class="module-title"><%= videoData.lesson %></h2>
+        <div class="indicators-box">
+          <% if (videoData.videoProgress) { %>
+            <span class="progress-indicator">Progress on this lesson is <%= Math.round(parseFloat(videoData.videoProgress)*1000) / 10 %>%</span>
+          <% } else { %>
+            <span class="progress-indicator">Progress on this lesson is 0%</span>
+          <% } %>
+          <% if (parseFloat(videoData.testProgress)) { %>
+            <span class="test-indicator -quiz-done">Quiz done</span>
+          <% } else {%>
+            <span class="test-indicator">Quiz not passed</span>
+          <% } %>
+        </div>  <!-- indicators-box -->
       <% } %>
-      <% if (parseFloat(videoData.testProgress)) { %>
-        <span class="test-indicator">Quiz done</span>
-      <% } else {%>
-        <span class="test-indicator">Quiz is not passed</span>
-      <% } %>
-    <% } %>
-  </div>
+    </div>  <!-- title-box -->
 
-  <!-- PLAYER -->
-  <div class="player-and-tools">
-    <div class="player-box" onclick=ytPlayerClick(this)>
-      <div id="player"></div>
-    </div>
-    <div class="tools-box">
-      <input class="tool-volume" type="range" min="0" max="100" name="volume" list="tickmarks" oninput="volumeChanged(this)">
-      <datalist id="tickmarks">
-        <option value="0" label="0%">
-        <option value="10">
-        <option value="20">
-        <option value="30">
-        <option value="40">
-        <option value="50" label="50%">
-        <option value="60">
-        <option value="70">
-        <option value="80">
-        <option value="90">
-        <option value="100" label="100%">
-      </datalist>
-
-      <select class="tool-playbackQuality" name="playbackQuality" id="playbackQuality" data-status='empty'></select>
+    <!-- PLAYER -->
+    <div class="player-and-tools">
+      <div class="player-box" onclick=ytPlayerClick(this)>
+        <div id="player"></div>
+      </div>
+      <div class="tools-box">
+        <input class="tool-volume" type="range" min="0" max="100" name="volume" list="tickmarks" oninput="volumeChanged(this)">
+        <datalist id="tickmarks">
+          <option value="0" label="0%">
+          <option value="10">
+          <option value="20">
+          <option value="30">
+          <option value="40">
+          <option value="50" label="50%">
+          <option value="60">
+          <option value="70">
+          <option value="80">
+          <option value="90">
+          <option value="100" label="100%">
+        </datalist>
+        <select class="tool-playbackQuality" name="playbackQuality" id="playbackQuality" data-status='empty'></select>
+      </div>  <!-- tools-box -->
       <div class="navigation-box">
         <input class="tool-navigation" type="range" min="0" max="0" name="navigation" onchange="navigationChanged()">
       </div>
-    </div>  <!-- tools-box -->
-    <form action="/user/tuition/update" method="POST"></form>
-  </div>  <!-- player-and-tools -->
+      <form action="/user/tuition/update" method="POST"></form>
+    </div>  <!-- player-and-tools -->
+  </div>  <!-- left-side -->
 
-  <!-- TEST -->
-  <div class="test-box-info" id="test-box-info"></div>
-  <div class="test-box -hidden" id="test-box">
-    <% if (videoData) { %>
-      <% videoData.questions.map(question => { %>
-        <h3><%= question.question %></h3>
-        <% question.answers.map((answer, index) => { %>
 
-          <label for="Q<%= question.id %>A<%= index %>" data-answer='<%= answer %>'>
-            <input type="radio" name="Q<%= question.id %>" id="Q<%= question.id %>A<%= index %>" />
-            <%= answer %>
-          </label>
 
-        <% }) %>
+  <div class="right-side">
+    <!-- TEST -->
+    <div class="test-box-info" id="test-box-info"></div>
+    <div class="test-box -hidden" id="test-box">
+      <button class="submitQuizze" onclick="submitQuizze()">Submit Quizze</button>
+      <div class="test-inner">
+        <% if (videoData) { %>
+          <% videoData.questions.map(question => { %>
+            <h3><%= question.question %></h3>
+            <% question.answers.map((answer, index) => { %>
 
-      <% }) %>
-    <% } %>
-    <button class="submitQuizze" onclick="submitQuizze()">Submit Quizze</button>
-    <div class="quizzeResult"></div>
-  </div>
+              <label for="Q<%= question.id %>A<%= index %>" data-answer='<%= answer %>'>
+                <input type="radio" name="Q<%= question.id %>" id="Q<%= question.id %>A<%= index %>" />
+                <%= answer %>
+              </label>
+
+            <% }) %>  <!-- answers map -->
+          <% }) %>  <!-- questions map -->
+        <% } %>
+      </div>
+      <div class="quizzeResult"></div>
+    </div>
+  </div>  <!-- right-side -->
+
+  
+
+  
 
 
   <script>
 
-    const whenToShowATest = 0.001   // 0.85
+    const whenToShowATest = 0.85   // 0.85
     const navigation = document.querySelector('[name="navigation"]')
     const navigationBox = document.querySelector('.navigation-box')
     const progressIndicator = document.querySelector('.progress-indicator')
@@ -302,6 +314,7 @@
       if (correct) {
         // save Quizze result
         testIndicator.textContent = 'Quiz done'
+        testIndicator.classList.add('-quiz-done')
         document.querySelector('.quizzeResult').textContent = "Congratulation!!! Your result has been saved"
         lesson.quiz = Math.round(lesson.currRatio * 10000) / 10000    // saving current ratio when quiz done
         updateOnServer()
