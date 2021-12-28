@@ -24,7 +24,7 @@
     position: relative;
 }
 .player-box::after {
-    /* add transparent layer on youtube player & disable right click */
+    /* diables clicking over yt */
     content: "";
 
     position: absolute;
@@ -58,6 +58,33 @@
 .false {
     color: var(--false);
     transition: ease-in 0.3s;
+}
+
+.tools-box, .navigation-box {
+    width: var(--player-width);
+}
+.navigation-box {
+    --progress1: 0%;
+    --progress2: calc(var(--progress1) + 2%);
+    --col1: #5269b6;
+    --col2: #98cfc3;
+    --test-col: #edf2d0;
+
+    height: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+
+    background: -webkit-linear-gradient(90deg, var(--col1) var(--progress1), var(--col2) var(--progress2), var(--test-col) 85%);
+    background: -moz-linear-gradient(90deg, var(--col1) var(--progress1), var(--col2) var(--progress2), var(--test-col) 85%);
+    background: linear-gradient(90deg, var(--col1) var(--progress1), var(--col2) var(--progress2), var(--test-col) 85%);
+
+    border-radius: 1rem;
+}
+.tool-navigation {
+    margin: 0;
+    padding: 0;
+    border: none;
+    width: var(--player-width);
 }
 
 
@@ -98,4 +125,8 @@
     margin: 5px auto;
 
     border-bottom: 1px solid #dddddd;
+}
+
+.-hidden {
+    display: none;
 }
