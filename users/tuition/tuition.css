@@ -286,6 +286,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin: 1rem auto 5rem auto;
 
     display: flex;
+    align-items: center;
     justify-content: center;
 
     font-family: "BrixSlab-Light";
