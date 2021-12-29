@@ -75,23 +75,24 @@
     <!-- TEST -->
     <div class="test-box-info" id="test-box-info"></div>
     <div class="test-box -hidden" id="test-box">
-      <button class="submitQuizze" onclick="submitQuizze()">Submit Quizze</button>
       <div class="test-inner">
         <% if (videoData) { %>
-          <% videoData.questions.map(question => { %>
-            <h3><%= question.question %></h3>
-            <% question.answers.map((answer, index) => { %>
-
-              <label for="Q<%= question.id %>A<%= index %>" data-answer='<%= answer %>'>
-                <input type="radio" name="Q<%= question.id %>" id="Q<%= question.id %>A<%= index %>" />
-                <%= answer %>
-              </label>
-
-            <% }) %>  <!-- answers map -->
+          <% videoData.questions.map((question, Q) => { %>
+            <div class="question-block" id="Q-block<%= Q %>">
+              <h3 class="test-question"><%= question.question %></h3>
+              <div class="answers-block">
+                <% question.answers.map((answer, A) => { %>
+                  <label class="test-answer" for="Q<%= Q %>A<%= A %>" data-answer='<%= answer %>'>
+                    <input type="radio" name="Q<%= Q %>" id="Q<%= Q %>A<%= A %>" />
+                    <%= answer %>
+                  </label>
+                <% }) %>  <!-- answers map -->
+              </div>  <!-- answers-block -->
+            </div>  <!-- question-block -->
           <% }) %>  <!-- questions map -->
         <% } %>
       </div>
-      <div class="quizzeResult"></div>
+      <button class="submitQuizze" onclick="submitQuizze()">Submit Quizze</button>
     </div>
   </div>  <!-- right-side -->
 
@@ -290,20 +291,31 @@
 
 
     // Quizze
+    let submitionMaxCount = 3   // submition takes without forn clearning
+
+
     function submitQuizze() {
       let correct = true  // assume all correct
+      let correctCurrent
       let ifAnswered      // for check if aswer is given
+      let testQuestionBlock   // to design ech Q-block    
       let studentAnswer   // for each input
 
       '<% videoData.questions.map((question, Q) => { %>'
+        testQuestionBlock = document.getElementById('Q-block<%= Q %>')
         ifAnswered = false
         '<% question.answers.map((answer, A) => { %>'
           studentAnswer = document.getElementById('Q<%= Q %>A<%= A %>')
           if (studentAnswer) {
             if (studentAnswer.checked) {
-              correct = correct ? studentAnswer.parentElement.dataset.answer === '<%= question.correctAnswer %>' : false
-              studentAnswer.parentElement.classList.remove(studentAnswer.parentElement.dataset.answer != '<%= question.correctAnswer %>')
-              studentAnswer.parentElement.classList.add(studentAnswer.parentElement.dataset.answer === '<%= question.correctAnswer %>')
+              correctCurrent = studentAnswer.parentElement.dataset.answer === '<%= question.correctAnswer %>'
+              correct = correct ? correctCurrent : false
+              studentAnswer.parentElement.classList.remove(!correctCurrent)
+              studentAnswer.parentElement.classList.add(correctCurrent)
+
+              testQuestionBlock.classList.remove(`--block-${!correctCurrent}`)
+              testQuestionBlock.classList.add(`--block-${correctCurrent}`)
+
               ifAnswered = true
             }
           }
@@ -315,11 +327,27 @@
         // save Quizze result
         testIndicator.textContent = 'Quiz done'
         testIndicator.classList.add('-quiz-done')
-        document.querySelector('.quizzeResult').textContent = "Congratulation!!! Your result has been saved"
         lesson.quiz = Math.round(lesson.currRatio * 10000) / 10000    // saving current ratio when quiz done
         updateOnServer()
       } else {
-        document.querySelector('.quizzeResult').textContent = "You've missed somewhere"
+        submitionMaxCount -= 1
+        if (submitionMaxCount < 1) {
+          // just guessing
+          alert("Are you guessing? Bad approach, let's clear up you test form.")
+          '<% videoData.questions.map((question, Q) => { %>'
+            testQuestionBlock = document.getElementById('Q-block<%= Q %>')
+            testQuestionBlock.classList.remove('--block-true')
+            testQuestionBlock.classList.remove('--block-false')
+            '<% question.answers.map((answer, A) => { %>'
+              studentAnswer = document.getElementById('Q<%= Q %>A<%= A %>')
+              studentAnswer.checked = false
+              studentAnswer.parentElement.classList.remove('true')
+              studentAnswer.parentElement.classList.remove('false')
+            '<% }) %>'
+          '<% }) %>'
+          submitionMaxCount = 3
+        }
+
       }
 
     }

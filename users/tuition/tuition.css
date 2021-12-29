@@ -13,14 +13,10 @@
 /* Hide Scrollbars But Keep Functionality */
 html, body {
     width: 100vw;
-    height: 100vh;
 
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-
-    display: flex;
-    align-items: flex-start;
 }
 html::-webkit-scrollbar, body::-webkit-scrollbar {
     /* Hide scrollbar for Chrome, Safari and Opera */
@@ -43,12 +39,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 
 .left-side {
-    width: 55%;
-    height: 100%;
+    width: 95%;
+    margin: 0 auto;
+    /* height: 100%; */
 }
 .right-side {
-    width: 45%;
-    height: 100%;
+    width: 95%;
+    max-width: 1024px;
+    margin: 0 auto;
+    /* height: 100%; */
 }
 
 
@@ -195,18 +194,54 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 /* Quiz Side */
 .test-inner {
-    margin: 0.3rem auto;
     padding: 1rem;
-
-    width: 95%;
-    height: 85vh;
-    overflow-y: scroll;
-
-    display: flex;
-    flex-direction: column;
-
-    background-color: var(--gray40-pacific-cloud);
+    width: 100%;
 }
+.question-block {
+    width: 100%;
+    margin: 2px 0;
+    padding: 0.35rem 2px;
+
+    background-color: var(--gray15-pacific-cloud);
+}
+.--block-true {
+    background-color: rgb(202, 250, 202);
+}
+.--block-false {
+    background-color: rgb(250, 183, 183);
+}
+
+.test-question {
+    font-family: "BrixSlab-BlackItalic";
+    font-size: 1.07rem;
+    text-transform: uppercase;
+    text-align: justify;
+
+    color: #2d2d2d;
+
+    margin-bottom: 0.7rem;
+}
+.answers-block {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:flex-start;
+}
+.test-answer {
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    /* white-space: nowrap; */
+}
+/* styles to mark true and false answers with */
+.true {
+    color: var(--true);
+    transition: ease-in 0.3s;
+}
+.false {
+    color: var(--false);
+    transition: ease-in 0.3s;
+}
+
 .submitQuizze {
     min-width: 250px;
     margin: 1rem auto;
@@ -224,18 +259,58 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 
 
+@media (max-width: 1700px) {
+    :root {
+        --player-box-width: 55vw;
+    }
+}
+@media (max-width: 1600px) {
+    :root {
+        --player-box-width: 60vw;
+    }
+}
+@media (max-width: 1500px) {
+    :root {
+        --player-box-width: 65vw;
+    }
+}
+@media (max-width: 1400px) {
+    :root {
+        --player-box-width: 70vw;
+    }
+}
+@media (max-width: 1300px) {
+    :root {
+        --player-box-width: 75vw;
+    }
+}
+@media (max-width: 1200px) {
+    :root {
+        --player-box-width: 80vw;
+    }
+}
+@media (max-width: 1100px) {
+    :root {
+        --player-box-width: 85vw;
+    }
+}
+@media (max-width: 1000px) {
+    :root {
+        --player-box-width: 90vw;
+    }
+}
+@media (max-width: 900px) {
+    :root {
+        --player-box-width: 95vw;
+    }
+}
+
+
+
 
 /* CENTER */
 
-/* styles to mark true and false answers with */
-.true {
-    color: var(--true);
-    transition: ease-in 0.3s;
-}
-.false {
-    color: var(--false);
-    transition: ease-in 0.3s;
-}
+
 .videoListInner {
     width: 100%;
 
