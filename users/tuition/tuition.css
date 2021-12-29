@@ -153,7 +153,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content: space-between;
 }
 .tool-volume, .tool-playbackQuality {
-    min-width: 10rem;
+    min-width: 9.5rem;
     font-family: "BrixSlab-Light";
     font-size: 0.83rem;
     text-align: center;
@@ -193,6 +193,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 
 /* Quiz Side */
+.test-box-info {
+    width: 100%;
+    
+    font-family: "BrixSlab-Medium";
+    font-size: 1.83rem;
+    text-align: center;
+    color: #2d2d2d;
+}
+
 .test-inner {
     padding: 1rem;
     width: 100%;
@@ -200,15 +209,46 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .question-block {
     width: 100%;
     margin: 2px 0;
-    padding: 0.35rem 2px;
+    padding: 0.5rem;
 
     background-color: var(--gray15-pacific-cloud);
 }
+
+/* Wobble Vertical */
+@keyframes wobble-vertical {
+	16.65% { transform: translateY(8px) }
+    33.3% { transform: translateY(-6px) }
+    49.95% { transform: translateY(4px) }
+    66.6% { transform: translateY(-2px) }
+    83.25% { transform: translateY(1px) }
+    100% { transform: translateY(0) }
+}
+
 .--block-true {
     background-color: rgb(202, 250, 202);
+
+    animation-name: wobble-vertical;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+}
+
+/* Wobble Horizontal */
+@keyframes wobble-horizontal {
+	16.65% { transform: translateX(8px) }
+    33.3% { transform: translateX(-6px) }
+    49.95% { transform: translateX(4px) }
+    66.6% { transform: translateX(-2px) }
+    83.25% { transform: translateX(1px) }
+    100% { transform: translateX(0) }
 }
 .--block-false {
     background-color: rgb(250, 183, 183);
+
+    animation-name: wobble-horizontal;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
 }
 
 .test-question {
@@ -230,7 +270,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .test-answer {
     margin-left: 1rem;
     margin-bottom: 0.5rem;
-    /* white-space: nowrap; */
 }
 /* styles to mark true and false answers with */
 .true {
@@ -244,7 +283,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .submitQuizze {
     min-width: 250px;
-    margin: 1rem auto;
+    margin: 1rem auto 5rem auto;
 
     display: flex;
     justify-content: center;
@@ -309,7 +348,67 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 
 /* CENTER */
+.tuition-center-box {
+    padding: 0.5rem 1.5rem 2rem 1.5rem;
+    background-color: #000000;
+}
 
+.tuition-center-title {
+    width: 100%;
+    padding: 1rem 0;
+
+    font-family: 'WindSong', cursive;
+    font-size: 3.3rem;
+    line-height: 4.2rem;
+    
+    background: -webkit-linear-gradient(180deg, #5e5e5e, rgb(0, 0, 0));
+    background: -moz-linear-gradient(180deg, #5e5e5e, rgb(0, 0, 0));
+    background: linear-gradient(180deg, #5e5e5e, rgb(0, 0, 0));
+
+    color: #ffffff;
+
+    text-align: center;
+}
+.center-subtitle {
+    width: 100%;
+    padding: 0.65rem 0.5rem;
+
+    font-family: "BrixSlab-ExtraLight";
+    font-size: 1.07rem;
+    line-height: 1.2rem;
+
+    background-color: #000000;
+    color: #d3d3d3;
+
+    text-align: center;
+}
+.center-nav {
+    width: 100%;
+    padding: 10px 0;
+
+    background-color: #000000;
+
+    text-align: right;
+}
+.center-nav a {
+    width: 175px;
+
+    padding: 0.35rem 1rem;
+    font-family: "BrixSlab-ExtraLight";
+    font-size: 0.83rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-transform: uppercase;
+    text-decoration: none;
+
+    border-radius: 1rem;
+
+    background-color: var(--orange-high-desert);
+    color: white;
+}
 
 .videoListInner {
     width: 100%;
@@ -318,13 +417,35 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     grid-template-columns: repeat(5, 1fr);
     column-gap: 1rem;
     row-gap: 0.5rem;
+
+    background-color: #000000;
 }
+
 .videoThumb {
     width: 100%;
     cursor: pointer;
 }
 .videoRadio {
     display: none;
+}
+
+.videoSection_info {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.videoWatching, .videoTests {
+    height: 1.6rem;
+    color: #dddddd;
+    display: flex;
+    align-items: center;
+}
+.videoWatching_info {
+    margin: 0 4px;
+    font-family: "BrixSlab-ExtraLight";
+    font-size: 1.5rem;
+    color: #ffffff;
 }
 .ico {
     width: 16px;
@@ -333,9 +454,17 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .-star {
     fill: var(--orange-high-desert);
 }
-.-check {
-    fill: hsl(110, 50%, 42%);
+.-test {
+    margin-left: 4px;
+    fill: hsl(110, 81%, 40%);
 }
+.-no-test {
+    font-family: "BrixSlab-ExtraLight";
+    text-decoration: line-through;
+    text-transform: uppercase;
+    color: #5f5f5f;
+}
+
 .afterLine {
     width: 95%;
     margin: 5px auto;
@@ -345,4 +474,50 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .-hidden {
     display: none;
+}
+
+
+
+/* CENTER Media */
+@media (max-width: 1650px) {
+    .videoListInner {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media (max-width: 1450px) {
+    .videoListInner {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 1100px) {
+    .videoListInner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 700px) {
+    .videoListInner {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .center-subtitle {
+        text-align: justify;
+        text-align-last: center;
+    }
+}
+@media (max-width: 650px) {
+    .tuition-center-title {
+        font-size: 2.5rem;
+    }
+}
+@media (max-width: 650px) {
+    .tuition-center-title {
+        font-size: 2.2rem;
+    }
+}
+@media (max-width: 400px) {
+    .tuition-center-title {
+        font-size: 1.75rem;
+    }
+    .center-subtitle {
+        font-size: 0.93rem;
+    }
 }

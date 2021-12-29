@@ -75,7 +75,7 @@
     <!-- TEST -->
     <div class="test-box-info" id="test-box-info"></div>
     <div class="test-box -hidden" id="test-box">
-      <div class="test-inner">
+      <div class="test-inner" id="test-inner">
         <% if (videoData) { %>
           <% videoData.questions.map((question, Q) => { %>
             <div class="question-block" id="Q-block<%= Q %>">
@@ -298,7 +298,8 @@
       let correct = true  // assume all correct
       let correctCurrent
       let ifAnswered      // for check if aswer is given
-      let testQuestionBlock   // to design ech Q-block    
+      let testQuestionBlock   // to design ech Q-block
+      let answersBlock    // to shufle after guessing
       let studentAnswer   // for each input
 
       '<% videoData.questions.map((question, Q) => { %>'
@@ -338,8 +339,13 @@
             testQuestionBlock = document.getElementById('Q-block<%= Q %>')
             testQuestionBlock.classList.remove('--block-true')
             testQuestionBlock.classList.remove('--block-false')
+            answersBlock = testQuestionBlock.querySelector('.answers-block')
             '<% question.answers.map((answer, A) => { %>'
+              // shufling one more time
               studentAnswer = document.getElementById('Q<%= Q %>A<%= A %>')
+              if (Math.random() > 0.5) {
+                answersBlock.insertBefore(answersBlock.lastElementChild, answersBlock.firstElementChild)
+              }
               studentAnswer.checked = false
               studentAnswer.parentElement.classList.remove('true')
               studentAnswer.parentElement.classList.remove('false')
@@ -347,9 +353,7 @@
           '<% }) %>'
           submitionMaxCount = 3
         }
-
       }
-
     }
 
 
