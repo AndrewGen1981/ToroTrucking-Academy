@@ -27,6 +27,12 @@ const listOfLessons = [
     "30ejX843HfI",    "guGK9h3u6G0",
     "9qCpGGMhU0A",    "v11pYxt5wFk",
     "2kyPEhTJiz8",    "fzwLgmRNHS8",
+    // 21-30
+    "oAo9Wh8I0D4",    "OTjYnCklxwY",
+    "_0ie8gKimJM",    "x15pck15los",
+    "-3GbAIYAgyg",    "08ypMNH4vXc",
+    "Qyabk1hl2sU",    "gZNxWL_U9Gc",
+    "zQix4Sv16kA",    "YQA1MWp19RY"
 ]
 
 
