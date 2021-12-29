@@ -160,7 +160,7 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
         }
     }   //  Agreement is signed AND user is a Student
 
-    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires, tuition: student.tuition })
+    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires })
 })
 
 

@@ -35,6 +35,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname+'/main-page/index.html'))
 })
 
+app.get('/catalog', async(req, res) => {
+    res.sendFile(path.join(__dirname+'/static/catalog/Toro Catalog WA 2021 Dec17.pdf'))
+})
+
 
 // USERS (Applicants and Students) ROUTES
 app.use('/user', require('./users/userRouter'),)
