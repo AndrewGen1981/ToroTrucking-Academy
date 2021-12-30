@@ -476,8 +476,26 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 })
 
 
-userRouter.get('/token/:token', async (req, res) => {
+userRouter.get('/token/:token', async (req, res) => { 
+    const { email, token } = req.query
+
+    console.log(email)
+    console.log(token)
     
+    if (email && token) {
+        try {
+            if ( await User.findOneAndUpdate({ email, token }, { token: 'verified' }) ) {      // successfuly VERIFIED email!
+                
+                return res.status(200).send('Your email was successfuly verified. Now you can close this page and get back to your profile')
+            }
+            return res.status(400).send('Wrong credentials have been sent. Try again please')
+        } catch(e) { return res.status(500).send("Server error, try later please...") }
+    }
+    res.status(500).send("Sorry, email verification was unsuccessful. Try again later")
+})
+
+
+userRouter.post('/token/:token', async (req, res) => { 
     const { email, token } = req.body
     
     if (email && token) {
