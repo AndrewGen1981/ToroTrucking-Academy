@@ -422,10 +422,25 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-color: #000000;
 }
 
+
+/* Pulse */
+@keyframes pulse {
+	25% { transform: scale(1.02) }
+    75% { transform: scale(.98) }
+}
+
 .videoThumb {
     width: 100%;
     cursor: pointer;
 }
+.videoThumb:hover {
+    animation-name: pulse;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+
 .videoRadio {
     display: none;
 }
