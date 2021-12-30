@@ -325,7 +325,11 @@
     </section>  <!-- landing-main -->
 
 
+    <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+
     <script defer>
+        // Init rellax
+
         // observer adding
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entrie => {
@@ -351,10 +355,8 @@
             wdwo[i].style.setProperty("--anim-delay", `${delay}s`);
             observer.observe(wdwo[i])
         }
-        
-
+   
     </script>
 
-    
 </body>
 </html>

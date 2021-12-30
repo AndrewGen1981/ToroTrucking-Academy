@@ -5,10 +5,10 @@ const fetch = require('node-fetch')
 const { getCompressedTokenLetter, getCompressedPasswordResetLetter } = require('./letterTemplates')
 
 
-function sendALetter(letter) {
+async function sendALetter(letter) {
     // FETCH is async, but we send POST, so reply will not come
     
-    fetch(process.env.CLIENT_POST_SERVER, {
+    const result = await fetch(process.env.CLIENT_POST_SERVER, {
         method: 'POST',
          body: JSON.stringify({
             action: "sendGmail",
@@ -19,6 +19,8 @@ function sendALetter(letter) {
             sender: "[TTA] TORO Trucking Academy"
         })
     })
+
+    console.log(result)
 }
 
 
