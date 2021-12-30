@@ -476,7 +476,7 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 })
 
 
-userRouter.post('/token/:token', async (req, res) => {
+userRouter.all('/token/:token', async (req, res) => {
     
     const { email, token } = req.body
     
