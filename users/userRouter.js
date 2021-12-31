@@ -476,17 +476,16 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 })
 
 
-// without this BODY is empty when just fetching from client-side
-userRouter.use(express.json({
-    type: ['application/json', 'text/plain']
- }))
-
 userRouter.get('/token/:token', async (req, res) => { 
-    const { email, token } = req.query
+    let { email, token } = req.query
 
-    console.log(email)
+    if (!email && !token) {
+        token = req.params.token
+        email = req.session.userId
+    }
+
     console.log(token)
-    console.log(req)
+    console.log(email)
     
     if (email && token) {
         try {
