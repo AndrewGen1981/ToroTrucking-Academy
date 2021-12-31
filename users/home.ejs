@@ -371,9 +371,13 @@
         socket.on('users-collection-update', user => {
             if (user) {
                 if (user.documentKey._id === localStorage.getItem('id')) {
-                    if (user.updateDescription.updatedFields.token === "verified") {
-                        alert("Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you.")
-                        document.location.reload();
+                    if (user.updateDescription) {
+                        if (user.updateDescription.updatedFields) {
+                            if (user.updateDescription.updatedFields.token === "verified") {
+                                alert("Congratulation! You've just passed email verification process. Now please refresh a page and forms will be available for you.")
+                                document.location.reload();
+                            }
+                        }
                     }
                 }
             }
