@@ -476,6 +476,7 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 })
 
 
+// for email verification we use 2 routes: GET and POST. Some browsers and mobile browsers do not allow post requests from emails
 userRouter.get('/token/:token', async (req, res) => { 
     let { email, token } = req.query
 
@@ -483,9 +484,6 @@ userRouter.get('/token/:token', async (req, res) => {
         token = req.params.token
         email = req.session.userId
     }
-
-    console.log(token)
-    console.log(email)
     
     if (email && token) {
         try {
@@ -496,7 +494,13 @@ userRouter.get('/token/:token', async (req, res) => {
             return res.status(400).send('Wrong credentials have been sent. Try again please')
         } catch(e) { return res.status(500).send("Server error, try later please...") }
     }
-    res.status(500).send("Sorry, email verification was unsuccessful. Try again later")
+
+    if (!token) {
+        return res.status(400).send(`We got an invalid TOKEN, when verified your email. You sent a TOKEN=${token}`)
+    }
+    if (!email) {
+        return res.status(400).send('Looks like you are logged out already. Please login on the same device you are currently using for email verification with the credentials you already have and click verification link one more time. Sorry for that, we just have to know if that were you.')
+    }
 })
 
 
