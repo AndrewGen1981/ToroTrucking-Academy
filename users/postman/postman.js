@@ -8,7 +8,7 @@ const { getCompressedTokenLetter, getCompressedPasswordResetLetter } = require('
 async function sendALetter(letter) {
     // FETCH is async, but we send POST, so reply will not come
     
-    const result = await fetch(process.env.CLIENT_POST_SERVER, {
+    await fetch(process.env.CLIENT_POST_SERVER, {
         method: 'POST',
          body: JSON.stringify({
             action: "sendGmail",
@@ -19,8 +19,6 @@ async function sendALetter(letter) {
             sender: "[TTA] TORO Trucking Academy"
         })
     })
-
-    console.log(result)
 }
 
 
