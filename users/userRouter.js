@@ -487,8 +487,7 @@ userRouter.get('/token/:token', async (req, res) => {
         token = req.params.token
     }
 
-    console.log(email)
-    console.log(token)
+    console.log(req)
     
     if (email && token) {
         try {
