@@ -463,7 +463,9 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
         const tokenLink = IN_PROD ?
         `https://${req.headers.host}/user/token/${token}?email=${email}` :     // should be HTTPS for Production
         `http://${req.headers.host}/user/token/${token}?email=${email}`        // should be HTTP for Dev
- 
+        
+        console.log(tokenLink)
+        
         try {
             if ( await User.findOneAndUpdate({ email }, { token }) ) {      // TODO: has token here
                 postman.sendATokenLetter(name, email, token, tokenLink)
