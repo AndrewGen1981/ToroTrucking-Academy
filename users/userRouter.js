@@ -461,8 +461,8 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 
         // creating token link depends on is in production
         const tokenLink = IN_PROD ?
-        `https://${req.headers.host}/user/token/${token}` :     // should be HTTPS for Production
-        `http://${req.headers.host}/user/token/${token}`        // should be HTTP for Dev
+        `https://${req.headers.host}/user/token/${token}?email=${email}` :     // should be HTTPS for Production
+        `http://${req.headers.host}/user/token/${token}?email=${email}`        // should be HTTP for Dev
  
         try {
             if ( await User.findOneAndUpdate({ email }, { token }) ) {      // TODO: has token here
@@ -480,10 +480,15 @@ userRouter.post('/sendToken', redirectToLogin, async (req, res) => {
 userRouter.get('/token/:token', async (req, res) => { 
     let { email, token } = req.query
 
-    if (!email && !token) {
-        token = req.params.token
+    if (!email) {
         email = req.session.userId
     }
+    if (!token) {
+        token = req.params.token
+    }
+
+    console.log(email)
+    console.log(token)
     
     if (email && token) {
         try {
