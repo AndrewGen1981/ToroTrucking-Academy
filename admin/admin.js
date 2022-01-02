@@ -306,7 +306,7 @@ admRouter.put('/user', redirectToLogin, async(req, res) => {
     if (!userId) { return res.status(404).send('User is not defined') }
     // studentId CAN be undefined, when deleting a user
 
-    if (action === "block" || action === "unblock" || action === "archive") {
+    if (action === "block" || action === "unblock") {
         try {
             if (!studentId) { return res.status(400).send('Not A Student') }
 
