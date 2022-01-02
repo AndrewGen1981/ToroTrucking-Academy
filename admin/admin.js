@@ -12,6 +12,7 @@ const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
 const { qrCONFIG } = require('./config-qr')
+const { Tuition } = require('../users/tuition/tuitionModel')
 
 
 // PDF
@@ -305,21 +306,61 @@ admRouter.put('/user', redirectToLogin, async(req, res) => {
     if (!userId) { return res.status(404).send('User is not defined') }
     // studentId CAN be undefined, when deleting a user
 
-    if (action === "block" || action === "unblock") {
-        if (!studentId) { return res.status(400).send('Not A Student') }
+    if (action === "block" || action === "unblock" || action === "archive") {
+        try {
+            if (!studentId) { return res.status(400).send('Not A Student') }
 
-        const student = await Student.findById(studentId)
-        if (!student) { return res.status(404).send('Student is not defined') }
-        
-        student.status = action
-        await student.save()
-        return res.status(200).end()
+            const student = await Student.findById(studentId)
+            if (!student) { return res.status(404).send('Student is not defined') }
+            
+            student.status = action
+            await student.save()
+            return res.status(200).end()
+        } catch(e) {
+            return res.status(500).send(`Issue: ${e.message}`)
+        }
     }
 
-    const user = await User.findById(userId)
-    if (!user) { return res.status(404).send('User is not defined') }
+    // action === archive TODO: should it transfer all archived data to other collection? or just filter data when showing student list
 
+    if (action === "delete") {
+        const user = await User.findById(userId)
+        if (!user) { return res.status(404).send('User is not defined') }
 
+        try {
+            // deliting student info
+            if (user.student) {
+                const student = await Student.findById(user.student)
+                if (student) {
+                    if (student.tuition) { await Tuition.findByIdAndDelete(student.tuition) }   // deliting Tuition info
+                    await student.remove()
+                }
+            }
+
+            // deleting forms data
+            if (user.agreement) {
+                await agreementForm.findByIdAndDelete(user.agreement)
+            }
+            if (user.application) {
+                await applicationForm.findByIdAndDelete(user.application)
+            }
+            if (user.dataCollection) {
+                await dataCollectionForm.findByIdAndDelete(user.dataCollection)
+            }
+
+            // TODO: delete Instructors data, Graduation data and etc. here too !!!
+
+            // deleting a user
+            await user.remove()
+
+            return res.status(200).end()
+        } catch(e) {
+            return res.status(500).send(`Issue: ${e.message}`)
+        }
+    }
+
+    // action was not found
+    res.status(400).end()
 })
 
 
@@ -538,7 +579,6 @@ admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
 
         // can be in status of: block, unblock, archive, delete
         // only 'unblock' is good for Clocking
-        console.log('Status:', student.status)
         if (student.status != "unblock") { return res.status(200).send(`Forbidden: Student status is ${student.status}`) }
 
         // check min time after last clock - 5 min to avoid doubling

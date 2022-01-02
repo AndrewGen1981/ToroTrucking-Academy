@@ -72,7 +72,7 @@ let filter = {}
 // @GET admin/student/list
 studentRouter.get('/list', ifCanRead, async(req, res) => {
     // auth is good
-    const studentPopulated = ['key', 'email', 'TTT', 'created']
+    const studentPopulated = ['key', 'email', 'TTT', 'created', 'status']
     const userPopulated = ['token']
 
     const dataCollPopulated = [

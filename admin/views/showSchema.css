@@ -11,9 +11,25 @@
     box-sizing: border-box;
 }
 
+/* NAV BAR */
+nav {
+    width: 95%;
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+.ico {
+    width: 30px;
+    height: 30px;
+
+    background-color: #333;
+    fill: white;
+    border-radius: 100%;
+}
+
 .schema-users {
     width: fit-content;
-    margin: 2rem auto;
+    margin: 0 auto;
 }
 
 .schema-row {

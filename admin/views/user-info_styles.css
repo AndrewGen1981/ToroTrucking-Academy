@@ -133,7 +133,6 @@
 
     flex-wrap: nowrap;
 }
-
 .block-title {
     min-width: 150px;
     font-size: 1.35rem;
@@ -158,12 +157,12 @@
 /* @MENU */
 menu {
     width: 90%;
-    margin: 0 auto 1rem auto;
+    margin: 0 auto 0.5rem auto;
 
     display: flex;
     justify-content: flex-end;
 }
-menu span {
+menu span, menu a {
     margin: 0 5px;
 }
 .-inactive {
@@ -197,10 +196,20 @@ menu span {
     fill:rgb(77, 196, 48);
 }
 .-archivate {
-    fill:rgb(196, 107, 48);
+    fill:rgb(58, 58, 58);
 }
 .-delete {
     fill:rgb(196, 48, 48);
+}
+svg.-active {
+    fill:rgba(34, 60, 80, 0.2);
+    opacity: 0.75;
+}
+
+.-sys {
+    background-color: #333;
+    fill: white;
+    border-radius: 100%;
 }
 
 

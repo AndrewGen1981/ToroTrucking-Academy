@@ -148,6 +148,27 @@ a.-name {
     -o-transform: scale(var(--chbx-size)); /* Opera */
     transform: scale(var(--chbx-size));
 }
+.-TTT {
+    --width: 5rem;
+    background-color: var(--orange-high-desert);
+    color: white;
+    text-align: center;
+}
+.-status {
+    --width: 5rem;
+    background-color: var(--left-cols-color);
+    text-align: center;
+}
+.-status-block {
+    color: var(--orange-high-desert);
+}
+.-status-unblock {
+    color: var(--good-done1);
+}
+.-status-archive {
+    color: yellow;
+}
+
 .-email {
     --width: 15rem;
     background-color: var(--left-cols-color);
@@ -163,12 +184,6 @@ a.-name {
 }
 .-email-unsafe {
     color: var(--bad-todo1);
-}
-.-TTT {
-    --width: 5rem;
-    background-color: var(--orange-high-desert);
-    color: white;
-    text-align: center;
 }
 .-street {
     --width: 12.5rem;
@@ -286,6 +301,10 @@ a.-name {
 .button-ico:hover {
     fill: #5324d4;
     transition: fill .15s ease-in;
+}
+.-bigger {
+    width: 1.85rem;
+    height: 1.85rem;
 }
 
 
