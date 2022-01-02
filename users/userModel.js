@@ -61,6 +61,9 @@ const studentSchema = new mongoose.Schema({
     key: { type: Number, required: true },
     email: { type: String, lowercase: true, required: true },
     created: { type: Date, default: new Date() },
+    
+    status: {type: String, default: "unblock"},
+
     user: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'userSchema'

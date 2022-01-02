@@ -286,6 +286,44 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
 
 
 
+// without this BODY is empty when just fetching from client-side
+admRouter.use(express.json({
+    type: ['application/json', 'text/plain']
+}))
+
+// for user data updating (block/unblock/archive/delete)
+admRouter.put('/user', redirectToLogin, async(req, res) => {
+
+    // check Admin's Auth
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'write')) {
+        return res.status(400).send('Not enough authorities for requested operation')
+    }
+
+    const { studentId, userId, action } = req.body
+    if (!action) { return res.status(400).send('Action is not defined') }
+    if (!userId) { return res.status(404).send('User is not defined') }
+    // studentId CAN be undefined, when deleting a user
+
+    if (action === "block" || action === "unblock") {
+        if (!studentId) { return res.status(400).send('Not A Student') }
+
+        const student = await Student.findById(studentId)
+        if (!student) { return res.status(404).send('Student is not defined') }
+        
+        student.status = action
+        await student.save()
+        return res.status(200).end()
+    }
+
+    const user = await User.findById(userId)
+    if (!user) { return res.status(404).send('User is not defined') }
+
+
+})
+
+
+
 // Generating a view to print (NOT a PDF one)
 admRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
 
@@ -497,6 +535,11 @@ admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
         
         const student = await Student.findById(studentId)
         if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
+
+        // can be in status of: block, unblock, archive, delete
+        // only 'unblock' is good for Clocking
+        console.log('Status:', student.status)
+        if (student.status != "unblock") { return res.status(200).send(`Forbidden: Student status is ${student.status}`) }
 
         // check min time after last clock - 5 min to avoid doubling
         // counting todays clocks

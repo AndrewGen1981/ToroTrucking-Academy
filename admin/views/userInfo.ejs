@@ -79,6 +79,29 @@
                 <div class="block-title" name='block4' onclick='toggleBlock(this)'>Student Data</div>
             </div>
         </nav>
+
+        <menu>
+            <span class="-inactive" id="block-menu-item" title="Block a Student(Unable Clocking)">
+                <svg class="ico -block" viewBox="0 0 122.88 119.8" onclick="menuAction('block')">
+                    <path d="M23.59,0h75.7a23.63,23.63,0,0,1,23.59,23.59V96.21A23.64,23.64,0,0,1,99.29,119.8H23.59a23.53,23.53,0,0,1-16.67-6.93l-.38-.42A23.49,23.49,0,0,1,0,96.21V23.59A23.63,23.63,0,0,1,23.59,0Zm59.7,53.51a6.39,6.39,0,1,1,0,12.77H39.59a6.39,6.39,0,1,1,0-12.77Zm16-40.74H23.59A10.86,10.86,0,0,0,12.77,23.59V96.21a10.77,10.77,0,0,0,2.9,7.37l.28.26A10.76,10.76,0,0,0,23.59,107h75.7a10.87,10.87,0,0,0,10.82-10.82V23.59A10.86,10.86,0,0,0,99.29,12.77Z"/>
+                </svg>
+            </span>
+            <span class="-inactive" id="unblock-menu-item" title="Unblock a Student(Allow Clocking)">
+                <svg class="ico -unblock" viewBox="0 0 122.88 119.8" onclick="menuAction('unblock')">
+                    <path d="M23.59,0h75.7a23.63,23.63,0,0,1,23.59,23.59V96.21A23.64,23.64,0,0,1,99.29,119.8H23.59a23.53,23.53,0,0,1-16.67-6.93l-.38-.42A23.49,23.49,0,0,1,0,96.21V23.59A23.63,23.63,0,0,1,23.59,0ZM55.06,38.05a6.38,6.38,0,1,1,12.76,0V53.51H83.29a6.39,6.39,0,1,1,0,12.77H67.82V81.75a6.38,6.38,0,0,1-12.76,0V66.28H39.59a6.39,6.39,0,1,1,0-12.77H55.06V38.05ZM99.29,12.77H23.59A10.86,10.86,0,0,0,12.77,23.59V96.21a10.77,10.77,0,0,0,2.9,7.37l.28.26A10.76,10.76,0,0,0,23.59,107h75.7a10.87,10.87,0,0,0,10.82-10.82V23.59A10.86,10.86,0,0,0,99.29,12.77Z"/>
+                </svg>
+            </span>
+            <span class="-inactive" id="archive-menu-item" title="Move to Archive">
+                <svg class="ico -archivate" viewBox="0 0 122.88 114.318" onclick="menuAction('archivate')">
+                    <path d="M122.88,35.289L87.945,70.578v-17.58c-22.091-4.577-39.542,0.468-52.796,17.271 c2.301-34.558,25.907-51.235,52.795-52.339L87.945,0L122.88,35.289L122.88,35.289z"/><path d="M6.908,23.746h35.626c-4.587,3.96-8.71,8.563-12.264,13.815H13.815v62.943h80.603V85.831l13.814-13.579v35.159 c0,3.814-3.093,6.907-6.907,6.907H6.908c-3.815,0-6.908-3.093-6.908-6.907V30.653C0,26.838,3.093,23.746,6.908,23.746L6.908,23.746 z"/>
+                </svg>
+            </span>
+            <span class="-inactive" id="delete-menu-item" title="Delete without Archiving">
+                <svg class="ico -delete" viewBox="0 0 122.88 119.79" onclick="menuAction('delete')">
+                    <path d="M23.5,0H99.38a23.56,23.56,0,0,1,23.5,23.5V96.29a23.56,23.56,0,0,1-23.5,23.5H23.5a23.44,23.44,0,0,1-16.6-6.9l-.37-.4A23.43,23.43,0,0,1,0,96.29V23.5A23.56,23.56,0,0,1,23.5,0ZM41,49.35a7,7,0,0,1,9.89-9.89L61.44,50,72,39.46a7,7,0,1,1,9.89,9.9L71.33,59.9,81.87,70.43A7,7,0,0,1,72,80.33L61.44,69.79,50.9,80.33A7,7,0,0,1,41,70.43L51.55,59.89,41,49.35ZM99.38,12.52H23.5a11,11,0,0,0-11,11V96.29a10.92,10.92,0,0,0,3,7.49l.27.26a11,11,0,0,0,7.75,3.23H99.38a11,11,0,0,0,11-11V23.5a11,11,0,0,0-11-11Z"/>
+                </svg>
+            </span>
+        </menu>
         
         <section class="block-box -hidden" name='blockBox' id='block1'>
             <h2 class="block-header">Data Collection Form</h2>
@@ -2427,6 +2450,53 @@
 
         // showing block #1 as default
         document.querySelector('[name=block1]').click()
+
+
+
+        // MENU Actions
+        const block = document.getElementById('block-menu-item')
+        const unblock = document.getElementById('unblock-menu-item')
+        const archive = document.getElementById('archive-menu-item')
+
+        async function updateUser(action) {
+            return await fetch('/admin/user', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studentId: "<%= user.student._id %>",
+                    userId: "<%= user._id %>",
+                    action
+                })
+            })
+        }
+
+        async function menuAction(action) {
+            const result = await updateUser(action)
+
+            if (!result) {
+                return alert(`Action '${action.toUpperCase()}' was not done`)
+            }
+            if (result.status != 200) {
+                return alert(`Error: response status ${result.status}, ${result.statusText}`)
+            }
+
+            if (action === "block" && block && unblock) {
+                block.classList.remove('-inactive')
+                block.classList.add('-active')
+                unblock.classList.remove('-active')
+                unblock.classList.add('-inactive')
+            }   // BLOCK
+            if (action === "unblock" && block && unblock) {
+                unblock.classList.remove('-inactive')
+                unblock.classList.add('-active')
+                block.classList.remove('-active')
+                block.classList.add('-inactive')
+            }   // UNBLOCK
+            if (action === "archivate" && archive) {
+                archive.classList.remove('-inactive')
+                archive.classList.add('-active')
+            }   // UNBLOCK
+        }
 
 
     </script>
