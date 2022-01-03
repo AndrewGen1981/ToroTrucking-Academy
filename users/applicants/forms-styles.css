@@ -476,27 +476,38 @@ td:nth-child(2) {
         font-size: 0.83rem;
         line-height: 1rem;
     }
-    #form1-personal, #form1-address, #form1-additional {
+    #form1-personal, #form1-address, #form1-additional,
+    #form2-hdyfu, #form2-referral, #form2-highGrade,
+    #Employers .form-block, .sign-box {
         flex-direction: column;
+    }
+    #form2-referral {
+        align-items: center;
     }
     #form1-personal input, #form1-address input, #form1-additional input {
         width: 20rem;
     }
+    .-smaller {
+        width: 17rem;
+    }
     #form1-personal br, #form1-address br, 
-    #form1-additional br, #form1-grade br {
+    #form1-additional br, #form1-grade br,
+    #Employers br  {
         content: "";
     }
     #form1-personal br::after,
     #form1-address br::after,
     #form1-additional br::after,
-    #form1-grade br::after {
+    #form1-grade br::after,
+    #Employers br::after {
         content: " ";
     }
 
     #form1-race, #form1-hisp-disab-vet-sex, #form1-grade {
         flex-direction: column;
     }
-    #form1-race .form-radio-box, #form1-grade .form-radio-box {
+    #form1-race .form-radio-box, #form1-grade .form-radio-box,
+    #form2-hdyfu .form-radio-box {
         width: fit-content;
         grid-template-columns: 1fr;
     }
@@ -517,5 +528,26 @@ td:nth-child(2) {
 @media (max-width: 650px) {
     #form1-hisp-disab-vet-sex .form-section {
         width: 95%;
+    }
+
+    #form2-acc-traf-crim {
+        padding: 0.3rem 0;
+    }
+    #form2-acc-traf-crim label {
+        width: 95%;
+    }
+    #Employers .form-block {
+        padding: 0;
+    }
+    ul {
+        --ul-width: 90%;
+    }
+    .-one-row-pillow {
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
+        flex-wrap: nowrap;
     }
 }
