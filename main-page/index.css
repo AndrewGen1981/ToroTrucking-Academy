@@ -49,6 +49,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     fill: #ffffff;
     background-color: rgba(34, 60, 80, 0.15);
     border-radius: 100%;
+    overflow: hidden;
 
     cursor: pointer;
     z-index: 10;
@@ -56,7 +57,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .-close-view {
     transform: rotate(45deg);
-    transition: transform 0.2s linear;
+    transition: transform 0.25s linear;
 }
 
 .main-nav-menu {
@@ -1088,7 +1089,7 @@ footer {
 @media (max-width: 555px) {
     .nav-item {
         font-size: 1.2rem;
-        line-height: 1.85rem;
+        line-height: 2.2rem;
     }
 }
 
@@ -1149,7 +1150,7 @@ footer {
 
 @media (max-width: 395px) {
     .nav-item {
-        font-size: 1.2rem;
-        line-height: 1.65rem;
+        font-size: 1.25rem;
+        line-height: 1.85rem;
     }
 }
