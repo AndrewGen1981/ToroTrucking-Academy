@@ -25,11 +25,11 @@
 <body>
     
     <form action="/user/form1" method="POST" class='applicant-form'>
-        <h1 class='form-title'>STUDENT DATA COLLECTION FORM</h1>
-        <h5 class='form-subtitle'>The Workforce Board (the state agency that regulates this school) requires that we ask you for this information, by law (RCW 28C.10.050). Providing your social security number is voluntary. By law, the information you provide on this form cannot be given out by any state agency as public information. The Workforce Board will not disclose data to anyone except authorized Workforce Board employees or contractors working on specific research activities, who follow strict confidentiality procedures. This format follows the information required to be submitted by the school as part of the annual student data report.</h5>
+        <h1 class='form-title' id="form1-title">STUDENT DATA COLLECTION FORM</h1>
+        <h5 class='form-subtitle' id="form1-subtitle">The Workforce Board (the state agency that regulates this school) requires that we ask you for this information, by law (RCW 28C.10.050). Providing your social security number is voluntary. By law, the information you provide on this form cannot be given out by any state agency as public information. The Workforce Board will not disclose data to anyone except authorized Workforce Board employees or contractors working on specific research activities, who follow strict confidentiality procedures. This format follows the information required to be submitted by the school as part of the annual student data report.</h5>
 
 
-        <section class='form-personal'>
+        <section class='form-personal' id='form1-personal'>
             <h2 class='section-title'>PERSONAL<br>INFORMATION</h2>
 
             <label for="first-name">First Name
@@ -45,7 +45,7 @@
 
         
 
-        <section class='form-address'>
+        <section class='form-address' id='form1-address'>
             <h2 class='section-title'>Address<br>Section</h2>
 
             <label for="street">Street Address
@@ -116,7 +116,7 @@
             </label>
         </section>
 
-        <section class='form-additional'>
+        <section class='form-additional' id='form1-additional'>
             <h2 class='section-title'>Additional<br>Info</h2>
 
             <label for="phone">Phone Number
@@ -131,7 +131,7 @@
             </label>
         </section>
 
-        <section class='form-race'>
+        <section class='form-race' id='form1-race'>
             <h3 class='section-title'>Race</h3>
             <div class='form-radio-box'>
                 <label class='-one-row' for="raceChoice1">
@@ -172,7 +172,7 @@
             </div>
         </section>      <!-- RACE section -->
 
-        <div class="form-box2x4">
+        <div class="form-box2x4" id="form1-hisp-disab-vet-sex">
             <section class='form-section'>
                 <h3 class='section-title'>Are you Hispanic in origin?</h3>
                 <small>*Hispanic defined as a person of Mexican, Puerto Rican, Cuban, Central or South American, or other Spanish culture or origin, regardless of race</small>
@@ -238,7 +238,7 @@
         </div>  <!-- form-box2x4 -->
 
 
-        <section class='form-grade'>
+        <section class='form-grade' id='form1-grade'>
             <h3 class='section-title'>Highest grade<br>completed</h3>
             <div class='form-radio-box'>
                 <label class='-one-row' for="gradeChoice1">

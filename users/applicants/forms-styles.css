@@ -462,3 +462,57 @@ td:nth-child(2) {
     font-size: 2rem;
     text-align: right;
 }
+
+
+
+@media (max-width: 1065px) {
+    #form1-title {
+        padding: 2rem 0 1rem 0;
+        font-size: 2rem;
+    }
+    #form1-subtitle {
+        margin-bottom: 0.5rem;
+        padding: 0 5px 0.5rem 5px;
+        font-size: 0.83rem;
+        line-height: 1rem;
+    }
+    #form1-personal, #form1-address, #form1-additional {
+        flex-direction: column;
+    }
+    #form1-personal input, #form1-address input, #form1-additional input {
+        width: 20rem;
+    }
+    #form1-personal br, #form1-address br, #form1-additional br {
+        display: none
+    }
+
+    #form1-race, #form1-hisp-disab-vet-sex, #form1-grade {
+        flex-direction: column;
+    }
+    #form1-race .form-radio-box, #form1-grade .form-radio-box {
+        width: fit-content;
+        grid-template-columns: 1fr;
+    }
+    #form1-hisp-disab-vet-sex .form-section {
+        margin: 0 auto;
+    }
+
+    #form1-grade br {
+        display: none;
+    }
+
+    .form-button-box {
+        width: fit-content;
+        flex-direction: column;
+        padding: 1rem 0;
+    }
+    .form-button-box .-btn {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 650px) {
+    #form1-hisp-disab-vet-sex .form-section {
+        width: 95%;;
+    }
+}
