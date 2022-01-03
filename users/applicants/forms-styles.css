@@ -525,6 +525,46 @@ td:nth-child(2) {
     }
 }
 
+
+@media (max-width: 1000px) {
+    #form3-programm,
+    #form3-pmts .form-block,
+    #form3-parents {
+        width: 100%;
+        flex-direction: column;
+    }
+    #form3-programm .section-title {
+        text-align: center;
+    }
+    #form3-pmts .form-block {
+        align-items: flex-start;
+        padding: 0;
+    }
+
+    #form3-programm .form-radio-box {
+        width: 100%;
+        grid-template-columns: 1fr;
+    }
+
+    #form3-cancel table {
+        width: 100%;
+    }
+
+    #form3-parents {
+        align-items: center;
+    }
+
+    
+
+    #form3-programm br, #form3-parents br {
+        content: "";
+    }
+    #form3-programm br::after, #form3-parents br::after {
+        content: " ";
+    }
+}
+
+
 @media (max-width: 650px) {
     #form1-hisp-disab-vet-sex .form-section {
         width: 95%;
@@ -549,5 +589,8 @@ td:nth-child(2) {
         justify-content: space-between;
         flex-direction: row;
         flex-wrap: nowrap;
+
+        margin-left: auto;
+        margin-right: auto;
     }
 }
