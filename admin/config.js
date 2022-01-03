@@ -24,7 +24,7 @@ const PROFILES = [
     { id: "Ryan0001", name: "Ryan Kling", title:'president', email: "ryan@torocdl.com", location: 'PACIFIC', password: process.env.RYAN0001_PASS, auth: AUTH.editor },
     { id: "Mariana0001", name: "Mariana Bulgaru", title:'manager', email: "nwcdlschool@gmail.com", location: 'PACIFIC', password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
     { id: "Aziz0001", name: "Aziz", title:'manager', email: "Azo2008@gmail.com", location: 'PACIFIC', password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
-    { id: "Salazar0001", name: "Michelle Salazar", title:'manager', email: "Tacoma@torocdl.com", location: 'PACIFIC', password: process.env.AZIZ0001_PASS, auth: AUTH.editor }
+    { id: "Salazar0001", name: "Michelle Salazar", title:'manager', email: "Tacoma@torocdl.com", location: 'PACIFIC', password: process.env.SALAZAR0001_PASS, auth: AUTH.editor }
 ]
 
 
