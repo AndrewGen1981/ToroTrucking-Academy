@@ -292,7 +292,10 @@ userRouter.get('/form2', redirectToLogin, async(req, res) => {
 userRouter.get('/form3', redirectToLogin, async(req, res) => {
     form1 = await dataCollectionForm.findOne({ email: req.session.userId })
     if (form1 && applicantProgress.form2) { res.render(path.join(__dirname+'/applicants/form3.ejs'), {form1, exists: applicantProgress.form3}) }
-    else { res.redirect('/user/home?status=issue&e=form1Read') }
+    else { 
+        if (!form1) { return res.redirect('/user/home?status=issue&e=form1Read') }
+        res.redirect('/user/home?status=issue&e=form2Read')
+    }
 })
 
 

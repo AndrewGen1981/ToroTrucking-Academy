@@ -466,7 +466,7 @@ td:nth-child(2) {
 
 
 @media (max-width: 1065px) {
-    #form1-title {
+    .form-title {
         padding: 2rem 0 1rem 0;
         font-size: 2rem;
     }
@@ -482,8 +482,15 @@ td:nth-child(2) {
     #form1-personal input, #form1-address input, #form1-additional input {
         width: 20rem;
     }
-    #form1-personal br, #form1-address br, #form1-additional br {
-        display: none
+    #form1-personal br, #form1-address br, 
+    #form1-additional br, #form1-grade br {
+        content: "";
+    }
+    #form1-personal br::after,
+    #form1-address br::after,
+    #form1-additional br::after,
+    #form1-grade br::after {
+        content: " ";
     }
 
     #form1-race, #form1-hisp-disab-vet-sex, #form1-grade {
@@ -495,10 +502,6 @@ td:nth-child(2) {
     }
     #form1-hisp-disab-vet-sex .form-section {
         margin: 0 auto;
-    }
-
-    #form1-grade br {
-        display: none;
     }
 
     .form-button-box {
@@ -513,6 +516,6 @@ td:nth-child(2) {
 
 @media (max-width: 650px) {
     #form1-hisp-disab-vet-sex .form-section {
-        width: 95%;;
+        width: 95%;
     }
 }

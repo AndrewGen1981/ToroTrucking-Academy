@@ -1,6 +1,7 @@
 // ISSUES
 const issuesArray = {
-    form1Read: "Sorry, you have to fill out form1 'STUDENT DATA COLLECTION FORM' at first",
+    form1Read: "You have to fill out form#1 'STUDENT DATA COLLECTION FORM' at first",
+    form2Read: "You have to fill out form#2 'APPLICATION FOR ENROLLMENT' at first",
     formAlreadyExists: "We've found this particular form in our database attached to your email.",
     savingIssue: "Ooops... info saving issue occurred, please try again later. We are very sorry for inconveniences.",
     dataIssue: "Sorry. We are unavailable to read data, database is not responding now. Try again later, please.",
