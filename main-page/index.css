@@ -30,6 +30,35 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 
 /* MIAN NAV */
+.menu-ico {
+    display: none;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    margin: 5px;
+
+    width: 50px;
+    width: 50px;
+
+    -webkit-box-shadow: 0px 0px 10px 4px rgba(34, 60, 80, 0.3);
+    -moz-box-shadow: 0px 0px 10px 4px rgba(34, 60, 80, 0.3);
+    box-shadow: 0px 0px 10px 4px rgba(34, 60, 80, 0.3);
+    
+    fill: #ffffff;
+    background-color: rgba(34, 60, 80, 0.15);
+    border-radius: 100%;
+
+    cursor: pointer;
+    z-index: 10;
+}
+
+.-close-view {
+    transform: rotate(45deg);
+    transition: transform 0.2s linear;
+}
+
 .main-nav-menu {
     width: 100%;
     height: 10rem;
@@ -790,9 +819,37 @@ footer {
 }
 
 @media (max-width: 1210px) {
-    .nav-item-box {
-        margin: 0 0.7rem;
+    .menu-ico {
+        display: block;
     }
+    .main-nav-menu {
+        display: none;
+        left:unset;
+        top: 0;
+        right: 0;
+
+        width: fit-content;
+        height: calc(56.25vw);
+
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        margin: 1px;
+        padding: 0.5rem 2rem 0.5rem 0;
+
+        background-color: hsla(213, 10%, 36%, 80%);
+        background-size: contain;
+        background-position-x: center;
+        background-position-y: bottom;
+
+        border-radius: 3px;
+    }
+
+    .nav-item {
+        font-size: 1.3rem;
+    }
+
     .why-us {
         background-position-x: 95%;
     }
@@ -802,13 +859,13 @@ footer {
     .nav-bottom-box {
         width: 90%;
     }
-
-    .nav-item {
-        font-size: 1.2rem;
-    }
     .header-titles {
+        inset: 0;
+
         width: 80%;
-        height: 85%;
+        height: fit-content;
+
+        padding-top: 2rem;
     }
     .ceo-person img {
         width: 8%;
@@ -836,20 +893,8 @@ footer {
 }
 
 @media (max-width: 910px) {
-    header, .main-nav-menu {
+    header {
         height: calc(60vw);
-    }
-    .main-nav-menu {
-        align-items: flex-end;
-        justify-content: space-between;
-
-        background-position-y: 2vw;
-        background-position-x: 2vw;
-
-        padding: 0 1rem;
-    }
-    .nav-item-box {
-        margin: 0;
     }
     .header-titles {
         width: 95%;
@@ -902,26 +947,14 @@ footer {
     }
 }
 
+@media (max-width: 770px) {
+    .main-nav-menu {
+        background-image: unset;
+        height: fit-content;
+    }
+}
 
 @media (max-width: 710px) {
-    .main-nav-menu {
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-
-        background-position-y: 2vw;
-        background-position-x: 85vw;
-
-        padding: 50vw 0 0 0;
-    }
-    .nav-item-box {
-        width: 25%;
-        text-align: center;
-    }
-    .nav-item {
-        line-height: 2rem;
-    }
-
     .header-titles {
         height: 100%;
         justify-content: flex-start;
@@ -981,12 +1014,8 @@ footer {
 
 
 @media (max-width: 610px) {
-    header, .main-nav-menu {
+    header {
         height: calc(55vw);
-    }
-    .main-nav-menu {
-        background-position-x: 80vw;
-        padding-top: 45vw;
     }
     .title {
         font-size: 3rem;
@@ -1056,13 +1085,17 @@ footer {
     }
 }
 
+@media (max-width: 555px) {
+    .nav-item {
+        font-size: 1.2rem;
+        line-height: 1.85rem;
+    }
+}
+
 @media (max-width: 510px) {
     .title {
         font-size: 2.5rem;
         line-height: 2.7rem;
-    }
-    .nav-item {
-        font-size: 1rem;
     }
     .why-us {
         background-position-x: 300%;
@@ -1088,15 +1121,6 @@ footer {
 }
 
 @media (max-width: 415px) {
-    .main-nav-menu {
-        background-position-y: 6vw;
-        padding-top: 42vw;
-    }
-    .nav-item {
-        font-family: "Industrial Medium";
-        font-size: 0.9rem;
-        letter-spacing: -1px;
-    }
     .title {
         margin-bottom: 0.35rem;
     }
@@ -1120,5 +1144,12 @@ footer {
     }
     .social-block {
         width: 85%;
+    }
+}
+
+@media (max-width: 395px) {
+    .nav-item {
+        font-size: 1.2rem;
+        line-height: 1.65rem;
     }
 }
