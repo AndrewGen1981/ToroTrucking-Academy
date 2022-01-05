@@ -21,10 +21,14 @@ const AUTHNAMES = [ 'viewOnly', 'editor', 'admin' ]
 const PROFILES = [
     { id: "BigG0001", name: "BigG Admin", title: "admin", email: "alphafleetacc@gmail.com", location: 'SEATTLE', password: process.env.BIGG0001_PASS, auth: AUTH.admin },
     { id: "Mike0001", name: "Mike Svoboda", title:'admin', email: "newsoundcdl@gmail.com", location: 'TEST', password: process.env.MIKE0001_PASS, auth: AUTH.editor },
+
     { id: "Ryan0001", name: "Ryan Kling", title:'president', email: "ryan@torocdl.com", location: 'PACIFIC', password: process.env.RYAN0001_PASS, auth: AUTH.editor },
-    { id: "Mariana0001", name: "Mariana Bulgaru", title:'manager', email: "nwcdlschool@gmail.com", location: 'PACIFIC', password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
     { id: "Aziz0001", name: "Aziz", title:'manager', email: "Azo2008@gmail.com", location: 'PACIFIC', password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
-    { id: "Salazar0001", name: "Michelle Salazar", title:'manager', email: "Tacoma@torocdl.com", location: 'PACIFIC', password: process.env.SALAZAR0001_PASS, auth: AUTH.editor }
+
+    { id: "Mariana0001", name: "Mariana Bulgaru", title:'manager', email: "nwcdlschool@gmail.com", location: 'PACIFIC', password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
+    { id: "Salazar0001", name: "Michelle Salazar", title:'manager', email: "tacoma@torocdl.com", location: 'PACIFIC', password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
+
+    { id: "Littleton0001", name: "Robert Littleton", title:'manager', email: "robert@torocdl.com", location: 'KENT', password: process.env.LITTLETON0001_PASS, auth: AUTH.editor }
 ]
 
 
