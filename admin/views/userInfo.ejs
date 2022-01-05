@@ -45,7 +45,7 @@
             
             <div class="head-name-info">
                 <% if(user.dataCollection) { %>
-                    <h1 class="student-full-name"><%= user.dataCollection.lastName %> <%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %></h1>
+                    <h1 class="student-full-name"><%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %></h1>
                     <h3 class="student-address"><%= user.dataCollection.street %> <%= user.dataCollection.city %>, <%= user.dataCollection.state %> <%= user.dataCollection.zip %></h3>
                 <% } else { %>
                     <h1 class="student-full-name">New User</h1>
@@ -336,7 +336,7 @@
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Date of birth</div>
-                            <div class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString() %></div>
+                            <div class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         </div>
                         <div class="fields-set">
                             <label class="show-edit-btn" for='DOB' onclick='toggleEditField(this)'>edit</label>
@@ -2068,7 +2068,7 @@
                         <!-- @SIGNATURE -->
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow">completed as of</div>
-                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> (<%= new Date(user.agreement.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
+                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(user.agreement.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
                         </section>
 
                         <!-- @UPDATED by whom and when -->

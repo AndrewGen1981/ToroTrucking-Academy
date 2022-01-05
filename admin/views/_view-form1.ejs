@@ -47,7 +47,7 @@
             <% if(user.dataCollection) { %>
                 <div class="main-box">
                     <p class="main-box-title">Full applicant's name and address:</p>
-                    <h2 class="appl-full-name"><%= user.dataCollection.lastName %> <%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %></h1>
+                    <h2 class="appl-full-name"><%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %></h1>
                     <h3 class="appl-address"><%= user.dataCollection.street %> <%= user.dataCollection.city %>, <%= user.dataCollection.state %> <%= user.dataCollection.zip %></h3>
                 </div>  <!-- main-box -->
 
@@ -60,7 +60,7 @@
                         </div>
                         <div class="field-box">
                             <h3 class="field-title">Date of Birth</h3>
-                            <p class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString() %></p>
+                            <p class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></p>
                         </div>
                         <div class="field-box">
                             <h3 class="field-title">Social Security Number</h3>
@@ -261,11 +261,11 @@
                     <div class="section-fields -fields-side-by-side">
                         <div class="field-box">
                             <h3 class="field-title">Date of signing</h3>
-                            <p class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString() %></p>
+                            <p class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></p>
                         </div>
                         <div class="field-box">
                             <h3 class="field-title">Applicant signature</h3>
-                            <p class="field-signature"><%= user.dataCollection.lastName %> <%= user.dataCollection.firstName %></p>
+                            <p class="field-signature"><%= user.dataCollection.firstName %> <%= user.dataCollection.lastName %></p>
                         </div>
                     </div>  <!-- section-fields -->
                 </section>  <!-- signature info -->
