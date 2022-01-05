@@ -147,7 +147,7 @@
 
                         <div class='field -phone'><%= student.user.dataCollection.phone %></div>
 
-                        <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString() : '-' } %>
+                        <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
 
                         <div class='field -DOB'><%= formatDate(student.user.dataCollection.DOB) %></div>
                         <div class='field -SSN'><%= student.user.dataCollection.SSN %></div>
@@ -295,7 +295,7 @@
                                         el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
                                     break
                                     case 'created':
-                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                        el.textContent = value ? new Date(value).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-'
                                     break
                                     default: el.textContent = value
                                 }
@@ -321,7 +321,7 @@
                             if (el) {
                                 switch (key) {
                                     case 'DOB':
-                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                        el.textContent = value ? new Date(value).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-'
                                     break
                                     default: el.textContent = value
                                 }
@@ -363,7 +363,7 @@
 
                                     case 'updatedDate':
                                     case 'schoolSignDate':
-                                        el.textContent = value ? new Date(value).toLocaleDateString() : '-'
+                                        el.textContent = value ? new Date(value).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-'
                                     break
 
                                     default: el.textContent = value

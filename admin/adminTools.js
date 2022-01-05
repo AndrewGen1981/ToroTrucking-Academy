@@ -67,8 +67,8 @@ async function getUsers(filter, limit, skip) {
                 }
             }
 
-            html += `<div class='schema-col-created' id='created-${item._id}'>${new Date(item.created).toLocaleDateString()}</div>`
-            html += `<div class='schema-col-lastSESS' id='lastSESS-${item._id}'>${new Date(item.lastSESS).toLocaleDateString()} ${new Date(item.lastSESS).toLocaleTimeString()}</div>`
+            html += `<div class='schema-col-created' id='created-${item._id}'>${new Date(item.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })}</div>`
+            html += `<div class='schema-col-lastSESS' id='lastSESS-${item._id}'>${new Date(item.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })} ${new Date(item.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}</div>`
 
             if (item.dataCollection) {
                 html += `<div class='schema-col-dataCollection' id='dataCollection-${item._id}'><div class='step -step-done' id='form1-step-${item._id}'>+</div></div>`

@@ -56,8 +56,8 @@
 
                         if (fields.name) { document.querySelector(`#name-${id}`).textContent = fields.name }
                         if (fields.email) { document.querySelector(`#email-${id}`).textContent = fields.email }
-                        if (fields.created) { document.querySelector(`#created-${id}`).textContent = new Date(fields.created).toLocaleDateString() }
-                        if (fields.lastSESS) { document.querySelector(`#lastSESS-${id}`).textContent = `${new Date(fields.lastSESS).toLocaleDateString()} ${new Date(fields.lastSESS).toLocaleTimeString()}` }
+                        if (fields.created) { document.querySelector(`#created-${id}`).textContent = new Date(fields.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) }
+                        if (fields.lastSESS) { document.querySelector(`#lastSESS-${id}`).textContent = `${new Date(fields.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })} ${new Date(fields.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}` }
                         if (fields.token) {
                             const token = document.querySelector(`#token-${id}`)
                             if (fields.token === 'not sent') {
@@ -154,8 +154,8 @@
                     }
 
                     row.appendChild(addField('div', 'token', getToken(fields.token)))      // token
-                    row.appendChild(addField('div', 'created', new Date(fields.created).toLocaleDateString()))     // created
-                    row.appendChild(addField('div', 'lastSESS', `${new Date(fields.lastSESS).toLocaleDateString()} ${new Date(fields.lastSESS).toLocaleTimeString()}`))     // lastSESS
+                    row.appendChild(addField('div', 'created', new Date(fields.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })))     // created
+                    row.appendChild(addField('div', 'lastSESS', `${new Date(fields.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })} ${new Date(fields.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`))     // lastSESS
 
                     function getStepCheck(check, form) {       // general service function
                         return check 

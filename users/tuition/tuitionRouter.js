@@ -34,10 +34,8 @@ const listOfLessons = [
     "Qyabk1hl2sU",    "gZNxWL_U9Gc",
     "zQix4Sv16kA",    "YQA1MWp19RY",
     // 31-35
-    "C8Y9LVgR9iY",
-    "Vn8n7JnFzOI",
-    "4wukFJiHhQg",
-    "z-9RgNg2hC0",
+    "C8Y9LVgR9iY",    "Vn8n7JnFzOI",
+    "4wukFJiHhQg",    "z-9RgNg2hC0",
     "w0EYV8ZfwqM"
 ]
 

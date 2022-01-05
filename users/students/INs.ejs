@@ -25,7 +25,7 @@
 
         <% if(inStudents) { %>
             <header class="ins-list-header">
-                <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString() %></h2>
+                <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></h2>
                 <nav>
                     <a class='-btn reload-ins' id='reload-ins' href="/admin/student/">reload</a>
                     <a class='-btn back-home' href="/admin/profile/">home</a>
@@ -62,19 +62,19 @@
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= new Date(clockIN.date).toLocaleTimeString() %>
+                                    <%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString() %></a>
+                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
                             <% } %>
 
 
                             <% if (!isNaN(clockOUT.lat) && !isNaN(clockOUT.lon)) { %>
                                 <a class='field -clocks -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
-                                    <%= new Date(clockOUT.date).toLocaleTimeString() %>
+                                    <%= new Date(clockOUT.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -out -not-present' target="_blank"><%= new Date(clockOUT.date).toLocaleTimeString() %></a>
+                                <a class='field -clocks -out -not-present' target="_blank"><%= new Date(clockOUT.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
                             <% } %>
 
 
@@ -84,10 +84,10 @@
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= new Date(clockIN.date).toLocaleTimeString() %>
+                                    <%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString() %></a>
+                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
                             <% } %>
 
                             <a class='field -clocks -out' target="_blank">...</a>
@@ -158,7 +158,6 @@
                                         el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
                                     break
                                     case 'clocks':
-                                        // el.textContent = value ? new Date(value).toLocaleDateString() : '-'
                                         let elIN = updatedRow.getElementsByClassName('-in')[0]
                                         let elOUT = updatedRow.getElementsByClassName('-out')[0]
 
@@ -172,7 +171,7 @@
                                             } else {
                                                 elOUT.href = ''
                                             }
-                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString()
+                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })
                                             updatedRow.classList.add('-not-present')
                                         } else {
                                             if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
@@ -180,7 +179,7 @@
                                             } else {
                                                 elIN.href = ''
                                             }
-                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString()
+                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })
                                             updatedRow.classList.remove('-not-present')
                                             elOUT.textContent ='...'
                                         }

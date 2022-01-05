@@ -10,7 +10,7 @@
     
     <% if(user.dataCollection) { %>
         <section class="row-item-85">
-            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
     <% } else { %>
         <section class="row-item-85">
@@ -20,7 +20,7 @@
 
     <% if(user.application) { %>
         <section class="row-item-85">
-            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
     <% } else { %>
         <section class="row-item-85">
@@ -30,7 +30,7 @@
 
     <% if(user.agreement) { %>
         <section class="row-item-85">
-            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
         <% if(!user.agreement.schoolSignRep) { %>
             <section class="row-item-85">
@@ -53,13 +53,13 @@
     <% if(!user.student) { %>
         
         <section class="row-item-85">
-            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
         <section class="row-item-85">
-            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
         <section class="row-item-85">
-            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString() %></div>
+            <div class="field-value -small">#3 Agreement has been signed by User <%= new Date(user.agreement.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
         </section>
     
         <section class="row-item-85"><div class="gap-line"></div></section>
@@ -94,7 +94,7 @@
         <section class="row-item-85">
             <div class="fields-set">
                 <div class="field-title">Record Created:</div>
-                <div class="field-value"><%= new Date(user.student.created).toLocaleDateString() %> (<%= new Date(user.student.created).toLocaleTimeString() %>)</div>
+                <div class="field-value"><%= new Date(user.student.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(user.student.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
             </div>
         </section>
 
@@ -130,7 +130,7 @@
             <div class="fields-set">
                 <div class="field-title">Tuition Center</div>
                 <% if(user.student.tuition) { %>
-                    <div class="field-value">Course assigned: <%= new Date(user.student.tuition.created).toLocaleDateString() %></div>
+                    <div class="field-value">Course assigned: <%= new Date(user.student.tuition.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                 <% } else { %>
                     <div class="field-warning">Has no Access <a class="-btn" href="/admin/student/allow-tuition/<%= user.student._id %>">Allow</a></div>
                 <% } %>
@@ -174,7 +174,7 @@
                         <div class="fields-set -top-align">
                             <div class="field-title -sm1 -module"><%= lesson.lesson %></div>
                             <div class="field-value -sm1 -title"><%= lesson.lessonTitle %></div>
-                            <div class="field-value -sm1 -date-title"><%= new Date(lesson.watchDate).toLocaleDateString() %> (<%= new Date(lesson.watchDate).toLocaleTimeString() %>)</div>
+                            <div class="field-value -sm1 -date-title"><%= new Date(lesson.watchDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(lesson.watchDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
                             <div class="field-value -sm1 -progress"><%= Math.round(lesson.videoProgress*1000) / 10 %>%</div>
                             <% if(lesson.testProgress > 0) { %>
                                 <div class="field-value -sm1 -test">+</div>
@@ -239,11 +239,11 @@
                 <section class="row-item-85">
                     <div class="fields-set">
                         <!-- Date, key -->
-                        <div class="field-title -sm1 -date-title"><%= new Date(clock.date).toLocaleDateString() %></div>
+                        <div class="field-title -sm1 -date-title"><%= new Date(clock.date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         <div class="field-value -sm1"><%= clock.dateKey %></div>
                         
                         <!-- IN & coord -->
-                        <div class="field-value -sm1"><%= new Date(clock.in).toLocaleTimeString() %></div>
+                        <div class="field-value -sm1"><%= new Date(clock.in).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         <% if (!isNaN(clock.inlat) && !isNaN(clock.inlon)) { %>
                             <a class="field-value -sm1 -coord" href="http://www.google.com/maps/place/<%= clock.inlat %>,<%= clock.inlon %>" target="_blank">
                                 <%= normCOORD(clock.inlat) %>,<%= normCOORD(clock.inlon) %>
@@ -254,7 +254,7 @@
 
                         <!-- OUT & coord -->
                         <% if( !isNaN(clock.out) ) { %>
-                            <div class="field-value -sm1"><%= new Date(clock.out).toLocaleTimeString() %></div>
+                            <div class="field-value -sm1"><%= new Date(clock.out).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         <% } else { %>
                             <div class="field-value -sm1 -orange">NO</div>
                         <% } %>

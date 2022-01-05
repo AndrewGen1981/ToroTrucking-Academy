@@ -66,8 +66,8 @@
                     <% } %>
                 <% } %>
                 <br>
-                <span class="user-profile-created">profile created <%= new Date(user.created).toLocaleDateString() %>,</span>
-                <span class="user-last-session">last session <%= new Date(user.lastSESS).toLocaleDateString() %> <%= new Date(user.lastSESS).toLocaleTimeString() %></span>   
+                <span class="user-profile-created">profile created <%= new Date(user.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>,</span>
+                <span class="user-last-session">last session <%= new Date(user.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> <%= new Date(user.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></span>   
             </div>      <!-- user-info -->
         </header>   <!-- main-info-box -->
 
@@ -525,14 +525,14 @@
                     <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
-                        <div class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString() %> (<%= new Date(user.dataCollection.created).toLocaleTimeString() %>)</div>
+                        <div class="field-value"><%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(user.dataCollection.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
                     </section>
                     
                     <!-- @ADMIN CHANGED -->
                     <% if(user.dataCollection.updatedAdmin) { %>
                         <% let updater = user.dataCollection.updatedAdmin+' ' %>
-                        <% updater += new Date(user.dataCollection.updatedDate).toLocaleDateString() %>
-                        <% updater += '('+new Date(user.dataCollection.updatedDate).toLocaleTimeString()+')' %>
+                        <% updater += new Date(user.dataCollection.updatedDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                        <% updater += '('+new Date(user.dataCollection.updatedDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })+')' %>
 
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow -orange">updated by</div>
@@ -936,7 +936,7 @@
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Graduation or GED Completion Date</div>
-                            <div class="field-value"><%= new Date(user.application['education-grade-date']).toLocaleDateString() %></div>
+                            <div class="field-value"><%= new Date(user.application['education-grade-date']).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         </div>
                         <div class="fields-set">
                             <label class="show-edit-btn" for='education-grade-date' onclick='toggleEditField(this)'>edit</label>
@@ -1672,14 +1672,14 @@
                     <!-- @SIGNATURE -->
                     <section class="row-item-85 -right-side">
                         <div class="field-title -windblow">completed as of</div>
-                        <div class="field-value"><%= new Date(user.application.created).toLocaleDateString() %> (<%= new Date(user.application.created).toLocaleTimeString() %>)</div>
+                        <div class="field-value"><%= new Date(user.application.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(user.application.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
                     </section>
                     
                     <!-- @ADMIN CHANGED -->
                     <% if(user.application.updatedAdmin) { %>
                         <% let updater = user.application.updatedAdmin+' ' %>
-                        <% updater += new Date(user.application.updatedDate).toLocaleDateString()+' ' %>
-                        <% updater += '('+new Date(user.application.updatedDate).toLocaleTimeString()+')' %>
+                        <% updater += new Date(user.application.updatedDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })+' ' %>
+                        <% updater += '('+new Date(user.application.updatedDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })+')' %>
 
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow -orange">updated by</div>
@@ -1978,7 +1978,7 @@
                             <section class="row-item-85">
                                 <div class="field-title -orange">Agreement is Signed on TTA's behalf by:</div>
                                 <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
-                                <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString() %></div>
+                                <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                             </section>
     
                             <section class="row-item-85">
@@ -2068,14 +2068,14 @@
                         <!-- @SIGNATURE -->
                         <section class="row-item-85 -right-side">
                             <div class="field-title -windblow">completed as of</div>
-                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> (<%= new Date(user.agreement.created).toLocaleTimeString() %>)</div>
+                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString() %> (<%= new Date(user.agreement.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
                         </section>
 
                         <!-- @UPDATED by whom and when -->
                         <% if(user.agreement.updatedAdmin) { %>
                             <% let updater = user.agreement.updatedAdmin+' ' %>
-                            <% updater += new Date(user.agreement.updatedDate).toLocaleDateString() %>
-                            <% updater += '('+new Date(user.agreement.updatedDate).toLocaleTimeString()+')' %>
+                            <% updater += new Date(user.agreement.updatedDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                            <% updater += '('+new Date(user.agreement.updatedDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })+')' %>
 
                             <section class="row-item-85 -right-side">
                                 <div class="field-title -windblow -orange">updated by</div>
@@ -2187,7 +2187,7 @@
                     </section>
                     <% if(user.dataCollection) { %>
                         <section class="row-item-85">
-                            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString() %></div>
+                            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         </section>
                     <% } else { %>
                         <section class="row-item-85">
@@ -2197,7 +2197,7 @@
                     
                     <% if(user.application) { %>
                         <section class="row-item-85">
-                            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString() %></div>
+                            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                         </section>
                     <% } else { %>
                         <section class="row-item-85">
