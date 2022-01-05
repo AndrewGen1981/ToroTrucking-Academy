@@ -92,20 +92,33 @@
 
                             <% items = ['4 weeks * 40 hours/week = 160 total hours', '2 weeks * 40 hours/week = 80 total hours'] %>
 
-                            <% items.map(item => { %>
+                            <% if (user.agreement.class === "CDL Class A") { %>
                                 <div class="field-box">
-                                    <% if (item.toUpperCase() != user.agreement.program.toUpperCase()) { %>
-                                        <svg class="check-mark">
-                                            <use xlink:href="#unchecked"></use> 
-                                        </svg>
-                                    <% } else { %>
-                                        <svg class="check-mark">
-                                            <use xlink:href="#checked"></use> 
-                                        </svg>
-                                    <% } %>
-                                    <h3 class="field-title"><%= item %></h3>
+                                    <svg class="check-mark">
+                                        <use xlink:href="#checked"></use> 
+                                    </svg>
+                                    <h3 class="field-title"><%= items[0] %></h3>
                                 </div>
-                            <% }) %>
+                                <div class="field-box">
+                                    <svg class="check-mark">
+                                        <use xlink:href="#unchecked"></use> 
+                                    </svg>
+                                    <h3 class="field-title"><%= items[1] %></h3>
+                                </div>
+                            <% } else { %>
+                                <div class="field-box">
+                                    <svg class="check-mark">
+                                        <use xlink:href="#unchecked"></use> 
+                                    </svg>
+                                    <h3 class="field-title"><%= items[0] %></h3>
+                                </div>
+                                <div class="field-box">
+                                    <svg class="check-mark">
+                                        <use xlink:href="#checked"></use> 
+                                    </svg>
+                                    <h3 class="field-title"><%= items[1] %></h3>
+                                </div>
+                            <% } %>
                         </div>  <!-- section-fields -->
                         
                         <section class="section-box">

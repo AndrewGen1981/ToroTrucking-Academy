@@ -1735,28 +1735,6 @@
 
                         <section class="row-item-85">
                             <div class="fields-set">
-                                <div class="field-title">Tuition Program</div>
-                                <div class="field-value"><%= user.agreement.program %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='program' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='program'>
-                                    <label class="show-edit-btn -red" for='program' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <select class='input-box' onchange="checkAllChanged(this)" name="program" id="program">
-                                        <option value='DNU'>do not update</option>
-                                        <option value='4 weeks * 40 hours/week = 160 total hours'>4 weeks * 40 hours/week = 160 total hours</option>
-                                        <option value='2 weeks * 40 hours/week = 80 total hours'>2 weeks * 40 hours/week = 80 total hours</option>
-                                    </select>
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- program -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
                                 <div class="field-title">Class</div>
                                 <div class="field-value -orange"><%= user.agreement.class %></div>
                             </div>

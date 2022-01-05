@@ -4,7 +4,6 @@ const form3 = new mongoose.Schema({
     created: { type: Date, default: new Date },
     email: { type: String, lowercase: true, required: true },
     
-    program: { type: String, required: true },
     class: { type: String, required: true },
     transmission: { type: String, required: true },
     visiting: { type: String, required: true },
@@ -43,7 +42,6 @@ function getForm3Object(body, userEmail) {
 
     return {
         email: userEmail,
-        program: body.program,
         class: body.class,
         transmission: body.transmission,
         visiting: body.visiting,
