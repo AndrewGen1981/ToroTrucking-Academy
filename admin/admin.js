@@ -688,9 +688,45 @@ admRouter.post('/qr-update-geo', async (req, res) => {
             return res.status(400).send(`Issue occursed in UPDATE-GEO: ${e.message}`)
         }
         
-    }
+    }    
+})
 
-    
+
+
+// @CLOCKs work - showing and updating
+
+// ROUTE POST /admin/clocks for updating clocks
+admRouter.post('/clocks', redirectToLogin, async(req, res) => {
+    // check Admin's Auth
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'write')) {
+        return res.send('Not enough authorities for requested operation')
+    }
+    // Auth is good, get user ID
+    const {studentId, studentKey, studentName, visiting} = req.body
+    try {
+        const student = await Student.findById(studentId).select(['email', 'TTT', 'clocks'])
+        if (student) {
+
+            // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
+            const minVisitingRequirements = visiting.toLowerCase().includes("full time") ? 6 : 4
+            const { TTT, studentClocks } = tools.reCalculateTTT(student.clocks, minVisitingRequirements)       //  destructuring results
+
+            return res.render(path.join(__dirname+'/views/userInfoClocks.ejs'), { 
+                studentId, studentKey, studentName, visiting,
+                verTTT: TTT / (1000 * 60 *60),
+                verClocks: studentClocks
+            })
+        }
+        return res.status(404).send(`Student with ID#${studentId} not found`)
+    } catch(e) {
+        res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
+    }
+})
+
+// for clocks updating
+admRouter.post('/clocks-update', redirectToLogin, async(req, res) => {
+    res.send('coming soon...')
 })
 
 

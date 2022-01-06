@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TTA | Student Clocks</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+    
+    <link rel="stylesheet" href="/admin/views/userInfoClocks.css">
+
+</head>
+<body>
+    
+    <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
+
+    <section class="clocks-box">
+        <h1>Clocks List of <span><%= studentName %></span></h1>
+        <h2>student key# <span><%= studentKey %></span></h2>
+        <h3>attendance type: <span><%= visiting %></span></h3>
+        <h4>Total Tuition Time is <span><%= strTTT(verTTT) %></span></h4>
+        <form action="/admin/clocks-update" method="POST">
+            <input type="hidden" name="studentId" value="<%= studentId %>" />
+            <!-- QR Clocks -->
+            <div class="clocks-table">
+                <!-- headers -->
+                <div class="clock-title">DATE</div>
+                <div class="clock-title">IN</div>
+                <div class="clock-title">OUT</div>
+                <div class="clock-title">DURATION</div>
+                <div class="clock-title">Restore</div>
+                <!-- values -->
+
+                <% function leadZero(a) {return a.length < 2 ? `0${a}` : a} %>
+                <% function getYYYYMMDD(date) { const a = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }).split('/'); return `${a[2]}-${leadZero(a[0])}-${leadZero(a[1])}`} %>
+                <% function getHHMMSS(time) { const a = new Date(time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }).replace(' ',':').split(':'); a[0] = a[3].toUpperCase() === 'PM' ? parseInt(a[0])+12 : a[0]; return `${leadZero(a[0])}:${leadZero(a[1])}:${leadZero(a[2])}` } %>
+
+                <% if (verClocks) { %>
+                    <% verClocks.map((clock, index) => { %>
+                        <!-- DATE -->
+                        <input type="date" name="clockDate" id="date<%= index + 1 %>" value="<%= getYYYYMMDD(clock.date) %>" data-wasvalue="<%= getYYYYMMDD(clock.date) %>" />
+                        <!-- IN -->
+                        <input type="time" name="clockIN" id="IN<%= index + 1%>" value="<%= getHHMMSS(clock.in) %>" data-wasvalue="<%= getHHMMSS(clock.in) %>" />
+                        <!-- OUT & duration -->
+                        <% if( !isNaN(clock.out) ) { %>
+                            <input type="time" name="clockOUT" id="OUT<%= index + 1%>" value="<%= getHHMMSS(clock.out) %>" data-wasvalue="<%= getHHMMSS(clock.out) %>" />
+                            <div name="duration" id="duration<%= index + 1%>"><%= strTTT(clock.duration / (1000 * 60 *60)) %></div>
+                        <% } else { %>
+                            <% let newOut = new Date(clock.in) %>
+                            <% newOut.setTime(newOut.getTime() + clock.duration) %>
+                            <input class="-no-clockOUT" type="time" name="clockOUT" id="OUT<%= index + 1%>" value="<%= getHHMMSS(newOut) %>" data-wasvalue="<%= getHHMMSS(newOut) %>" />
+                            <div name="duration" id="duration<%= index + 1%>"><%= strTTT(clock.duration / (1000 * 60 *60)) %>(auto)</div>
+                        <% } %>
+                        <button type="button" id="restore<%= index + 1%>">restore</button>
+                    <% }) %>
+                <% } %>
+
+                <!-- add more values -->
+
+            </div>      <!-- clocks-table -->
+
+            <button type="submit">Update</button>
+
+        </form>
+    </section>      <!-- clocks-box -->
+    
+</body>
+</html>

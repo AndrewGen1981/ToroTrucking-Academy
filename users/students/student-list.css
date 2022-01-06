@@ -217,10 +217,6 @@ a.-name {
     text-align: center;
 }
 
-.-program {
-    --width: 8.45rem;
-    white-space: nowrap;
-}
 .-class {
     --width: 7rem;
     text-align: center;

@@ -412,8 +412,7 @@ svg.-active {
 }
 .-btn:hover, .show-edit-btn:hover {
     background-color: var(--color-hover);
-    transform: scale(1.05);
-    transition: background-color 0.2s ease-in, transform 0.2s ease-in;
+    transition: background-color 0.2s ease-in;
 }
 
 

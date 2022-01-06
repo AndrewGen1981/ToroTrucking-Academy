@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.clocks-box {
+    width: 95%;
+    max-width: 1024px;
+
+    margin: 0 auto;
+}
+.clocks-table {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 0.5fr;
+    gap: 3px;
+}
+.-no-clockOUT {
+    background-color: rgb(218, 103, 126);
+}
