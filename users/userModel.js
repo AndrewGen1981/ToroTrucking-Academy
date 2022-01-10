@@ -76,7 +76,9 @@ const studentSchema = new mongoose.Schema({
         key: String,
         lat: String,
         lon: String,
-        location: String
+        location: String,
+        doneByAdmin: String,
+        updatedByAdmin: String
     }],
 
     tuition: {
@@ -145,12 +147,12 @@ function getTodayClocksInfo(clocks) {
 
 function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisitingRequirements has to be 4 or 6 for part and full-time respectively
     // recalculates TTT, uses array of clocks as a base
-    // RULE: tadays clocks will be encounted only tommorow
+    // RULE: todays clocks will be encounted only tommorow
     
     // clocks should be a sorted array, because clocks appear one by one. But I'm sorting them one more time
     const clocks = sortClocksArray(clocksArray)
 
-    let studentClocks = []   // structured array of clock objects [{ date, dateKey, in, out, duration }]
+    let studentClocks = []   // structured array of clock objects [{ date, dateKey, in, out, duration, location }]
     let TTT = 0
     if (clocks.length === 0) { return { TTT, studentClocks } }     // studentClocks length will be 0 when no clocks!!! check this before use
 
@@ -172,8 +174,13 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
                 // init new clock object
                 studentClocks.push({ 
                     date: clocks[i].date, dateKey: clocks[i].key, 
-                    in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, 
-                    out: '-', outlat: '-', outlon: '-',
+                    
+                    in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, inlocation: clocks[i].location,
+                    inDoneByAdmin: clocks[i].doneByAdmin, inUpdatedByAdmin: clocks[i].updatedByAdmin,
+                    
+                    out: '-', outlat: '-', outlon: '-', outlocation: 'none',
+                    outDoneByAdmin: '-', outUpdatedByAdmin: '-',
+                    
                     duration: minSessionDuration
                 })
 
@@ -187,6 +194,9 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
                 studentClocks[n].out = clocks[i].date
                 studentClocks[n].outlat = clocks[i].lat
                 studentClocks[n].outlon = clocks[i].lon
+                studentClocks[n].outlocation = clocks[i].location
+                studentClocks[n].outDoneByAdmin = clocks[i].doneByAdmin
+                studentClocks[n].outUpdatedByAdmin = clocks[i].updatedByAdmin
                 studentClocks[n].duration = timeDelta
             }
         } else {  // next day
@@ -203,8 +213,13 @@ function reCalculateTTT(clocksArray, minVisitingRequirements) {      // minVisit
             // init new clock object
             studentClocks.push({ 
                 date: clocks[i].date, dateKey: clocks[i].key, 
-                in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, 
-                out: '-', outlat: '-', outlon: '-',
+
+                in: clocks[i].date, inlat: clocks[i].lat, inlon: clocks[i].lon, inlocation: clocks[i].location,
+                inDoneByAdmin: clocks[i].doneByAdmin, inUpdatedByAdmin: clocks[i].updatedByAdmin,
+
+                out: '-', outlat: '-', outlon: '-', outlocation: 'none',
+                outDoneByAdmin: '-', outUpdatedByAdmin: '-',
+
                 duration: minSessionDuration
             })
         }

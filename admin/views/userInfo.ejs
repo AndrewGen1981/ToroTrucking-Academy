@@ -2445,9 +2445,22 @@
         const globalColorCalm = getComputedStyle(document.body).getPropertyValue('--color-calm')
         const globalColorHover = getComputedStyle(document.body).getPropertyValue('--color-hover')
 
-        // showing block #1 as default
-        document.querySelector('[name=block1]').click()
 
+        // 'tab', if set, choose what tab to show
+        switch ('<%= tab %>') {
+            case '4':
+                document.querySelector('[name=block4]').click()
+            break;
+            case '3':
+                document.querySelector('[name=block3]').click()
+            break;
+            case '2':
+                document.querySelector('[name=block2]').click()
+            break;
+            default:
+                document.querySelector('[name=block1]').click()     // showing block #1 as default
+            break;
+        }
 
 
         // MENU Actions

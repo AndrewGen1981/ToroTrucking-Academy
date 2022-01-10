@@ -17,6 +17,7 @@ const { Tuition } = require('../users/tuition/tuitionModel')
 
 // PDF
 const pdf = require('../static/pdf/pdf')
+const { redirect } = require('express/lib/response')
 
 
 // @SESSION config
@@ -231,7 +232,8 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
     }
 
     // Auth is good, get user ID
-    const id = req.params.id
+    const id = req.params.id    //  user id
+    const tab = req.query.activatetab       // what tab to show at start
 
     try {
         const user = await User.findById(id)
@@ -271,13 +273,14 @@ admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
 
                 return res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer,
                     verTTT: TTT / (1000 * 60 *60),
-                    verClocks: studentClocks
+                    verClocks: studentClocks,
+                    tab
                 })
                             
             }   //  type is determined AND clocks are present
         }   //  Agreement is signed AND user is a Student
         
-        res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer })
+        res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer, tab })
 
     } catch(e) {
         res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
@@ -715,7 +718,8 @@ admRouter.post('/clocks', redirectToLogin, async(req, res) => {
             return res.render(path.join(__dirname+'/views/userInfoClocks.ejs'), { 
                 studentId, studentKey, studentName, visiting,
                 verTTT: TTT / (1000 * 60 *60),
-                verClocks: studentClocks
+                verClocks: studentClocks,
+                admin: req.session.userId
             })
         }
         return res.status(404).send(`Student with ID#${studentId} not found`)
@@ -726,7 +730,64 @@ admRouter.post('/clocks', redirectToLogin, async(req, res) => {
 
 // for clocks updating
 admRouter.post('/clocks-update', redirectToLogin, async(req, res) => {
-    res.send('coming soon...')
+    const { studentId, clockDate, 
+        clockIN, latIN, lonIN, locationIN, doneByAdminIN, updatedByAdminIN,
+        clockOUT, latOUT, lonOUT, locationOUT, doneByAdminOUT, updatedByAdminOUT,
+    } = req.body
+
+    // tool, converting strings to date with time
+    function settime(dateString, timeString) {
+        if (timeString.length < 6) { timeString += ':00' }
+        return new Date(`${dateString}T${timeString}-08:00`)
+    }
+
+    const newClocks = []
+    let clIN, clOUT
+    let TTT = 0
+
+    clockDate.map((dateString, index) => {
+        clIN = settime(dateString, clockIN[index])
+        clOUT = settime(dateString, clockOUT[index])
+        
+        if ((clOUT - clIN) > 0) {    // skip empty
+            TTT += clOUT - clIN
+            // adding clockIN
+            newClocks.push({
+                date: new Date(clIN),
+                key: tools.getDatePrefix(new Date(dateString)),
+                lat: latIN[index],
+                lon: lonIN[index],
+                location: locationIN[index],
+                doneByAdmin: doneByAdminIN[index],
+                updatedByAdmin: updatedByAdminIN[index]
+            })
+            // adding clockOUT
+            newClocks.push({
+                date: new Date(clOUT),
+                key: tools.getDatePrefix(new Date(dateString)),
+                lat: latOUT[index],
+                lon: lonOUT[index],
+                location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
+                doneByAdmin: doneByAdminOUT[index],
+                updatedByAdmin: updatedByAdminOUT[index]
+            })
+        }
+    })
+
+    try {
+        const student = await Student.findById(studentId)
+        if (student) {
+            student.TTT = TTT / (1000 * 60 *60)
+            student.clocks = newClocks
+            await student.save()
+            return res.status(200).redirect(`/admin/user/${student.user}?activatetab=4`)
+        }
+        res.send('student is not defined')
+    } catch(e) {
+        res.send(`Issue: ${e.message}`)
+    }
+
+    
 })
 
 
