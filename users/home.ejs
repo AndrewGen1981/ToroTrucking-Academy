@@ -198,20 +198,20 @@
                             </svg>
                             <% if(tuition) { %>
                                 <% if(tuition.avLessonsRate < 0.25) { %>
-                                    <a class="block-key" href='/user/tuition'>Tuition Center<span class="block-value -orange"><%= Math.round(tuition.avLessonsRate*1000) / 10 %>% done</span></a>
+                                    <a class="block-key" href='/user/tuition'>Learning Center<span class="block-value -orange"><%= Math.round(tuition.avLessonsRate*1000) / 10 %>% done</span></a>
                                 <% } else { %>
                                     <% if(tuition.avLessonsRate < 0.85) { %>
-                                        <a class="block-key" href='/user/tuition'>Tuition Center<span class="block-value -trusted"><%= Math.round(tuition.avLessonsRate*1000) / 10 %>% done</span></a>
+                                        <a class="block-key" href='/user/tuition'>Learning Center<span class="block-value -trusted"><%= Math.round(tuition.avLessonsRate*1000) / 10 %>% done</span></a>
                                     <% } else { %>
                                         <% if(tuition.avLessonsRate > 0.849) { %>
-                                            <a class="block-key" href='/user/tuition'>Tuition Center<span class="block-value -trusted">Sufficient level</span></a>
+                                            <a class="block-key" href='/user/tuition'>Learning Center<span class="block-value -trusted">Sufficient level</span></a>
                                         <% } else { %>
-                                            <a class="block-key" href='/user/tuition'>Tuition Center<span class="block-value -orange">Unknown level</span></a>
+                                            <a class="block-key" href='/user/tuition'>Learning Center<span class="block-value -orange">Unknown level</span></a>
                                         <% } %>
                                     <% } %>
                                 <% } %>
                             <% } else { %>
-                                <span class="block-key">Tuition Center<span class="block-value -warning">Lessons aren't scheduled</span></span>
+                                <span class="block-key">Learning Center<span class="block-value -warning">Lessons aren't scheduled</span></span>
                             <% } %>
                         </div>  <!-- tuition -->
                     <% } %>
