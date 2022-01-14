@@ -42,6 +42,10 @@
     background: #9f5e85;
     color: white !important;
 }
+.-learn-color-group {
+    background: #1d9947;
+    color: white !important;
+}
 
 .student-list-box {
     width: fit-content;
@@ -257,6 +261,11 @@ a.-name {
 }
 .-schoolSignRep,
 .-updatedAdmin {
+    --width: 6rem;
+    text-align: center;
+}
+
+.-tuition {
     --width: 6rem;
     text-align: center;
 }

@@ -109,6 +109,8 @@
                     <div class='field -schoolSignDate -header -sign-color-group'>Date of Sign</div>
                     <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
                     <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
+
+                    <div class='field -tuition -header -learn-color-group'>Learning Center</div>
                 </div>  <!-- student-list-row -->
 
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
@@ -177,6 +179,18 @@
                         <div class='field -schoolSignDate'><%= formatDate(student.user.agreement.schoolSignDate) %></div>
                         <div class='field -updatedAdmin'><%= student.user.agreement.updatedAdmin %></div>
                         <div class='field -updatedDate'><%= formatDate(student.user.agreement.updatedDate) %></div>
+
+                        <!-- TUITION RESULTS -->
+                        <% if(!student.tuition) { %>
+                            <div class='field -tuition'>no data</div>
+                        <% } else { %>
+                            <% if(!student.tuition.isAllowed) { %>
+                                <div class='field -tuition'>disabled</div>
+                            <% } else { %>
+                                <div class='field -tuition'><%= Math.round(student.tuition.avLessonsRate * 1000) / 10 %>%</div>
+                            <% } %>
+                        <% } %>
+
                     </div>  <!-- student-list-row -->
                 <% }) %>
 

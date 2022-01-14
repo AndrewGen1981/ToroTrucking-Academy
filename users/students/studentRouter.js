@@ -84,6 +84,8 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
         'payment', 'thirdPartyList', 'schoolSignDate', 'schoolSignRep', 'updatedAdmin', 'updatedDate'
     ]
 
+    const tuitionPopulated = ['isAllowed', 'avLessonsRate']
+
 
     const students = await Student.find(filter).select(studentPopulated).populate([
         {
@@ -93,6 +95,9 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
         {
             path: 'user', select: userPopulated, 
             populate: { path: 'agreement', select: agrPopulated }
+        },
+        {
+            path: 'tuition', select: tuitionPopulated
         }
     ])
 
