@@ -2,22 +2,24 @@
 // contains credentials & a list of authorities
 
 
-// LIST of Authorities
+// LIST of Authorities. Order does matter, should match with AUTHNAMES
 const AUTH = {
     viewOnly: 1,
     editor:   2,
-    admin:    3
+    instructor: 3,
+    admin:    4
 }
 
 const canREADset = [AUTH.viewOnly, AUTH.editor, AUTH.admin]
 const canWRITEset = [AUTH.editor, AUTH.admin]
+const canINSTset = [AUTH.instructor]
 const canSHAREset = [AUTH.admin]
 
 // LIST of Auth names
-const AUTHNAMES = [ 'viewOnly', 'editor', 'admin' ]
+const AUTHNAMES = [ 'viewOnly', 'editor', 'instructor', 'admin' ]
 
 
-// Array of admins
+// Array of admins & instructors
 const PROFILES = [
     { id: "BigG0001", name: "BigG Admin", title: "Admin", email: "alphafleetacc@gmail.com", location: 'SEATTLE', password: process.env.BIGG0001_PASS, auth: AUTH.admin },
     { id: "Mike0001", name: "Mike Svoboda", title:'Admin', email: "newsoundcdl@gmail.com", location: 'TEST', password: process.env.MIKE0001_PASS, auth: AUTH.editor },
@@ -29,7 +31,10 @@ const PROFILES = [
     { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "tacoma@torocdl.com", location: 'PACIFIC', password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
 
     { id: "Littleton0001", name: "Robert Littleton", title:'Manager', email: "robert@torocdl.com", location: 'KENT', password: process.env.LITTLETON0001_PASS, auth: AUTH.editor },
-    { id: "Young0001", name: "Carri Young", title:'Office Admin', email: "Kent@torocdl.com", location: 'KENT', password: process.env.YOUNG0001_PASS, auth: AUTH.editor }
+    { id: "Young0001", name: "Carri Young", title:'Office Admin', email: "Kent@torocdl.com", location: 'KENT', password: process.env.YOUNG0001_PASS, auth: AUTH.editor },
+
+    // INSTRUCTORS
+    { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: 'KENT', password: process.env.INST0001_PASS, auth: AUTH.instructor },
 ]
 
 
@@ -46,19 +51,13 @@ function checkAdminsAuth(id, auth) {
     const admin = findAdminById(id)
     if (!admin) { return false }
 
-    if (auth === 'read') {
-        return canREADset.includes(admin.auth)
-    } else {
-        if (auth === 'write') {
-            return canWRITEset.includes(admin.auth)
-        } else {
-            if (auth === 'share') {
-                return canSHAREset.includes(admin.auth)
-            }   // share
-        }   // write
-    }   // read
-
-    return false    // all other requests
+    switch(auth) {
+        case 'read': return canREADset.includes(admin.auth)
+        case 'instructor': return canINSTset.includes(admin.auth)
+        case 'write': return canWRITEset.includes(admin.auth)
+        case 'share': return canSHAREset.includes(admin.auth)
+        default: return false   // all other requests
+    }
 }
 
 

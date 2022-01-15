@@ -105,6 +105,30 @@ admRouter.use((req, res, next) => {   // !!! general middleware - will be used b
     next()
 })
 
+// @Middleware
+function ifCanRead (req, res, next) {
+    // check Admin's Auth - if can READ
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'read')) {
+        return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read" })
+    } else { next() }
+}
+function ifCanWrite (req, res, next) {
+    // check Admin's Auth - if can WRITE
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'write')) {
+        return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write" })
+    } else { next() }
+}
+function ifCanReadOrInstructor (req, res, next) {
+    // check Admin's Auth - if INSTRUCTOR
+    const adminId = req.session.userId
+
+    if (admin.checkAdminsAuth(adminId, 'read')) { return next() }
+    if (admin.checkAdminsAuth(adminId, 'instructor')) { return next() }
+
+    return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
+}
 
 
 
@@ -194,14 +218,7 @@ admRouter.post('/logout', redirectToLogin, (req, res) => {
 
 
 // @USERS AREA Routes
-admRouter.get('/user-area', redirectToLogin, async (req, res) => {
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'read')) {
-        return res.send('Not enough authorities for requested operation')
-    }
-
+admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
     res.render(path.join(__dirname + '/views/__userArea.ejs'), { HTML:  await adminTools.getUsers({}, 100, 0) })
 })
 
@@ -223,15 +240,7 @@ function getDocsSigner(agreement) {
 }
 
 
-admRouter.get('/user/:id', redirectToLogin, async(req, res) => {
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'read')) {
-        return res.send('Not enough authorities for requested operation')
-    }
-
-    // Auth is good, get user ID
+admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
     const id = req.params.id    //  user id
     const tab = req.query.activatetab       // what tab to show at start
 
@@ -296,14 +305,7 @@ admRouter.use(express.json({
 }))
 
 // for user data updating (block/unblock/archive/delete)
-admRouter.put('/user', redirectToLogin, async(req, res) => {
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.status(400).send('Not enough authorities for requested operation')
-    }
-
+admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
     const { studentId, userId, action } = req.body
     if (!action) { return res.status(400).send('Action is not defined') }
     if (!userId) { return res.status(404).send('User is not defined') }
@@ -369,14 +371,7 @@ admRouter.put('/user', redirectToLogin, async(req, res) => {
 
 
 // Generating a view to print (NOT a PDF one)
-admRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'read')) {
-        return res.send('Not enough authorities for requested operation')
-    }
-    
+admRouter.get('/print-form/:id', redirectToLogin, ifCanRead, async(req, res) => {
     const id = req.params.id
     const form = req.query.form
     if (!id || !form) { return res.status(400).send(`Wrong request: ${id} : ${form}`) }
@@ -456,35 +451,17 @@ async function checkAndUpdate(req, res, next) {
 }
 
 
-admRouter.post('/update-form1/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.send('Not enough authorities for a form updating')
-    }
-    // auth is good
+admRouter.post('/update-form1/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form2/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.send('Not enough authorities for a form updating')
-    }
-    // auth is good
+admRouter.post('/update-form2/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form3/:id', redirectToLogin, checkAndUpdate, async(req, res) => {
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.send('Not enough authorities for a form updating')
-    }
-    // auth is good
+admRouter.post('/update-form3/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
@@ -494,16 +471,8 @@ admRouter.post('/update-form3/:id', redirectToLogin, checkAndUpdate, async(req, 
 
 // @SIGNING of the agreement
 
-admRouter.post('/sign/:id', redirectToLogin, async(req, res) => {
+admRouter.post('/sign/:id', redirectToLogin, ifCanWrite, async(req, res) => {
     // signs Agreement with Admin's credentials passed from client side
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.send('Not enough authorities to sign an Agreement')
-    }
-
-    // auth is good
     const agreementId = req.params.id
 
     if(!checkCredentials(req.session.userId, req.body.signerPassword)) { 
@@ -549,15 +518,7 @@ function qrRedirectToLogin (req, res, next) {
 
 
 // route /admin/qr/:id
-admRouter.get('/qr/:id', qrRedirectToLogin, async (req, res) => {
-
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'read')) {
-        return res.send('Not enough authorities  for requested operation')
-    }
-
-    // auth is good
+admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
     const studentId = req.params.id    // receiving user _id from posting form
     let location    // this will be passed as 'location' to a clock
 
@@ -699,13 +660,7 @@ admRouter.post('/qr-update-geo', async (req, res) => {
 // @CLOCKs work - showing and updating
 
 // ROUTE POST /admin/clocks for updating clocks
-admRouter.post('/clocks', redirectToLogin, async(req, res) => {
-    // check Admin's Auth
-    const adminId = req.session.userId
-    if (!admin.checkAdminsAuth(adminId, 'write')) {
-        return res.send('Not enough authorities for requested operation')
-    }
-    // Auth is good, get user ID
+admRouter.post('/clocks', redirectToLogin, ifCanWrite, async(req, res) => {
     const {studentId, studentKey, studentName, visiting} = req.body
     try {
         const student = await Student.findById(studentId).select(['email', 'TTT', 'clocks'])
@@ -729,7 +684,7 @@ admRouter.post('/clocks', redirectToLogin, async(req, res) => {
 })
 
 // for clocks updating
-admRouter.post('/clocks-update', redirectToLogin, async(req, res) => {
+admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) => {
     const { studentId, clockDate, 
         clockIN, latIN, lonIN, locationIN, doneByAdminIN, updatedByAdminIN,
         clockOUT, latOUT, lonOUT, locationOUT, doneByAdminOUT, updatedByAdminOUT,

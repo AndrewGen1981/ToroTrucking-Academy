@@ -23,28 +23,37 @@ function ifCanRead (req, res, next) {
     // check Admin's Auth - if can READ
     const adminId = req.session.userId
     if (!admin.checkAdminsAuth(adminId, 'read')) {
-        res.send('Not enough authorities for reviewing page content')
+        return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read" })
     } else { next() }
 }
 function ifCanWrite (req, res, next) {
-    // check Admin's Auth - if can READ
+    // check Admin's Auth - if can WRITE
     const adminId = req.session.userId
     if (!admin.checkAdminsAuth(adminId, 'write')) {
-        res.send('Not enough authorities for changing data')
+        return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write" })
     } else { next() }
+}
+function ifCanReadOrInstructor (req, res, next) {
+    // check Admin's Auth - if INSTRUCTOR
+    const adminId = req.session.userId
+
+    if (admin.checkAdminsAuth(adminId, 'read')) { return next() }
+    if (admin.checkAdminsAuth(adminId, 'instructor')) { return next() }
+
+    return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
 }
 
 
 // @Students ROUTES
 
 // INs route is a root one
-studentRouter.get('/', ifCanRead, async (req, res) => {
+studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
     // auth is good
     const studentPopulated = ['key', 'TTT', 'clocks']
     const userPopulated = ['dataCollection']
     const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
 
-    const students = await Student.find({}).select(studentPopulated).populate([
+    const students = await Student.find({ status: 'unblock' }).select(studentPopulated).populate([
         {
             path: 'user', select: userPopulated,
             populate: { path: 'dataCollection', select: dataCollPopulated }
