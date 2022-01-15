@@ -116,7 +116,7 @@
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
 
                     <!-- dataset for all db changes (student, dataCol, agr) -->
-                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>'>
+                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>' data-tuition='<%= student.tuition._id %>'>
 
                         <a href='/admin/user/<%= student.user._id %>' class='field -lastName -fixed1'><%= student.user.dataCollection.lastName %></a>
                         <div class='field -firstName -fixed2'><%= student.user.dataCollection.firstName %></div>
@@ -386,6 +386,24 @@
                 }   // operation is update
             }   // if data is defined
         })  // socket.on('dataCollections-update')
+
+        // @WHEN Tuition is changed
+        socket.on('tuition-update', lesson => {
+            if (lesson) {
+                const id = lesson.documentKey._id
+                if (lesson.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-tuition='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = lesson.updateDescription.updatedFields
+                        if (fields.avLessonsRate) {     // fires only when avLessonsRate is changed
+                            indicateChanges()   //  show reaction on changes
+                            const el = updatedRow.getElementsByClassName('-tuition')[0]
+                            if (el) { el.textContent = `${Math.round(fields.avLessonsRate * 1000) / 10}%` }
+                        }
+                    }   // updatedRow != null
+                }   // operation is update
+            }   // if student is defined
+        })  // socket.on('students-update')
 
     </script>
 

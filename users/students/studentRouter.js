@@ -112,6 +112,11 @@ studentRouter.post('/new/:id', ifCanWrite, async(req, res) => {
     
     try {
         const user = await User.findById(userId)    // finds a user with given _id
+        if (!user) { return res.status(404).send(`Cannot find user with id: ${userId}`) }
+
+        // Only 1 student can be assigned to 1 user, let's check maybe there is already Student with given user._id
+        const existingStudent = await Student.findOne({ user: userId })
+        if (existingStudent) { return res.status(500).send(`This user is a student alredy, key is ${existingStudent.key}`) }
 
         // working with Student-List cofigurations - receiving 
         const studentConfigurations = await StudentCONFIG.findOne({ configType: 'student-list' })
