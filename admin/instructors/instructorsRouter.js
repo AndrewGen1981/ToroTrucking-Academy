@@ -7,7 +7,7 @@ const instRouter = express.Router()
 const { test1_preTrip } = require('./test1_class_A_pretrip')
 
 instRouter.get('/', (req, res) => {
-    res.render(path.join(__dirname + '/test1_preTrip.ejs'), { test: test1_preTrip })
+    res.render(path.join(__dirname + '/test1_pretrip.ejs'), { test: test1_preTrip })
 })
 
 module.exports = instRouter
