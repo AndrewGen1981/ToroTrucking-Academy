@@ -747,8 +747,11 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
 
 
 
-// @ admin/Student routes
+// @ admin/student routes
 admRouter.use('/student', redirectToLogin, require('../users/students/studentRouter'))
+
+// @ admin/inst routes
+admRouter.use('/inst', redirectToLogin, require('./instructors/instructorsRouter'))
 
 
 module.exports = admRouter

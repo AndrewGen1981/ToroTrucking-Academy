@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | Class A Pre-Trip Inspection</title>
+
+    <link rel="shortcut icon" href="/static/images/thumb.png">
+        
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+        
+    <link rel="stylesheet" href="/admin/instructors/tests.css">
+
+</head>
+<body>
+
+   <header>
+        <h1>Class A Pre-Trip Inspection</h1>
+        <h2>Student_______</h2>
+        <h2>Examiner _______</h2>
+        <p>Date _________</p>
+        <p>Auto / Manual</p>
+    </header>
+
+    <% let count %>
+
+    <div class="main-test-box">
+        <% if (test) { %>
+            <% test.map((block, N) => { %>
+                <section class="test-block-box">
+                    <details>
+                        <% count = 0 %>
+                        <summary>
+                            <span class="section-title"><%= block.title %> [<span class="section-result" id="result_<%= N %>" data-total=0 data-correct=0 data-incorrect=0>0</span>]</span>
+                        </summary>
+                        <% block.items.map((subblock, i) => { %>
+                            <section class="item-box">
+                                <h3 class="item-title"><%= subblock.item %></h3>
+                                <% count += subblock.checks.length %>
+                                <% subblock.checks.map((check, j) => { %>
+                                    <span class="skill">
+                                        <label for="<%= `block${N}_item${i}_skill${j}` %>"><%= check %></label>
+                                        <input type="checkbox" name="<%= `block${N}_item${i}_skill${j}` %>" id="<%= `block${N}_item${i}_skill${j}` %>" />
+                                    </span>
+                                <% }) %>
+                            </section>  <!-- item-box -->
+                        <% }) %>
+                        <input type="hidden" name="block-total" data-id="result_<%= N %>" value="<%= count %>">
+                    </details>
+                </section> <!-- test-block-box -->
+            <% }) %>
+        <% } %>     <!-- if TEST passed -->
+    </div>   <!-- main-test-box -->
+
+    <footer>
+        <p>In Cab Missed (max 20): _________ Pass / Fail</p>
+        <p>Out Cab Missed (max 60): __________ Pass / Fail</p>
+    </footer>
+
+
+    <script>
+
+        // INIT - initing blocks with qty of items
+        const totals = document.getElementsByName("block-total")
+        for(let i=0; i<totals.length; i++) {
+            document.querySelector(`#${totals[i].dataset.id}`).textContent = totals[i].value
+        }
+
+    </script>
+
+</body>
+</html>
