@@ -29,7 +29,7 @@
 
     <% let count %>
 
-    <div class="main-test-box">
+    <form class="main-test-box">
         <% if (test) { %>
             <% test.map((block, N) => { %>
                 <section class="test-block-box">
@@ -41,13 +41,17 @@
                         <% block.items.map((subblock, i) => { %>
                             <section class="item-box">
                                 <h3 class="item-title"><%= subblock.item %></h3>
-                                <% count += subblock.checks.length %>
-                                <% subblock.checks.map((check, j) => { %>
-                                    <span class="skill">
-                                        <label for="<%= `block${N}_item${i}_skill${j}` %>"><%= check %></label>
-                                        <input type="checkbox" name="<%= `block${N}_item${i}_skill${j}` %>" id="<%= `block${N}_item${i}_skill${j}` %>" />
-                                    </span>
-                                <% }) %>
+                                <div class="item">
+                                    <% count += subblock.checks.length %>
+                                    <% subblock.checks.map((check, j) => { %>
+                                        <span class="skill">
+                                            <input type="checkbox" name="<%= `block${N}_item${i}_skill${j}` %>" 
+                                                id="<%= `block${N}_item${i}_skill${j}` %>" data-qty="result_<%= N %>"
+                                                onchange="updateQty('result_<%= N %>')" />
+                                            <label for="<%= `block${N}_item${i}_skill${j}` %>"><%= check %></label>
+                                        </span>
+                                    <% }) %>
+                                </div>
                             </section>  <!-- item-box -->
                         <% }) %>
                         <input type="hidden" name="block-total" data-id="result_<%= N %>" value="<%= count %>">
@@ -55,7 +59,11 @@
                 </section> <!-- test-block-box -->
             <% }) %>
         <% } %>     <!-- if TEST passed -->
-    </div>   <!-- main-test-box -->
+        <div class="buttons-box">
+            <button class="-btn" type="submit">Submit</button>
+            <button class="-btn" type="reset">Reset</button>
+        </div>
+    </form>   <!-- main-test-box -->
 
     <footer>
         <p>In Cab Missed (max 20): _________ Pass / Fail</p>
@@ -65,11 +73,56 @@
 
     <script>
 
-        // INIT - initing blocks with qty of items
         const totals = document.getElementsByName("block-total")
-        for(let i=0; i<totals.length; i++) {
-            document.querySelector(`#${totals[i].dataset.id}`).textContent = totals[i].value
+        
+        // INIT - initing blocks with qty of items
+        function InitQtyTotals() {
+            let el
+            for(let i=0; i<totals.length; i++) {
+                el = document.querySelector(`#${totals[i].dataset.id}`)
+                if (el) {
+                    el.dataset.correct = 0
+                    el.dataset.total = parseInt(totals[i].value)
+                    el.dataset.incorrect = parseInt(totals[i].value)
+                    el.textContent = `0/${totals[i].value}`
+                }
+            }
         }
+
+
+        // updates qty of answers in block
+        function updateQty(qtyElId) {
+            const qtyEl = document.getElementById(qtyElId)
+            if (!qtyEl) { return false }
+
+            const blockInputs = document.querySelectorAll(`[data-qty='${qtyElId}']`)
+            if (!blockInputs) { return false }
+
+            let correct = 0
+            for (let i=0; i< blockInputs.length; i++) {
+                if (blockInputs[i].checked) {
+                    correct += 1
+                }
+            }
+
+            qtyEl.dataset.correct = correct
+            qtyEl.dataset.incorrect = qtyEl.dataset.total - correct
+            qtyEl.textContent = `${qtyEl.dataset.correct}/${qtyEl.dataset.total}`
+        }
+
+        
+        // reset results on reset
+        document.forms[0].addEventListener('reset', (e) => {
+            if (!confirm('This will reset test and above entered data will be lost. Are you sure?')) { 
+                e.preventDefault()
+                return
+            }
+            InitQtyTotals()
+        })
+
+
+        // Entry Point
+        InitQtyTotals() //  initing totals per block
 
     </script>
 

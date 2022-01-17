@@ -120,16 +120,6 @@ function ifCanWrite (req, res, next) {
         return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write" })
     } else { next() }
 }
-function ifCanReadOrInstructor (req, res, next) {
-    // check Admin's Auth - if INSTRUCTOR
-    const adminId = req.session.userId
-
-    if (admin.checkAdminsAuth(adminId, 'read')) { return next() }
-    if (admin.checkAdminsAuth(adminId, 'instructor')) { return next() }
-
-    return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
-}
-
 
 
 // LOGIN, MAIN, PROFILE ROUTES

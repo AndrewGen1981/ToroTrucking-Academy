@@ -5,7 +5,7 @@
     box-sizing: border-box;
     
     font-family: "BrixSlab-Regular";
-    font-size: 15px;
+    font-size: 17px;
     font-weight: normal;
 }
 
@@ -17,12 +17,15 @@ header, .main-test-box, footer {
 }
 
 .test-block-box {
-    padding: 5px;
+    line-height: 2em;
+    
+    padding-left: 3px;
     margin-bottom: 0.5rem;
     background-color: gray;
+
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
 }
-
-
 
 
 summary {
@@ -36,13 +39,36 @@ summary {
     width: 100%;
 
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: flex-start;
+    
 
-    background-color: lightblue;
+    background-color: lightgray;
+    border-top: 1px solid white;
 }
-.skill {
+.item-title {
+    font-weight: bold;
+    width: 15%;
+}
+.item {
+    width: 85%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    flex-wrap: wrap;
+    
+}
+
+.skill {
+    width: 20%;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* border-left: 1px solid white; */
+}
+.skill label {
+    padding-left: 5px;
+    line-height: 1.5em;
 }
