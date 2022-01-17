@@ -32,11 +32,11 @@
     <form class="main-test-box">
         <% if (test) { %>
             <% test.map((block, N) => { %>
-                <section class="test-block-box">
+                <section class="test-block-box" data-block="block_<%= N %>">
                     <details>
                         <% count = 0 %>
                         <summary>
-                            <span class="section-title"><%= block.title %> [<span class="section-result" id="result_<%= N %>" data-total=0 data-correct=0 data-incorrect=0>0</span>]</span>
+                            <span class="section-title"><%= block.title %> [<span class="section-result" id="block_<%= N %>" data-total=0 data-correct=0 data-incorrect=0>0</span>]</span>
                         </summary>
                         <% block.items.map((subblock, i) => { %>
                             <section class="item-box">
@@ -46,21 +46,21 @@
                                     <% subblock.checks.map((check, j) => { %>
                                         <span class="skill">
                                             <input type="checkbox" name="<%= `block${N}_item${i}_skill${j}` %>" 
-                                                id="<%= `block${N}_item${i}_skill${j}` %>" data-qty="result_<%= N %>"
-                                                onchange="updateQty('result_<%= N %>')" />
+                                                id="<%= `block${N}_item${i}_skill${j}` %>" data-qty="block_<%= N %>"
+                                                onchange="updateQty('block_<%= N %>')" />
                                             <label for="<%= `block${N}_item${i}_skill${j}` %>"><%= check %></label>
                                         </span>
                                     <% }) %>
                                 </div>
                             </section>  <!-- item-box -->
                         <% }) %>
-                        <input type="hidden" name="block-total" data-id="result_<%= N %>" value="<%= count %>">
+                        <input type="hidden" name="block-total" data-id="block_<%= N %>" value="<%= count %>">
                     </details>
                 </section> <!-- test-block-box -->
             <% }) %>
         <% } %>     <!-- if TEST passed -->
         <div class="buttons-box">
-            <button class="-btn" type="submit">Submit</button>
+            <button class="-btn" type="submit" id="submit">Submit</button>
             <button class="-btn" type="reset">Reset</button>
         </div>
     </form>   <!-- main-test-box -->
@@ -108,6 +108,34 @@
             qtyEl.dataset.correct = correct
             qtyEl.dataset.incorrect = qtyEl.dataset.total - correct
             qtyEl.textContent = `${qtyEl.dataset.correct}/${qtyEl.dataset.total}`
+
+            const block = document.querySelector(`[data-block='${qtyElId}']`)
+            if (!block) { return false }
+
+            function changeView(i, arr) {
+                arr.map((a, index) => {
+                    block.classList.remove(a)
+                    if (i === index) {
+                        block.classList.add(a)
+                    }
+                })
+            }
+
+            let perc = qtyEl.dataset.correct / qtyEl.dataset.total
+            if (perc > 0.98) {
+                changeView(2, ['-done1-3', '-done2-3', '-done3-3'])
+            } else {
+                if (perc > 0.65) {
+                    changeView(1, ['-done1-3', '-done2-3', '-done3-3'])
+                } else {
+                    if (perc > 0.32) {
+                        changeView(0, ['-done1-3', '-done2-3', '-done3-3'])
+                    } else {
+                        changeView(-1, ['-done1-3', '-done2-3', '-done3-3'])
+                    }
+                }
+            }
+
         }
 
         
