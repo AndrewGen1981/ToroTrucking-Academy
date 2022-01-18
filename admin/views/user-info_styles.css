@@ -269,6 +269,7 @@ svg.-active {
     align-items: center;
     justify-content: space-between;
 }
+
 .row-item-75 {
     width: 75%;
 }
@@ -283,6 +284,13 @@ svg.-active {
     display: flex;
     align-items: center;
 }
+.-evently {
+    flex: 1;
+}
+.-space-between {
+    justify-content: space-between
+}
+
 
 .field-title, .field-value {
     font-family: "BrixSlab-Medium";

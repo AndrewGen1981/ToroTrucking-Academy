@@ -74,6 +74,7 @@
                     <div class='field -firstName -header -left-color-group -fixed2'>First Name</div>
                     <div class='field -middleName -header -left-color-group'>Middle</div>
                     <div class='field -key -header -left-color-group -fixed3'>Key</div>
+                    <div class='field -location -header -left-color-group'>Location</div>
                     <div class='field -qr -header -left-color-group'>Need QR?</div>
                     <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
 
@@ -123,6 +124,12 @@
                         <div class='field -middleName'><%= student.user.dataCollection.middleName %></div>
 
                         <div class='field -key -fixed3'><%= student.key %></div>
+
+                        <% if(student.location === 'UNSET') { %>
+                            <div class='field -location -status-block'><%= student.location %></div>
+                        <% } else { %>
+                            <div class='field -location'><%= student.location %></div>
+                        <% } %>
 
                         <!-- form elements to be passed to QRs bulk print -->
                             <label class='field -qr'>

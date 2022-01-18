@@ -138,6 +138,11 @@ a.-name {
     background-color: var(--left-cols-color);
     text-align: center;
 }
+.-location {
+    --width: 7rem;
+    background-color: var(--left-cols-color);
+    text-align: center;
+}
 .-qr {
     --width: 3rem;
     background-color: var(--left-cols-color);

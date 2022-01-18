@@ -101,15 +101,13 @@
         <section class="row-item-85">
             <div class="fields-set">
                 <div class="field-title">hooked up email:</div>
-                <div class="field-value -email"><%= user.student.email %></div>
-            </div>
-            <div class="fields-set">
-                <div class="field-title">equals to user email:</div>
-                <% if(user.student.email === user.email) { %>
-                    <div class="field-accomplished">YES</div>
-                <% } else { %>
-                    <div class="field-warning">NO</div>
-                <% } %> 
+                <a href="mailto:<%= user.student.email %>">
+                    <% if(user.student.email === user.email) { %>
+                        <div class="field-value -email field-accomplished" title="equals to user email"><%= user.student.email %></div>
+                    <% } else { %>
+                        <div class="field-value -email field-warning" title="doesn't equal to user email"><%= user.student.email %></div>
+                    <% } %>
+                </a>
             </div>
         </section>
 
@@ -123,6 +121,34 @@
                 <div class="field-value"><%= user.student._id %></div>
             </div>
         </section>
+
+
+        <!-- Location -->
+        <section class="row-item-85">
+
+            <div class="field-title">Location</div>
+            <% const location = user.student.location ? user.student.location : 'UNSET' %>
+            <% const locs = ['Tacoma, WA', 'Kent, WA', 'Troutdale, OR'] %>
+            
+            <form class="fields-set -evently -space-between" action='/admin/student/update-location' method="post" id="update-location">
+                <input type="hidden" name="studentId" value="<%= user.student._id %>" />
+                <input type="hidden" name="userId" value="<%= user._id %>" />
+                <select class='input-box' name='location' id='location'>
+                    <% if (location === 'UNSET') { %>
+                        <option value='UNSET' selected >UNSET</option>
+                    <% } %>
+                    <% locs.map(loc => { %>
+                        <% if (location === loc) { %>
+                            <option value='<%= loc %>' selected ><%= loc %></option>
+                        <% } else { %>
+                            <option value='<%= loc %>'><%= loc %></option>
+                        <% } %>
+                    <%  }) %>
+                </select>
+                <button type='submit' class='-btn'>Update</button>
+            </form>
+        </section>  <!-- Location -->
+
 
         <section class="row-item-85"><div class="gap-line"></div></section>
 
@@ -293,3 +319,22 @@
     <% } %>     <!-- already a Student -->
     
 <% } %>     <!-- if all forms are ready -->
+
+
+<script>
+    document.querySelector('#update-location').addEventListener('submit', (e) => {
+        const new_loc = document.querySelector('#location').value
+
+        if (new_loc === 'UNSET') {
+            alert("Location cannot be changed to 'UNSET'")
+            e.preventDefault()
+            return
+        }
+        
+        const current_loc = '<%= user.student.location %>'
+        if (new_loc === current_loc) {
+            e.preventDefault()
+            return
+        }
+    })
+</script>

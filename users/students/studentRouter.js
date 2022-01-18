@@ -81,7 +81,7 @@ let filter = {}
 // @GET admin/student/list
 studentRouter.get('/list', ifCanRead, async(req, res) => {
     // auth is good
-    const studentPopulated = ['key', 'email', 'TTT', 'created', 'status']
+    const studentPopulated = ['key', 'email', 'TTT', 'created', 'status', 'location']
     const userPopulated = ['token']
 
     const dataCollPopulated = [
@@ -161,6 +161,30 @@ studentRouter.post('/new/:id', ifCanWrite, async(req, res) => {
 })
 
 
+
+// Updates Location
+studentRouter.post('/update-location', ifCanWrite, async(req, res) => {
+    const {userId, studentId, location} = req.body
+    if (!userId || !studentId || !location) {
+        return res.status(404).send(`Location updating isssue: ${userId}, ${studentId}, ${location}`)
+    }
+    try {
+        const student = await Student.findById(studentId)
+        if (!student) {
+            return res.status(404).send(`Cannot find student with ID: ${studentId}`)
+        }
+        if (student.location != location) {
+            student.location = location
+            await student.save()
+        }
+        res.redirect(`/admin/user/${userId}?activatetab=4`)
+    } catch(e) {
+        return res.status(500).send(`Location updating isssue: ${e.message}`)
+    }
+})
+
+
+// Updates Learning Center Access
 studentRouter.get("/allow-tuition/:id", ifCanWrite, async(req, res) => {    // Allows tuition for an existing Student
     // auth is good
     const studentId = req.params.id    // receiving student _id from client-side

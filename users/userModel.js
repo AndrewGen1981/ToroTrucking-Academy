@@ -63,6 +63,7 @@ const studentSchema = new mongoose.Schema({
     created: { type: Date, default: new Date() },
     
     status: {type: String, default: "unblock"},
+    location: {type: String, default: "UNSET"},
 
     user: {
         type: mongoose.SchemaTypes.ObjectId,
