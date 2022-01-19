@@ -67,6 +67,7 @@ nav {
 .schema-col-name {
     width: 15rem;
     text-align: left;
+    text-transform: capitalize;
 }
 .schema-col-email {
     width: 20rem;
@@ -80,6 +81,11 @@ nav {
     width: 12rem;
     text-align: center;
 }
+.schema-col-lastSESS span {
+    margin-left: 5px;
+    color: var(--orange-high-desert);
+}
+
 .schema-col-dataCollection,
 .schema-col-application,
 .schema-col-agreement,
