@@ -74,12 +74,14 @@ nav {
     text-align: left;
 }
 .schema-col-token, .schema-col-created {
-    width: 7rem;
+    width: 8rem;
     text-align: center;
 }
 .schema-col-lastSESS {
     width: 12rem;
-    text-align: center;
+    display: flex;
+    align-items: top;
+    justify-content: space-between;
 }
 .schema-col-lastSESS span {
     margin-left: 5px;
