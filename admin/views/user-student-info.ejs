@@ -316,25 +316,29 @@
             <% }) %>
         <% } %>
 
+        
+        <script>
+            const loc_form = document.querySelector('#update-location')
+            if (loc_form) {
+                loc_form.addEventListener('submit', (e) => {
+                    const new_loc = document.querySelector('#location').value
+            
+                    if (new_loc === 'UNSET') {
+                        alert("Location cannot be changed to 'UNSET'")
+                        e.preventDefault()
+                        return
+                    }
+                    
+                    const current_loc = '<%= user.student.location %>'
+                    if (new_loc === current_loc) {
+                        e.preventDefault()
+                        return
+                    }
+                })
+            }
+        </script>
+
     <% } %>     <!-- already a Student -->
     
 <% } %>     <!-- if all forms are ready -->
 
-
-<script>
-    document.querySelector('#update-location').addEventListener('submit', (e) => {
-        const new_loc = document.querySelector('#location').value
-
-        if (new_loc === 'UNSET') {
-            alert("Location cannot be changed to 'UNSET'")
-            e.preventDefault()
-            return
-        }
-        
-        const current_loc = '<%= user.student.location %>'
-        if (new_loc === current_loc) {
-            e.preventDefault()
-            return
-        }
-    })
-</script>

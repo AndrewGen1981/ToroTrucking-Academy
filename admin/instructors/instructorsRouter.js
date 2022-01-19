@@ -4,7 +4,8 @@ const path = require('path')
 const instRouter = express.Router()
 
 // import test objects
-const { test1_preTrip } = require('./test1_class_A_pretrip')
+const { test1_preTrip_incab } = require('./test1_class_A_incab')
+const { test1_preTrip_outcab } = require('./test1_class_A_outcab')
 
 
 // CONFIG
@@ -19,7 +20,31 @@ function ifInstructor (req, res, next) {
 
 
 instRouter.get('/', ifInstructor, (req, res) => {
-    res.render(path.join(__dirname + '/test1_pretrip.ejs'), { test: test1_preTrip })
+    res.send(`
+        <h1>Scorings</h1>
+        <ul>
+            <li><a href='/admin/inst/class-A-incab'>class A in-Cab</a></li>
+            <li><a href='/admin/inst/class-A-outcab'>class A out-Cab</a></li>
+        </ul>
+    `)
 })
+
+
+instRouter.get('/class-A-incab', ifInstructor, (req, res) => {
+    res.render(path.join(__dirname + '/test1_pretrip.ejs'), {
+        title: 'Class A preTrip Inspection INCAB scoring',
+        examiner: admin.findAdminById(req.session.userId),
+        test: test1_preTrip_incab
+    })
+})
+
+instRouter.get('/class-A-outcab', ifInstructor, (req, res) => {
+    res.render(path.join(__dirname + '/test1_pretrip.ejs'), {
+        title: 'Class A preTrip Inspection OUTCAB scoring',
+        examiner: admin.findAdminById(req.session.userId),
+        test: test1_preTrip_outcab
+    })
+})
+
 
 module.exports = instRouter

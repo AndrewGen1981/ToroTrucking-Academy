@@ -15,6 +15,20 @@ header, .main-test-box, footer {
     max-width: 1535px;
     margin: 1rem auto;
 }
+.scoring-title {
+    width: 100%;
+    font-size: 2rem;
+    text-align: center;
+}
+.scoring-examiner {
+    font-weight: bolder;
+    text-align: right;
+    color: var(--orange-high-desert);
+}
+.scoring-date {
+    text-align: right;
+    color: var(--orange-high-desert);
+}
 
 .test-block-box {
     line-height: 2em;

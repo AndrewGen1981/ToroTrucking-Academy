@@ -20,11 +20,31 @@
 <body>
 
    <header>
-        <h1>Class A Pre-Trip Inspection</h1>
+        <% if (title) { %>
+            <h1 class='scoring-title'><%= title %></h1>
+        <% } else { %>
+            <h1 class='scoring-title'>No Title Data</h1>
+        <% } %>
+
+
         <h2>Student_______</h2>
-        <h2>Examiner _______</h2>
-        <p>Date _________</p>
         <p>Auto / Manual</p>
+
+
+        <% if (examiner) { %>
+            <h2 class='scoring-examiner'>Examiner:
+                <span><%= examiner.name %></span>
+                <span>(<%= examiner.title %>)</span>
+                <span><%= examiner.location %></span>
+            </h2>
+        <% } else { %>
+            <h2 class='scoring-examiner'>Examiner _______</h2>
+        <% } %>
+
+        <p class='scoring-date'>Date:
+            <span><%= new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></span>
+            <span>(<%= new Date().toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</span>
+        </p>
     </header>
 
     <% let count %>
@@ -66,8 +86,8 @@
     </form>   <!-- main-test-box -->
 
     <footer>
-        <p>In Cab Missed (max 20): _________ Pass / Fail</p>
-        <p>Out Cab Missed (max 60): __________ Pass / Fail</p>
+        <p>Scoring Result (max <span id='result'>0</span>)</p>
+        <p id='pass-fail'>Pass/Fail</p>
     </footer>
 
 
@@ -78,6 +98,7 @@
         // INIT - initing blocks with qty of items
         function InitQtyTotals() {
             let el
+            let max = 0
             for(let i=0; i<totals.length; i++) {
                 el = document.querySelector(`#${totals[i].dataset.id}`)
                 if (el) {
@@ -85,8 +106,10 @@
                     el.dataset.total = parseInt(totals[i].value)
                     el.dataset.incorrect = parseInt(totals[i].value)
                     el.textContent = `0/${totals[i].value}`
+                    max += parseInt(totals[i].value)
                 }
             }
+            document.querySelector('#result').textContent = max
         }
 
 
