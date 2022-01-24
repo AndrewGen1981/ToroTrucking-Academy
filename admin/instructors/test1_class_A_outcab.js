@@ -1,4 +1,4 @@
-const test1_preTrip_outcab = [    
+const test1_preTrip_A_outcab = [    
     {
         title: 'Tractor & Trailer Brake Checks',
         items: [
@@ -366,5 +366,5 @@ const test1_preTrip_outcab = [
 
 
 module.exports = {
-    test1_preTrip_outcab
+    test1_preTrip_A_outcab
 }

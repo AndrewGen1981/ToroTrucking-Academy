@@ -40,6 +40,11 @@
                 <div class='field -TTT -header -left-color-group'>TTT</div>
                 <div class="field -in -header -clock-color-group">Clock IN</div>
                 <div class="field -out -header -clock-color-group">Clock OUT</div>
+
+                <div class="field -incab-scoring -header -right-color-group">IN-CAB Scoring</div>
+                <div class="field -outcab-scoring -header -right-color-group">OUT-CAB Scoring</div>
+                <div class="field -backing-scoring -header -right-color-group">Backing Scoring</div>
+                <div class="field -city-scoring -header -right-color-group">City Scoring</div>
             </div>  <!-- titles -->
 
             <% if(inStudents.length > 0) { %>
@@ -92,6 +97,24 @@
 
                             <a class='field -clocks -out' target="_blank">...</a>
                         <% } %>
+
+                        <!-- Scorings -->
+                        <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
+                            <input type="hidden" name="studentId" value="<%= student._id %>" />
+                            <button class='-btn-scoring' type="submit">Last Take</button>
+                        </form>
+                        <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
+                            <input type="hidden" name="studentId" value="<%= student._id %>" />
+                            <button class='-btn-scoring' type="submit">Last Take</button>
+                        </form>
+                        <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
+                            <input type="hidden" name="studentId" value="<%= student._id %>" />
+                            <button class='-btn-scoring' type="submit">Last Take</button>
+                        </form>
+                        <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
+                            <input type="hidden" name="studentId" value="<%= student._id %>" />
+                            <button class='-btn-scoring' type="submit">Last Take</button>
+                        </form>
 
                     </div>  <!-- student-list-row -->
                 <% }) %>

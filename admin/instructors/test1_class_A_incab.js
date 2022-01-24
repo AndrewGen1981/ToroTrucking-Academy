@@ -1,4 +1,4 @@
-const test1_preTrip_incab = [
+const test1_preTrip_A_incab = [
     {
         title: 'Beginning Checks',
         items: [
@@ -110,5 +110,5 @@ const test1_preTrip_incab = [
 
 
 module.exports = {
-    test1_preTrip_incab
+    test1_preTrip_A_incab
 }

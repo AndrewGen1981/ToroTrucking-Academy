@@ -85,6 +85,10 @@ const studentSchema = new mongoose.Schema({
     tuition: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'tuitionSchema'
+    },
+    scoring: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'studentScoringSchema'
     }
 
 }, {
