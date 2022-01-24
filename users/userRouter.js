@@ -41,7 +41,7 @@ const postman = require('./postman/postman')
 
 
 // @SESSION setup
-const SESS_DURATION = 1000 * 60 * 30    //  30 minutes for Applicats and Students
+const SESS_DURATION = 1000 * 60 * 60 * 2    //  2 hours for Applicants and Students
 
 // extracting from process.env
 const {
