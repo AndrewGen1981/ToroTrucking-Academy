@@ -690,9 +690,40 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
     let clIN, clOUT
     let TTT = 0
 
-    clockDate.map((dateString, index) => {
-        clIN = settime(dateString, clockIN[index])
-        clOUT = settime(dateString, clockOUT[index])
+    if (Array.isArray(clockDate)) {
+        clockDate.map((dateString, index) => {
+            clIN = settime(dateString, clockIN[index])
+            clOUT = settime(dateString, clockOUT[index])
+            
+            if ((clOUT - clIN) > 0) {    // skip empty
+                TTT += clOUT - clIN
+                // adding clockIN
+                newClocks.push({
+                    date: new Date(clIN),
+                    key: tools.getDatePrefix(new Date(dateString)),
+                    lat: latIN[index],
+                    lon: lonIN[index],
+                    location: locationIN[index],
+                    doneByAdmin: doneByAdminIN[index],
+                    updatedByAdmin: updatedByAdminIN[index]
+                })
+                // adding clockOUT
+                newClocks.push({
+                    date: new Date(clOUT),
+                    key: tools.getDatePrefix(new Date(dateString)),
+                    lat: latOUT[index],
+                    lon: lonOUT[index],
+                    location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
+                    doneByAdmin: doneByAdminOUT[index],
+                    updatedByAdmin: updatedByAdminOUT[index]
+                })
+            }
+        })
+    } else {
+        let dateString = clockDate
+        
+        clIN = settime(dateString, clockIN)
+        clOUT = settime(dateString, clockOUT)
         
         if ((clOUT - clIN) > 0) {    // skip empty
             TTT += clOUT - clIN
@@ -700,24 +731,25 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
             newClocks.push({
                 date: new Date(clIN),
                 key: tools.getDatePrefix(new Date(dateString)),
-                lat: latIN[index],
-                lon: lonIN[index],
-                location: locationIN[index],
-                doneByAdmin: doneByAdminIN[index],
-                updatedByAdmin: updatedByAdminIN[index]
+                lat: latIN,
+                lon: lonIN,
+                location: locationIN,
+                doneByAdmin: doneByAdminIN,
+                updatedByAdmin: updatedByAdminIN
             })
             // adding clockOUT
             newClocks.push({
                 date: new Date(clOUT),
                 key: tools.getDatePrefix(new Date(dateString)),
-                lat: latOUT[index],
-                lon: lonOUT[index],
-                location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
-                doneByAdmin: doneByAdminOUT[index],
-                updatedByAdmin: updatedByAdminOUT[index]
+                lat: latOUT,
+                lon: lonOUT,
+                location: locationOUT != 'none' ? locationOUT : locationIN,
+                doneByAdmin: doneByAdminOUT,
+                updatedByAdmin: updatedByAdminOUT
             })
         }
-    })
+    }
+    
 
     try {
         const student = await Student.findById(studentId)
