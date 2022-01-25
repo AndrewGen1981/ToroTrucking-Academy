@@ -2500,7 +2500,7 @@
 
             const result = await updateUser(action)     //  doing PUT for all actions
 
-            // getting back with resopse
+            // getting back with response
             if (!result) { return alert(`Action '${action.toUpperCase()}' was not done`) }
             if (result.status != 200) {
                 return alert(`Error: response status ${result.status}, ${result.statusText}`)

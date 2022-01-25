@@ -1,6 +1,15 @@
 // @ADMIN configuration file
 // contains credentials & a list of authorities
 
+// Locations
+const LOCATION = {
+    All: 'All',
+    Unset: 'UNSET',
+    Tacoma: 'Tacoma, WA',
+    Kent: 'Kent, WA',
+    Troutdale: 'Troutdale, OR'
+}
+
 
 // LIST of Authorities. Order does matter, should match with AUTHNAMES
 const AUTH = {
@@ -21,20 +30,40 @@ const AUTHNAMES = [ 'viewOnly', 'editor', 'instructor', 'admin' ]
 
 // Array of admins & instructors
 const PROFILES = [
-    { id: "BigG0001", name: "BigG Admin", title: "Admin", email: "alphafleetacc@gmail.com", location: 'SEATTLE', password: process.env.BIGG0001_PASS, auth: AUTH.admin },
-    { id: "Mike0001", name: "Mike Svoboda", title:'Admin', email: "newsoundcdl@gmail.com", location: 'TEST', password: process.env.MIKE0001_PASS, auth: AUTH.editor },
+    { id: "BigG0001", name: "BigG Admin", title: "Admin", email: "alphafleetacc@gmail.com", location: LOCATION.All, password: process.env.BIGG0001_PASS, auth: AUTH.admin },
+    { id: "Mike0001", name: "Mike Svoboda", title:'Admin', email: "newsoundcdl@gmail.com", location: LOCATION.All, password: process.env.MIKE0001_PASS, auth: AUTH.editor },
+    { id: "Ryan0001", name: "Ryan Kling", title:'President', email: "ryan@torocdl.com", location: LOCATION.All, password: process.env.RYAN0001_PASS, auth: AUTH.editor },
+   
+    
+    // TACOMA managers & instructors:
+    { id: "Aziz0001", name: "Aziz", title:'Manager', email: "Azo2008@gmail.com", location: LOCATION.Tacoma, password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
+    { id: "Mariana0001", name: "Mariana Bulgaru", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
+    // + Henry Easterlin ( Manager / Instructor )
+    { id: "Easterlin0001", name: "Henry Easterlin", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.EASTERLIN0001_PASS, auth: AUTH.editor },
+    { id: "EasterlinInst0001", name: "Henry Easterlin", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.EASTERLIN0001_PASS, auth: AUTH.instructor },
+    // + Stephen Hewett ( Instructor )
+    { id: "HewettInst0001", name: "Stephen Hewett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.HEWETT0001_PASS, auth: AUTH.instructor },
+    // + Jeffrey Mudgett ( Instructor )
+    { id: "MudgettInst0001", name: "Jeffrey Mudgett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MUDGETT0001_PASS, auth: AUTH.instructor },
+    // + Uladzimar Martynau ( Instructor )
+    { id: "MartynauInst0001", name: "Uladzimar Martynau", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARTYNAU0001_PASS, auth: AUTH.instructor },
 
-    { id: "Ryan0001", name: "Ryan Kling", title:'President', email: "ryan@torocdl.com", location: 'PACIFIC', password: process.env.RYAN0001_PASS, auth: AUTH.editor },
-    { id: "Aziz0001", name: "Aziz", title:'Manager', email: "Azo2008@gmail.com", location: 'PACIFIC', password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
+    
+    // KENT managers & instructors:
+    { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },    
+    // + Robert Littleton manager/instructor
+    { id: "Littleton0001", name: "Robert Littleton", title:'Manager', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.editor },
+    { id: "LittletonInst0001", name: "Robert Littleton", title:'Instructor', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.instructor },    
+    // + Tyer Newman instructor
+    { id: "NewmanInst0001", name: "Tyer Newman", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.NEWMAN0001_PASS, auth: AUTH.instructor },    
+    // + Trever Perry instructor
+    { id: "PerryInst0001", name: "Trever Perry", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.PERRY0001_PASS, auth: AUTH.instructor },
+    // + Omar Hussein instructor
+    { id: "HusseinInst0001", name: "Omar Hussein", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.HUSSEIN0001_PASS, auth: AUTH.instructor },
 
-    { id: "Mariana0001", name: "Mariana Bulgaru", title:'Manager', email: "tacoma@torocdl.com", location: 'PACIFIC', password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
-    { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "tacoma@torocdl.com", location: 'PACIFIC', password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
 
-    { id: "Littleton0001", name: "Robert Littleton", title:'Manager', email: "robert@torocdl.com", location: 'KENT', password: process.env.LITTLETON0001_PASS, auth: AUTH.editor },
-    { id: "Young0001", name: "Carri Young", title:'Office Admin', email: "Kent@torocdl.com", location: 'KENT', password: process.env.YOUNG0001_PASS, auth: AUTH.editor },
-
-    // INSTRUCTORS
-    { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: 'KENT', password: process.env.INST0001_PASS, auth: AUTH.instructor },
+    // TEST INSTRUCTORS
+    { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: LOCATION.Kent, password: process.env.INST0001_PASS, auth: AUTH.instructor },
 ]
 
 
