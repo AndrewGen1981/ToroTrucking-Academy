@@ -102,8 +102,8 @@ const studentSchema = new mongoose.Schema({
 // @TOOLS SECTION
 function getDatePrefix(date) {
     //  returns date-prefix
-    // const timezoneOffset = date.getTimezoneOffset() * 60000
-    const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00"))
+    const timezoneOffset = (12*60 - date.getTimezoneOffset()) * 60000
+    const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00")) + timezoneOffset
     return Math.round(1 + diffTime / 86400000)
 }
 
