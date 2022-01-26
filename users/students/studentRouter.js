@@ -76,8 +76,7 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
 })
 
 
-// filter to find Students with
-let filter = {}
+
 // @GET admin/student/list
 studentRouter.get('/list', ifCanRead, async(req, res) => {
     // auth is good
@@ -95,6 +94,9 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
 
     const tuitionPopulated = ['isAllowed', 'avLessonsRate']
 
+    // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
+    const adminProfile = admin.findAdminById(req.session.userId)
+    let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
 
     const students = await Student.find(filter).select(studentPopulated).populate([
         {
@@ -110,7 +112,7 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
         }
     ])
 
-    res.render(path.join(__dirname+'/student-list.ejs'), { students })
+    res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile })
 })
 
 
@@ -258,6 +260,44 @@ studentRouter.post('/print-bulk-qr', (req, res) => {
     }
 
     res.render(path.join(__dirname+'/qr_bulk-print.ejs'), { qrsToPrint, qrsNamesToPrint, qrsKeysToPrint, qrsClassesToPrint })
+})
+
+
+
+// @POST admin/student/print-bulk-qr
+studentRouter.get('/timetest', (req, res) => {
+
+    let html = ''
+    
+
+    for (let i=0; i<25; i++) {
+        let hh = i<10 ? `0${i}` : `${i}`
+
+        let date = `2022-01-26T${hh}:00:00`
+        let key = tools.getDatePrefix(new Date(date))
+        let keyCeil = tools.getDatePrefixCeil(new Date(date))
+
+        let timezone = new Date(date).getTimezoneOffset()
+        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
+
+        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
+    }
+
+    for (let i=0; i<25; i++) {
+        let hh = i<10 ? `0${i}` : `${i}`
+
+        let date = `2022-01-27T${hh}:00:00`
+        let key = tools.getDatePrefix(new Date(date))
+        let keyCeil = tools.getDatePrefixCeil(new Date(date))
+
+        let timezone = new Date(date).getTimezoneOffset()
+        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
+
+        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
+    }
+
+    res.send(html)
+
 })
 
 

@@ -96,6 +96,7 @@ PROFILES.map(profile => {
 })
 
 module.exports = {
+    LOCATION,
     PROFILES,
     ISSUES,
     findAdminById,

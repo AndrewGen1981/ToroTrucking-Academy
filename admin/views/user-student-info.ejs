@@ -228,8 +228,8 @@
         <% function normTTT(TTT) { return `${ Math.round(TTT * 100) / 100 }h` } %>
         <% function normCOORD(latlon) { return Math.round(latlon * 1000) / 1000 } %>
 
-        <% if (user.student.TTT) { %>
-            <section class="row-item-85">
+        <section class="row-item-85">
+            <% if (user.student.TTT) { %>
                 <div class="fields-set">
                     <div class="field-title">Total Tuition Time:</div>
                     <div class="field-value -orange"><%= strTTT(user.student.TTT) %> | <%= normTTT(user.student.TTT) %> SAVED</div>
@@ -237,17 +237,18 @@
                         <div class="field-value">( just recalculated <%= normTTT(verTTT) %>, should match)</div>
                     <% } %>
                 </div>
+            <% } %>
 
-                <form action="/admin/clocks" method="POST">
-                    <input type="hidden" name="studentId" value="<%= user.student._id %>" />
-                    <input type="hidden" name="studentKey" value="<%= user.student.key %>" />
-                    <input type="hidden" name="studentName" value="<%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %>" />
-                    <input type="hidden" name="visiting" value="<%= user.agreement.visiting %>" />
-                    <button class="-btn" type="submit">Details</button>
-                </form>
+            <form action="/admin/clocks" method="POST">
+                <input type="hidden" name="studentId" value="<%= user.student._id %>" />
+                <input type="hidden" name="studentKey" value="<%= user.student.key %>" />
+                <input type="hidden" name="studentName" value="<%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %>" />
+                <input type="hidden" name="visiting" value="<%= user.agreement.visiting %>" />
+                <button class="-btn" type="submit">Clocks Info</button>
+            </form>
 
-            </section>
-        <% } %>
+        </section>
+        
         
         <section class="row-item-85"><div class="gap-line"></div></section>
 

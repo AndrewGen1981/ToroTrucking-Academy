@@ -106,6 +106,11 @@ function getDatePrefix(date) {
     const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00")) + timezoneOffset
     return Math.round(1 + diffTime / 86400000)
 }
+function getDatePrefixCeil(date) {
+    //  returns date-prefix
+    const diffTime = Math.abs( new Date(date) - new Date("01-01-1900") )
+    return Math.ceil(1 + diffTime / 86400000)
+}
 
 
 
@@ -250,6 +255,7 @@ module.exports = {
     StudentCONFIG: mongoose.model('StudentCONFIG', configSchema),
     tools: {
         getDatePrefix,
+        getDatePrefixCeil,
         getTodayClocksInfo,
         reCalculateTTT
     }

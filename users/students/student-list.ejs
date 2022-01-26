@@ -66,6 +66,11 @@
                             </svg>
                         </a>
                     </div>
+                    <div class="admin-box">
+                        <% if(adminProfile) { %>
+                            <p class="welcome-admin">Welcome <%= adminProfile.name %>.<span>Access granted to location "<%= adminProfile.location %>"</span></p>
+                        <% } %>
+                    </div>
                 </header>
 
                 <!-- draw column titles -->

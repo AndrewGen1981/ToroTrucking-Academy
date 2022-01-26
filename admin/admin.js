@@ -721,35 +721,36 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
         })
     } else {
         let dateString = clockDate
-        
-        clIN = settime(dateString, clockIN)
-        clOUT = settime(dateString, clockOUT)
-        
-        if ((clOUT - clIN) > 0) {    // skip empty
-            TTT += clOUT - clIN
-            // adding clockIN
-            newClocks.push({
-                date: new Date(clIN),
-                key: tools.getDatePrefix(new Date(dateString)),
-                lat: latIN,
-                lon: lonIN,
-                location: locationIN,
-                doneByAdmin: doneByAdminIN,
-                updatedByAdmin: updatedByAdminIN
-            })
-            // adding clockOUT
-            newClocks.push({
-                date: new Date(clOUT),
-                key: tools.getDatePrefix(new Date(dateString)),
-                lat: latOUT,
-                lon: lonOUT,
-                location: locationOUT != 'none' ? locationOUT : locationIN,
-                doneByAdmin: doneByAdminOUT,
-                updatedByAdmin: updatedByAdminOUT
-            })
+        if (dateString) {
+            clIN = settime(dateString, clockIN)
+            clOUT = settime(dateString, clockOUT)
+            
+            if ((clOUT - clIN) > 0) {    // skip empty
+                TTT += clOUT - clIN
+                // adding clockIN
+                newClocks.push({
+                    date: new Date(clIN),
+                    key: tools.getDatePrefix(new Date(dateString)),
+                    lat: latIN,
+                    lon: lonIN,
+                    location: locationIN,
+                    doneByAdmin: doneByAdminIN,
+                    updatedByAdmin: updatedByAdminIN
+                })
+                // adding clockOUT
+                newClocks.push({
+                    date: new Date(clOUT),
+                    key: tools.getDatePrefix(new Date(dateString)),
+                    lat: latOUT,
+                    lon: lonOUT,
+                    location: locationOUT != 'none' ? locationOUT : locationIN,
+                    doneByAdmin: doneByAdminOUT,
+                    updatedByAdmin: updatedByAdminOUT
+                })
+            }
         }
+        // else (dateString = undefined) - admin deleted all the clocks
     }
-    
 
     try {
         const student = await Student.findById(studentId)
@@ -763,8 +764,6 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
     } catch(e) {
         res.send(`Issue: ${e.message}`)
     }
-
-    
 })
 
 

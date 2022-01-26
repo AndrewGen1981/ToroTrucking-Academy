@@ -55,13 +55,19 @@
                 <div class="clock-title">Undo</div>
                 <div class="clock-title">Del</div>
                 <div class="clock-title">Add</div>
+  
                 <!-- values -->
 
                 <% function leadZero(a) {return a.length < 2 ? `0${a}` : a} %>
                 <% function getYYYYMMDD(date) { const a = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }).split('/'); return `${a[2]}-${leadZero(a[0])}-${leadZero(a[1])}`} %>
                 <% function getHHMMSS(time) { const a = new Date(time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }).replace(' ',':').split(':'); return `${leadZero(a[0])}:${leadZero(a[1])}` } %>
-
+                
                 <% if (verClocks) { %>
+                    <!-- if no clocks at all, then admin cann add, even first -->
+                    <% if (!verClocks.length) { %>
+                        <% verClocks.push({ date: new Date(), in: new Date(), inlat: '-', inlon: '-', inlocation: 'none', inDoneByAdmin: '-', inUpdatedByAdmin: '-', out: '-', outlat: '-', outlon: '-', outlocation: 'none', outDoneByAdmin: '-', outUpdatedByAdmin: '-', duration: 0 }) %>
+                    <% } %>
+
                     <% verClocks.map((clock, index) => { %>
                         <!-- DATE -->
                         <input type="date" name="clockDate" id="date<%= index + 1 %>" value="<%= getYYYYMMDD(clock.date) %>" data-wasvalue="<%= getYYYYMMDD(clock.date) %>" required />
@@ -107,6 +113,7 @@
                             <use href="#add"></use>
                         </svg>
                     <% }) %>
+                    
                 <% } %>
 
                 <!-- add more values -->
@@ -123,11 +130,6 @@
 
 
     <script>
-
-        // all INs and OUTs inputs
-        const INs = document.getElementsByName ("clockIN")
-        const OUTs = document.getElementsByName ("clockOUT")
-
 
         // tools for undo, adding and deleting
 
@@ -185,6 +187,11 @@
 
         // Adding line with inputs for clock IN and OUT
         function addBtnClick(addBtn, index) {
+            
+            // all INs and OUTs inputs. Have to reload INs and OUTs each time, because their qty changes in dynamic
+            const INs = document.getElementsByName ("clockIN")
+            const OUTs = document.getElementsByName ("clockOUT")
+
             // line date & location
             const date = document.querySelector(`#date${index}`)
             const locationIN = document.querySelector(`#locationIN${index}`)
@@ -374,6 +381,10 @@
 
 
         function recalculateTTT() {
+            // all INs and OUTs inputs. Have to reload INs and OUTs each time, because their qty changes in dynamic
+            const INs = document.getElementsByName ("clockIN")
+            const OUTs = document.getElementsByName ("clockOUT")
+
             const TTTElement = document.querySelector('#TTT')
 
             function getTimeInSeconds(timeString) {
@@ -477,7 +488,18 @@
                 return false
             }
 
-            const needed = checkAllInputs([INs, OUTs])
+            // all INs and OUTs inputs. Have to reload INs and OUTs each time, because their qty changes in dynamic
+            const INs = document.getElementsByName ("clockIN")
+            const OUTs = document.getElementsByName ("clockOUT")
+            const Dates = document.getElementsByName ("clockDate")
+
+            // checking if qty is changed
+            let needed = parseInt("<%= verClocks.length %>") != Dates.length
+
+            // checking if there were changes among Dates, INs, OUTs
+            if (!needed) {
+                needed = checkAllInputs([Dates, INs, OUTs])
+            }
 
             if (!needed) {
                 alert('Nothing was changed. Update is not needed.')
