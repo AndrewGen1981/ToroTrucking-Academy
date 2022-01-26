@@ -264,41 +264,5 @@ studentRouter.post('/print-bulk-qr', (req, res) => {
 
 
 
-// @POST admin/student/print-bulk-qr
-studentRouter.get('/timetest', (req, res) => {
-
-    let html = ''
-    
-
-    for (let i=0; i<25; i++) {
-        let hh = i<10 ? `0${i}` : `${i}`
-
-        let date = `2022-01-26T${hh}:00:00`
-        let key = tools.getDatePrefix(new Date(date))
-        let keyCeil = tools.getDatePrefixCeil(new Date(date))
-
-        let timezone = new Date(date).getTimezoneOffset()
-        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
-
-        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
-    }
-
-    for (let i=0; i<25; i++) {
-        let hh = i<10 ? `0${i}` : `${i}`
-
-        let date = `2022-01-27T${hh}:00:00`
-        let key = tools.getDatePrefix(new Date(date))
-        let keyCeil = tools.getDatePrefixCeil(new Date(date))
-
-        let timezone = new Date(date).getTimezoneOffset()
-        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
-
-        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
-    }
-
-    res.send(html)
-
-})
-
 
 module.exports = studentRouter

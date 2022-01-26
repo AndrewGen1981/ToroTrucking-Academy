@@ -63,7 +63,7 @@ const io = require('socket.io')(server, {
 })
 
 // Has to bring in a MODELS here, just to create a WATCHER with SOCKET inside
-const { User, Student } = require('./users/userModel')
+const { User, Student, tools } = require('./users/userModel')       // tools for timetest, can be deleted after solving
 const { dataCollectionForm } = require('./users/applicants/form1Model')
 const { applicationForm } = require('./users/applicants/form2Model')
 const { agreementForm } = require('./users/applicants/form3Model')
@@ -86,4 +86,42 @@ agreementForm.watch().on('change', data => {
 })
 Tuition.watch().on('change', data => {
     io.emit('tuition-update', data)
+})
+
+
+
+// TEST can be deleted
+app.get('/timetest', (req, res) => {
+
+    let html = ''
+    
+
+    for (let i=0; i<25; i++) {
+        let hh = i<10 ? `0${i}` : `${i}`
+
+        let date = `2022-01-26T${hh}:00:00`
+        let key = tools.getDatePrefix(new Date(date))
+        let keyCeil = tools.getDatePrefixCeil(new Date(date))
+
+        let timezone = new Date(date).getTimezoneOffset()
+        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
+
+        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
+    }
+
+    for (let i=0; i<25; i++) {
+        let hh = i<10 ? `0${i}` : `${i}`
+
+        let date = `2022-01-27T${hh}:00:00`
+        let key = tools.getDatePrefix(new Date(date))
+        let keyCeil = tools.getDatePrefixCeil(new Date(date))
+
+        let timezone = new Date(date).getTimezoneOffset()
+        let timezoneOffset = (12*60 - new Date(date).getTimezoneOffset()) * 60000
+
+        html += `<p>${date} ${key} CEIL ${keyCeil} timezone ${timezone}m(${timezone / 60}h), timezoneOffset ${timezoneOffset}ms (${timezoneOffset/3600000}h) </p>`
+    }
+
+    res.send(html)
+
 })
