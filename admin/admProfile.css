@@ -1,12 +1,10 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css');
+
 /* @GENERAL */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
-    font-family: "BrixSlab-Regular";
-    font-size: 15px;
-    font-weight: normal;
 }
 
 :root {
@@ -28,6 +26,10 @@
     width: var(--left-panel-width);
     min-width: 175px;
     height: 100vh;
+
+    font-family: "BrixSlab-Regular";
+    font-size: 15px;
+    font-weight: normal;
 
     background-color: var(--main-color);
 
@@ -53,6 +55,10 @@
 .top-side {
     width: var(--desktop-width);
     height: var(--top-side-heihgt);
+
+    font-family: "BrixSlab-Regular";
+    font-size: 15px;
+    font-weight: normal;
 
     display: inline-flex;
     align-items: center;
@@ -88,6 +94,20 @@
     display: flex;
     flex-wrap: wrap;
 }
+.fas {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 0, 0.952);
+    margin-right: 7px;
+
+    transition: all 0.25s linear;
+}
+.-btn:hover .fas {
+    color: rgb(86, 181, 184);
+    color: -webkit-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
+    color: -moz-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
+    color: linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
+}
+
 .adm-profile {
     width: 100%;
     padding: 1rem;
@@ -155,7 +175,10 @@ font-family: "BrixSlab-BlackItalic";
 
 */
 
-
+.chart-title {
+    font-family: "BrixSlab-RegularItalic";
+    font-size: 18px;
+}
 .analythicsChart {
     width: var(--chart-width);
     height: 30vh;
@@ -177,6 +200,7 @@ font-family: "BrixSlab-BlackItalic";
     border-radius: 3px;
 
     position:relative;
+    
 }
 .chart-column::before {
     content: attr(data-value);
@@ -185,6 +209,9 @@ font-family: "BrixSlab-BlackItalic";
     text-align: center;
     color: #ffffff;
 
+    font-family: "BrixSlab-Regular";
+    font-size: 15px;
+   
     position: absolute;
     top: 3px; 
     left: 0;
@@ -195,6 +222,9 @@ font-family: "BrixSlab-BlackItalic";
     width: 100%;
     min-width: 75px;
    
+    font-family: "BrixSlab-Regular";
+    font-size: 13px;
+
     text-align: center;
 
     position: absolute;
