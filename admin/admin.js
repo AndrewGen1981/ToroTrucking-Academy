@@ -18,6 +18,7 @@ const { Tuition } = require('../users/tuition/tuitionModel')
 // PDF
 const pdf = require('../static/pdf/pdf')
 const { redirect } = require('express/lib/response')
+const { Mongoose } = require('mongoose')
 
 
 // @SESSION config
@@ -211,8 +212,6 @@ admRouter.post('/logout', redirectToLogin, (req, res) => {
 admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
     res.render(path.join(__dirname + '/views/__userArea.ejs'), { HTML:  await adminTools.getUsers({}, 100, 0) })
 })
-
-
 
 
 // @USERS/APPLICANTS/STUDENTS profiles form admin
@@ -684,6 +683,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
     function settime(dateString, timeString) {
         if (timeString.length < 6) { timeString += ':00' }
         return new Date(`${dateString}T${timeString}-08:00`)
+        // return new Date(`${dateString}T${timeString}`)
     }
 
     const newClocks = []
@@ -700,7 +700,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 // adding clockIN
                 newClocks.push({
                     date: new Date(clIN),
-                    key: tools.getDatePrefix(new Date(dateString)),
+                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latIN[index],
                     lon: lonIN[index],
                     location: locationIN[index],
@@ -710,7 +710,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 // adding clockOUT
                 newClocks.push({
                     date: new Date(clOUT),
-                    key: tools.getDatePrefix(new Date(dateString)),
+                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latOUT[index],
                     lon: lonOUT[index],
                     location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
@@ -730,7 +730,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 // adding clockIN
                 newClocks.push({
                     date: new Date(clIN),
-                    key: tools.getDatePrefix(new Date(dateString)),
+                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latIN,
                     lon: lonIN,
                     location: locationIN,
@@ -740,7 +740,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 // adding clockOUT
                 newClocks.push({
                     date: new Date(clOUT),
-                    key: tools.getDatePrefix(new Date(dateString)),
+                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latOUT,
                     lon: lonOUT,
                     location: locationOUT != 'none' ? locationOUT : locationIN,

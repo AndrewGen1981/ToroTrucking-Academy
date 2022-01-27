@@ -1,18 +1,14 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css');
+
 /* @GENERAL */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
-    font-family: 'BrixSlab-Light';
-    font-size: 15px;
-    font-weight: normal;
-    
-    color: black;
 }
 
 :root {
-    --header-height: 2.5rem;
+    --header-height: 3rem;
     --titles-row-height: 3.2rem;
     --left-cols-color: #c7c7c7;
     --borders-color: var(--gray60-pacific-cloud);
@@ -138,6 +134,10 @@
     --width: 6rem;
     width: var(--width);
     min-width: var(--width);
+
+    font-family: 'BrixSlab-Light';
+    font-size: 15px;
+    font-weight: normal;
 
     overflow-x: hidden;
     border-right: 1px solid var(--borders-color);
@@ -300,37 +300,35 @@ a.-name {
     align-items: center;
 }
 .-btn {
-    padding: 0;
-    margin: 0 2px;
+    all: unset;
 
-    width: 2rem;
-    height: 1.95rem;
-
-    display: flex;
+    margin: 0 5px;
+    width: 45px;
+    height: 35px;
+    
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
+    font-size: 1.15rem;
+    font-weight: normal;
+    
+    text-decoration: none;
+    
+    color: rgba(255, 255, 255, 0.95);
+    background: transparent;
+    
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+
     cursor: pointer;
-    border: none;
 }
 .-btn:hover {
-    opacity: 0.9;
-    transition: opacity .15s ease-in;
-}
+    color: #fff;
+    border: 2px solid #fff;
 
-.button-ico {
-    width: 1.35rem;
-    height: 1.35rem;
-
-    fill: #785e9f;
-}
-.button-ico:hover {
-    fill: #5324d4;
-    transition: fill .15s ease-in;
-}
-.-bigger {
-    width: 1.85rem;
-    height: 1.85rem;
+    transform: translateY(-1px);
+    transition: all 0.25s linear;
 }
 
 
@@ -352,6 +350,9 @@ a.-name {
     width: 1.35rem;
     height: 1.35rem;
 
+    color: #fff;
+    text-align: center;
+
     background: -webkit-linear-gradient(135deg, #5324d4, #785e9f);
     background: -moz-linear-gradient(135deg, #5324d4, #785e9f);
     background: linear-gradient(135deg, #5324d4, #785e9f);
@@ -361,3 +362,4 @@ a.-name {
 .-hidden {
     display: none;
 }
+

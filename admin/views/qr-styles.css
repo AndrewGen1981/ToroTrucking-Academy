@@ -243,3 +243,71 @@ a.grid-value {
 .-hidden {
     display: none;
 }
+
+.map-marker {
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    fill: rgba(255, 255, 255, 0.932);
+    display: none;
+}
+.map-marker:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 800px) {
+    .qr-main-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        padding: 0 0 15px 0;
+    }
+    .qr-main-type {
+        padding: 5px 0;
+    }
+    .flex-box {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .flex-column {
+        width: 100%;
+    }
+    .flex-column div, .flex-column p {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+
+        padding-bottom: 5px;
+    }
+    .-btn {
+        margin: 0 10px;
+        padding: 10px 15px;
+        width: auto;
+        min-width: unset;
+        border-radius: 30px;
+    }
+    .title {
+        margin: 0;
+
+        padding-right: 0.3rem;
+        min-width: unset;
+
+        border: none;
+        
+    }
+}
+
+@media (max-width: 500px) {
+    .grid-table {
+        grid-template-columns: 0.3fr 0.8fr 0.8fr 0.3fr 1fr;
+    }
+    .-coord {
+        display: none;
+    }
+    .map-marker {
+        display: block;
+    }
+}

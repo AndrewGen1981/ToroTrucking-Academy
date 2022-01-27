@@ -14,12 +14,12 @@
 
     <link rel="stylesheet" href="../../static/css/colors.css">
 
-    <link rel="stylesheet" href="/users/students/student-list.css">
     <link rel="stylesheet" href="/users/students/INs.css">
 
 </head>
 <body>
     
+    <% function printTime24(date) { return new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }) } %>
 
     <div class="ins-list-box">
 
@@ -27,17 +27,28 @@
             <header class="ins-list-header">
                 <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></h2>
                 <nav>
-                    <a class='-btn reload-ins' id='reload-ins' href="/admin/student/">reload</a>
-                    <a class='-btn back-home' href="/admin/profile/">home</a>
+                    <a class='-btn' href="/admin/profile/" title='HOME'>
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class='-btn' href="/admin/student/list" title='Student List'>
+                        <i class="fas fa-address-book"></i>
+                    </a>
+                    <a class='-btn' href="/admin//user-area" title='Users Area'>
+                        <i class="fas fa-users"></i>
+                    </a>
+                    <a class='-btn' id='reload-ins' href="/admin/student/" title='Reload INs'>
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </nav>
             </header>
 
             <div class="student-list-row" id="fixed-headers-row">
-                <div class='field -lastName -header -left-color-group'>Last Name</div>
-                <div class='field -firstName -header -left-color-group'>First Name</div>
-                <div class='field -middleName -header -left-color-group'>Middle</div>
+                <div class='field -name -header -left-color-group'>Student Name</div>
+
                 <div class='field -key -header -left-color-group'>Key</div>
                 <div class='field -TTT -header -left-color-group'>TTT</div>
+
+                <div class="field -presentStatus -header -clock-color-group">Status</div>
                 <div class="field -in -header -clock-color-group">Clock IN</div>
                 <div class="field -out -header -clock-color-group">Clock OUT</div>
 
@@ -54,67 +65,87 @@
                     
                     <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>'>
 
-                        <a href='/admin/user/<%= student.user._id %>' class='field -lastName'><%= student.user.dataCollection.lastName %></a>
-                        <div class='field -firstName'><%= student.user.dataCollection.firstName %></div>
-                        <div class='field -middleName'><%= student.user.dataCollection.middleName %></div>
+                        <% let name = `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName}` %>
+                        <a href='/admin/user/<%= student.user._id %>' class='field -name'><%= name %></a>
+
                         <div class='field -key'><%= student.key %></div>
-                        <div class='field -TTT'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
+                        <div class='field -TTT'><%= Math.trunc(student.TTT) %>h</div>
                         
                         <% if (student.clocks.length % 2 === 0) { %>    <!-- EVEN: last is clock out -->
+
+                            <div class='field -presentStatus'>OUT</div>
                             
                             <% let clockIN = student.clocks[student.clocks.length - 2] %>
                             <% let clockOUT = student.clocks[student.clocks.length - 1] %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    <%= printTime24(clockIN.date) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
+                                <a class='field -clocks -in' target="_blank"><%= printTime24(clockIN.date) %></a>
                             <% } %>
 
 
                             <% if (!isNaN(clockOUT.lat) && !isNaN(clockOUT.lon)) { %>
                                 <a class='field -clocks -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
-                                    <%= new Date(clockOUT.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    <%= printTime24(clockOUT.date) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -out -not-present' target="_blank"><%= new Date(clockOUT.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
+                                <a class='field -clocks -out -not-present' target="_blank"><%= printTime24(clockOUT.date) %></a>
                             <% } %>
 
 
                         <% } else { %>  <!-- ODD: last is clock in -->
 
+                            <div class='field -presentStatus'>IN</div>
+
                             <% let clockIN = student.clocks[student.clocks.length - 1] %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    <%= printTime24(clockIN.date) %>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= new Date(clockIN.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></a>
+                                <a class='field -clocks -in' target="_blank"><%= printTime24(clockIN.date) %></a>
                             <% } %>
 
                             <a class='field -clocks -out' target="_blank">...</a>
                         <% } %>
 
+
                         <!-- Scorings -->
+                        <% let test1Info = 'submit' %>
+                        <% let test2Info = 'submit' %>
+                        <% let test3Info = 'submit' %>
+                        <% let test4Info = 'submit' %>
+
+                        <% if (student.scoring) { %>
+                            <% function getInfo(arr){ return arr.length ? `${arr.length} (${new Date(arr[arr.length-1].created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })})` : 'submit' } %>
+
+                            <% test1Info = getInfo(student.scoring.scoringsInCab) %>
+                            <% test2Info = getInfo(student.scoring.scoringsOutCab) %>
+                            <% test3Info = getInfo(student.scoring.scoringsBacking) %>
+                            <% test4Info = getInfo(student.scoring.scoringsCity) %>
+                        <% } %>
+
                         <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit">Last Take</button>
+                            <button class='-btn-scoring' type="submit"><%= test1Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit">Last Take</button>
+                            <button class='-btn-scoring' type="submit"><%= test2Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit">Last Take</button>
+                            <button class='-btn-scoring' type="submit"><%= test3Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit">Last Take</button>
+                            <button class='-btn-scoring' type="submit"><%= test4Info %></button>
                         </form>
+                        
 
                     </div>  <!-- student-list-row -->
                 <% }) %>

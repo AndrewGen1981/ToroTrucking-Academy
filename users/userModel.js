@@ -98,21 +98,20 @@ const studentSchema = new mongoose.Schema({
 
 
 
-
 // @TOOLS SECTION
 function getDatePrefix(date) {
-    //  returns date-prefix
-    const timezoneOffset = (12*60 - date.getTimezoneOffset()) * 60000
+    //  returns date-prefix due to LA time zone
+    // used for clock INs & OUTs
+    const timezoneOffset = (12 - 8) * 3600000       //  8h diff with LA time zone
     const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00")) + timezoneOffset
     return Math.round(1 + diffTime / 86400000)
 }
-function getDatePrefixCeil(date) {
-    //  returns date-prefix
-    const diffTime = Math.abs( new Date(date) - new Date("01-01-1900") )
-    return Math.ceil(1 + diffTime / 86400000)
+function getDatePrefixZeroZone(date) {
+    //  returns date-prefix for clock update operations
+    // ignore time zones, because -08:00 is hardcoded at server side
+    const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00"))
+    return Math.round(1 + diffTime / 86400000)
 }
-
-
 
 function sortClocksArray(clocksArray) {
     return clocksArray.sort((a, b) => {
@@ -130,7 +129,7 @@ function sortClocksArray(clocksArray) {
 function getTodayClocksInfo(clocks) {
     // returns info object about last Clock
 
-    const todDatePrefix = getDatePrefix(new Date())     // getting today's date-prefix
+    const todDatePrefix = getDatePrefix(new Date())     // getting today's date-prefix in LA time zone
     
     const todayClocks = sortClocksArray( clocks.filter(clock => clock.key == todDatePrefix) )
     if (todayClocks.length === 0) { return false }
@@ -255,7 +254,7 @@ module.exports = {
     StudentCONFIG: mongoose.model('StudentCONFIG', configSchema),
     tools: {
         getDatePrefix,
-        getDatePrefixCeil,
+        getDatePrefixZeroZone,
         getTodayClocksInfo,
         reCalculateTTT
     }

@@ -48,7 +48,6 @@
                         <div class='flex-column'>
                             
                             <p><span class="title">visiting</span><span class="value"><%= student.user.agreement.visiting %></span></p>
-                            <p><span class="title">program</span><span class="value"><%= student.user.agreement.program %></span></p>
                             <p><span class="title">class</span><span class="value"><%= student.user.agreement.class %></span></p>
 
                             <% let form = student.user.dataCollection ? '+' : '-' %>
@@ -82,13 +81,19 @@
                             <span class='grid-value -center'>[<%= new Date(clock.date).toLocaleTimeString() %>]</span>
 
                             <% if (!isNaN(clock.lat) && !isNaN(clock.lon)) { %>
-                                <a class='grid-value -center' href="http://www.google.com/maps/place/<%= clock.lat %>,<%= clock.lon %>" target="_blank">
+                                <a class='grid-value -center -coord' href="http://www.google.com/maps/place/<%= clock.lat %>,<%= clock.lon %>" target="_blank">
                                     <%= Math.round(clock.lat * 10000) / 10000 %>,
                                     <%= Math.round(clock.lon * 10000) / 10000 %>
                                 </a>
                             <% } else { %>
-                                <span class='grid-value -center'>LAT: <%= clock.lat %>, LON: <%= clock.lon %></span>
+                                <span class='grid-value -center -coord'>LAT: <%= clock.lat %>, LON: <%= clock.lon %></span>
                             <% } %>
+
+                            <a class='grid-value -center' href="http://www.google.com/maps/place/<%= clock.lat %>,<%= clock.lon %>" target="_blank">
+                                <svg class="map-marker" viewBox="0 0 384 512">
+                                    <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
+                                </svg>
+                            </a>
 
                             <span class='grid-value -right'>-location <%= clock.location %></span>
                         </div>

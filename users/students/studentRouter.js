@@ -52,11 +52,15 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
     const studentPopulated = ['key', 'TTT', 'clocks']
     const userPopulated = ['dataCollection']
     const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
+    const scoringPopulated = ['scoringsInCab', 'scoringsOutCab', 'scoringsBacking', 'scoringsCity']
 
     const students = await Student.find({ status: 'unblock' }).select(studentPopulated).populate([
         {
             path: 'user', select: userPopulated,
             populate: { path: 'dataCollection', select: dataCollPopulated }
+        },
+        {
+            path: 'scoring', select: scoringPopulated
         }
     ])
 
@@ -70,7 +74,6 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
             inStudents.push(student)
         }
     })
-
 
     res.render(path.join(__dirname+'/INs.ejs'), { inStudents })
 })
