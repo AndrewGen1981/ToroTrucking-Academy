@@ -155,9 +155,10 @@
 .-firstName, .-lastName, .-middleName {
     --width: var(--name-fixed-col-width);
     background-color: var(--left-cols-color);
+    font-style: italic;
 }
-a.-name {
-    color:rgb(15, 15, 138)
+a.-lastName {
+    color:#333;
 }
 .-key {
     --width: var(--key-fixed-col-width);
