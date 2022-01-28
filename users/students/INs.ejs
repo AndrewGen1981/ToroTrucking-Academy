@@ -46,6 +46,8 @@
                 <div class='field -name -header -left-color-group'>Student Name</div>
 
                 <div class='field -key -header -left-color-group'>Key</div>
+                <div class='field -location -header -left-color-group'>Location</div>
+
                 <div class='field -TTT -header -left-color-group'>TTT</div>
 
                 <div class="field -presentStatus -header -clock-color-group">Status</div>
@@ -69,6 +71,7 @@
                         <a href='/admin/user/<%= student.user._id %>' class='field -name'><%= name %></a>
 
                         <div class='field -key'><%= student.key %></div>
+                        <div class='field -location'><%= student.location %></div>
                         <div class='field -TTT'><%= Math.trunc(student.TTT) %>h</div>
                         
                         <% if (student.clocks.length % 2 === 0) { %>    <!-- EVEN: last is clock out -->
@@ -131,19 +134,19 @@
 
                         <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit"><%= test1Info %></button>
+                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test1Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit"><%= test2Info %></button>
+                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test2Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit"><%= test3Info %></button>
+                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test3Info %></button>
                         </form>
                         <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
                             <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit"><%= test4Info %></button>
+                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test4Info %></button>
                         </form>
                         
 
@@ -162,18 +165,38 @@
 
     <script>
         
-        // @ENTERY POINT
         // selecting not present already
-        const allOUTs = document.querySelectorAll('.-out')
-        if (allOUTs) {
-            for (let i=allOUTs.length-1; i > -1; i--) {     // backwards fastest
-                if (allOUTs[i].classList.contains('-not-present')) {
-                    allOUTs[i].parentElement.classList.add('-not-present')
-                } else {
-                    allOUTs[i].parentElement.classList.remove('-not-present')
+        function disableAllWhoOut() {
+            let rowElement, testButtons
+            const allOUTs = document.querySelectorAll('.-out')
+
+            if (allOUTs) {
+                for (let i=allOUTs.length-1; i > -1; i--) {     // backwards fastest
+                    rowElement = allOUTs[i].parentElement
+                    testButtons = rowElement.querySelectorAll(`[data-test=${rowElement.id}]`)
+
+                    if (allOUTs[i].classList.contains('-not-present')) {
+                        rowElement.classList.add('-not-present')
+                        testButtons.forEach(testBtn => {    // student out, make scoring's buttons unclickable
+                            testBtn.type = 'button'
+                            testBtn.classList.add('-not-active')
+                            if (testBtn.textContent === 'submit') { testBtn.textContent = 'NO'}
+                        })
+                    } else {
+                        rowElement.classList.remove('-not-present')
+                        testButtons.forEach(testBtn => {    // student in, restore scoring's buttons functionality
+                            testBtn.type = 'submit'
+                            testBtn.classList.remove('-not-active')
+                            if (testBtn.textContent === 'NO') { testBtn.textContent = 'submit'}
+                        })
+                    }
                 }
             }
         }
+
+
+        // @ENTERY POINT
+        disableAllWhoOut()
 
     </script>
 
@@ -205,38 +228,41 @@
                     if (updatedRow != null) {
                         const fields = student.updateDescription.updatedFields
                         for (const [key, value] of Object.entries(fields)) {
-                            let el = updatedRow.getElementsByClassName(`-${key}`)[0]
+                            let el = updatedRow.querySelector(`.-${key}`)
                             if (el) {
                                 switch (key) {
                                     case 'TTT':
                                         el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
                                     break
                                     case 'clocks':
-                                        let elIN = updatedRow.getElementsByClassName('-in')[0]
-                                        let elOUT = updatedRow.getElementsByClassName('-out')[0]
+                                        let elIN = updatedRow.querySelector('.-in')
+                                        let elOUT = updatedRow.querySelector('.-out')
 
                                         let lastClock = value[value.length - 1]
                                         let todaysClocks = value.filter(item => { return item.key === lastClock.key })
-                                        console.log(todaysClocks)
 
                                         if (todaysClocks.length % 2 === 0) {    //  EVEN: last is clock out
                                             if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
                                                 elOUT.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
                                             } else {
-                                                elOUT.href = ''
+                                                elOUT.removeAttribute("href")
                                             }
-                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })
-                                            updatedRow.classList.add('-not-present')
+                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
+                                            elOUT.classList.add('-not-present')
                                         } else {
                                             if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
                                                 elIN.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
                                             } else {
-                                                elIN.href = ''
+                                                elIN.removeAttribute("href")
                                             }
-                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })
-                                            updatedRow.classList.remove('-not-present')
-                                            elOUT.textContent ='...'
+                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
+                                            elOUT.textContent ='...'    // if returned back
+                                            elOUT.removeAttribute("href")
+                                            elOUT.classList.remove('-not-present')
                                         }
+
+                                        disableAllWhoOut()
+
                                     break
                                     default: el.textContent = value
                                 }

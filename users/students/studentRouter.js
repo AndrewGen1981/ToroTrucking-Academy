@@ -49,7 +49,7 @@ function ifCanReadOrInstructor (req, res, next) {
 // INs route is a root one
 studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
     // auth is good
-    const studentPopulated = ['key', 'TTT', 'clocks']
+    const studentPopulated = ['key', 'TTT', 'clocks', 'location']
     const userPopulated = ['dataCollection']
     const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
     const scoringPopulated = ['scoringsInCab', 'scoringsOutCab', 'scoringsBacking', 'scoringsCity']
@@ -62,7 +62,7 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
         {
             path: 'scoring', select: scoringPopulated
         }
-    ])
+    ]).sort({"location" : 1, "key": 1})
 
     let inStudents = []
     const today = tools.getDatePrefix(new Date()).toString()
@@ -85,22 +85,23 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
     // auth is good
     const studentPopulated = ['key', 'email', 'TTT', 'created', 'status', 'location']
     const userPopulated = ['token']
-
     const dataCollPopulated = [
         'firstName', 'lastName', 'middleName', 'street', 'city', 'state', 'zip', 'phone', 'DOB', 'SSN'
     ]
-
     const agrPopulated = [
         'program', 'class', 'transmission', 'visiting', 'tuitionCost', 'regisrFee', 'supplyFee', 'otherFee', 
         'payment', 'thirdPartyList', 'schoolSignDate', 'schoolSignRep', 'updatedAdmin', 'updatedDate'
     ]
-
     const tuitionPopulated = ['isAllowed', 'avLessonsRate']
+    const scoringPopulated = [
+        'isAllowed', 'scoringsInCab', 'scoringsOutCab', 'scoringsBacking', 'scoringsCity'
+    ]
 
     // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
     const adminProfile = admin.findAdminById(req.session.userId)
     let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
 
+    // query to Mongo DB
     const students = await Student.find(filter).select(studentPopulated).populate([
         {
             path: 'user', select: userPopulated,
@@ -112,6 +113,9 @@ studentRouter.get('/list', ifCanRead, async(req, res) => {
         },
         {
             path: 'tuition', select: tuitionPopulated
+        },
+        {
+            path: 'scoring', select: scoringPopulated
         }
     ])
 

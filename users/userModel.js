@@ -110,8 +110,9 @@ function getDatePrefixZeroZone(date) {
     //  returns date-prefix for clock update operations
     // ignore time zones, because -08:00 is hardcoded at server side
     const diffTime = Math.abs(date - new Date("1900-01-01T00:00:00+00:00"))
-    return Math.round(1 + diffTime / 86400000)
+    return Math.round(2 + diffTime / 86400000)
 }
+
 
 function sortClocksArray(clocksArray) {
     return clocksArray.sort((a, b) => {
@@ -123,7 +124,6 @@ function sortClocksArray(clocksArray) {
         return 0; // impossble variant, but has to be mentioned here if minTime will be set=0, default 5 mins
     })
 }
-
 
 
 function getTodayClocksInfo(clocks) {

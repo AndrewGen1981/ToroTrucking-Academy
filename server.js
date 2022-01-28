@@ -68,6 +68,8 @@ const { dataCollectionForm } = require('./users/applicants/form1Model')
 const { applicationForm } = require('./users/applicants/form2Model')
 const { agreementForm } = require('./users/applicants/form3Model')
 const { Tuition } = require('./users/tuition/tuitionModel')
+const { StudentScoring } = require('./admin/instructors/scoringModel')
+
 // turning on USER changes watch with mongoose
 User.watch().on('change', data => {
     io.emit('users-collection-update', data)
@@ -87,4 +89,6 @@ agreementForm.watch().on('change', data => {
 Tuition.watch().on('change', data => {
     io.emit('tuition-update', data)
 })
-
+StudentScoring.watch().on('change', data => {
+    io.emit('scoring-update', data)
+})

@@ -694,12 +694,12 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
         clockDate.map((dateString, index) => {
             clIN = settime(dateString, clockIN[index])
             clOUT = settime(dateString, clockOUT[index])
-            
+          
             if ((clOUT - clIN) > 0) {    // skip empty
                 TTT += clOUT - clIN
                 // adding clockIN
                 newClocks.push({
-                    date: new Date(clIN),
+                    date: clIN,
                     key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latIN[index],
                     lon: lonIN[index],
@@ -709,7 +709,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 })
                 // adding clockOUT
                 newClocks.push({
-                    date: new Date(clOUT),
+                    date: clOUT,
                     key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latOUT[index],
                     lon: lonOUT[index],
@@ -729,7 +729,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 TTT += clOUT - clIN
                 // adding clockIN
                 newClocks.push({
-                    date: new Date(clIN),
+                    date: clIN,
                     key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latIN,
                     lon: lonIN,
@@ -739,7 +739,7 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
                 })
                 // adding clockOUT
                 newClocks.push({
-                    date: new Date(clOUT),
+                    date: clOUT,
                     key: tools.getDatePrefixZeroZone(new Date(dateString)),
                     lat: latOUT,
                     lon: lonOUT,

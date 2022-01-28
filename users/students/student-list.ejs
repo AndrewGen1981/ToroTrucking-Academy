@@ -109,13 +109,23 @@
                     <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
                     <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
 
-                    <div class='field -tuition -header -learn-color-group'>Learning Center</div>
+                    <div class='field -tuition -header -learn-color-group'>
+                        Learning
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+
+                    <div class='field -isAllowed -header -scoring-color-group'>Can Do Scorings?</div>
+                    <div class='field -scoring -header -scoring-color-group'>IN-CAB Scoring</div>
+                    <div class='field -scoring -header -scoring-color-group'>OUT-CAB Scoring</div>
+                    <div class='field -scoring -header -scoring-color-group'>Backing Scoring</div>
+                    <div class='field -scoring -header -scoring-color-group'>City Scoring</div>
+
                 </div>  <!-- student-list-row -->
 
                 <% students.map((student, index) => { %>    <!-- main showing loop -->
 
                     <!-- dataset for all db changes (student, dataCol, agr) -->
-                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>' data-tuition='<%= student.tuition._id %>'>
+                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>' data-agreement='<%= student.user.agreement._id %>' data-tuition='<%= student.tuition._id %>' data-scoring='<%= student.scoring ? student.scoring._id : "n/a" %>'>
 
                         <a href='/admin/user/<%= student.user._id %>' class='field -lastName -fixed1'><%= student.user.dataCollection.lastName %></a>
                         <div class='field -firstName -fixed2'><%= student.user.dataCollection.firstName %></div>
@@ -190,11 +200,51 @@
                             <div class='field -tuition'>no data</div>
                         <% } else { %>
                             <% if(!student.tuition.isAllowed) { %>
-                                <div class='field -tuition'>disabled</div>
+                                <div class='field -tuition -tuitionDisabled'>disabled</div>
                             <% } else { %>
-                                <div class='field -tuition'><%= Math.round(student.tuition.avLessonsRate * 1000) / 10 %>%</div>
+                                <% let rateClass = student.tuition.avLessonsRate > 0.95 ? '-tuitionDone' : student.tuition.avLessonsRate > 0.55 ? '-tuitionHalf' : '-tuitionStarted' %>
+                                <div class='field -tuition <%= rateClass %>'><%= Math.round(student.tuition.avLessonsRate * 1000) / 10 %>%</div>
                             <% } %>
                         <% } %>
+
+                        <!-- Scoring -->
+                        <% if(student.scoring) { %>
+
+                            <% if(student.scoring.isAllowed) { %>
+                                <div class='field -isAllowed'>Yes</div>
+                            <% } else { %>
+                                <div class='field -isAllowed'>No</div>
+                            <% } %>
+
+                            <% let scorArr = [student.scoring.scoringsInCab, student.scoring.scoringsOutCab, student.scoring.scoringsBacking, student.scoring.scoringsCity] %>
+                            <!-- scoring type classes here not for styling only BUT for socket.io work -->
+                            <% let scorClasses = ['-scoringsInCab', '-scoringsOutCab', '-scoringsBacking', '-scoringsCity'] %>
+                            
+                            <% scorArr.map((scor, index) => { %>
+                                <% if(scor.length) { %>
+                                    
+                                    <% let lastScor = scor[scor.length - 1] %>
+                                    <% let date = new Date(lastScor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    <% let msg = lastScor.comment ? `[${date}] ${lastScor.instructor} says: ${lastScor.comment}` : `[${date}] ${lastScor.instructor}` %>
+                                    <% let passedClass = lastScor.result ? '-scoringPassed' : '-scoringFailed' %>
+                                    <% let text = lastScor.result ? 'passed' : 'failed' %>
+                                    
+                                    <div class='field -scoring <%= scorClasses[index] %> <%= passedClass %>' title='<%= msg %>'><%= text %></div>
+
+                                <% } else { %>
+                                    <div class='field -scoring <%= scorClasses[index] %>'></div>
+                                <% } %>
+                            <% }) %>
+
+                        <% } else { %>
+                            <div class='field -isAllowed'></div>
+                            <!-- scoring type classes here not for styling only BUT for socket.io work -->
+                            <div class='field -scoring -scoringsInCab'></div>
+                            <div class='field -scoring -scoringsOutCab'></div>
+                            <div class='field -scoring -scoringsBacking'></div>
+                            <div class='field -scoring -scoringsCity'></div>
+                        <% } %>
+
 
                     </div>  <!-- student-list-row -->
                 <% }) %>
@@ -286,10 +336,12 @@
 
         // indicator to react when db updates
         const lighthouse = document.getElementsByClassName('lighthouse')[0]
-        function indicateChanges() {
-            lighthouse.classList.add('-jump')
+        
+        function indicateChanges(animation) {
+            const tyOfAnimation = animation ? animation : '-jump'
+            lighthouse.classList.add(tyOfAnimation)
             setTimeout(()=>{
-                lighthouse.classList.remove('-jump')
+                lighthouse.classList.remove(tyOfAnimation)
             }, 2500)
         }
 
@@ -401,7 +453,7 @@
                     if (updatedRow != null) {
                         const fields = lesson.updateDescription.updatedFields
                         if (fields.avLessonsRate) {     // fires only when avLessonsRate is changed
-                            indicateChanges()   //  show reaction on changes
+                            indicateChanges('-flip')   //  show reaction on changes
                             const el = updatedRow.getElementsByClassName('-tuition')[0]
                             if (el) { el.textContent = `${Math.round(fields.avLessonsRate * 1000) / 10}%` }
                         }
@@ -409,6 +461,58 @@
                 }   // operation is update
             }   // if student is defined
         })  // socket.on('students-update')
+
+
+        // @WHEN scoring changed
+        socket.on('scoring-update', data => {
+            if (data) {
+                const id = data.documentKey._id
+                if (data.operationType === "update") {
+                    const updatedRow = document.querySelector(`[data-scoring='${id}']`)
+                    if (updatedRow != null) {
+                        const fields = data.updateDescription.updatedFields
+                        indicateChanges('-roll')   //  show reaction on changes
+                        for (const [key, value] of Object.entries(fields)) {
+                            let el = updatedRow.querySelector(`.-${key}`)
+                            if (el) {
+                                switch (key) {
+                                    case 'isAllowed':
+                                        el.textContent = value ? "Yes" : "No"
+                                    break
+
+                                    case 'scoringsInCab':
+                                    case 'scoringsOutCab':
+                                    case 'scoringsBacking':
+                                    case 'scoringsCity':
+                                        // arrays of scorings
+                                        if (!value.length) {    // scoring is deleted
+                                            el.textContent = ''
+                                            el.title = 'just deleted'
+                                            el.classList.remove('-scoringPassed')
+                                            el.classList.remove('-scoringFailed')
+                                        } else {    // added or updated
+                                            let lastScor = value[value.length - 1]
+                                            let date = new Date(lastScor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
+                                            el.title = lastScor.comment ? `[${date}] ${lastScor.instructor} says: ${lastScor.comment}` : `[${date}] ${lastScor.instructor}`
+                                            
+                                            if (lastScor.result) {
+                                                el.textContent = 'passed'
+                                                el.classList.add('-scoringPassed')
+                                                el.classList.remove('-scoringFailed')
+                                            } else {
+                                                el.textContent = 'failed'
+                                                el.classList.add('-scoringFailed')
+                                                el.classList.remove('-scoringPassed')
+                                            }
+                                        }
+                                    break
+                                }
+                            }
+                        }
+                    }   // updatedRow != null
+                }   // operation is update
+            }   // if data is defined
+        })  // socket.on('scoring-update')
 
     </script>
 

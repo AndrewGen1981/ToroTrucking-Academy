@@ -94,18 +94,17 @@
     display: flex;
     flex-wrap: wrap;
 }
+
 .fas {
-    font-size: 1.8rem;
-    color: rgba(255, 255, 0, 0.952);
+    font-size: 1.5rem;
+    color: #ffff00f3;
     margin-right: 7px;
 
     transition: all 0.25s linear;
 }
-.-btn:hover .fas {
-    color: rgb(86, 181, 184);
-    color: -webkit-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
-    color: -moz-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
-    color: linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
+.-btn:hover>.fas {
+    color: #ffd900;
+    transform: translateY(-1px);
 }
 
 .adm-profile {
@@ -118,6 +117,10 @@
     font-size: 0.9rem;
     line-height: 2rem;
     color: #f2f7fb;
+}
+.adm-prop {
+    padding-left: 5px;
+    color: wheat;
 }
 .-btn {
     width: 100%;
@@ -145,7 +148,12 @@
     width: 100%;
 }
 .-log-out {
-    text-transform: uppercase;
+    width: 100%;
+
+    font-family: 'WindSong', cursive;
+    font-size: 2rem;
+    letter-spacing: 1px;
+
     background-color: #1d2531;
 }
 

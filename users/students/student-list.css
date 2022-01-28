@@ -39,8 +39,18 @@
     color: white !important;
 }
 .-learn-color-group {
-    background: #1d9947;
+    background: #74c553;
+}
+.-scoring-color-group {
+    background: #505050 !important;
     color: white !important;
+}
+
+
+/* FA elements */
+.-header>.fas {
+    font-size: 1.35rem;
+    color: yellow;
 }
 
 .student-list-box {
@@ -286,9 +296,40 @@ a.-name {
     text-align: center;
 }
 
+/* Tuition States */
 .-tuition {
-    --width: 6rem;
+    --width: 5rem;
     text-align: center;
+}
+.-tuitionDisabled {
+    background-color: #f57546de;
+}
+.-tuitionDone {
+    background-color: #91c57d;
+    color: white;
+}
+.-tuitionHalf {
+    background-color: #fcfc7e;
+}
+.-tuitionStarted {
+    background-color: #c0c0c09d;
+}
+
+/* Scoring States */
+.-scoring, .-isAllowed {
+    --width: 4.5rem;
+    text-align: center;
+    cursor:default;
+}
+.-scoringPassed {
+    font-style: italic;
+    color: white;
+    background-color: #91c57d;
+}
+.-scoringFailed {
+    font-style: italic;
+    color: white;
+    background-color: #f57546de;
 }
 
 
@@ -345,6 +386,26 @@ a.-name {
     -webkit-animation: lighthouse-work 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
     animation: lighthouse-work 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
 }
+
+
+@keyframes rollIn {
+    0% { opacity: 0; transform: translateX(-100%) rotate(-120deg); }
+    100% { opacity: 1; transform: translateX(0px) rotate(0deg); } 
+}
+.-roll {
+    -webkit-animation: rollIn 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
+    animation: rollIn 1s cubic-bezier(0.445, 0.050, 0.550, 0.950) 2 alternate ;
+}
+
+
+@keyframes flip {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+.-flip{
+    animation: flip 1s linear; 
+}
+
 .lighthouse {
     margin: 0 5px 0 2px;
     width: 1.35rem;
