@@ -10,53 +10,46 @@
 
     color: var(--blue-slate)
 }
-
 :root {
     --max-content-width: 1650px;
-
     --color-calm: var(--blue-slate);
     --color-hover: var(--orange80-high-desert);
 }
 
 .main-box {
-    --bk-color1: white;
-    --bk-color2: var(--blue15-slate);
-    
     width: 100%;
     padding: 1rem 0;
-
-    background: -webkit-linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
-    background: -moz-linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
-    background: linear-gradient(45deg, var(--bk-color1), var(--bk-color2));
-    background-color: var(--bk-color1);
 }
-
-.main-info-box {
-    width: 90%;
-    margin: 0 auto;
-    display: block;
-}
-
-.head-name-info {
+.user-top-info-box {
     width: 100%;
-    background-color: var(--blue-slate);
-    position: relative;
+    min-height: 120px;
+
+    background: #333;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    text-align: center;
 }
-.head-name-info::after {
-    content: "";
-    
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 30%;
-
-    background-color: var(--blue-slate);
-    mix-blend-mode:overlay;
-
-    border-radius: 0 0 100% 0;
-
-    position: absolute;
-    z-index: 1;
+@media (min-width: 1535px) {
+    .user-top-info-box {
+        background-image: url('/static/images/pages/for-student-profile/watercolor_1920.jpg');
+    }
+}
+@media (max-width: 1535px) {
+    .user-top-info-box {
+        background-image: url('/static/images/pages/for-student-profile/watercolor_1535.jpg');
+    }
+}
+@media (max-width: 1150px) {
+    .user-top-info-box {
+        background-image: url('/static/images/pages/for-student-profile/watercolor_1150.jpg');
+    }
+}
+@media (max-width: 768px) {
+    .user-top-info-box {
+        background-image: url('/static/images/pages/for-student-profile/watercolor_768.jpg');
+    }
 }
 
 .student-full-name {
@@ -69,10 +62,10 @@
 
     text-shadow: 0px -1px 2px var(--blue-slate);
 
-    color: white; 
+    color: #fff; 
 }
 .student-address {
-    font-family: "BrixSlab-Light";
+    font-family: "BrixSlab-Regular";
     font-size: 1.35rem;
     text-align: center;
     text-transform: capitalize;
@@ -82,32 +75,33 @@
     color: white;
 }
 
-
-.head-user-info {
-    width: 100%;
-    padding: 0.3rem 0;
-
-    background-color: var(--blue-slate);
-
-    border-radius: 0 0 2rem 2rem;
-    text-align: center;
-}
-
 .user-nick-name, .user-email, .email-verify {
     font-family: "BrixSlab-Light";
     font-size: 1.15rem;
     color: white;
 }
+.user-nick-name {
+    color: #333;
+    font-style: italic;
+}
+.user-nick-name span {
+    color: #333;
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.65rem;
+    padding: 0 3px;
+}
 .user-email {
-    color: var(--sand-coastal);
+    
+    font-style: italic;
 }
 .-trusted {
+    font-family: "BrixSlab-Regular";
     color: lightgreen;
 }
 .-unsafe {
+    font-family: "BrixSlab-Regular";
     color: lightcoral;
 }
-
 .user-profile-created, .user-last-session {
     font-family: "BrixSlab-ExtraLightItalic";
     line-height: 1.75rem;
@@ -115,13 +109,40 @@
 }
 
 
+/* @MENU */
+menu {
+    width: 100%;
+   
+    margin: 0 auto;
+    padding: 3px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+menu span, menu a {
+    margin: 0 5px;
+}
+.-admin-menu-btn:hover {
+    -webkit-box-shadow: 0px 0px 10px 3px rgb(227 200 245 / 61%) !important;
+    -moz-box-shadow: 0px 0px 10px 3px rgb(227 200 245 / 61%) !important;
+    box-shadow: 0px 0px 10px 3px rgb(227 200 245 / 61%) !important;
+}
+
+
+
 /* NAVBAR */
 .nav-menu {
     width: 90%;
-    margin: 1rem auto;
+    margin: 0 auto;
+    
+    position: sticky;
+    top: 0;
+    
+    background-color: rgba(255, 255, 255, 0.95);
+    border-top: 2px solid #fad465;
 
-    background-color: var(--orange-high-desert);
-    border-radius: 1.5rem;
+    z-index: 10;
 }
 .nav-menu-box {
     max-width: var(--max-content-width);
@@ -134,93 +155,58 @@
     flex-wrap: nowrap;
 }
 .block-title {
-    min-width: 150px;
-    font-size: 1.35rem;
-    line-height: 2;
+    min-width: 25%;
+    line-height: 3rem;
+
+    font-family: 'WindSong', cursive;
+    font-size: 1.4rem;
     text-align: center;
 
-    color: var(--black-worn);
+    color: gray;
 
     cursor: pointer;
 }
-.block-title:hover:not(.-nav-item-active) {
-    color: white;
-    background-color: var(--blue80-slate);
 
-    transition: color 0.2s ease-in, background-color 0.2s ease-in
+@keyframes fill-color {
+    0% {
+        opacity: 0;
+        transform: translateX(-5%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+        background-color: var(--blue80-slate);
+    }
+}
+
+.block-title:hover:not(.-nav-item-active) {
+    color: wheat;
+
+    animation: fill-color 0.5s linear;
+    animation-delay: 0.2s;
+
+    background-color: var(--blue80-slate);
 }
 .-nav-item-active {
-    color: white;
+    color: #fad465;
     background-color: var(--blue-slate);
-}
-
-/* @MENU */
-menu {
-    width: 90%;
-    margin: 0 auto 0.5rem auto;
-
-    display: flex;
-    justify-content: flex-end;
-}
-menu span, menu a {
-    margin: 0 5px;
-}
-.-inactive {
-    border-bottom: 2px solid lightgrey;
-}
-.-active {
-    border-bottom: 2px solid lightgreen;
-}
-
-.ico {
-    
-    width: 40px;
-    height: 40px;
-
-    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-
-    background-color: #eeeeee;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.ico:hover {
-    transform: scale(1.035);
-    transition: transform 0.2s linear;
-}
-.-block {
-    fill:salmon;
-}
-.-unblock {
-    fill:rgb(77, 196, 48);
-}
-.-archivate {
-    fill:rgb(58, 58, 58);
-}
-.-delete {
-    fill:rgb(196, 48, 48);
-}
-svg.-active {
-    fill:rgba(34, 60, 80, 0.2);
-    opacity: 0.75;
-}
-
-.-sys {
-    background-color: #333;
-    fill: white;
-    border-radius: 100%;
 }
 
 
 /* TOGGLER BODY */
 .block-box {
+    --col1:#fff;
+    --col2:var(--sand15-coastal);
+
     width: 90%;
     min-height: 78vh;
     margin: 0 auto;
 
-    background-color: var(--sand15-coastal);
-    border-radius: 1rem 1rem 0 0;
+    background-color: var(--col2);
+
+    background: -webkit-linear-gradient(180deg, var(--col1), var(--col2));
+    background: -moz-linear-gradient(180deg, var(--col1), var(--col2));
+    background: linear-gradient(180deg, var(--col1), var(--col2));
 
     position: relative;
     z-index: 1;
@@ -307,7 +293,9 @@ svg.-active {
     min-width: 100px;
     font-family: "BrixSlab-Light";
 }
-.field-warning, .field-accomplished {
+.field-warning,
+.field-accomplished,
+.field-yellow {
     min-width: 100px;
     
     font-family: "BrixSlab-LightItalic";
@@ -317,6 +305,9 @@ svg.-active {
 }
 .field-accomplished {
     color: var(--good-done1)
+}
+.field-yellow {
+    color: rgb(205, 156, 50);
 }
 
 .-orange {
@@ -498,6 +489,110 @@ svg.-active {
     margin-right: 2rem;
 }
 
+
+.student-info-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap: 5px;
+    margin-top: 5px !important;
+}
+.student-info-table * {
+    font-size: 1.067rem;
+
+}
+
+.location-input-box {
+    max-width: 150px;
+    border: 1px solid lightgray;
+    background: transparent;
+    outline: none;
+}
+.-btn-type2 {
+    --col: var(--orange-high-desert);
+    
+    width: 150px;
+    height: 100%;
+
+    display: inline-flex;
+
+    text-decoration: none;
+    text-transform: uppercase;
+    color: var(--col);
+
+    font-family: "BrixSlab-LightItalic";
+    font-size: 0.85rem;
+
+    align-items: center;
+    justify-content: center;
+    justify-self: right;
+
+    background: transparent;
+    border: 2px solid var(--col);
+    border-radius: 1rem;
+
+    cursor: pointer;
+}
+.-btn-type2:hover {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+
+/* Details sections */
+details {
+    background-color: rgba(51, 51, 51, 0.075);
+    
+    margin-top: 5px !important;
+    margin-bottom: 10px !important;
+    
+    padding: 5px;
+    border-radius: 3px;
+}
+summary {
+    cursor: pointer;
+}
+.details-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.65rem;
+    text-transform: capitalize;
+}
+.details-ico {
+    margin-right: 5px;
+    height: 1.2rem;
+    fill: var(--blue60-slate);
+}
+
+/* Student Data Details */
+.learning-table {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr 1fr 1fr 1fr;
+}
+.-table-header {
+    padding: 5px 0;
+    background-color: rgba(51, 51, 51, 0.075);
+    font-weight: bold;
+}
+.-cell-center {
+    text-align: center;
+}
+.-cell-right {
+    text-align: right;
+}
+.-cell-done {
+    color:rgb(77, 196, 48);
+    cursor: pointer;
+}
+
+/* Student Clock Details */
+.clock-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+/* Student Scoring Details */
+.scoring-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
 
 /* 
 @BRIX font family

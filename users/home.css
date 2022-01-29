@@ -379,7 +379,6 @@ header::after {
 }
 
 
-
 /* Clocks Table */
 .clocks-table {
     margin: 1rem 0;
@@ -410,7 +409,36 @@ header::after {
     background-color: var(--hgl-color);
 }
 
-.-header {
+
+/* Scoring Table */
+.scoring-table {
+    margin: 1rem 0;
+
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr 1fr;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 3px;
+
+    overflow: hidden;
+}
+.scoring-table-cell {
+    --hgl-color: #f7f7f7;
+
+    padding: 0.2rem 0;
+    text-align: center;
+}
+.scoring-table-cell:not(.-scoring-header):nth-child(10n+1),
+.scoring-table-cell:not(.-scoring-header):nth-child(10n+2),
+.scoring-table-cell:not(.-scoring-header):nth-child(10n+3),
+.scoring-table-cell:not(.-scoring-header):nth-child(10n+4),
+.scoring-table-cell:not(.-scoring-header):nth-child(10n+5) {
+    background-color: var(--hgl-color);
+}
+
+
+.-header, .-scoring-header {
     padding: 0.25rem 0;
 
     font-size: 0.83rem;
@@ -420,11 +448,26 @@ header::after {
     color: #ffffff;
     border-bottom: 1px solid #dddddd;
 }
+.-scoring-header {
+    background-color: var(--blue-slate);
+}
+
 .-info1 {
     color: #94a5bb;
 }
 .-orange {
     color: #ef5a29;
+}
+
+.-passed {
+    color: var(--good-done1);
+    font-style: italic;
+    text-transform: capitalize;
+}
+.-failed {
+    color: var(--orange-high-desert);
+    font-style: italic;
+    text-transform: capitalize;
 }
 
 

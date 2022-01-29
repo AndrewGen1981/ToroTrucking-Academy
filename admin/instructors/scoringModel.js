@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 const studentScoringSchema = new mongoose.Schema ({
-
+    created: { type: Date, default: new Date() },
+    
     key: { type: Number, required: true },
     email: { type: String, lowercase: true, required: true },
     student_id_string: { type: String, default: 'not assigned' },       // Student._id will be here, populate will not work - to make modules Student & Tuition separate

@@ -136,6 +136,9 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
                 },
                 {
                     path: 'tuition', select: ["created", "isAllowed", "avLessonsRate", "lessons"]
+                },
+                {
+                    path: 'scoring'
                 }
             ])
             
@@ -151,7 +154,9 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
 
                     verTTT: TTT / (1000 * 60 *60),
                     verClocks: studentClocks,
-                    visiting: student.user.agreement.visiting
+                    visiting: student.user.agreement.visiting,
+
+                    scorings: student.scoring
                 })
                             
             }   //  type is determined AND clocks are present

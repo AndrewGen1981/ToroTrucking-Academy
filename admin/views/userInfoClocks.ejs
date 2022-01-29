@@ -120,9 +120,10 @@
 
             </div>      <!-- clocks-table -->
 
-            <button type="submit">Update</button>
-            <button type="button" onclick="restoreAll()">Restore All</button>
-            <button type="button" onclick="cancelAll()">Cancel</button>
+            <button class='-btn' type="submit">Update</button>
+            <button class='-btn' type="button" onclick="restoreAll()">Restore All</button>
+            <a class='-btn' href="/admin/user/<%= userId %>?activatetab=4">Cancel</a>
+            <!-- <button type="button" onclick="cancelAll()">Cancel</button> -->
 
         </form>
     </section>      <!-- clocks-box -->
@@ -466,11 +467,6 @@
                 document.location.reload()
             }
         }
-
-        function cancelAll() {
-            history.back()
-        }
-
 
 
         document.querySelector('#clocks-update-form').addEventListener('submit', (e) => {

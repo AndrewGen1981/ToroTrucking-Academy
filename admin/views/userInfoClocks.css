@@ -141,10 +141,16 @@ div[name='duration']:nth-of-type(odd) {
     transition: fill 0.2s linear;
 }
 
-button {
-    min-width: 130px;
+.-btn {
+    width: 130px;
     font-size: 1rem;
     padding: 7px 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
 
     background-color: var(--hgh-col1);
     color: #ffffff;
@@ -155,7 +161,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.-btn:hover {
     background-color: var(--hgh-col2);
     transition: background-color 0.2s linear;
 }

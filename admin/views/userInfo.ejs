@@ -41,35 +41,59 @@
 
     <div class="main-box">
 
-        <header class='main-info-box'>
-            
-            <div class="head-name-info">
-                <% if(user.dataCollection) { %>
-                    <h1 class="student-full-name"><%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %></h1>
-                    <h3 class="student-address"><%= user.dataCollection.street %> <%= user.dataCollection.city %>, <%= user.dataCollection.state %> <%= user.dataCollection.zip %></h3>
-                <% } else { %>
-                    <h1 class="student-full-name">New User</h1>
-                    <h3 class="student-address">no address data yet</h3>
-                <% } %>
-            </div>  <!-- head-name-info -->
-            
-            <div class="head-user-info">
-                <span class="user-nick-name">nickname: <%= user.name %></span>
+        <header class="user-top-info-box">
+            <% if(user.dataCollection) { %>
+                <h1 class="student-full-name"><%= user.dataCollection.firstName %> <%= user.dataCollection.middleName %> <%= user.dataCollection.lastName %></h1>
+                <h3 class="student-address"><%= user.dataCollection.street %> <%= user.dataCollection.city %>, <%= user.dataCollection.state %> <%= user.dataCollection.zip %></h3>
+            <% } else { %>
+                <h1 class="student-full-name">New User</h1>
+                <h3 class="student-address">no address data yet</h3>
+            <% } %>
+            <span class="user-nick-name">nickname<span><%= user.name %></span></span>
     
-                <% if (user.token === 'not sent') { %>
-                    <span class="user-email">(<%= user.email %><span class="email-verify">: not verified yet</span>)</span>
+            <% if (user.token === 'not sent') { %>
+                <span class="user-email">(<%= user.email %><span class="email-verify">: not verified yet</span>)</span>
+            <% } else { %>
+                <% if (user.token === 'verified') { %>
+                    <span class="user-email">(<%= user.email %><span class="email-verify -trusted">: trusted</span>)</span>
                 <% } else { %>
-                    <% if (user.token === 'verified') { %>
-                        <span class="user-email">(<%= user.email %><span class="email-verify -trusted">: trusted</span>)</span>
-                    <% } else { %>
-                        <span class="user-email">(<%= user.email %><span class="email-verify -unsafe">: unsafe</span>)</span>
-                    <% } %>
+                    <span class="user-email">(<%= user.email %><span class="email-verify -unsafe">: unsafe</span>)</span>
                 <% } %>
-                <br>
-                <span class="user-profile-created">profile created <%= new Date(user.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>,</span>
-                <span class="user-last-session">last session <%= new Date(user.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> <%= new Date(user.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></span>   
-            </div>      <!-- user-info -->
-        </header>   <!-- main-info-box -->
+            <% } %>
+            <br>
+            <span class="user-profile-created">profile created <%= new Date(user.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>,</span>
+            <span class="user-last-session">last session <%= new Date(user.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> <%= new Date(user.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></span>
+            
+            <menu>
+                <% if(user) { %>
+                    <a class="-hidden" id="for-getting-back" href="/admin/user/<%= user._id %>" data-user="<%= user._id %>"></a>  <!-- this link is used for getting back to correct PAGE after PUT request -->
+                <% } %>
+    
+                <%- include('../../static/partial/--admin-menu.ejs') %>
+    
+                <span class="-admin-menu-btn" title="Block this student (Unable Clocking)">
+                    <svg viewBox="0 0 448 512" onclick="menuAction('block')">
+                        <path d="M372.57 112.641v-10.825c0-43.612-40.52-76.691-83.039-65.546-25.629-49.5-94.09-47.45-117.982.747C130.269 26.456 89.144 57.945 89.144 102v126.13c-19.953-7.427-43.308-5.068-62.083 8.871-29.355 21.796-35.794 63.333-14.55 93.153L132.48 498.569a32 32 0 0 0 26.062 13.432h222.897c14.904 0 27.835-10.289 31.182-24.813l30.184-130.958A203.637 203.637 0 0 0 448 310.564V179c0-40.62-35.523-71.992-75.43-66.359zm27.427 197.922c0 11.731-1.334 23.469-3.965 34.886L368.707 464h-201.92L51.591 302.303c-14.439-20.27 15.023-42.776 29.394-22.605l27.128 38.079c8.995 12.626 29.031 6.287 29.031-9.283V102c0-25.645 36.571-24.81 36.571.691V256c0 8.837 7.163 16 16 16h6.856c8.837 0 16-7.163 16-16V67c0-25.663 36.571-24.81 36.571.691V256c0 8.837 7.163 16 16 16h6.856c8.837 0 16-7.163 16-16V101.125c0-25.672 36.57-24.81 36.57.691V256c0 8.837 7.163 16 16 16h6.857c8.837 0 16-7.163 16-16v-76.309c0-26.242 36.57-25.64 36.57-.691v131.563z"></path>
+                    </svg>
+                </span>
+                <span class="-admin-menu-btn" title="Unblock this Student (Allow Clocking)">
+                    <svg viewBox="0 0 512 512" onclick="menuAction('unblock')">
+                        <path d="M466.27 286.69C475.04 271.84 480 256 480 236.85c0-44.015-37.218-85.58-85.82-85.58H357.7c4.92-12.81 8.85-28.13 8.85-46.54C366.55 31.936 328.86 0 271.28 0c-61.607 0-58.093 94.933-71.76 108.6-22.747 22.747-49.615 66.447-68.76 83.4H32c-17.673 0-32 14.327-32 32v240c0 17.673 14.327 32 32 32h64c14.893 0 27.408-10.174 30.978-23.95 44.509 1.001 75.06 39.94 177.802 39.94 7.22 0 15.22.01 22.22.01 77.117 0 111.986-39.423 112.94-95.33 13.319-18.425 20.299-43.122 17.34-66.99 9.854-18.452 13.664-40.343 8.99-62.99zm-61.75 53.83c12.56 21.13 1.26 49.41-13.94 57.57 7.7 48.78-17.608 65.9-53.12 65.9h-37.82c-71.639 0-118.029-37.82-171.64-37.82V240h10.92c28.36 0 67.98-70.89 94.54-97.46 28.36-28.36 18.91-75.63 37.82-94.54 47.27 0 47.27 32.98 47.27 56.73 0 39.17-28.36 56.72-28.36 94.54h103.99c21.11 0 37.73 18.91 37.82 37.82.09 18.9-12.82 37.81-22.27 37.81 13.489 14.555 16.371 45.236-5.21 65.62zM88 432c0 13.255-10.745 24-24 24s-24-10.745-24-24 10.745-24 24-24 24 10.745 24 24z"></path>
+                    </svg>
+                </span>
+                <span class="-admin-menu-btn" id="archive-menu-item" title="Move to Archive">
+                    <svg viewBox="0 0 384 512" onclick="menuAction('archive')">
+                        <path d="M128.3 160v32h32v-32zm64-96h-32v32h32zm-64 32v32h32V96zm64 32h-32v32h32zm177.6-30.1L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM256 51.9l76.1 76.1H256zM336 464H48V48h79.7v16h32V48H208v104c0 13.3 10.7 24 24 24h104zM194.2 265.7c-1.1-5.6-6-9.7-11.8-9.7h-22.1v-32h-32v32l-19.7 97.1C102 385.6 126.8 416 160 416c33.1 0 57.9-30.2 51.5-62.6zm-33.9 124.4c-17.9 0-32.4-12.1-32.4-27s14.5-27 32.4-27 32.4 12.1 32.4 27-14.5 27-32.4 27zm32-198.1h-32v32h32z"></path>
+                    </svg>
+                </span>
+                <span class="-admin-menu-btn" title="Delete without Archiving">
+                    <svg viewBox="0 0 448 512" onclick="menuAction('delete')">
+                        <path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path>
+                    </svg>
+                </span>
+            </menu>
+        </header>
+
 
         <nav class='nav-menu'>
             <div class="nav-menu-box">
@@ -79,48 +103,6 @@
                 <div class="block-title" name='block4' onclick='toggleBlock(this)'>Student Data</div>
             </div>
         </nav>
-
-        <menu>
-            <a href="/admin/profile" id="back-to-prolife" title="Admin Profile">
-                <svg class="ico -sys" viewBox="0 0 122.88 120.26">
-                    <path d="M47,70.06a19,19,0,0,1-1.66-2c-1.23-1.68-2.37-3.44-3.49-5.21L36.35,54c-2.1-3.1-3.21-5.86-3.21-8.08s1.25-5.12,3.76-5.75a152.65,152.65,0,0,1-.22-15.93,21.05,21.05,0,0,1,.66-3.65A21,21,0,0,1,46.75,8.64,24.2,24.2,0,0,1,51.84,6.2C55.05,5,53.5.12,57,0,65.34-.22,79,6.87,84.26,12.62a20.91,20.91,0,0,1,5.42,13.61l-.33,14.49a4.12,4.12,0,0,1,3,3c.44,1.77,0,4.2-1.55,7.64h0c0,.11-.11.11-.11.22L84.37,62c-1.44,2.36-2.92,4.75-4.58,7-2,2.63-3.59,2.16-1.91,4.68a22,22,0,0,0,8.29,6.66,8.55,8.55,0,0,0-1.19.22h0A7.29,7.29,0,0,0,80.38,84l-2.27,3.93a7.63,7.63,0,0,0-.93,2.77h0a7.61,7.61,0,0,0,.18,2.84l0,.18a7.45,7.45,0,0,0,1.27,2.57l.06.09q-.24.15-.48.33a7.3,7.3,0,0,0-2,2.26,7.39,7.39,0,0,0-.95,2.85,7.93,7.93,0,0,0,.2,2.86h0l1.15,4.37a5.51,5.51,0,0,0,.37,1,7.55,7.55,0,0,0,1,1.73c.1.13.21.25.32.37s.37.38.56.56H0c0-33,35.5-22.55,47.58-39.15,1.39-2.08,1-1.88-.55-3.55Zm74.74,23.68a1.92,1.92,0,0,0-.91-1.2,1.86,1.86,0,0,0-1.48-.18l-2.87.76a14.86,14.86,0,0,0-1.06-1.73,18.15,18.15,0,0,0-1.28-1.59L115.78,87a1.9,1.9,0,0,0-.71-2.65l-3.5-2a1.89,1.89,0,0,0-1.46-.2,1.87,1.87,0,0,0-1.18.91l-1.48,2.55a14.06,14.06,0,0,0-2-.45,15.22,15.22,0,0,0-2-.19l-.87-3.15a1.78,1.78,0,0,0-.87-1.17,1.89,1.89,0,0,0-1.49-.19l-3.87,1a1.9,1.9,0,0,0-1.19.91A1.86,1.86,0,0,0,95,83.88l.77,2.87A13.36,13.36,0,0,0,94,87.81a16.31,16.31,0,0,0-1.6,1.28l-2.79-1.62a1.9,1.9,0,0,0-1.47-.2,1.85,1.85,0,0,0-1.18.92l-2,3.5a1.87,1.87,0,0,0-.19,1.45,1.81,1.81,0,0,0,.9,1.19l2.55,1.48a15.58,15.58,0,0,0-.45,2,15.35,15.35,0,0,0-.2,2l-3.13.83a1.76,1.76,0,0,0-1.18.88,1.9,1.9,0,0,0-.19,1.48l1,3.9a1.91,1.91,0,0,0,.92,1.16,1.88,1.88,0,0,0,1.46.22l2.89-.79a14.86,14.86,0,0,0,1.06,1.73c.4.55.83,1.08,1.28,1.59l-1.61,2.79a1.91,1.91,0,0,0-.21,1.47,1.88,1.88,0,0,0,.92,1.18l3.5,2a2,2,0,0,0,2.65-.71L98.44,115a14.1,14.1,0,0,0,2,.46,17.27,17.27,0,0,0,2,.2l.83,3.13a1.82,1.82,0,0,0,.89,1.19,1.77,1.77,0,0,0,1.47.17l3.91-1a2,2,0,0,0,1.37-2.39l-.79-2.88a14.07,14.07,0,0,0,1.73-1.06,19.77,19.77,0,0,0,1.59-1.28l2.79,1.61a1.92,1.92,0,0,0,2.65-.71l2-3.5a2,2,0,0,0-.71-2.65l-2.55-1.47a17.82,17.82,0,0,0,.44-2,14.25,14.25,0,0,0,.2-2l3.14-.86a1.79,1.79,0,0,0,1.18-.88,1.86,1.86,0,0,0,.19-1.48l-1-3.87Zm-14.86-.29a8,8,0,0,1,2.36,2.08,7.78,7.78,0,0,1,1.55,5.76A8,8,0,0,1,105,108a7.87,7.87,0,0,1-3,.2,8.06,8.06,0,0,1-5.35-3.09,7.79,7.79,0,0,1-1.54-5.75A8,8,0,0,1,98.16,94a7.78,7.78,0,0,1,5.76-1.55,8.09,8.09,0,0,1,3,1Z"/>
-                </svg>
-            </a>
-            <a href="/admin/user-area" id="back-to-users" title="Users Area">
-                <svg class="ico -sys" viewBox="0 0 122.88 79.13">
-                    <path d="M72.74,51.34A11.29,11.29,0,0,1,67.43,48c3.55-1.34,5.2-4.93,5.42-11.22.17-4.68-.79-8.2.8-12.81C76.8,14.82,88.48,11.7,95,17.05c5.1-.55,10.24,2.08,11.35,10,.82,5.86-.93,11,.92,16.4a8.41,8.41,0,0,0,4.35,5.15,12.65,12.65,0,0,1-5.81,2.8,59.57,59.57,0,0,1-9.17,1v2.76l3.19,5.1-10.3,8.07-10.3-8,2.29-4.9v-3a39.86,39.86,0,0,1-8.76-1.1ZM29,53.86a7.58,7.58,0,0,1,.79-2.76c-2.26-2-4-4-4.42-8.19h-.24a3.35,3.35,0,0,1-1.6-.42,4.34,4.34,0,0,1-1.76-2.14c-.82-1.87-1.46-6.78.59-8.18L22,31.92l0-.55c-.08-1-.1-2.18-.12-3.44-.07-4.61-.17-10.2-3.88-11.33l-1.59-.48,1.05-1.29a60.37,60.37,0,0,1,9.29-9.44C30.23,2.58,33.87.7,37.42.16A13,13,0,0,1,47.89,3.09,20.24,20.24,0,0,1,50.7,5.91a11.86,11.86,0,0,1,8.37,4.9,17,17,0,0,1,2.73,5.5,18.78,18.78,0,0,1,.73,6.24,15,15,0,0,1-4.34,10.12,3.11,3.11,0,0,1,1.35.35c1.55.83,1.6,2.62,1.19,4.13-.4,1.26-.91,2.73-1.39,4-.59,1.66-1.44,2-3.1,1.79-.08,4.1-2,6.11-4.53,8.52l.58,2c-1.61,7.8-18.69,8.65-23.31.43ZM0,79.13C1.62,58.19,5.56,66,23.42,54.86c4.93,12.8,28.6,13.65,33.79,0,15.42,9.85,23.11,2.41,23,24.27ZM105.69,64.61c-1.69-3.4-2.27-4.71-4.76-7.42,4.7,1.83,8.71,2.06,12.27,4.29,2.27,1.42,5.63,2.49,6.55,4.21,2.26,4.23,1.92,8.94,3.13,13.44H86.26a70.42,70.42,0,0,0-.41-8.56l3.39,2.71,11.55-8.79,4.9.12ZM77.93,57.26l.17-.07L78,57.3l-.08,0Z"/>
-                </svg>
-            </a>
-            <a href="/admin/student/list" id="back-to-students" title="Student List">
-                <svg class="ico -sys" viewBox="0 0 512 512">
-                    <polygon points="32 192 256 64 480 192 256 320 32 192"/><polyline points="112 240 112 368 256 448 400 368 400 240"/><line x1="480" y1="368" x2="480" y2="192"/><line x1="256" y1="320" x2="256" y2="448" />
-                </svg>
-            </a>
-
-            <% const blockClass = !user.student ? "-inactive" : user.student.status === "block" ? "-active" : "-inactive" %>
-            <span class="<%= blockClass %>" id="block-menu-item" title="Block a Student(Unable Clocking)">
-                <svg class="ico -block <%= blockClass %>" viewBox="0 0 122.88 119.8" onclick="menuAction('block')">
-                    <path d="M23.59,0h75.7a23.63,23.63,0,0,1,23.59,23.59V96.21A23.64,23.64,0,0,1,99.29,119.8H23.59a23.53,23.53,0,0,1-16.67-6.93l-.38-.42A23.49,23.49,0,0,1,0,96.21V23.59A23.63,23.63,0,0,1,23.59,0Zm59.7,53.51a6.39,6.39,0,1,1,0,12.77H39.59a6.39,6.39,0,1,1,0-12.77Zm16-40.74H23.59A10.86,10.86,0,0,0,12.77,23.59V96.21a10.77,10.77,0,0,0,2.9,7.37l.28.26A10.76,10.76,0,0,0,23.59,107h75.7a10.87,10.87,0,0,0,10.82-10.82V23.59A10.86,10.86,0,0,0,99.29,12.77Z"/>
-                </svg>
-            </span>
-            <% const unblockClass = !user.student ? "-inactive" : user.student.status === "unblock" ? "-active" : "-inactive" %>
-            <span class="<%= unblockClass %>" id="unblock-menu-item" title="Unblock a Student(Allow Clocking)">
-                <svg class="ico -unblock <%= unblockClass %>" viewBox="0 0 122.88 119.8" onclick="menuAction('unblock')">
-                    <path d="M23.59,0h75.7a23.63,23.63,0,0,1,23.59,23.59V96.21A23.64,23.64,0,0,1,99.29,119.8H23.59a23.53,23.53,0,0,1-16.67-6.93l-.38-.42A23.49,23.49,0,0,1,0,96.21V23.59A23.63,23.63,0,0,1,23.59,0ZM55.06,38.05a6.38,6.38,0,1,1,12.76,0V53.51H83.29a6.39,6.39,0,1,1,0,12.77H67.82V81.75a6.38,6.38,0,0,1-12.76,0V66.28H39.59a6.39,6.39,0,1,1,0-12.77H55.06V38.05ZM99.29,12.77H23.59A10.86,10.86,0,0,0,12.77,23.59V96.21a10.77,10.77,0,0,0,2.9,7.37l.28.26A10.76,10.76,0,0,0,23.59,107h75.7a10.87,10.87,0,0,0,10.82-10.82V23.59A10.86,10.86,0,0,0,99.29,12.77Z"/>
-                </svg>
-            </span>
-            <% const archiveClass = !user.student ? "-inactive" : user.student.status === "archive" ? "-active" : "-inactive" %>
-            <span class="<%= archiveClass %>" id="archive-menu-item" title="Move to Archive">
-                <svg class="ico -archivate" viewBox="0 0 122.88 114.318" onclick="menuAction('archive')">
-                    <path d="M122.88,35.289L87.945,70.578v-17.58c-22.091-4.577-39.542,0.468-52.796,17.271 c2.301-34.558,25.907-51.235,52.795-52.339L87.945,0L122.88,35.289L122.88,35.289z"/><path d="M6.908,23.746h35.626c-4.587,3.96-8.71,8.563-12.264,13.815H13.815v62.943h80.603V85.831l13.814-13.579v35.159 c0,3.814-3.093,6.907-6.907,6.907H6.908c-3.815,0-6.908-3.093-6.908-6.907V30.653C0,26.838,3.093,23.746,6.908,23.746L6.908,23.746 z"/>
-                </svg>
-            </span>
-            <span id="delete-menu-item" title="Delete without Archiving">
-                <svg class="ico -delete" viewBox="0 0 122.88 119.79" onclick="menuAction('delete')">
-                    <path d="M23.5,0H99.38a23.56,23.56,0,0,1,23.5,23.5V96.29a23.56,23.56,0,0,1-23.5,23.5H23.5a23.44,23.44,0,0,1-16.6-6.9l-.37-.4A23.43,23.43,0,0,1,0,96.29V23.5A23.56,23.56,0,0,1,23.5,0ZM41,49.35a7,7,0,0,1,9.89-9.89L61.44,50,72,39.46a7,7,0,1,1,9.89,9.9L71.33,59.9,81.87,70.43A7,7,0,0,1,72,80.33L61.44,69.79,50.9,80.33A7,7,0,0,1,41,70.43L51.55,59.89,41,49.35ZM99.38,12.52H23.5a11,11,0,0,0-11,11V96.29a10.92,10.92,0,0,0,3,7.49l.27.26a11,11,0,0,0,7.75,3.23H99.38a11,11,0,0,0,11-11V23.5a11,11,0,0,0-11-11Z"/>
-                </svg>
-            </span>
-        </menu>
         
         <section class="block-box -hidden" name='blockBox' id='block1'>
             <h2 class="block-header">Data Collection Form</h2>
@@ -2419,16 +2401,16 @@
 
         // @MIAN Block's toggler
         function toggleBlock(navItem) {
-            
             const targetBlock = document.getElementById(navItem.getAttribute('name'))
-
             if (targetBlock) {    // if block exists
                 // hiding all blocks
                 document.getElementsByName('blockBox').forEach(block => {
                     block.classList.add('-hidden')
+                    block.dataset.active = 'no'
                 })
                 // showing target one
                 targetBlock.classList.remove('-hidden')
+                targetBlock.dataset.active = 'active'
 
                 // activating active menu item
                 Array.from(document.getElementsByClassName('block-title')).forEach(blockTitle => {
@@ -2437,11 +2419,22 @@
                 // showing target one
                 navItem.classList.add('-nav-item-active')
             }
-
         }   // toggleBlock
 
 
-        
+
+        function getActiveBlock() {
+            let result = 0
+            // going though all blocks
+            document.getElementsByName('blockBox').forEach((block, index) => {
+                if (block.dataset.active === 'active') {
+                    result = index + 1
+                }
+            })
+            return result
+        }
+
+
         // saving colorschemes for edit fields to enable its RESET
         const globalColorCalm = getComputedStyle(document.body).getPropertyValue('--color-calm')
         const globalColorHover = getComputedStyle(document.body).getPropertyValue('--color-hover')
@@ -2465,10 +2458,6 @@
 
 
         // MENU Actions
-        const block = document.getElementById('block-menu-item')
-        const unblock = document.getElementById('unblock-menu-item')
-        const archive = document.getElementById('archive-menu-item')
-
         async function updateUser(action) {
             return await fetch('/admin/user', {
                 method: 'PUT',
@@ -2482,21 +2471,12 @@
         }
 
         async function menuAction(action) {
-            function toggleMenuItem(element, toggler) {
-                if (toggler) {  //switch ON
-                    element.classList.remove('-inactive')
-                    element.classList.add('-active')
-                    element.querySelector('svg').classList.add('-active')
-                } else {    //switch OFF
-                    element.classList.remove('-active')
-                    element.classList.add('-inactive')
-                    element.querySelector('svg').classList.remove('-active')
-                }
-            }
-
             if (action === "delete" && !confirm('Do you want to delete this Student without a possibility to recover?')) {
                 return
-            }   // delete before server call to delete
+            }
+            if (action === "block" && !confirm('Would you like to BLOCK this student?')) {
+                return
+            }
 
             const result = await updateUser(action)     //  doing PUT for all actions
 
@@ -2506,21 +2486,17 @@
                 return alert(`Error: response status ${result.status}, ${result.statusText}`)
             }
 
-            // reaction on response due to request
-            if (action === "block" && block && unblock) {
-                toggleMenuItem(block, true)
-                toggleMenuItem(unblock, false)
-            }   // BLOCK
-            if (action === "unblock" && block && unblock) {
-                toggleMenuItem(unblock, true)
-                toggleMenuItem(block, false)
-            }   // UNBLOCK
-            if (action === "archive" && archive) {
-                toggleMenuItem(archive, true)
-            }   // ARCHIVE
             if (action === "delete") {
-                document.getElementById("back-to-users").click()
+                document.getElementById("to-student-list").click()
             }   // DELETE
+            else {
+                let back = document.getElementById("for-getting-back")
+                let activeBlock = getActiveBlock()
+                if (back && activeBlock) {
+                    back.setAttribute('href', `/admin/user/${back.dataset.user}?activatetab=${activeBlock}`)
+                    back.click()
+                }
+            }
         }
 
 

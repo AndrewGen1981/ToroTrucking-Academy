@@ -243,6 +243,20 @@ instRouter.post('/scoring-save', ifInstructor, async (req, res) => {
 })
 
 
+// disables/enables isAllow field !!DON'T use ifInstructor as a middleware, bacause it triggers from admins side!!
+instRouter.post('/toggle-isallow', async (req, res) => {
+    const { scoringId, userId, newIsAllowed } = req.body
+    try {
+        const scoring = await StudentScoring.findById(scoringId)
+        scoring.isAllowed = newIsAllowed === "enable"
+        await scoring.save()
+        return res.status(200).redirect(`/admin/user/${userId}?activatetab=4`)
+    } catch(e) {
+        return res.status(404).send(`Error: ${e.message}`)
+    }
+})
+
+
 
 
 module.exports = instRouter

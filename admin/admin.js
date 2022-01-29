@@ -234,14 +234,19 @@ admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
     const tab = req.query.activatetab       // what tab to show at start
 
     try {
-        const user = await User.findById(id)
-        .populate('dataCollection')
-        .populate('application')
-        .populate('agreement')
-        .populate({
-            path: 'student', 
-            populate: { path: 'tuition', select: ["created", "isAllowed", "avLessonsRate", "lessons"] }
-        })        // <- is this slows a process
+        const user = await User.findById(id).populate([
+            { path: 'dataCollection' },
+            { path: 'application' },
+            { path: 'agreement' },
+            {
+                path: 'student', 
+                populate: { path: 'tuition', select: '-key -email -student_id_string -__v' },  // excluding fields from query
+            },
+            {
+                path: 'student',
+                populate: { path: 'scoring', select: '-key -email -student_id_string -__v' }   // excluding fields from query
+            }
+        ])
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
@@ -650,7 +655,7 @@ admRouter.post('/qr-update-geo', async (req, res) => {
 
 // ROUTE POST /admin/clocks for updating clocks
 admRouter.post('/clocks', redirectToLogin, ifCanWrite, async(req, res) => {
-    const {studentId, studentKey, studentName, visiting} = req.body
+    const {studentId, userId, studentKey, studentName, visiting} = req.body
     try {
         const student = await Student.findById(studentId).select(['email', 'TTT', 'clocks'])
         if (student) {
@@ -660,7 +665,7 @@ admRouter.post('/clocks', redirectToLogin, ifCanWrite, async(req, res) => {
             const { TTT, studentClocks } = tools.reCalculateTTT(student.clocks, minVisitingRequirements)       //  destructuring results
 
             return res.render(path.join(__dirname+'/views/userInfoClocks.ejs'), { 
-                studentId, studentKey, studentName, visiting,
+                studentId, userId, studentKey, studentName, visiting,
                 verTTT: TTT / (1000 * 60 *60),
                 verClocks: studentClocks,
                 admin: req.session.userId
@@ -683,7 +688,6 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
     function settime(dateString, timeString) {
         if (timeString.length < 6) { timeString += ':00' }
         return new Date(`${dateString}T${timeString}-08:00`)
-        // return new Date(`${dateString}T${timeString}`)
     }
 
     const newClocks = []

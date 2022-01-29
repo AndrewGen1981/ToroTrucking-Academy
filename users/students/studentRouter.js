@@ -217,7 +217,7 @@ studentRouter.get("/allow-tuition/:id", ifCanWrite, async(req, res) => {    // A
                 student.tuition = tuition._id
             }
             await student.save()
-            return res.status(200).redirect(`/admin/user/${student.user}`)
+            return res.status(200).redirect(`/admin/user/${student.user}?activatetab=4`)
         } catch(e) {
             return res.status(500).send(`Server issue: ${e.message}`)
         }
@@ -241,7 +241,7 @@ studentRouter.get("/change-tuition-access/:id", ifCanWrite, async(req, res) => {
                 if (action === 'enable' || action === 'disable') {
                     try {
                         await tuition.save()
-                        return res.status(200).redirect(`/admin/user/${student.user}`)
+                        return res.status(200).redirect(`/admin/user/${student.user}?activatetab=4`)
                     } catch(e) {
                         return res.status(500).send(`Cannot save tuition record: ${e.message}`)
                     }

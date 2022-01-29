@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../static/css/brix-family.css">
 
     <link rel="stylesheet" href="../static/css/colors.css">
+    <link rel="stylesheet" href="../static/css/bolt-copyright.css">
         
     <link rel="stylesheet" href="/users/home.css">
 
@@ -252,7 +253,7 @@
             </div>  <!-- right-side -->
 
             <% if(user.student) { %>
-                <h3 class="block-title">Student Info</h3>
+                <h3 class="block-title">Attendance Info</h3>
                 
                 <!-- TTT -->
                 <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
@@ -329,6 +330,61 @@
                     <span class="block-value -info1">* The duration of your presence in the TTA when there is no clock-out is determined on the basis of the minimum required number of hours according to the Agreement signed by you. TTA reserves the right to review this number depending on the current Attendance Policy. We also inform you that the Student, as a party to the Agreement, is obliged to attend classes in case of abuse by the Student, the absence of clocks-out allows TTA not to take into account the hours for such a day.</span>
 
                 <% } %>     <!-- if there are any clocks -->
+
+                <!-- SCORINGS -->
+                <% if(scorings) { %>
+                    <h3 class="block-title">Skill Scorings</h3>
+                    <div class="block-item">
+                        <span class="block-key">Can Visit Teaching<span class="block-value"><%= scorings.isAllowed ? "Yes" : "No" %></span></span>
+                    </div>
+                    <% if(scorings.lastDone) { %>
+                        <div class="block-item">
+                            <span class="block-key">
+                                Last Scoring Done
+                                <span class="block-value">
+                                    <%= new Date(scorings.lastDone).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    <%= new Date(scorings.lastDone).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="scoring-table">
+                            <div class="scoring-table-cell -scoring-header">Type</div>
+                            <div class="scoring-table-cell -scoring-header">Date</div>
+                            <div class="scoring-table-cell -scoring-header">Instructor</div>
+                            <div class="scoring-table-cell -scoring-header">Result</div>
+                            <div class="scoring-table-cell -scoring-header">Certificate</div>
+
+                            <% const scorArrays = [scorings.scoringsInCab, scorings.scoringsOutCab, scorings.scoringsBacking, scorings.scoringsCity] %>
+                            <% const scorTitles = ['pretrip In-Cab', 'pretrip Out-Cab', 'Backing Maneuvers', 'City Driving'] %>
+
+                            <% scorArrays.map((scorArray, index) => { %>
+                                <% scorArray.map(scor => { %>
+                                    <div class="scoring-table-cell"><%= scorTitles[index] %></div>
+                                    <div class="scoring-table-cell">
+                                        <%= new Date(scor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                        <%= new Date(scor.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
+                                    </div>
+                                    <div class="scoring-table-cell"><%= scor.instructor %></div>
+
+                                    <% if (scor.result) { %>
+                                        <div class="scoring-table-cell -passed">passed</div>
+                                    <% } else { %>
+                                        <div class="scoring-table-cell -failed">failed</div>
+                                    <% } %>
+
+                                    <% if (scor.certificate) { %>
+                                        <div class="scoring-table-cell -passed">Yes</div>
+                                    <% } else { %>
+                                        <div class="scoring-table-cell -failed">No</div>
+                                    <% } %>
+
+                                <% }) %>
+                            <% }) %>
+
+                        </div>  <!-- scoring-table -->
+                    <% } %>
+                <% } %>     <!-- if there are any scorings -->
+
             <% } %>     <!-- USER is a STUDENT -->
         <% } %>     <!-- USER is OK -->
     </div>  <!--- profile-box -->
@@ -347,8 +403,15 @@
                 <div class="nav-right-item">Contact Us</div>
             </div>
         </div>
+        
+        
     </div>      <!-- nav-bottom -->
-
+    <div class="bolt-footer">
+        © 2022 designed by BOLT
+        <a href="mailto:info@boltcdl.com">info@boltcdl.com</a>
+        <span class="tel">+1253.200.4466</span>
+    </div>
+    
 
 
     <script defer>
