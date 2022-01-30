@@ -386,6 +386,8 @@ input#certificate:checked ~ .cetrSignature {
     box-shadow: 0 12px 20px -11px rgb(122 172 172 / 73%);
 }
 
+
+
 @media (max-width: 1150px) {
     .item-title {
         width: 20%;

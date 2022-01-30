@@ -156,7 +156,7 @@ instRouter.post('/scoring-save', ifInstructor, async (req, res) => {
             result: result.ifPassed,
             details: scoringData,
             comment: comments,
-            certificate: certificate == 'on',
+            certificate: (certificate == 'on' && result.ifPassed),      // certification is imposible when result is FALSE
         }
         const instructorScoringItem = {
             instructorId: result.examinerId,
@@ -165,7 +165,7 @@ instRouter.post('/scoring-save', ifInstructor, async (req, res) => {
             
             scoringType: scoringType,
             scoring_str_ref: 'NOREF',      // string _id studentScoringSchema.scoringTypeOf[i] to retrive data
-            scoring_certificate: certificate == 'on',
+            scoring_certificate: (certificate == 'on' && result.ifPassed),      // certification is imposible when result is FALSE
             scoring_comment: comments,
 
             examinedStudent: result.studentName,
@@ -256,6 +256,22 @@ instRouter.post('/toggle-isallow', async (req, res) => {
     }
 })
 
+
+// printable scoring view
+instRouter.post('/scoring-print', (req, res) => {
+    try {
+        const { scoringDetails, scoringComment, scoringCertificate, userId } = req.body
+        const scoring = JSON.parse(scoringDetails)
+        res.render(path.join(__dirname+'/scoring-printable-view.ejs'), { 
+            scoring, scoringCertificate,
+            allowComments: true,    //  comments can be hidden if needed
+            scoringComment,
+            backlink: `/admin/user/${userId}?activatetab=4&open=scorings`
+         })
+    } catch(e) {
+        return res.status(404).send(`Error: ${e.message}`)
+    }
+})
 
 
 

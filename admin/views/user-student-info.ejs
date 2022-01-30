@@ -245,7 +245,7 @@
                 </div>
             </section>
             <% if(user.student.tuition.lessons.length) { %>     <!-- begun tuition -->
-                <details class="row-item-95">
+                <details class="row-item-95" id="tuition-details">  <!-- id is used for open details after backlink -->
                     <summary class="field-accomplished">
                         Details
                     </summary>
@@ -290,7 +290,7 @@
                     <div class="details-title">Clocks</div>
                 </div>
             </section>
-            <details class="row-item-95">
+            <details class="row-item-95" id="clocks-details">   <!-- id is used for open details after backlink -->
                 <summary class="field-accomplished">
                     Details
                 </summary>
@@ -350,7 +350,7 @@
                     <div class="details-title">Scorings</div>
                 </div>
             </section>
-            <details class="row-item-95">
+            <details class="row-item-95" id="scoring-details">  <!-- id is used for open details after backlink -->
                 <summary class="field-accomplished">
                     Details
                 </summary>
@@ -367,7 +367,15 @@
                     <!-- 2D scorings array -->
                     <% scorArrays.map((scorArray, index) => { %>
                         <% scorArray.map(scor => { %>
-                            <div><%= scorTitles[index] %></div>
+
+                            <form action="/admin/inst/scoring-print" method="POST">
+                                <textarea class='-hidden' name="scoringDetails"><%= scor.details %></textarea>
+                                <textarea class='-hidden' name="scoringComment"><%= scor.comment %></textarea>
+                                <input type="hidden" name="scoringCertificate" value="<%= scor.certificate %>" />
+                                <input type="hidden" name="userId" value="<%= user._id %>" />
+                                <button class='scoring-details' type='submit'><%= scorTitles[index] %></button>
+                            </form>
+
                             <div><%= printDateTime(scor.created) %></div>
                             <div><%= scor.instructor %></div>
                             <!-- Result -->

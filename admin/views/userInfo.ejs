@@ -2185,15 +2185,6 @@
     
     
     
-
-
-    
-
-
-    
-
-
-    
     <script defer>
 
         // preparing PDF object for downloading
@@ -2454,6 +2445,28 @@
             default:
                 document.querySelector('[name=block1]').click()     // showing block #1 as default
             break;
+        }
+
+        // 'open', if set, choose details group to open
+        function openIfExists(detailsId) {
+            let details = document.querySelector(detailsId)
+            if(details) {
+                console.log(details)
+                details.open = true
+            }
+        }
+
+        switch ('<%= open %>') {
+            case 'tuition':
+                openIfExists('#tuition-details')
+            break;
+            case 'clocks':
+                openIfExists('#clocks-details')
+            break;
+            case 'scorings':
+                openIfExists('#scoring-details')
+            break;
+            // details can be added here
         }
 
 

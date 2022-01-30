@@ -232,6 +232,7 @@ function getDocsSigner(agreement) {
 admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
     const id = req.params.id    //  user id
     const tab = req.query.activatetab       // what tab to show at start
+    const open = req.query.open             // what details group to open
 
     try {
         const user = await User.findById(id).populate([
@@ -277,13 +278,13 @@ admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
                 return res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer,
                     verTTT: TTT / (1000 * 60 *60),
                     verClocks: studentClocks,
-                    tab
+                    tab, open
                 })
                             
             }   //  type is determined AND clocks are present
         }   //  Agreement is signed AND user is a Student
         
-        res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer, tab })
+        res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer, tab, open })
 
     } catch(e) {
         res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
