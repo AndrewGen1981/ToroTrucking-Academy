@@ -15,6 +15,26 @@ const { qrCONFIG } = require('../admin/config-qr')
 //     .populate('agreement')
 //     .populate('student')
 
+// OR
+// await Student.findById(id).select(studentPopulated).populate([
+//    {
+//        path: 'user', select: userPopulated,
+//        populate: { path: 'agreement', select: dataAgrPopulated },
+//    },
+//    {
+//        path: 'user', select: userPopulated,
+//        populate: { path: 'dataCollection', select: dataCollPopulated }
+//    }
+// ])
+
+// select: '-key -_-d -__v' - for excluding fields from request
+
+// BEST approach is to use STRINGS (faster) when selecting, not arrays
+// const user = await User.findById(userId).populate({
+//     path: 'agreement', select: 'tuitionCost regisrFee supplyFee otherFee'
+// })
+
+
 
 // @UserSchema for mongoose
 const userSchema = new mongoose.Schema({
@@ -24,6 +44,15 @@ const userSchema = new mongoose.Schema({
     created: { type: Date, default: new Date },
     lastSESS: { type: Date, default: new Date },
     token: { type: String, default: "not sent" },
+
+    // payments should be here, because not only Student can pay, User can pay too
+    payments: [{
+        type: { type: String, default: 'UNSET' },
+        whenPaid: { type: Date, default: new Date },
+        ammount: { type: Number, default: 0.00 },
+        notes: String,
+    }],
+    balance: { type: Number, default: 0.00 },
 
     // @Applicant part, refrences on FORMS
     dataCollection: {

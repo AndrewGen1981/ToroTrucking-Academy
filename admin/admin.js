@@ -407,7 +407,7 @@ admRouter.get('/print-form/:id', redirectToLogin, ifCanRead, async(req, res) => 
 
 // @FORMS UPDATING
 
-// middleware for updating
+// middleware for updating dataCol, Application and Agreement
 async function checkAndUpdate(req, res, next) {
     const id = req.params.id    //  _id of updated Model
     const url = req.url     // url contains form's reference, used to undestand what form is being updated
@@ -433,6 +433,24 @@ async function checkAndUpdate(req, res, next) {
 
                 await Model.findByIdAndUpdate(id, updatedRecord)
 
+                // updating BALANCE if cost params were updated
+                if (form === 'update-form3') {  // cost can be changed only from agreement page
+                    let updatedCost = 0
+                    updatedCost += updatedRecord.tuitionCost ? parseFloat(updatedRecord.tuitionCost) : 0
+                    updatedCost += updatedRecord.regisrFee ? parseFloat(updatedRecord.regisrFee) : 0
+                    updatedCost += updatedRecord.supplyFee ? parseFloat(updatedRecord.supplyFee) : 0
+                    updatedCost += updatedRecord.otherFee ? parseFloat(updatedRecord.otherFee) : 0
+                    if (updatedCost) {  //  if at least some cost param was updatet, then recalc balance
+                        // user id is in 'postedPath'
+                        const { userId } = req.body
+                        const user = await User.findById(userId).populate({
+                            path: 'agreement', select: 'tuitionCost regisrFee supplyFee otherFee'
+                        })
+                        user.balance = calculateBalance(user, user.payments)
+                        await user.save()
+                    }
+                }
+
                 next()  // updatet successfully
             } catch(e) {
                 res.send(`Oops... We almost did it! Issue: ${e.message}`)
@@ -446,17 +464,17 @@ async function checkAndUpdate(req, res, next) {
 }
 
 
-admRouter.post('/update-form1/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
+admRouter.post('/update-form1/:id', redirectToLogin, ifCanWrite, checkAndUpdate, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form2/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
+admRouter.post('/update-form2/:id', redirectToLogin, ifCanWrite, checkAndUpdate, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
 
-admRouter.post('/update-form3/:id', redirectToLogin, checkAndUpdate, ifCanWrite, async(req, res) => {
+admRouter.post('/update-form3/:id', redirectToLogin, ifCanWrite, checkAndUpdate, async(req, res) => {
     const { postedPath } = req.body
     res.status(200).redirect(postedPath)    // redirecting back to the posting page
 })
@@ -770,6 +788,63 @@ admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) =>
         res.send(`Issue: ${e.message}`)
     }
 })
+
+
+// for updating payment
+admRouter.post('/update-payments', redirectToLogin, ifCanWrite, async(req, res) => {
+    const { userId, paymentType, paymentDate, paymentAmount, paymentNotes } = req.body
+    // updating to arrays if not
+    const arrPmtTypes = Array.isArray(paymentType) ? paymentType : [paymentType]
+    const arrPmtDates = Array.isArray(paymentDate) ? paymentDate : [paymentDate]
+    const arrPmtAmounts = Array.isArray(paymentAmount) ? paymentAmount : [paymentAmount]
+    const arrPmtNotes = Array.isArray(paymentNotes) ? paymentNotes : [paymentNotes]
+    // amount - is the main array, so go with one to create newPaymentsArray
+    const newPaymentsArray = []
+    arrPmtAmounts.map((amount, index) => {
+        if(parseFloat(amount)) {
+            newPaymentsArray.push({
+                type: arrPmtTypes[index],
+                whenPaid: new Date(`${arrPmtDates[index]}:00-08:00`),
+                ammount: parseFloat(amount),
+                notes: arrPmtNotes[index]
+            })
+        }
+    })
+    try {
+        // getting data about cost of tuition
+        const user = await User.findById(userId).populate({
+            path: 'agreement', select: 'tuitionCost regisrFee supplyFee otherFee'
+        })
+        // calculating the balance
+        let balance = calculateBalance(user, newPaymentsArray)
+        // updating user record
+        await User.findByIdAndUpdate(userId, {payments: newPaymentsArray, balance})
+        res.redirect(`/admin/user/${userId}?activatetab=3&open=payments`)
+    } catch(e) {
+        res.send(`Issue: ${e.message}`)
+    }
+})
+
+// TOOL: calculates balance
+function calculateBalance(user, payments) {
+    // user should contain agreement with costs data
+    // payments should be an array of payments like in UserModel
+    let balance = 0
+    if (user) {
+        if (user.agreement) {
+            balance -= parseFloat(user.agreement.tuitionCost) > 0 ? parseFloat(user.agreement.tuitionCost) : 0
+            balance -= parseFloat(user.agreement.regisrFee) > 0 ? parseFloat(user.agreement.regisrFee) : 0
+            balance -= parseFloat(user.agreement.supplyFee) > 0 ? parseFloat(user.agreement.supplyFee) : 0
+            balance -= parseFloat(user.agreement.otherFee) > 0 ? parseFloat(user.agreement.otherFee) : 0
+        }
+    }
+    if (payments) {
+        payments.map(payment => {
+            balance += payment.ammount
+        })
+    }
+    return balance
+}
 
 
 

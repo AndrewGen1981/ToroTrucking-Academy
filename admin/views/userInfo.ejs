@@ -112,7 +112,7 @@
 
                 <form action='/admin/update-form1/<%= user.dataCollection._id %>' method="post" class='block-box-inner' id='form1'>
 
-                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
+                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>?activatetab=1' />       <!-- path for getting back after updating -->
 
                     <section class="row-item-85">
                         <div class="fields-set">
@@ -559,7 +559,7 @@
                 
                 <form action='/admin/update-form2/<%= user.application._id %>' method="post" class='block-box-inner' id='form2'>
             
-                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
+                    <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>?activatetab=2' />       <!-- path for getting back after updating -->
 
                     <section class="row-item-85">
                         <div class="fields-set">
@@ -1698,485 +1698,20 @@
         </section>  <!-- block-box -->
 
         
-
-
-
-        
         <!-- @AGREEMENT  id=block3 -->
-        <!-- EDIT group 'agr-edits' -->
-
         <section class="block-box -hidden" name='blockBox' id='block3'>
             <h2 class="block-header">Agreement Form</h2>
             <div class="block-box-inner">       <!-- structire is different from above block 1 & 2 because block 3 contains 2 forms and forms CANNOT be an element of another form -->
-                <% if(user.agreement) { %>
-
-                    <!-- #1 UPDATE FORM -->
-                    <form action='/admin/update-form3/<%= user.agreement._id %>' method="post" id='form3'>
-
-                        <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Class</div>
-                                <div class="field-value -orange"><%= user.agreement.class %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='class' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='class'>
-                                    <label class="show-edit-btn -red" for='class' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <select class='input-box' onchange="checkAllChanged(this)" name="class" id="class">
-                                        <option value='DNU'>do not update</option>
-                                        <option value='CDL Class A'>CDL Class A</option>
-                                        <option value='CDL Class B'>CDL Class B</option>
-                                        <option value='Upgrade to Class A'>Upgrade to Class A</option>
-                                        <option value='Endorsements'>Endorsements</option>
-                                    </select>
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- class -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Transmission Type</div>
-                                <div class="field-value -orange"><%= user.agreement.transmission %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='transmission' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='transmission'>
-                                    <label class="show-edit-btn -red" for='transmission' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <select class='input-box' onchange="checkAllChanged(this)" name="transmission" id="transmission">
-                                        <option value='DNU'>do not update</option>
-                                        <option value='Automatic Transmission'>Automatic Transmission</option>
-                                        <option value='Manual Transmission'>Manual Transmission</option>
-                                    </select>
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- transmission -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Visiting Type</div>
-                                <div class="field-value"><%= user.agreement.visiting %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='visiting' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='visiting'>
-                                    <label class="show-edit-btn -red" for='visiting' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <select class='input-box' onchange="checkAllChanged(this)" name="visiting" id="visiting">
-                                        <option value='DNU'>do not update</option>
-                                        <option value='Full Time (at least 6h per day)'>Full Time (at least 6h per day)</option>
-                                        <option value='Part Time (at least 4h per day)'>Part Time (at least 4h per day)</option>
-                                    </select>
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- visiting -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Payments Section</div>
-                                <div class="field-value"><%= user.agreement.payment %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='payment' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='payment'>
-                                    <label class="show-edit-btn -red" for='payment' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- DELETE show-edit-btn -red -->
-                                    <label class="show-edit-btn -red" onclick='redoField(payment, "<%= user.agreement.payment %>")'>
-                                        <svg class="redo-mark">
-                                            <use xlink:href="#redo"></use> 
-                                        </svg>
-                                    </label>    <!-- REDO show-edit-btn -red -->
-                                    <div class='column-view' id='payment' data-value='<%= user.agreement.payment %>'>
-                                        <% const pmts = user.agreement.payment.split(',') %>
-
-                                        <% const headers = ['Cash Payment', 'Credit Card', 'Scholarship', 'Financial Aid', 'Third Party (e.g.VA;<br>Voc.Rehab.; LnI; Employer)'] %>
-                                        <% const items = ['Cash', 'Credit Card', 'Scholarship', 'Financial Aid', 'Third Party'] %>
-
-                                        <% items.map((item, index) => { %>
-                                            <% const checked =  pmts.includes(item) ? 'checked' : '' %>
-                                            <label for="payment-Choice<%= index %>">
-                                                <input type="checkbox" id="payment-Choice<%= index %>" name="payment" value="<%= item %>" <%= checked %> >
-                                                <span><%- headers[index] %></span>
-                                            </label>
-                                        <% }) %>
-
-                                    </div>  <!-- payment options -->
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- payment -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">List third party payer:</div>
-                                <div class="field-value"><%= user.agreement.thirdPartyList %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='thirdPartyList' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='thirdPartyList'>
-                                    <label class="show-edit-btn -red" for='thirdPartyList' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="thirdPartyList" id="thirdPartyList" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- thirdPartyList -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Down Payment:</div>
-                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.downPayment) %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='downPayment' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='downPayment'>
-                                    <label class="show-edit-btn -red" for='downPayment' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="downPayment" id="downPayment" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- downPayment -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Monthly Payment:</div>
-                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.monthlyPayment) %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='monthlyPayment' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='monthlyPayment'>
-                                    <label class="show-edit-btn -red" for='monthlyPayment' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="monthlyPayment" id="monthlyPayment" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- monthlyPayment -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Loan Payment:</div>
-                                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.loanPayment) %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='loanPayment' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='loanPayment'>
-                                    <label class="show-edit-btn -red" for='loanPayment' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="loanPayment" id="loanPayment" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- loanPayment -->
-    
-                        <section class="row-item-85"><div class="gap-line"></div></section>
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Parent Or Guardian First Name</div>
-                                <div class="field-value"><%= user.agreement.parentFirstName %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='parentFirstName' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='parentFirstName'>
-                                    <label class="show-edit-btn -red" for='parentFirstName' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentFirstName" id="parentFirstName" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- parentFirstName -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Parent Or Guardian Last Name</div>
-                                <div class="field-value"><%= user.agreement.parentLastName %></div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='parentLastName' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="agr-edits" data-id='parentLastName'>
-                                    <label class="show-edit-btn -red" for='parentLastName' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentLastName" id="parentLastName" />
-                                </div>  <!-- data-id hidden area -->
-                            </div>
-                        </section>  <!-- parentLastName -->
-
-
-                        <% if(user.agreement.schoolSignRep) { %>        <!-- Agreement signed, show fields for editing -->
-
-                            <section class="row-item-85"><div class="gap-line"></div></section>
-
-                            <section class="row-item-85">
-                                <div class="field-title -orange">Agreement is Signed on TTA's behalf by:</div>
-                                <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
-                                <div class="field-value -orange"><%= signer.name %> <%= new Date(user.agreement.schoolSignDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
-                            </section>
-    
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-value -small">Admins can change financials terms of Agreement</div>
-                                </div>
-                            </section>
-
-                            <!-- Tuition Cost -->
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title">Cost of Tuition</div>
-                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.tuitionCost) %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='tuitionCost' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="agr-edits" data-id='tuitionCost'>
-                                        <label class="show-edit-btn -red" for='tuitionCost' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="tuitionCost" id="tuitionCost" min=0 step='.01' />
-                                    </div>  <!-- data-id hidden area -->
-                                </div>
-                            </section>  <!-- tuitionCost -->
-    
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title">Registration Fee</div>
-                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.regisrFee) %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='regisrFee' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="agr-edits" data-id='regisrFee'>
-                                        <label class="show-edit-btn -red" for='regisrFee' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="regisrFee" id="regisrFee" min=0 step='.01' />
-                                    </div>  <!-- data-id hidden area -->
-                                </div>
-                            </section>  <!-- regisrFee -->
-    
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title">Supplies and Materials Fee</div>
-                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.supplyFee) %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='supplyFee' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="agr-edits" data-id='supplyFee'>
-                                        <label class="show-edit-btn -red" for='supplyFee' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="supplyFee" id="supplyFee" min=0 step='.01' />
-                                    </div>  <!-- data-id hidden area -->
-                                </div>
-                            </section>  <!-- supplyFee -->
-    
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title">Other Fees</div>
-                                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.otherFee) %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='otherFee' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="agr-edits" data-id='otherFee'>
-                                        <label class="show-edit-btn -red" for='otherFee' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="number" name="otherFee" id="otherFee" min=0 step='.01' />
-                                    </div>  <!-- data-id hidden area -->
-                                </div>
-                            </section>  <!-- otherFee -->
-    
-                        <% } %>     <!-- Agreement signed -->
-
-
-                        <!-- contains all updated MODELS fields -->
-                        <input type="hidden" name='whatWasUpdated'  data-updated='agr-edits' />
-
-                        <!-- @SIGNATURE -->
-                        <section class="row-item-85 -right-side">
-                            <div class="field-title -windblow">completed as of</div>
-                            <div class="field-value"><%= new Date(user.agreement.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> (<%= new Date(user.agreement.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>)</div>
-                        </section>
-
-                        <!-- @UPDATED by whom and when -->
-                        <% if(user.agreement.updatedAdmin) { %>
-                            <% let updater = user.agreement.updatedAdmin+' ' %>
-                            <% updater += new Date(user.agreement.updatedDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
-                            <% updater += '('+new Date(user.agreement.updatedDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })+')' %>
-
-                            <section class="row-item-85 -right-side">
-                                <div class="field-title -windblow -orange">updated by</div>
-                                <div class="field-value"><%= updater %></div>
-                            </section>
-                        <% } %>
-    
-                        <!-- @BUTTONS -->
-                        <section class="row-item-85 -button-box">
-                            <span class='-btn' onclick="print('<%= pdfObj %>')">Download</span>
-                            <a class='-btn' href='/admin/print-form/<%= user._id %>?form=form3'>Print</a>
-                            <button type='submit' class='-btn'>Update</button>
-                        </section>
-
-                    </form>     <!-- /admin/update-form3 -->
-                    
-
-                    <section class="row-item-95"><div class="gap-line"></div></section>
-
-
-                    <!-- #2 SCHOOL SIGNATURE FORM -->
-                    <% if(!user.agreement.schoolSignRep) { %>
-
-                        <form action='/admin/sign/<%= user.agreement._id %>' method="post">
-
-                            <input type="hidden" name='postedPath' value='/admin/user/<%= user._id %>' />       <!-- path for getting back after updating -->
-
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title -orange -italic">NOT signed on TTA's behalf yet</div>
-                                </div>
-                            </section>
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-value -small">Agreement cannot be signed zero cost. Please indicate its cost and additional fees.</div>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85">
-                                <div class="field-title">Cost of Tuition</div>
-                                <div class="field-value">
-                                    <span name='tuitionCost'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                                    <input type="number" class='input-box' name='tuitionCostItem' id='tuitionCost' min=1 value=0.00 step='.01' oninput='updateSpan(this)' required>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85">
-                                <div class="field-title">Registration Fee</div>
-                                <div class="field-value">
-                                    <span name='regisrFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                                    <input type="number" class='input-box' name='regisrFeeItem' id='regisrFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85">
-                                <div class="field-title">Supplies and Materials Fee</div>
-                                <div class="field-value">
-                                    <span name='supplyFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                                    <input type="number" class='input-box' name='supplyFeeItem' id='supplyFee' min=0 value=0.00 step='.01' oninput='updateSpan(this)' required>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85">
-                                <div class="field-title">Other Fees</div>
-                                <div class="field-value">
-                                    <span name='otherFee'>e.g. <%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                                    <input type="number" class='input-box' name='otherFeeItem' id='otherFee' min=0 value=0.00 step='.01'  oninput='updateSpan(this)' required>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85 -right-side">
-                                <div class="field-title -orange">Agreement's Total:</div>
-                                <div class="field-value">
-                                    <span name='agrTotal'><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(0) %></span>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85">
-                                <div class="field-title -small">To sign an Agreement please put in cost and all required fees, also enter your admin's password</div>
-                            </section>
-                            <section class="row-item-85">
-                                <!-- signer.first, signer.last, signer.title can be used here -->
-                                <div class="fields-set">
-                                    <div class="field-title">*agreement will be signed</div>
-                                    <div class="field-value -orange">as of today by <%= signer.name %></div>
-                                </div>
-                            </section>
-
-                            <section class="row-item-85 -button-box">
-                                <div class="fields-set">
-                                    <div class="field-value">
-                                        <input type='password' class='input-box' name='signerPassword' id='signerPassword' placeholder="Admin's Password" required/>*
-                                    </div>
-                                    <label for="toggler">
-                                        <input type="checkbox" id="toggler" onchange="toggleVisibility(this, signerPassword)">
-                                        <span class='show-password'>Show</span>
-                                    </label>
-                                    <button class='-btn' type="submit">Sign</button>
-                                </div>
-                            </section>
-
-                        </form>     <!-- sign Agreement form -->
-
-                    <% } %>     <!-- if not signed -->
-
-                <% } else { %>
-                    <section class="row-item-85">
-                        <div class="field-value -small">Agreement was not signed on user's behalf yet.</div>
-                    </section>
-                    <% if(user.dataCollection) { %>
-                        <section class="row-item-85">
-                            <div class="field-value -small">#1 Data Collection has been completed by User <%= new Date(user.dataCollection.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
-                        </section>
-                    <% } else { %>
-                        <section class="row-item-85">
-                            <div class="field-warning">#1 Data Collection hasn't been completed by User.</div>
-                        </section>
-                    <% } %>
-                    
-                    <% if(user.application) { %>
-                        <section class="row-item-85">
-                            <div class="field-value -small">#2 Application has been completed by User <%= new Date(user.application.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
-                        </section>
-                    <% } else { %>
-                        <section class="row-item-85">
-                            <div class="field-warning">#2 Application form is not ready yet.</div>
-                        </section>
-                    <% } %>
-
-                <% } %> 
-
+                <%- include('userInfo_agreement.ejs') %>
             </div>  <!-- block-box-inner -->
         </section>  <!-- block-box -->
 
 
-
+        <!-- @STUDENT  id=block4 -->
         <section class="block-box -hidden" name='blockBox' id='block4'>
             <h2 class="block-header">Student Info Block</h2>
             <div class='block-box-inner'>
-                <%- include('user-student-info.ejs') %>
+                <%- include('userInfo_student.ejs') %>
             </div>   <!-- block4 -->
         </section>  <!-- block-box -->
 
@@ -2451,7 +1986,6 @@
         function openIfExists(detailsId) {
             let details = document.querySelector(detailsId)
             if(details) {
-                console.log(details)
                 details.open = true
             }
         }
@@ -2465,6 +1999,9 @@
             break;
             case 'scorings':
                 openIfExists('#scoring-details')
+            break;
+            case 'payments':
+                openIfExists('#payments-details')
             break;
             // details can be added here
         }
