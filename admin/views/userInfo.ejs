@@ -1910,7 +1910,7 @@
 
         function initializeFormWithUpdateListener(formId, inputGroup) {
             const form = document.getElementById(formId)
-            if (form) {
+            if (form && form != null) {
                 form.addEventListener('submit', async (e) => {
                     const anyChanges = await checkUpdates(inputGroup)
                     if (!anyChanges) { e.preventDefault() }
@@ -1920,9 +1920,11 @@
 
         // @ENTRY POINT
         // Init all forms and setup update listeners for each
+
         initializeFormWithUpdateListener('form1', 'data-coll-edits')
         initializeFormWithUpdateListener('form2', 'appl-edits')
         initializeFormWithUpdateListener('form3', 'agr-edits')
+
       
 
         // @MIAN Block's toggler

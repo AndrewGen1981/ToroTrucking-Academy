@@ -520,8 +520,277 @@
             </section>
         </form>     <!-- sign Agreement form -->
     <% } %>     <!-- if not signed by admin -->
-<% } else { %>
+    
 
+
+    <!-- THIS SCRIPT should only work if Agreement exists -->
+    <script>
+        // Entery point
+        recalculateBalance()
+        // initiates ico fields due to payment types
+        pmtTypeInputs = document.getElementsByName("paymentType")
+        for (let i=0; i < pmtTypeInputs.length; i++) {
+            // want to see value as selected in <select> payment type
+            changeSelectSelected(pmtTypeInputs[i])
+            // ico due to <select> value
+            changeTypeIco(pmtTypeInputs[i])
+        }
+
+
+        function changeSelectSelected(pmtTypeInput) {
+            // sets value as selected in <select> payment type
+            const options = pmtTypeInput.options
+            for (let i=0; i < options.length; i++) {
+                if(pmtTypeInput.dataset.was === options[i].value) {     // do not use pmtTypeInputs[i].value here, because value is being redefine right after el. created
+                    options[i].setAttribute('selected', 'selected')
+                } else {
+                    options[i].removeAttribute('selected')
+                }
+            }
+        }
+
+
+        function recalculateBalance() {
+            const balanceElement = document.querySelector('#balance')
+            if (balanceElement && balanceElement != null) {         // this element will be created only when agreement exists and signed
+                const tuitionCost = parseFloat('<%= user.agreement.tuitionCost %>')
+                const regisrFee = parseFloat('<%= user.agreement.regisrFee %>')
+                const supplyFee = parseFloat('<%= user.agreement.supplyFee %>')
+                const otherFee = parseFloat('<%= user.agreement.otherFee %>')
+
+                const totalCost = tuitionCost + regisrFee + supplyFee + otherFee
+                let totalPaid = 0
+                
+                const payments = document.getElementsByName('paymentAmount')
+                for (let i=0; i < payments.length; i++) {
+                    if (payments[i].value) {
+                        totalPaid += parseFloat(payments[i].value)
+                    }
+                }
+
+                let balance = totalPaid - totalCost
+
+                if (balance < 0) {
+                    balanceBox.classList.remove('balance-zero')
+                    balanceBox.classList.add('balance-student-owe')
+                    balanceBox.classList.remove('balance-company-owe')
+                } else {
+                    if (balance < 0.05) {   // from 0.00$ to less than 0.05$
+                        balanceBox.classList.add('balance-zero')
+                        balanceBox.classList.remove('balance-student-owe')
+                        balanceBox.classList.remove('balance-company-owe')
+                    } else {    //  TTA owes to student
+                        balanceBox.classList.remove('balance-zero')
+                        balanceBox.classList.remove('balance-student-owe')
+                        balanceBox.classList.add('balance-company-owe')
+                    }
+                }
+
+                const currency = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' })
+                balanceElement.innerText = `${currency.format(totalPaid)} – ${currency.format(totalCost)} = ${currency.format(balance)}`
+            }
+        }
+
+
+        // listener when change payment type
+        function changeTypeIco(typeSelect) {
+            const ico = document.getElementById(typeSelect.id.replace('paymentType', 'paymentIco'))     // cannot use indexes here, because we are cloning element
+            if (typeSelect && ico) {
+                switch (typeSelect.value.toUpperCase()) {
+                    case "CASH":
+                        ico.innerHTML = '<svg class="pmt-ico -fa-money-bill" viewBox="0 0 640 512"><path d="M320 144c-53.02 0-96 50.14-96 112 0 61.85 42.98 112 96 112 53 0 96-50.13 96-112 0-61.86-42.98-112-96-112zm40 168c0 4.42-3.58 8-8 8h-64c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h16v-55.44l-.47.31a7.992 7.992 0 0 1-11.09-2.22l-8.88-13.31a7.992 7.992 0 0 1 2.22-11.09l15.33-10.22a23.99 23.99 0 0 1 13.31-4.03H328c4.42 0 8 3.58 8 8v88h16c4.42 0 8 3.58 8 8v16zM608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zm-16 272c-35.35 0-64 28.65-64 64H112c0-35.35-28.65-64-64-64V176c35.35 0 64-28.65 64-64h416c0 35.35 28.65 64 64 64v160z"></path></svg>'
+                    break;
+                    case 'CARD':
+                        ico.innerHTML = '<svg class="pmt-ico -fa-card" viewBox="0 0 576 512"><path d="M0 432c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V256H0v176zm192-68c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-40zm-128 0c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM576 80v48H0V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48z"></path></svg>'
+                    break;
+                    case 'CHECK':
+                    case "CASHIER'S CHECK":
+                        ico.innerHTML = '<svg class="pmt-ico -fa-check-bill" viewBox="0 0 640 512"><path d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z"></path></svg>'
+                    break;
+                    case 'COMCHECK':
+                    case 'MONEYGRAM':
+                    case 'PERSONAL MONEY ORDER':
+                    case 'POSTAL MONEY ORDER':
+                        ico.innerHTML = '<svg class="pmt-ico -fa-check1-bill" viewBox="0 0 640 512"><path d="M0 448c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V128H0v320zm448-208c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v32c0 8.84-7.16 16-16 16h-96c-8.84 0-16-7.16-16-16v-32zm0 120c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H456c-4.42 0-8-3.58-8-8v-16zM64 264c0-4.42 3.58-8 8-8h304c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zm0 96c0-4.42 3.58-8 8-8h176c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zM624 32H16C7.16 32 0 39.16 0 48v48h640V48c0-8.84-7.16-16-16-16z"></path></svg>'
+                    break;
+                    case 'PAYPAL':
+                        ico.innerHTML = '<svg class="pmt-ico -fa-paypal" viewBox="0 0 384 512"><path d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4.7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9.7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"></path></svg>'
+                    break;
+                    case 'WESTERN UNION':
+                        ico.innerHTML = '<svg class="pmt-ico -fa-wu" viewBox="0 0 512 512"><path d="M425.09 65.83c-39.88 0-73.28 25.73-83.66 64.33-18.16-58.06-65.5-64.33-84.95-64.33-19.78 0-66.8 6.28-85.28 64.33-10.38-38.6-43.45-64.33-83.66-64.33C38.59 65.83 0 99.72 0 143.03c0 28.96 4.18 33.27 77.17 233.48 22.37 60.57 67.77 69.35 92.74 69.35 39.23 0 70.04-19.46 85.93-53.98 15.89 34.83 46.69 54.29 85.93 54.29 24.97 0 70.36-9.1 92.74-69.67 76.55-208.65 77.5-205.58 77.5-227.2.63-48.32-36.01-83.47-86.92-83.47zm26.34 114.81l-65.57 176.44c-7.92 21.49-21.22 37.22-46.24 37.22-23.44 0-37.38-12.41-44.03-33.9l-39.28-117.42h-.95L216.08 360.4c-6.96 21.5-20.9 33.6-44.02 33.6-25.02 0-38.33-15.74-46.24-37.22L60.88 181.55c-5.38-14.83-7.92-23.91-7.92-34.5 0-16.34 15.84-29.36 38.33-29.36 18.69 0 31.99 11.8 36.11 29.05l44.03 139.82h.95l44.66-136.79c6.02-19.67 16.47-32.08 38.96-32.08s32.94 12.11 38.96 32.08l44.66 136.79h.95l44.03-139.82c4.12-17.25 17.42-29.05 36.11-29.05 22.17 0 38.33 13.32 38.33 35.71-.32 7.87-4.12 16.04-7.61 27.24z"></path></svg>'
+                    break;
+                    case 'ACH': case 'QP': case 'WIRE':
+                        ico.innerHTML = '<svg class="pmt-ico -fa-bank" viewBox="0 0 512 512"><path d="M496 128v16a8 8 0 0 1-8 8h-24v12c0 6.627-5.373 12-12 12H60c-6.627 0-12-5.373-12-12v-12H24a8 8 0 0 1-8-8v-16a8 8 0 0 1 4.941-7.392l232-88a7.996 7.996 0 0 1 6.118 0l232 88A8 8 0 0 1 496 128zm-24 304H40c-13.255 0-24 10.745-24 24v16a8 8 0 0 0 8 8h464a8 8 0 0 0 8-8v-16c0-13.255-10.745-24-24-24zM96 192v192H60c-6.627 0-12 5.373-12 12v20h416v-20c0-6.627-5.373-12-12-12h-36V192h-64v192h-64V192h-64v192h-64V192H96z"></path></svg>'
+                    break;
+                    default:
+                        ico.innerHTML = '<svg class="pmt-ico -fa-other" viewBox="0 0 512 512"><path d="M0 405.3V448c0 35.3 86 64 192 64s192-28.7 192-64v-42.7C342.7 434.4 267.2 448 192 448S41.3 434.4 0 405.3zM320 128c106 0 192-28.7 192-64S426 0 320 0 128 28.7 128 64s86 64 192 64zM0 300.4V352c0 35.3 86 64 192 64s192-28.7 192-64v-51.6c-41.3 34-116.9 51.6-192 51.6S41.3 334.4 0 300.4zm416 11c57.3-11.1 96-31.7 96-55.4v-42.7c-23.2 16.4-57.3 27.6-96 34.5v63.6zM192 160C86 160 0 195.8 0 240s86 80 192 80 192-35.8 192-80-86-80-192-80zm219.3 56.3c60-10.8 100.7-32 100.7-56.3v-42.7c-35.5 25.1-96.5 38.6-160.7 41.8 29.5 14.3 51.2 33.5 60 57.2z"></path></svg>'
+                    break
+                }
+            }
+        }
+
+
+        function showInfo(info, text) {
+            info.innerText = text
+            info.classList.remove('-fading')
+            setTimeout(()=>{
+                info.classList.add('-fading')
+                setTimeout(()=>{
+                    info.innerText = ''
+                }, 1000)
+            }, 5000)
+        }
+
+        // adds a payment if payment info is filled up
+        function addPayment(plus) {
+            const info = document.querySelector('.payments-info')
+
+            const pmtType = document.querySelector(`#paymentType-last`)
+            const pmtIco = document.querySelector(`#paymentIco-last`)
+            const pmtDate = document.querySelector(`#paymentDate-last`)
+            const pmtAmount = document.querySelector(`#paymentAmount-last`)
+            const pmtNotes = document.querySelector(`#paymentNotes-last`)
+        
+            if(pmtType.value && pmtDate.value && pmtAmount.value && pmtNotes.value) {
+                if(parseFloat(pmtAmount.value) > 0) {
+                    // TOOL function, clones element from last one + makes some pre-inits
+                    function cloneAndChangeId(node, N, dataWas) {
+                        const clone = node.cloneNode(true)
+                        clone.id = clone.id.replace('-last', N)
+                        if (dataWas) {
+                            clone.dataset.was = dataWas
+                        }
+                        return document.querySelector('.payment-table').insertBefore(clone, pmtType)
+                    }
+                    // figure out what INDEX should new created elements have
+                    const n = document.getElementsByName("paymentType").length - 1  // how many payments before, except last one
+                    // cloning TYPE input and changing its selected value
+                    changeSelectSelected(cloneAndChangeId(pmtType, n, pmtType.value))
+                    // cloning all the rest of elements and doing pre-init
+                    cloneAndChangeId(pmtIco, n)
+                    cloneAndChangeId(pmtDate, n, 'added')
+                    cloneAndChangeId(pmtAmount, n, '0')
+                    cloneAndChangeId(pmtNotes, n)
+                    // clearing values of last row, used for adding
+                    pmtAmount.value = ''
+                    pmtNotes.value = ''
+                    // creating MINUS button with event listener
+                    const svg = document.createElement('div')
+                    svg.classList.add("pmt-ico")
+                    svg.classList.add("-fa-minus")
+                    svg.id = `paymentMinus${n}`
+                    svg.dataset.index = n
+                    svg.addEventListener('click', delPayment)
+                    document.querySelector('.payment-table').insertBefore(svg, pmtType)
+                    // recalculating balance due to updates
+                    recalculateBalance()
+                } else {
+                    showInfo(info, 'Payment amount have to be greater than 0.00 USD')
+                }
+            } else {
+                showInfo(info, 'Please fill-in all info about payment you are adding')
+            }
+        }
+
+
+        function delPayment(e) {
+            // deletes pmt from the list, when user hits '-'
+            let minus = e.target ? e.target : e     //  can be both types of requests: as listener(e) and from el.onclick(this)
+            let pmtType = document.querySelector(`#paymentType${minus.dataset.index}`)
+            let pmtIco = document.querySelector(`#paymentIco${minus.dataset.index}`)
+            let pmtDate = document.querySelector(`#paymentDate${minus.dataset.index}`)
+            let pmtAmount = document.querySelector(`#paymentAmount${minus.dataset.index}`)
+            let pmtNotes = document.querySelector(`#paymentNotes${minus.dataset.index}`)
+            // fires only if elements 
+            if(pmtType && pmtDate && pmtAmount && pmtNotes &&
+            confirm(`This will detele current payment(${pmtDate.value}), are you sure? `)) {
+                // delete elements
+                pmtType.remove()
+                pmtIco.remove()
+                pmtDate.remove()
+                pmtAmount.remove()
+                pmtNotes.remove()
+                minus.remove()
+                // changing order of all pmtInputs, except last one
+                const pmtInputs = document.getElementsByName("paymentType")
+                for (let i=0; i < pmtInputs.length - 1; i++) {   // except last one, which is for adding (blank)
+                    pmtIco = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentIco')) // trick with pmtInputs[i].id.replace('paymentType', 'paymentIco') lefts index but changes prefix, so it can find element
+                    pmtIco.id = `paymentIco${i}`
+                    pmtDate = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentDate'))
+                    pmtDate.id = `paymentDate${i}`
+                    pmtAmount = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentAmount'))
+                    pmtAmount.id = `paymentAmount${i}`
+                    pmtNotes = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentNotes'))
+                    pmtNotes.id = `paymentNotes${i}`
+                    minus = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentMinus'))
+                    minus.id = `paymentMinus${i}`
+                    minus.dataset.index = i     //  data-index is used for deleting, it is important to update this fild too
+                    // first element should be updated last, because we are using pmtInputs[i].id.replace('paymentType', 'paymentIco')
+                    pmtInputs[i].id = `paymentType${i}`        //should be last
+                    // recalculating balance due to updates
+                    recalculateBalance()
+                }
+            } else {
+                showInfo(document.querySelector('.payments-info'), 'Cannot find elements to delete')
+            }
+        }
+
+
+        document.querySelector('#update-payments').addEventListener('submit', (e) => {
+            // checks if there were any changes
+            let theSame = true
+
+            // if last blank amount changed, then all should be filled-in too
+            const pmtType = document.querySelector(`#paymentType-last`)
+            const pmtDate = document.querySelector(`#paymentDate-last`)
+            const pmtAmount = document.querySelector(`#paymentAmount-last`)
+            const pmtNotes = document.querySelector(`#paymentNotes-last`)
+            if (parseFloat(pmtAmount.value) > 0) {
+                if(!pmtType.value || !pmtDate.value || !pmtNotes.value) {
+                    showInfo(document.querySelector('.payments-info'), 'Check last payment, amount added, but some fields left blank')
+                    return e.preventDefault()
+                } else {
+                    theSame = false
+                }
+            }
+
+            // if admin didn't change last(additional) payment info, then let's check all previouse
+
+            function checkIfSame(pmtInput, prefix) {    // TOOL
+                const el = document.getElementById(pmtInput.id.replace('paymentType', prefix))
+                return el.value === el.dataset.was
+            }
+
+            if (theSame) {
+                const pmtInputs = document.getElementsByName("paymentType")
+                for (let i=0; i < pmtInputs.length-1; i++) {    // except last
+                    theSame = checkIfSame(pmtInputs[i], 'paymentType')
+                    if (!theSame) { break }
+                    theSame = checkIfSame(pmtInputs[i], 'paymentDate')
+                    if (!theSame) { break }
+                    theSame = checkIfSame(pmtInputs[i], 'paymentAmount')
+                    if (!theSame) { break }
+                    theSame = checkIfSame(pmtInputs[i], 'paymentNotes')
+                    if (!theSame) { break }
+                }
+            }
+
+            if (theSame) { 
+                showInfo(document.querySelector('.payments-info'), 'No changes found')
+                return e.preventDefault()
+            }
+            if(!confirm('Would you like to update payment list with the current one?')) {
+                showInfo(document.querySelector('.payments-info'), "You've cancelled action")
+                return e.preventDefault()
+            }
+        })
+
+
+    </script>
+
+
+<% } else { %>
+    <!-- AGREEMENT does not exist -->
     <section class="row-item-85">
         <div class="field-value -small">Agreement was not signed on user's behalf yet.</div>
     </section>
@@ -544,273 +813,4 @@
             <div class="field-warning">#2 Application form is not ready yet.</div>
         </section>
     <% } %>
-
 <% } %> 
-
-
-
-<script>
-    // Entery point
-    recalculateBalance()
-    // initiates ico fields due to payment types
-    pmtTypeInputs = document.getElementsByName("paymentType")
-    for (let i=0; i < pmtTypeInputs.length; i++) {
-        // want to see value as selected in <select> payment type
-        changeSelectSelected(pmtTypeInputs[i])
-        // ico due to <select> value
-        changeTypeIco(pmtTypeInputs[i])
-    }
-
-
-    function changeSelectSelected(pmtTypeInput) {
-        // sets value as selected in <select> payment type
-        const options = pmtTypeInput.options
-        for (let i=0; i < options.length; i++) {
-            if(pmtTypeInput.dataset.was === options[i].value) {     // do not use pmtTypeInputs[i].value here, because value is being redefine right after el. created
-                options[i].setAttribute('selected', 'selected')
-            } else {
-                options[i].removeAttribute('selected')
-            }
-        }
-    }
-
-
-    function recalculateBalance() {
-        const balanceElement = document.querySelector('#balance')
-        if (!balanceElement) { return } // this element will be created only when agreement exists and signed
-
-        const balanceBox = document.querySelector('#balance-box')
-
-        const tuitionCost = parseFloat('<%= user.agreement.tuitionCost %>')
-        const regisrFee = parseFloat('<%= user.agreement.regisrFee %>')
-        const supplyFee = parseFloat('<%= user.agreement.supplyFee %>')
-        const otherFee = parseFloat('<%= user.agreement.otherFee %>')
-
-        const totalCost = tuitionCost + regisrFee + supplyFee + otherFee
-        let totalPaid = 0
-        
-        const payments = document.getElementsByName('paymentAmount')
-        for (let i=0; i < payments.length; i++) {
-            if (payments[i].value) {
-                totalPaid += parseFloat(payments[i].value)
-            }
-        }
-
-        let balance = totalPaid - totalCost
-
-        if (balance < 0) {
-            balanceBox.classList.remove('balance-zero')
-            balanceBox.classList.add('balance-student-owe')
-            balanceBox.classList.remove('balance-company-owe')
-        } else {
-            if (balance < 0.05) {   // from 0.00$ to less than 0.05$
-                balanceBox.classList.add('balance-zero')
-                balanceBox.classList.remove('balance-student-owe')
-                balanceBox.classList.remove('balance-company-owe')
-            } else {    //  TTA owes to student
-                balanceBox.classList.remove('balance-zero')
-                balanceBox.classList.remove('balance-student-owe')
-                balanceBox.classList.add('balance-company-owe')
-            }
-        }
-
-        const currency = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' })
-        balanceElement.innerText = `${currency.format(totalPaid)} – ${currency.format(totalCost)} = ${currency.format(balance)}`
-    }
-
-
-    // listener when change payment type
-    function changeTypeIco(typeSelect) {
-        const ico = document.getElementById(typeSelect.id.replace('paymentType', 'paymentIco'))     // cannot use indexes here, because we are cloning element
-        if (typeSelect && ico) {
-            switch (typeSelect.value.toUpperCase()) {
-                case "CASH":
-                    ico.innerHTML = '<svg class="pmt-ico -fa-money-bill" viewBox="0 0 640 512"><path d="M320 144c-53.02 0-96 50.14-96 112 0 61.85 42.98 112 96 112 53 0 96-50.13 96-112 0-61.86-42.98-112-96-112zm40 168c0 4.42-3.58 8-8 8h-64c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h16v-55.44l-.47.31a7.992 7.992 0 0 1-11.09-2.22l-8.88-13.31a7.992 7.992 0 0 1 2.22-11.09l15.33-10.22a23.99 23.99 0 0 1 13.31-4.03H328c4.42 0 8 3.58 8 8v88h16c4.42 0 8 3.58 8 8v16zM608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zm-16 272c-35.35 0-64 28.65-64 64H112c0-35.35-28.65-64-64-64V176c35.35 0 64-28.65 64-64h416c0 35.35 28.65 64 64 64v160z"></path></svg>'
-                break;
-                case 'CARD':
-                    ico.innerHTML = '<svg class="pmt-ico -fa-card" viewBox="0 0 576 512"><path d="M0 432c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V256H0v176zm192-68c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-40zm-128 0c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM576 80v48H0V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48z"></path></svg>'
-                break;
-                case 'CHECK':
-                case "CASHIER'S CHECK":
-                    ico.innerHTML = '<svg class="pmt-ico -fa-check-bill" viewBox="0 0 640 512"><path d="M608 32H32C14.33 32 0 46.33 0 64v384c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zM176 327.88V344c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-16.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V152c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v16.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07zM416 312c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16zm160 0c0 4.42-3.58 8-8 8h-80c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16zm0-96c0 4.42-3.58 8-8 8H296c-4.42 0-8-3.58-8-8v-16c0-4.42 3.58-8 8-8h272c4.42 0 8 3.58 8 8v16z"></path></svg>'
-                break;
-                case 'COMCHECK':
-                case 'MONEYGRAM':
-                case 'PERSONAL MONEY ORDER':
-                case 'POSTAL MONEY ORDER':
-                    ico.innerHTML = '<svg class="pmt-ico -fa-check1-bill" viewBox="0 0 640 512"><path d="M0 448c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V128H0v320zm448-208c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v32c0 8.84-7.16 16-16 16h-96c-8.84 0-16-7.16-16-16v-32zm0 120c0-4.42 3.58-8 8-8h112c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H456c-4.42 0-8-3.58-8-8v-16zM64 264c0-4.42 3.58-8 8-8h304c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zm0 96c0-4.42 3.58-8 8-8h176c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zM624 32H16C7.16 32 0 39.16 0 48v48h640V48c0-8.84-7.16-16-16-16z"></path></svg>'
-                break;
-                case 'PAYPAL':
-                    ico.innerHTML = '<svg class="pmt-ico -fa-paypal" viewBox="0 0 384 512"><path d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4.7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9.7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"></path></svg>'
-                break;
-                case 'WESTERN UNION':
-                    ico.innerHTML = '<svg class="pmt-ico -fa-wu" viewBox="0 0 512 512"><path d="M425.09 65.83c-39.88 0-73.28 25.73-83.66 64.33-18.16-58.06-65.5-64.33-84.95-64.33-19.78 0-66.8 6.28-85.28 64.33-10.38-38.6-43.45-64.33-83.66-64.33C38.59 65.83 0 99.72 0 143.03c0 28.96 4.18 33.27 77.17 233.48 22.37 60.57 67.77 69.35 92.74 69.35 39.23 0 70.04-19.46 85.93-53.98 15.89 34.83 46.69 54.29 85.93 54.29 24.97 0 70.36-9.1 92.74-69.67 76.55-208.65 77.5-205.58 77.5-227.2.63-48.32-36.01-83.47-86.92-83.47zm26.34 114.81l-65.57 176.44c-7.92 21.49-21.22 37.22-46.24 37.22-23.44 0-37.38-12.41-44.03-33.9l-39.28-117.42h-.95L216.08 360.4c-6.96 21.5-20.9 33.6-44.02 33.6-25.02 0-38.33-15.74-46.24-37.22L60.88 181.55c-5.38-14.83-7.92-23.91-7.92-34.5 0-16.34 15.84-29.36 38.33-29.36 18.69 0 31.99 11.8 36.11 29.05l44.03 139.82h.95l44.66-136.79c6.02-19.67 16.47-32.08 38.96-32.08s32.94 12.11 38.96 32.08l44.66 136.79h.95l44.03-139.82c4.12-17.25 17.42-29.05 36.11-29.05 22.17 0 38.33 13.32 38.33 35.71-.32 7.87-4.12 16.04-7.61 27.24z"></path></svg>'
-                break;
-                case 'ACH': case 'QP': case 'WIRE':
-                    ico.innerHTML = '<svg class="pmt-ico -fa-bank" viewBox="0 0 512 512"><path d="M496 128v16a8 8 0 0 1-8 8h-24v12c0 6.627-5.373 12-12 12H60c-6.627 0-12-5.373-12-12v-12H24a8 8 0 0 1-8-8v-16a8 8 0 0 1 4.941-7.392l232-88a7.996 7.996 0 0 1 6.118 0l232 88A8 8 0 0 1 496 128zm-24 304H40c-13.255 0-24 10.745-24 24v16a8 8 0 0 0 8 8h464a8 8 0 0 0 8-8v-16c0-13.255-10.745-24-24-24zM96 192v192H60c-6.627 0-12 5.373-12 12v20h416v-20c0-6.627-5.373-12-12-12h-36V192h-64v192h-64V192h-64v192h-64V192H96z"></path></svg>'
-                break;
-                default:
-                    ico.innerHTML = '<svg class="pmt-ico -fa-other" viewBox="0 0 512 512"><path d="M0 405.3V448c0 35.3 86 64 192 64s192-28.7 192-64v-42.7C342.7 434.4 267.2 448 192 448S41.3 434.4 0 405.3zM320 128c106 0 192-28.7 192-64S426 0 320 0 128 28.7 128 64s86 64 192 64zM0 300.4V352c0 35.3 86 64 192 64s192-28.7 192-64v-51.6c-41.3 34-116.9 51.6-192 51.6S41.3 334.4 0 300.4zm416 11c57.3-11.1 96-31.7 96-55.4v-42.7c-23.2 16.4-57.3 27.6-96 34.5v63.6zM192 160C86 160 0 195.8 0 240s86 80 192 80 192-35.8 192-80-86-80-192-80zm219.3 56.3c60-10.8 100.7-32 100.7-56.3v-42.7c-35.5 25.1-96.5 38.6-160.7 41.8 29.5 14.3 51.2 33.5 60 57.2z"></path></svg>'
-                break
-            }
-        }
-    }
-
-
-    function showInfo(info, text) {
-        info.innerText = text
-        info.classList.remove('-fading')
-        setTimeout(()=>{
-            info.classList.add('-fading')
-            setTimeout(()=>{
-                info.innerText = ''
-            }, 1000)
-        }, 5000)
-    }
-
-    // adds a payment if payment info is filled up
-    function addPayment(plus) {
-        const info = document.querySelector('.payments-info')
-
-        const pmtType = document.querySelector(`#paymentType-last`)
-        const pmtIco = document.querySelector(`#paymentIco-last`)
-        const pmtDate = document.querySelector(`#paymentDate-last`)
-        const pmtAmount = document.querySelector(`#paymentAmount-last`)
-        const pmtNotes = document.querySelector(`#paymentNotes-last`)
-       
-        if(pmtType.value && pmtDate.value && pmtAmount.value && pmtNotes.value) {
-            if(parseFloat(pmtAmount.value) > 0) {
-                // TOOL function, clones element from last one + makes some pre-inits
-                function cloneAndChangeId(node, N, dataWas) {
-                    const clone = node.cloneNode(true)
-                    clone.id = clone.id.replace('-last', N)
-                    if (dataWas) {
-                        clone.dataset.was = dataWas
-                    }
-                    return document.querySelector('.payment-table').insertBefore(clone, pmtType)
-                }
-                // figure out what INDEX should new created elements have
-                const n = document.getElementsByName("paymentType").length - 1  // how many payments before, except last one
-                // cloning TYPE input and changing its selected value
-                changeSelectSelected(cloneAndChangeId(pmtType, n, pmtType.value))
-                // cloning all the rest of elements and doing pre-init
-                cloneAndChangeId(pmtIco, n)
-                cloneAndChangeId(pmtDate, n, 'added')
-                cloneAndChangeId(pmtAmount, n, '0')
-                cloneAndChangeId(pmtNotes, n)
-                // clearing values of last row, used for adding
-                pmtAmount.value = ''
-                pmtNotes.value = ''
-                // creating MINUS button with event listener
-                const svg = document.createElement('div')
-                svg.classList.add("pmt-ico")
-                svg.classList.add("-fa-minus")
-                svg.id = `paymentMinus${n}`
-                svg.dataset.index = n
-                svg.addEventListener('click', delPayment)
-                document.querySelector('.payment-table').insertBefore(svg, pmtType)
-                // recalculating balance due to updates
-                recalculateBalance()
-            } else {
-                showInfo(info, 'Payment amount have to be greater than 0.00 USD')
-            }
-        } else {
-            showInfo(info, 'Please fill-in all info about payment you are adding')
-        }
-    }
-
-
-    function delPayment(e) {
-        // deletes pmt from the list, when user hits '-'
-        let minus = e.target ? e.target : e     //  can be both types of requests: as listener(e) and from el.onclick(this)
-        let pmtType = document.querySelector(`#paymentType${minus.dataset.index}`)
-        let pmtIco = document.querySelector(`#paymentIco${minus.dataset.index}`)
-        let pmtDate = document.querySelector(`#paymentDate${minus.dataset.index}`)
-        let pmtAmount = document.querySelector(`#paymentAmount${minus.dataset.index}`)
-        let pmtNotes = document.querySelector(`#paymentNotes${minus.dataset.index}`)
-        // fires only if elements 
-        if(pmtType && pmtDate && pmtAmount && pmtNotes &&
-          confirm(`This will detele current payment(${pmtDate.value}), are you sure? `)) {
-            // delete elements
-            pmtType.remove()
-            pmtIco.remove()
-            pmtDate.remove()
-            pmtAmount.remove()
-            pmtNotes.remove()
-            minus.remove()
-            // changing order of all pmtInputs, except last one
-            const pmtInputs = document.getElementsByName("paymentType")
-            for (let i=0; i < pmtInputs.length - 1; i++) {   // except last one, which is for adding (blank)
-                pmtIco = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentIco')) // trick with pmtInputs[i].id.replace('paymentType', 'paymentIco') lefts index but changes prefix, so it can find element
-                pmtIco.id = `paymentIco${i}`
-                pmtDate = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentDate'))
-                pmtDate.id = `paymentDate${i}`
-                pmtAmount = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentAmount'))
-                pmtAmount.id = `paymentAmount${i}`
-                pmtNotes = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentNotes'))
-                pmtNotes.id = `paymentNotes${i}`
-                minus = document.getElementById(pmtInputs[i].id.replace('paymentType', 'paymentMinus'))
-                minus.id = `paymentMinus${i}`
-                minus.dataset.index = i     //  data-index is used for deleting, it is important to update this fild too
-                // first element should be updated last, because we are using pmtInputs[i].id.replace('paymentType', 'paymentIco')
-                pmtInputs[i].id = `paymentType${i}`        //should be last
-                // recalculating balance due to updates
-                recalculateBalance()
-            }
-        } else {
-            showInfo(document.querySelector('.payments-info'), 'Cannot find elements to delete')
-        }
-    }
-
-
-    document.querySelector('#update-payments').addEventListener('submit', (e) => {
-        // checks if there were any changes
-        let theSame = true
-
-        // if last blank amount changed, then all should be filled-in too
-        const pmtType = document.querySelector(`#paymentType-last`)
-        const pmtDate = document.querySelector(`#paymentDate-last`)
-        const pmtAmount = document.querySelector(`#paymentAmount-last`)
-        const pmtNotes = document.querySelector(`#paymentNotes-last`)
-        if (parseFloat(pmtAmount.value) > 0) {
-            if(!pmtType.value || !pmtDate.value || !pmtNotes.value) {
-                showInfo(document.querySelector('.payments-info'), 'Check last payment, amount added, but some fields left blank')
-                return e.preventDefault()
-            } else {
-                theSame = false
-            }
-        }
-
-        // if admin didn't change last(additional) payment info, then let's check all previouse
-
-        function checkIfSame(pmtInput, prefix) {    // TOOL
-            const el = document.getElementById(pmtInput.id.replace('paymentType', prefix))
-            return el.value === el.dataset.was
-        }
-
-        if (theSame) {
-            const pmtInputs = document.getElementsByName("paymentType")
-            for (let i=0; i < pmtInputs.length-1; i++) {    // except last
-                theSame = checkIfSame(pmtInputs[i], 'paymentType')
-                if (!theSame) { break }
-                theSame = checkIfSame(pmtInputs[i], 'paymentDate')
-                if (!theSame) { break }
-                theSame = checkIfSame(pmtInputs[i], 'paymentAmount')
-                if (!theSame) { break }
-                theSame = checkIfSame(pmtInputs[i], 'paymentNotes')
-                if (!theSame) { break }
-            }
-        }
-
-        if (theSame) { 
-            showInfo(document.querySelector('.payments-info'), 'No changes found')
-            return e.preventDefault()
-        }
-        if(!confirm('Would you like to update payment list with the current one?')) {
-            showInfo(document.querySelector('.payments-info'), "You've cancelled action")
-            return e.preventDefault()
-        }
-    })
-
-
-</script>
