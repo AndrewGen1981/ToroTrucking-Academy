@@ -84,7 +84,7 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
 studentRouter.get('/list', ifCanRead, async(req, res) => {
     // auth is good
     const studentPopulated = ['key', 'email', 'TTT', 'created', 'status', 'location']
-    const userPopulated = ['token']
+    const userPopulated = 'token payments'
     const dataCollPopulated = [
         'firstName', 'lastName', 'middleName', 'street', 'city', 'state', 'zip', 'phone', 'DOB', 'SSN'
     ]

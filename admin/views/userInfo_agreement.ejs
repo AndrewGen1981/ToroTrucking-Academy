@@ -553,6 +553,7 @@
         function recalculateBalance() {
             const balanceElement = document.querySelector('#balance')
             if (balanceElement && balanceElement != null) {         // this element will be created only when agreement exists and signed
+                const balanceBox = document.querySelector('#balance-box')
                 const tuitionCost = parseFloat('<%= user.agreement.tuitionCost %>')
                 const regisrFee = parseFloat('<%= user.agreement.regisrFee %>')
                 const supplyFee = parseFloat('<%= user.agreement.supplyFee %>')

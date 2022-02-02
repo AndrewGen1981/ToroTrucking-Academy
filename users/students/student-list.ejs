@@ -20,6 +20,9 @@
 </head>
 <body>
 
+    <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
+    <% const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+
     <!-- sprite -->
     <svg class='-hidden'>
         <symbol id='deselect' viewBox="0 0 128 128">
@@ -49,7 +52,7 @@
                         <a class='-btn' href="/admin/profile/" title='HOME'>
                             <i class="fas fa-home"></i>
                         </a>
-                        <a class='-btn' href="/admin//user-area" title='Users Area'>
+                        <a class='-btn' href="/admin/user-area" title='Users Area'>
                             <i class="fas fa-users"></i>
                         </a>
                         <a class='-btn' href="/admin/student/" title='INs'>
@@ -75,6 +78,8 @@
                     <div class='field -location -header -left-color-group'>Location</div>
                     <div class='field -qr -header -left-color-group'>Need QR?</div>
                     <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
+
+                    <div class='field -balance -header -left-color-group -fixed5'>Balance</div>
 
                     <div class='field -status -header -left-color-group'>Status</div>
 
@@ -150,6 +155,31 @@
                         
                         <div class='field -TTT -fixed4'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
 
+                        <!-- calculating total cost -->
+                        <% let tuitionCost = parseFloat(student.user.agreement.tuitionCost) %>
+                        <% let regisrFee = parseFloat(student.user.agreement.regisrFee) %>
+                        <% let supplyFee = parseFloat(student.user.agreement.supplyFee) %>
+                        <% let otherFee = parseFloat(student.user.agreement.otherFee) %>
+                        <% let totalCost = tuitionCost + regisrFee + supplyFee + otherFee %>
+                        <!-- calculating payments -->
+                        <% let paid = 0 %>
+                        <% if(student.user.payments) { student.user.payments.map(pmt => { if(pmt.ammount > 0){ paid += pmt.ammount}  }) } %>
+                        <!-- calculating balance -->
+                        <% let balance = paid - totalCost %>
+                        <% let balanceMsg = usNumberFormat.format(balance) %>
+                        <!-- perc for gradient  -->
+                        <% let perc = 100 - Math.round(paid * 100 / totalCost)%>
+
+                        <% if(balance < 0) { %>
+                            <div class='field -balance -fixed5 balance-student-owe' style="--perc:<%= perc %>%;"><%= balanceMsg %></div>
+                        <% } else { %>
+                            <% if(balance < 0.05) { %>    <!-- from 0.00$ to less than 0.05$ -->
+                                <div class='field -balance -fixed5 balance-zero'><%= balanceMsg %></div>
+                            <% } else { %>
+                                <div class='field -balance -fixed5 balance-company-owe'><%= balanceMsg %></div>
+                            <% } %>
+                        <% } %>
+
                         <div class='field -status -status-<%= student.status %>'><%= student.status === 'unblock' ? 'active' : student.status %></div>
 
                         <div class='field -email'><%= student.email %></div>
@@ -163,8 +193,6 @@
 
                         <div class='field -phone'><%= student.user.dataCollection.phone %></div>
 
-                        <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
-
                         <div class='field -DOB'><%= formatDate(student.user.dataCollection.DOB) %></div>
                         <div class='field -SSN'><%= student.user.dataCollection.SSN %></div>
 
@@ -172,7 +200,6 @@
                         <div class='field -transmission'><%= student.user.agreement.transmission %></div>
                         <div class='field -visiting'><%= student.user.agreement.visiting %></div>
                         
-                        <% const usNumberFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
 
                         <div class='field -tuitionCost' data-amount='<%= student.user.agreement.tuitionCost %>'><%= usNumberFormat.format(student.user.agreement.tuitionCost) %></div>
                         <div class='field -regisrFee' data-amount='<%= student.user.agreement.regisrFee %>'><%= usNumberFormat.format(student.user.agreement.regisrFee) %></div>
@@ -298,7 +325,8 @@
            document.getElementsByClassName('-fixed1')[0],
            document.getElementsByClassName('-fixed2')[0],
            document.getElementsByClassName('-fixed3')[0],
-           document.getElementsByClassName('-fixed4')[0]
+           document.getElementsByClassName('-fixed4')[0],
+           document.getElementsByClassName('-fixed5')[0]
         ]
     
         // listener on SCROLL adds/removes class 'isSticky'
