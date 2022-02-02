@@ -169,14 +169,16 @@
                         <% let balanceMsg = usNumberFormat.format(balance) %>
                         <!-- perc for gradient  -->
                         <% let perc = 100 - Math.round(paid * 100 / totalCost)%>
+                        <!-- link for get into payments directly -->
+                        <% let pmtLink = `/admin/user/${student.user._id}?activatetab=3&open=payments` %>
 
                         <% if(balance < 0) { %>
-                            <div class='field -balance -fixed5 balance-student-owe' style="--perc:<%= perc %>%;"><%= balanceMsg %></div>
+                            <a href='<%= pmtLink %>' class='field -balance -fixed5 balance-student-owe' style="--perc:<%= perc %>%;"><%= balanceMsg %></a>
                         <% } else { %>
                             <% if(balance < 0.05) { %>    <!-- from 0.00$ to less than 0.05$ -->
-                                <div class='field -balance -fixed5 balance-zero'><%= balanceMsg %></div>
+                                <a href='<%= pmtLink %>' class='field -balance -fixed5 balance-zero'><%= balanceMsg %></a>
                             <% } else { %>
-                                <div class='field -balance -fixed5 balance-company-owe'><%= balanceMsg %></div>
+                                <a href='<%= pmtLink %>' class='field -balance -fixed5 balance-company-owe'><%= balanceMsg %></a>
                             <% } %>
                         <% } %>
 

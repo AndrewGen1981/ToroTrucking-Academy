@@ -470,6 +470,8 @@ a.-lastName {
 
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
+    color: #333;
+    text-decoration: none;
 }
 .balance-student-owe {
     --col1: #dd4848;
@@ -483,9 +485,12 @@ a.-lastName {
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
     color: #fff;
+    text-decoration: none;
 }
 .balance-company-owe {
     background-color: #f5d992 !important;
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
+    color: #333333;
+    text-decoration: none;
 }
