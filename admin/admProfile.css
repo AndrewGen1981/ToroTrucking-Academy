@@ -196,42 +196,47 @@ font-family: "BrixSlab-BlackItalic";
     justify-content: center;
 }
 .chart-column {
+    --col1: lightgray;
+    --col2: gray;
+
     width: var(--chart-column-width);
     max-width: 75px;
-    margin-right: 3px;
+    padding: 0 1px;
 
-    background-color: rgb(86, 181, 184);
-    background: -webkit-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
-    background: -moz-linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
-    background: linear-gradient(135deg, rgb(152, 207, 195), rgb(86, 181, 184));
+    background-color: var(--col2);
+    background: -webkit-linear-gradient(90deg, var(--col1) 35%, var(--col2));
+    background: -moz-linear-gradient(90deg, var(--col1) 35%, var(--col2));
+    background: linear-gradient(90deg, var(--col1) 35%, var(--col2));
 
-    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
 
     position:relative;
-    
+    border-bottom: 1px solid #26354430;    
 }
 .chart-column::before {
     content: attr(data-value);
 
     width: 100%;
     text-align: center;
-    color: #ffffff;
+    color: #333;
 
     font-family: "BrixSlab-Regular";
     font-size: 15px;
    
     position: absolute;
-    top: 3px; 
+    top: -1.5em; 
     left: 0;
 }
 .chart-column::after {
     content: attr(data-key);
 
+    margin-top: 5px;
     width: 100%;
     min-width: 75px;
    
     font-family: "BrixSlab-Regular";
-    font-size: 13px;
+    font-size: 12px;
 
     text-align: center;
 
@@ -240,15 +245,20 @@ font-family: "BrixSlab-BlackItalic";
     left: 0;
 }
 .chart-column[data-value='0']::before {
-    top: -1rem; 
-    color: lightgray;
+    top: -1.5em; 
+    color: #26354430;
 }
-
+.chart-sub-column {
+    width: 100%;
+    height: var(--h);
+    background-color: var(--c);
+    opacity: 0.35;
+    border: 1px solid #26354430;
+}
 
 @media (max-width: 1170px) {
     :root {
         --left-panel-width: 175px;
-        
     }
     .chart-column::after {
         transform: rotate(-90deg);

@@ -18,6 +18,9 @@
 </head>
 <body>
 
+    <!-- each location has own color for Chart -->
+    <% const colorArray = ['gray', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple'] %>
+
     <div class="main-adm-box">
         <% if (user) { %>
 
@@ -65,9 +68,18 @@
                 <% if(analyticsArray) { %>
                     <div class="chart-title">New Students Involving Chart</div>
                     <div class="analythicsChart">
-                        <% for (const [key, value] of Object.entries(analyticsArray)) { %>
-                            <div class="chart-column" data-key="<%= value.month %>.<%= value.year %>" data-value="<%= value.newStudents %>"></div>
-                        <% } %>
+                        <% analyticsArray.map(item => { %>
+                            <div class="chart-column" data-key="<%= item.month %>.<%= item.year %>" data-value="<%= item.newStudents %>">
+                                <% if(item.newStudents > 0) { %>
+                                    <% item.locations.map((location, index) => { %>
+                                        <% if(item.locationValues[index] > 0) { %>
+                                            <% let perc = item.locationValues[index] *100 / item.newStudents %>
+                                            <div class="chart-sub-column" data-value="<%= item.locationValues[index] %>" style="--h:<%= perc %>%; --c:<%= colorArray[index - 1] %>" title="<%= location %>"></div>  <!-- use index-1 because 0th el. is 'All' -->
+                                        <% } %>
+                                    <% }) %>
+                                <% } %>
+                            </div>
+                        <% }) %>
                     </div>  <!-- analythicsChart -->
                 <% } %>
             </div>  <!-- desktop -->

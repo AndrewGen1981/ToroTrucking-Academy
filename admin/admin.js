@@ -1,6 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const path = require('path')
+const { Mongoose } = require('mongoose')
 
 // CONFIG
 const admin = require('./config')
@@ -14,11 +15,12 @@ const { agreementForm } = require('../users/applicants/form3Model')
 const { qrCONFIG } = require('./config-qr')
 const { Tuition } = require('../users/tuition/tuitionModel')
 
+// Charts
+const chart = require('./adminProfileCharts')
 
 // PDF
 const pdf = require('../static/pdf/pdf')
-const { redirect } = require('express/lib/response')
-const { Mongoose } = require('mongoose')
+// const { redirect } = require('express/lib/response')     do I need this?
 
 
 // @SESSION config
@@ -133,42 +135,11 @@ admRouter.get('/', redirectToHome, (req, res) => {
 
 admRouter.get('/profile', redirectToLogin, async(req, res) => {
 
-    // analytics has to be done here (12 last month) - 13 poriods for analythics
-    const date = new Date()
-    const currentYear = date.getFullYear()
-    const aYearBefore = currentYear - 1
-    const month = date.getMonth()
-    const startDate = new Date(`${aYearBefore}-${month + 1}-01`)
 
-    const students = await Student.where("created").gt(startDate).select("created")
-
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    const months = date.getMonth() - startDate.getMonth() + (date.getFullYear() - startDate.getFullYear()) * 12
-    let analyticsArray = {}
-
-    for (let i=0; i <= months; i++){
-        
-        let n = (month + i + 1) > monthNames.length ? (month + i) % monthNames.length : (month + i)
-        let year = (month + i + 1) > monthNames.length ? currentYear : aYearBefore
-
-        analyticsArray[`${year}-${n}`] = {
-            month: monthNames[n],
-            year,
-            newStudents: 0
-        }
-    }
-    for (let i=0; i < students.length; i++) {
-        
-        let created = new Date(students[i].created)
-        let createdMonth = created.getMonth()
-        let createdYear = created.getFullYear()
-
-        analyticsArray[`${createdYear}-${createdMonth}`].newStudents += 1
-    }
 
     res.render(path.join(__dirname+'/admProfile.ejs'), {
         user: res.locals.user,
-        analyticsArray
+        analyticsArray: await chart.newStudentsInvolvingChart(12)
     })
 })
 
