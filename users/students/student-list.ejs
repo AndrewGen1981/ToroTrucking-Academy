@@ -114,10 +114,7 @@
                     <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
                     <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
 
-                    <div class='field -tuition -header -learn-color-group'>
-                        Learning
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
+                    <div class='field -tuition -header -learn-color-group'>Learning</div>
 
                     <div class='field -isAllowed -header -scoring-color-group'>Can Do Scorings?</div>
                     <div class='field -scoring -header -scoring-color-group'>IN-CAB Scoring</div>
@@ -168,7 +165,7 @@
                         <% let balance = paid - totalCost %>
                         <% let balanceMsg = usNumberFormat.format(balance) %>
                         <!-- perc for gradient  -->
-                        <% let perc = 100 - Math.round(paid * 100 / totalCost)%>
+                        <% let perc = Math.round(paid * 100 / totalCost)%>
                         <!-- link for get into payments directly -->
                         <% let pmtLink = `/admin/user/${student.user._id}?activatetab=3&open=payments` %>
 
@@ -228,11 +225,12 @@
                         <% if(!student.tuition) { %>
                             <div class='field -tuition'>no data</div>
                         <% } else { %>
+                            <% let tuitionLink = `/admin/user/${student.user._id}?activatetab=4&open=tuition` %>
                             <% if(!student.tuition.isAllowed) { %>
-                                <div class='field -tuition -tuitionDisabled'>disabled</div>
+                                <a href="<%= tuitionLink %>" class='field -tuition -tuitionDisabled'>disabled</a>
                             <% } else { %>
-                                <% let rateClass = student.tuition.avLessonsRate > 0.95 ? '-tuitionDone' : student.tuition.avLessonsRate > 0.55 ? '-tuitionHalf' : '-tuitionStarted' %>
-                                <div class='field -tuition <%= rateClass %>'><%= Math.round(student.tuition.avLessonsRate * 1000) / 10 %>%</div>
+                                <% let progress = `${ Math.round(student.tuition.avLessonsRate * 1000) / 10}%` %>
+                                <a href="<%= tuitionLink %>" class='field -tuition -tuitionProgress' style="--progress: <%= progress %>"><%= progress %></a>
                             <% } %>
                         <% } %>
 

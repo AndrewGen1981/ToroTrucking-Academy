@@ -52,18 +52,12 @@
     color: white !important;
 }
 .-learn-color-group {
-    background: #74c553;
+    background: #0e8f93;
+    color: white !important;
 }
 .-scoring-color-group {
     background: #505050 !important;
     color: white !important;
-}
-
-
-/* FA elements */
-.-header>.fas {
-    font-size: 1.35rem;
-    color: yellow;
 }
 
 .student-list-box {
@@ -336,17 +330,25 @@ a.-lastName {
     text-align: center;
 }
 .-tuitionDisabled {
-    background-color: #f57546de;
+    background-color: #dd4848;
+    font-family: 'BrixSlab-LightItalic';
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
 }
-.-tuitionDone {
-    background-color: #91c57d;
-    color: white;
-}
-.-tuitionHalf {
-    background-color: #fcfc7e;
-}
-.-tuitionStarted {
-    background-color: #c0c0c09d;
+.-tuitionProgress {
+    --col1: #52b3b6;
+    --col2: #ebf900;
+    --right: calc(var(--progress) + 5%);
+
+    background: -webkit-linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
+    background: -moz-linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
+    background: linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
+
+    font-family: 'BrixSlab-LightItalic';
+    font-size: 14px;
+    color: #333333;
+    text-decoration: none;
 }
 
 /* Scoring States */
@@ -468,27 +470,33 @@ a.-lastName {
     background: -moz-linear-gradient(90deg, var(--col1), var(--col2));
     background: linear-gradient(90deg, var(--col1), var(--col2));
 
+    padding-right: 3px;
+
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
     color: #333;
     text-decoration: none;
 }
 .balance-student-owe {
-    --col1: #dd4848;
-    --col2: #56b5b8;
-    --p: var(--perc);
+    --col1: #56b5b8;
+    --col2: #dd4848;
+    --right: calc(var(--perc) + 3%);
 
-    background: -webkit-linear-gradient(90deg, var(--col1) var(--p), var(--col2));
-    background: -moz-linear-gradient(90deg, var(--col1) var(--p), var(--col2));
-    background: linear-gradient(90deg, var(--col1) var(--p), var(--col2));
+    background: -webkit-linear-gradient(90deg, var(--col1) var(--perc), var(--col2) var(--right));
+    background: -moz-linear-gradient(90deg, var(--col1) var(--perc), var(--col2) var(--right));
+    background: linear-gradient(90deg, var(--col1) var(--perc), var(--col2) var(--right));
+
+    padding-right: 3px;
 
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
-    color: #fff;
+    color: #222222;
     text-decoration: none;
 }
 .balance-company-owe {
     background-color: #f5d992 !important;
+
+    padding-right: 3px;
     font-family: 'BrixSlab-LightItalic';
     font-size: 14px;
     color: #333333;
