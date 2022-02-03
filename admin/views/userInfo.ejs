@@ -49,7 +49,7 @@
                 <h1 class="student-full-name">New User</h1>
                 <h3 class="student-address">no address data yet</h3>
             <% } %>
-            <span class="user-nick-name">nickname<span><%= user.name %></span></span>
+            <span class="user-nick-name">nickname<span><%= user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase() %></span></span>
     
             <% if (user.token === 'not sent') { %>
                 <span class="user-email">(<%= user.email %><span class="email-verify">: not verified yet</span>)</span>

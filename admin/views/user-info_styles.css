@@ -87,7 +87,8 @@
 .user-nick-name span {
     color: #333;
     font-family: 'Great Vibes', cursive;
-    font-size: 1.65rem;
+    font-size: 1.75rem;
+    text-transform: capitalize;
     padding: 0 3px;
 }
 .user-email {
