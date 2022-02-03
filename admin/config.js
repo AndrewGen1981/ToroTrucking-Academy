@@ -62,6 +62,13 @@ const PROFILES = [
     { id: "HusseinInst0001", name: "Omar Hussein", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.HUSSEIN0001_PASS, auth: AUTH.instructor },
 
 
+    // Troutdale Office managers & instructors:
+    { id: "Estudillo0001", name: "Megan Estudillo", title:'Manager', email: "troutdale@torocdl.com", location: LOCATION.Troutdale, password: process.env.ESTUDILLO0001_PASS, auth: AUTH.editor },
+    // + Richard Dupraw manager/instructor
+    { id: "Dupraw0001", name: "Richard Dupraw", title:'Manager', email: "troutdale@torocdl.com", location: LOCATION.Troutdale, password: process.env.DUPRAW0001_PASS, auth: AUTH.editor },
+    { id: "DuprawInst0001", name: "Richard Dupraw", title:'Instructor', email: "troutdale@torocdl.com", location: LOCATION.Troutdale, password: process.env.DUPRAW0001_PASS, auth: AUTH.instructor },
+
+
     // TEST INSTRUCTORS
     { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: LOCATION.Kent, password: process.env.INST0001_PASS, auth: AUTH.instructor },
 ]
