@@ -107,20 +107,15 @@
                     <h3 class="block-title">Profile info</h3>
 
                     <div class="block-item">    <!-- nickname -->
-                        <svg class="ico -user" viewBox="0 0 24 24">
-                            <g transform="translate(0 -1028.4)">
-                                <path d="m8.4062 1041.1c-2.8856 1.3-4.9781 4-5.3437 7.3 0 1.1 0.8329 2 1.9375 2h14c1.105 0 1.938-0.9 1.938-2-0.366-3.3-2.459-6-5.344-7.3-0.649 1.3-2.011 2.3-3.594 2.3s-2.9453-1-3.5938-2.3z"/>
-                                <path d="m17 4a5 5 0 1 1 -10 0 5 5 0 1 1 10 0z" transform="translate(0 1031.4)"/>
-                                <path d="m12 11c-1.277 0-2.4943 0.269-3.5938 0.75-2.8856 1.262-4.9781 3.997-5.3437 7.25 0 1.105 0.8329 2 1.9375 2h14c1.105 0 1.938-0.895 1.938-2-0.366-3.253-2.459-5.988-5.344-7.25-1.1-0.481-2.317-0.75-3.594-0.75z" transform="translate(0 1028.4)"/>
-                            </g>
+                        <svg class="ico -user" viewBox="0 0 448 512">
+                            <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path>
                         </svg>
                         <span class="block-key">User Nickname<span class="block-value"><%= user.name %></span></span>
                     </div>  <!-- nickname -->
 
                     <div class="block-item">    <!-- email -->
                         <svg class="ico -email" viewBox="0 0 512 512">
-                            <path d="M67,148.7c11,5.8,163.8,89.1,169.5,92.1c5.7,3,11.5,4.4,20.5,4.4c9,0,14.8-1.4,20.5-4.4c5.7-3,158.5-86.3,169.5-92.1   c4.1-2.1,11-5.9,12.5-10.2c2.6-7.6-0.2-10.5-11.3-10.5H257H65.8c-11.1,0-13.9,3-11.3,10.5C56,142.9,62.9,146.6,67,148.7z"/>
-                            <path d="M455.7,153.2c-8.2,4.2-81.8,56.6-130.5,88.1l82.2,92.5c2,2,2.9,4.4,1.8,5.6c-1.2,1.1-3.8,0.5-5.9-1.4l-98.6-83.2   c-14.9,9.6-25.4,16.2-27.2,17.2c-7.7,3.9-13.1,4.4-20.5,4.4c-7.4,0-12.8-0.5-20.5-4.4c-1.9-1-12.3-7.6-27.2-17.2l-98.6,83.2   c-2,2-4.7,2.6-5.9,1.4c-1.2-1.1-0.3-3.6,1.7-5.6l82.1-92.5c-48.7-31.5-123.1-83.9-131.3-88.1c-8.8-4.5-9.3,0.8-9.3,4.9   c0,4.1,0,205,0,205c0,9.3,13.7,20.9,23.5,20.9H257h185.5c9.8,0,21.5-11.7,21.5-20.9c0,0,0-201,0-205   C464,153.9,464.6,148.7,455.7,153.2z"/>
+                            <path d="M256 8C118.941 8 8 118.919 8 256c0 137.059 110.919 248 248 248 48.154 0 95.342-14.14 135.408-40.223 12.005-7.815 14.625-24.288 5.552-35.372l-10.177-12.433c-7.671-9.371-21.179-11.667-31.373-5.129C325.92 429.757 291.314 440 256 440c-101.458 0-184-82.542-184-184S154.542 72 256 72c100.139 0 184 57.619 184 160 0 38.786-21.093 79.742-58.17 83.693-17.349-.454-16.91-12.857-13.476-30.024l23.433-121.11C394.653 149.75 383.308 136 368.225 136h-44.981a13.518 13.518 0 0 0-13.432 11.993l-.01.092c-14.697-17.901-40.448-21.775-59.971-21.775-74.58 0-137.831 62.234-137.831 151.46 0 65.303 36.785 105.87 96 105.87 26.984 0 57.369-15.637 74.991-38.333 9.522 34.104 40.613 34.103 70.71 34.103C462.609 379.41 504 307.798 504 232 504 95.653 394.023 8 256 8zm-21.68 304.43c-22.249 0-36.07-15.623-36.07-40.771 0-44.993 30.779-72.729 58.63-72.729 22.292 0 35.601 15.241 35.601 40.77 0 45.061-33.875 72.73-58.161 72.73z"></path>
                         </svg>
                         <span class="block-key">Email<span class="block-value"><%= user.email %></span></span>
                     </div>  <!-- email -->
@@ -176,20 +171,32 @@
                     </div>  <!-- created -->
 
                     <div class="block-item">    <!-- session -->
-                        <svg class="ico -session" viewBox="0 0 16 16">
-                            <path d="M6.16 4.6c1.114 0.734 1.84 1.979 1.84 3.394 0 0.002 0 0.004 0 0.006v-0c0-0.002 0-0.004 0-0.006 0-1.415 0.726-2.66 1.825-3.384 0.573-0.385 0.984-0.939 1.17-1.589l-5.995-0.020c0.191 0.67 0.603 1.225 1.15 1.594z"></path>
-                            <path d="M11.18 6.060c1.107-0.808 1.819-2.101 1.82-3.56v-0.5h1v-2h-12v2h1v0.5c0.001 1.459 0.713 2.752 1.808 3.551 0.672 0.43 1.121 1.13 1.192 1.939-0.093 0.848-0.551 1.564-1.209 2.003-1.081 0.814-1.772 2.078-1.79 3.503l-0 0.503h-1v2h12v-2h-1v-0.5c-0.018-1.429-0.709-2.692-1.769-3.492-0.68-0.454-1.138-1.169-1.23-1.996 0.071-0.831 0.52-1.532 1.169-1.946zM9 8c0.072 1.142 0.655 2.136 1.519 2.763 0.877 0.623 1.445 1.61 1.481 2.732l0 0.505h-8v-0.5c0.036-1.127 0.604-2.114 1.459-2.723 0.886-0.642 1.468-1.635 1.54-2.766-0.063-1.124-0.641-2.091-1.498-2.683-0.914-0.633-1.499-1.662-1.502-2.827v-0.5h8v0.5c-0.003 1.166-0.587 2.195-1.479 2.813-0.88 0.607-1.458 1.574-1.521 2.678z"></path>
+                        <svg class="ico -session" viewBox="0 0 384 512">
+                            <path d="M360 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24 0 90.965 51.016 167.734 120.842 192C75.016 280.266 24 357.035 24 448c-13.255 0-24 10.745-24 24v16c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24 0-90.965-51.016-167.734-120.842-192C308.984 231.734 360 154.965 360 64c13.255 0 24-10.745 24-24V24c0-13.255-10.745-24-24-24zm-64 448H88c0-77.458 46.204-144 104-144 57.786 0 104 66.517 104 144z"></path>
                         </svg>
                         <span class="block-key">Session Started<span class="block-value"><%= new Date(user.lastSESS).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %> • <%= new Date(user.lastSESS).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></span></span>
                     </div>  <!-- session -->
 
                     <div class="block-item">    <!-- expired -->
-                        <svg class="ico -expired" viewBox="0 0 16 16">
-                            <path d="M6.16 4.6c1.114 0.734 1.84 1.979 1.84 3.394 0 0.002 0 0.004 0 0.006v-0c0-0.002 0-0.004 0-0.006 0-1.415 0.726-2.66 1.825-3.384 0.573-0.385 0.984-0.939 1.17-1.589l-5.995-0.020c0.191 0.67 0.603 1.225 1.15 1.594z"></path>
-                            <path d="M11.18 6.060c1.107-0.808 1.819-2.101 1.82-3.56v-0.5h1v-2h-12v2h1v0.5c0.001 1.459 0.713 2.752 1.808 3.551 0.672 0.43 1.121 1.13 1.192 1.939-0.093 0.848-0.551 1.564-1.209 2.003-1.081 0.814-1.772 2.078-1.79 3.503l-0 0.503h-1v2h12v-2h-1v-0.5c-0.018-1.429-0.709-2.692-1.769-3.492-0.68-0.454-1.138-1.169-1.23-1.996 0.071-0.831 0.52-1.532 1.169-1.946zM9 8c0.072 1.142 0.655 2.136 1.519 2.763 0.877 0.623 1.445 1.61 1.481 2.732l0 0.505h-8v-0.5c0.036-1.127 0.604-2.114 1.459-2.723 0.886-0.642 1.468-1.635 1.54-2.766-0.063-1.124-0.641-2.091-1.498-2.683-0.914-0.633-1.499-1.662-1.502-2.827v-0.5h8v0.5c-0.003 1.166-0.587 2.195-1.479 2.813-0.88 0.607-1.458 1.574-1.521 2.678z"></path>
+                        <svg class="ico -expired" viewBox="0 0 384 512">
+                            <path d="M360 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24 0 90.965 51.016 167.734 120.842 192C75.016 280.266 24 357.035 24 448c-13.255 0-24 10.745-24 24v16c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24 0-90.965-51.016-167.734-120.842-192C308.984 231.734 360 154.965 360 64c13.255 0 24-10.745 24-24V24c0-13.255-10.745-24-24-24zm-75.078 384H99.08c17.059-46.797 52.096-80 92.92-80 40.821 0 75.862 33.196 92.922 80zm.019-256H99.078C91.988 108.548 88 86.748 88 64h208c0 22.805-3.987 44.587-11.059 64z"></path>
                         </svg>
                         <span class="block-key">Session will be expired at<span class="block-value"><%= new Date(SESS_EXP).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></span></span>
                     </div>  <!-- expired -->
+
+                    <% const usCurrencyFormat = new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }) %>
+
+                    <% if(user.balance != undefined) { %>
+                        <div class="block-item">    <!-- balance -->
+                            <% if(user.balance < 0) { %>
+                                <svg class="ico -warning" viewBox="0 0 640 512"><path d="M256 336h-.02c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0C-2.06 328.75.02 320.33.02 336H0c0 44.18 57.31 80 128 80s128-35.82 128-80zM128 176l72 144H56l72-144zm511.98 160c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0-87.12 174.26-85.04 165.84-85.04 181.51H384c0 44.18 57.31 80 128 80s128-35.82 128-80h-.02zM440 320l72-144 72 144H440zm88 128H352V153.25c23.51-10.29 41.16-31.48 46.39-57.25H528c8.84 0 16-7.16 16-16V48c0-8.84-7.16-16-16-16H383.64C369.04 12.68 346.09 0 320 0s-49.04 12.68-63.64 32H112c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h129.61c5.23 25.76 22.87 46.96 46.39 57.25V448H112c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h416c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path></svg>
+                                <span class="block-key -warning">Your balance is<span class="block-value -warning"><%= usCurrencyFormat.format(user.balance) %></span></span>
+                            <% } else { %>
+                                <svg class="ico -trusted" viewBox="0 0 640 512"><path d="M256 336h-.02c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0C-2.06 328.75.02 320.33.02 336H0c0 44.18 57.31 80 128 80s128-35.82 128-80zM128 176l72 144H56l72-144zm511.98 160c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0-87.12 174.26-85.04 165.84-85.04 181.51H384c0 44.18 57.31 80 128 80s128-35.82 128-80h-.02zM440 320l72-144 72 144H440zm88 128H352V153.25c23.51-10.29 41.16-31.48 46.39-57.25H528c8.84 0 16-7.16 16-16V48c0-8.84-7.16-16-16-16H383.64C369.04 12.68 346.09 0 320 0s-49.04 12.68-63.64 32H112c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h129.61c5.23 25.76 22.87 46.96 46.39 57.25V448H112c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h416c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path></svg>
+                                <span class="block-key">Your balance is<span class="block-value -trusted"><%= usCurrencyFormat.format(user.balance) %></span></span>
+                            <% } %>
+                        </div>  <!-- balance -->
+                    <% } %>
 
                     <% if(user.student) { %>
                         <div class="block-item">    <!-- tuition -->
@@ -276,28 +283,28 @@
 
                     <div class="clocks-table">
                         <div class="clocks-table-cell -header">DATE</div>
-                        <div class="clocks-table-cell -header">KEY</div>
+                        <div class="clocks-table-cell -header -hide-if-small">KEY</div>
                         <div class="clocks-table-cell -header">IN</div>
-                        <div class="clocks-table-cell -header">IN GEO</div>
+                        <div class="clocks-table-cell -header -hide-if-small">IN GEO</div>
                         <div class="clocks-table-cell -header">OUT</div>
-                        <div class="clocks-table-cell -header">OUT GEO</div>
+                        <div class="clocks-table-cell -header -hide-if-small">OUT GEO</div>
                         <div class="clocks-table-cell -header">Duration</div>
-                        <div class="clocks-table-cell -header">Ratio</div>
+                        <div class="clocks-table-cell -header -hide-if-small">Ratio</div>
 
                         <% verClocks.map(clock => { %>
                             <% let duration = clock.duration / (1000 * 60 *60) %>
                             <!-- Date, key -->
                             <div class="clocks-table-cell"><%= new Date(clock.date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
-                            <div class="clocks-table-cell"><%= clock.dateKey %></div>
+                            <div class="clocks-table-cell -hide-if-small"><%= clock.dateKey %></div>
                             
                             <!-- IN & coord -->
                             <div class="clocks-table-cell"><%= new Date(clock.in).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
                             <% if (!isNaN(clock.inlat) && !isNaN(clock.inlon)) { %>
-                                <a class="clocks-table-cell" href="http://www.google.com/maps/place/<%= clock.inlat %>,<%= clock.inlon %>" target="_blank">
+                                <a class="clocks-table-cell -hide-if-small" href="http://www.google.com/maps/place/<%= clock.inlat %>,<%= clock.inlon %>" target="_blank">
                                     <%= normCOORD(clock.inlat) %>,<%= normCOORD(clock.inlon) %>
                                 </a>
                             <% } else { %>
-                                <div class="clocks-table-cell"><%= clock.inlat %>,<%= clock.inlon %></div>
+                                <div class="clocks-table-cell -hide-if-small"><%= clock.inlat %>,<%= clock.inlon %></div>
                             <% } %>
     
                             <!-- OUT & coord -->
@@ -308,20 +315,20 @@
                             <% } %>
     
                             <% if (!isNaN(clock.outlat) && !isNaN(clock.outlon)) { %>
-                                <a class="clocks-table-cell" href="http://www.google.com/maps/place/<%= clock.outlat %>,<%= clock.outlon %>" target="_blank">
+                                <a class="clocks-table-cell -hide-if-small" href="http://www.google.com/maps/place/<%= clock.outlat %>,<%= clock.outlon %>" target="_blank">
                                     <%= normCOORD(clock.outlat) %>,<%= normCOORD(clock.outlon) %>
                                 </a>
                             <% } else { %>
-                                <div class="clocks-table-cell"><%= clock.outlat %>,<%= clock.outlon %></div>
+                                <div class="clocks-table-cell -hide-if-small"><%= clock.outlat %>,<%= clock.outlon %></div>
                             <% } %>
     
                             <!-- duration -->
                             <% if( !isNaN(clock.out) ) { %>
                                 <div class="clocks-table-cell"><%= strTTT(duration) %></div>
-                                <div class="clocks-table-cell"><%= normTTT(duration) %></div>
+                                <div class="clocks-table-cell -hide-if-small"><%= normTTT(duration) %></div>
                             <% } else { %>
                                 <div class="clocks-table-cell -orange"><%= strTTT(duration) %></div>
-                                <div class="clocks-table-cell -orange"><%= normTTT(duration) %></div>
+                                <div class="clocks-table-cell -orange -hide-if-small"><%= normTTT(duration) %></div>
                             <% } %>
                         <% }) %>
 
@@ -350,7 +357,7 @@
                         <div class="scoring-table">
                             <div class="scoring-table-cell -scoring-header">Type</div>
                             <div class="scoring-table-cell -scoring-header">Date</div>
-                            <div class="scoring-table-cell -scoring-header">Instructor</div>
+                            <div class="scoring-table-cell -scoring-header -hide-if-small">Instructor</div>
                             <div class="scoring-table-cell -scoring-header">Result</div>
                             <div class="scoring-table-cell -scoring-header">Certificate</div>
 
@@ -364,7 +371,7 @@
                                         <%= new Date(scor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                         <%= new Date(scor.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                     </div>
-                                    <div class="scoring-table-cell"><%= scor.instructor %></div>
+                                    <div class="scoring-table-cell -hide-if-small"><%= scor.instructor %></div>
 
                                     <% if (scor.result) { %>
                                         <div class="scoring-table-cell -passed">passed</div>
@@ -408,8 +415,11 @@
     </div>      <!-- nav-bottom -->
     <div class="bolt-footer">
         © 2022 designed by BOLT
+        <a href="https://www.boltcdl.com" target="_blank">
+            <svg class='bolt-ico' viewBox="0 0 320 512"><path d="M296 160H180.6l42.6-129.8C227.2 15 215.7 0 200 0H56C44 0 33.8 8.9 32.2 20.8l-32 240C-1.7 275.2 9.5 288 24 288h118.7L96.6 482.5c-3.6 15.2 8 29.5 23.3 29.5 8.4 0 16.4-4.4 20.8-12l176-304c9.3-15.9-2.2-36-20.7-36z"></path></svg>
+        </a>
         <a href="mailto:info@boltcdl.com">info@boltcdl.com</a>
-        <span class="tel">+1253.200.4466</span>
+        <span class="bolt-tel">+1253.200.4466</span>
     </div>
     
 

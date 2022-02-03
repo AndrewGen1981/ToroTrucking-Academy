@@ -186,6 +186,7 @@ font-family: "BrixSlab-BlackItalic";
 .chart-title {
     font-family: "BrixSlab-RegularItalic";
     font-size: 18px;
+    margin-bottom: 3rem;
 }
 .analythicsChart {
     width: var(--chart-width);
@@ -212,7 +213,7 @@ font-family: "BrixSlab-BlackItalic";
     flex-direction: column;
 
     position:relative;
-    border-bottom: 1px solid #26354430;    
+    border-bottom: 1px solid #26354430;
 }
 .chart-column::before {
     content: attr(data-value);
@@ -248,6 +249,8 @@ font-family: "BrixSlab-BlackItalic";
     top: -1.5em; 
     color: #26354430;
 }
+
+
 .chart-sub-column {
     width: 100%;
     height: var(--h);

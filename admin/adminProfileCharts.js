@@ -51,5 +51,6 @@ async function newStudentsInvolvingChart(deltaMonth) {
 
 
 module.exports = {
-    newStudentsInvolvingChart
+    newStudentsInvolvingChart,
+    monthNames
 }

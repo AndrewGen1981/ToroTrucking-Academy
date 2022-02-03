@@ -121,7 +121,7 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
     res.locals.user.msg = status === 'issue' ? { class: 'issue', txt: getIssueMessage(e), e }
     : status === 'ok' ? { class: 'success', txt: getInfoMessage(e), e }
     : status === 'info' ? { class: 'info', txt: getInfoMessage(e), e }
-    : { class: 'info', txt: "Wellcome back" }
+    : { class: 'info', txt: "Welcome back" }
 
     // if Student, then show TTT and Clocks
     const user = res.locals.user
@@ -135,7 +135,7 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
                     populate: { path: 'agreement', select: 'visiting' }
                 },
                 {
-                    path: 'tuition', select: ["created", "isAllowed", "avLessonsRate", "lessons"]
+                    path: 'tuition', select: 'created isAllowed avLessonsRate lessons'
                 },
                 {
                     path: 'scoring'

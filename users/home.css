@@ -670,6 +670,12 @@ header::after {
         text-align: center;
         /* font-size: 0.933rem; */
     }
+    .-hide-if-small {
+        display: none;
+    }
+    .clocks-table, .scoring-table {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 @media (max-width: 400px) {
     .block-item {
@@ -681,5 +687,8 @@ header::after {
     }
     .nav-right-item {
         margin: 0 0.25rem;
+    }
+    .clocks-table-cell, .scoring-table-cell {
+        font-size: 13px;
     }
 }

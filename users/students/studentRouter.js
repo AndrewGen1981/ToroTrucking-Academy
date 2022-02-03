@@ -11,6 +11,7 @@ const admin = require('../../admin/config')
 // MODELS for mongoose
 const { User, Student, StudentCONFIG, tools } = require('../userModel')
 const { Tuition } = require('../tuition/tuitionModel')
+const chart = require('../../admin/adminProfileCharts')
 
 // do I need this here?
 // const { dataCollectionForm } = require('../applicants/form1Model')
@@ -79,47 +80,63 @@ studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
 })
 
 
+// Student List populate constants
+const studentPopulated = 'key email TTT created status location'
+const userPopulated = 'token payments'
+const studentListPopulate = [
+    {
+        path: 'user', select: userPopulated,
+        populate: { path: 'dataCollection', select: 'firstName lastName middleName street city state zip phone DOB SSN' }
+    },
+    {
+        path: 'user', select: userPopulated, 
+        populate: { path: 'agreement', select: 'program class transmission visiting tuitionCost regisrFee supplyFee otherFee payment thirdPartyList schoolSignDate schoolSignRep updatedAdmin updatedDate' }
+    },
+    {   path: 'tuition', select: 'isAllowed avLessonsRate'  },
+    {   path: 'scoring', select: 'isAllowed scoringsInCab scoringsOutCab scoringsBacking scoringsCity'  }
+]
+
 
 // @GET admin/student/list
 studentRouter.get('/list', ifCanRead, async(req, res) => {
-    // auth is good
-    const studentPopulated = ['key', 'email', 'TTT', 'created', 'status', 'location']
-    const userPopulated = 'token payments'
-    const dataCollPopulated = [
-        'firstName', 'lastName', 'middleName', 'street', 'city', 'state', 'zip', 'phone', 'DOB', 'SSN'
-    ]
-    const agrPopulated = [
-        'program', 'class', 'transmission', 'visiting', 'tuitionCost', 'regisrFee', 'supplyFee', 'otherFee', 
-        'payment', 'thirdPartyList', 'schoolSignDate', 'schoolSignRep', 'updatedAdmin', 'updatedDate'
-    ]
-    const tuitionPopulated = ['isAllowed', 'avLessonsRate']
-    const scoringPopulated = [
-        'isAllowed', 'scoringsInCab', 'scoringsOutCab', 'scoringsBacking', 'scoringsCity'
-    ]
-
     // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
     const adminProfile = admin.findAdminById(req.session.userId)
     let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
-
     // query to Mongo DB
-    const students = await Student.find(filter).select(studentPopulated).populate([
-        {
-            path: 'user', select: userPopulated,
-            populate: { path: 'dataCollection', select: dataCollPopulated }
-        },
-        {
-            path: 'user', select: userPopulated, 
-            populate: { path: 'agreement', select: agrPopulated }
-        },
-        {
-            path: 'tuition', select: tuitionPopulated
-        },
-        {
-            path: 'scoring', select: scoringPopulated
-        }
-    ])
-
+    const students = await Student.find(filter).select(studentPopulated).populate(studentListPopulate)
     res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile })
+})
+
+// for showing a shorter Student List variants, for exapmle when click on admin-profile-chart-columns
+studentRouter.get('/shortlist', ifCanRead, async(req, res) => {
+    const year = req.query.year
+    const month = req.query.month
+    const location = req.query.location
+    if(year && month && location) {
+        // TOOL: leading zero
+        function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
+        // calculating period for request
+        const n1 = chart.monthNames.indexOf(month) + 1
+        const n2 = (n1 + 1) % 12
+        // receiving start-year and end-year
+        const startYear = parseInt(year)
+        const endYear = startYear + Math.trunc((n1 + 1) / 12)
+        // receiving start-date and end-date
+        const startDate = `${startYear}-${leadingZero(n1)}-01T00:00:00Z`
+        const endDate = `${endYear}-${leadingZero(n2)}-01T00:00:00Z`
+        // defining admin and searching Students
+        const adminProfile = admin.findAdminById(req.session.userId)
+        if (adminProfile.location === admin.LOCATION.All || location === admin.LOCATION.Unset || location === adminProfile.location) {
+            const students = await Student.find(
+                {
+                    created: { $gte: startDate, $lte: endDate },
+                    location
+                }
+            ).select(studentPopulated).populate(studentListPopulate)
+            return res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile })
+        }
+    }
+    res.redirect('/admin/profile')
 })
 
 
