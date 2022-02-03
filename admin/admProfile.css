@@ -63,7 +63,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-
+    
     position: fixed;
     top: 0;
     left: var(--left-panel-width);
@@ -71,7 +71,10 @@
     -webkit-box-shadow: 0px 3px 10px 0px var(--main-color60);
     -moz-box-shadow: 0px 3px 10px 0px var(--main-color60);
     box-shadow: 0px 3px 10px 0px var(--main-color60);
+
+    z-index: 1;
 }
+
 .top-side-name {
     padding: 0 1rem;
     font-family: "BrixSlab-RegularItalic";

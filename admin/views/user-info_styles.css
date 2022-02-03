@@ -388,7 +388,7 @@ menu span, menu a {
 .-button-box {
     max-width: 550px;
     margin-right: 0;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
     justify-content: space-around;
 }
 .-btn, .show-edit-btn {

@@ -124,95 +124,112 @@
                 </div>  <!-- data-id hidden area -->
             </div>
         </section>  <!-- thirdPartyList -->
-        <section class="row-item-85">
-            <div class="fields-set">
-                <div class="field-title">Down Payment:</div>
-                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.downPayment) %></div>
-            </div>
-            <div class="fields-set">
-                <label class="show-edit-btn" for='downPayment' onclick='toggleEditField(this)'>edit</label>
-                <div class="fields-set -hidden" name="agr-edits" data-id='downPayment'>
-                    <label class="show-edit-btn -red" for='downPayment' onclick='cleanField(this)'>
-                        <svg class="delete-mark">
-                            <use xlink:href="#delete"></use> 
-                        </svg>
-                    </label>    <!-- show-edit-btn -red -->
-                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="downPayment" id="downPayment" />
-                </div>  <!-- data-id hidden area -->
-            </div>
-        </section>  <!-- downPayment -->
-        <section class="row-item-85">
-            <div class="fields-set">
-                <div class="field-title">Monthly Payment:</div>
-                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.monthlyPayment) %></div>
-            </div>
-            <div class="fields-set">
-                <label class="show-edit-btn" for='monthlyPayment' onclick='toggleEditField(this)'>edit</label>
-                <div class="fields-set -hidden" name="agr-edits" data-id='monthlyPayment'>
-                    <label class="show-edit-btn -red" for='monthlyPayment' onclick='cleanField(this)'>
-                        <svg class="delete-mark">
-                            <use xlink:href="#delete"></use> 
-                        </svg>
-                    </label>    <!-- show-edit-btn -red -->
-                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="monthlyPayment" id="monthlyPayment" />
-                </div>  <!-- data-id hidden area -->
-            </div>
-        </section>  <!-- monthlyPayment -->
-        <section class="row-item-85">
-            <div class="fields-set">
-                <div class="field-title">Loan Payment:</div>
-                <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.loanPayment) %></div>
-            </div>
-            <div class="fields-set">
-                <label class="show-edit-btn" for='loanPayment' onclick='toggleEditField(this)'>edit</label>
-                <div class="fields-set -hidden" name="agr-edits" data-id='loanPayment'>
-                    <label class="show-edit-btn -red" for='loanPayment' onclick='cleanField(this)'>
-                        <svg class="delete-mark">
-                            <use xlink:href="#delete"></use> 
-                        </svg>
-                    </label>    <!-- show-edit-btn -red -->
-                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="loanPayment" id="loanPayment" />
-                </div>  <!-- data-id hidden area -->
-            </div>
-        </section>  <!-- loanPayment -->
 
-        <section class="row-item-85"><div class="gap-line"></div></section>
-        <section class="row-item-85">
-            <div class="fields-set">
-                <div class="field-title">Parent Or Guardian First Name</div>
-                <div class="field-value"><%= user.agreement.parentFirstName %></div>
-            </div>
-            <div class="fields-set">
-                <label class="show-edit-btn" for='parentFirstName' onclick='toggleEditField(this)'>edit</label>
-                <div class="fields-set -hidden" name="agr-edits" data-id='parentFirstName'>
-                    <label class="show-edit-btn -red" for='parentFirstName' onclick='cleanField(this)'>
-                        <svg class="delete-mark">
-                            <use xlink:href="#delete"></use> 
-                        </svg>
-                    </label>    <!-- show-edit-btn -red -->
-                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentFirstName" id="parentFirstName" />
-                </div>  <!-- data-id hidden area -->
-            </div>
-        </section>  <!-- parentFirstName -->
-        <section class="row-item-85">
-            <div class="fields-set">
-                <div class="field-title">Parent Or Guardian Last Name</div>
-                <div class="field-value"><%= user.agreement.parentLastName %></div>
-            </div>
-            <div class="fields-set">
-                <label class="show-edit-btn" for='parentLastName' onclick='toggleEditField(this)'>edit</label>
-                <div class="fields-set -hidden" name="agr-edits" data-id='parentLastName'>
-                    <label class="show-edit-btn -red" for='parentLastName' onclick='cleanField(this)'>
-                        <svg class="delete-mark">
-                            <use xlink:href="#delete"></use> 
-                        </svg>
-                    </label>    <!-- show-edit-btn -red -->
-                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentLastName" id="parentLastName" />
-                </div>  <!-- data-id hidden area -->
-            </div>
-        </section>  <!-- parentLastName -->
+        <!-- Student suggested payment methond -->
+        <details class="row-item-85" id="suggested-pmts-details">   <!-- id is used for open details after backlink -->
+            <summary class="field-accomplished">
+                Suggested Payment Methods
+            </summary>
+            <section class="row-item-95">
+                <div class="fields-set">
+                    <div class="field-title">Down Payment:</div>
+                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.downPayment) %></div>
+                </div>
+                <div class="fields-set">
+                    <label class="show-edit-btn" for='downPayment' onclick='toggleEditField(this)'>edit</label>
+                    <div class="fields-set -hidden" name="agr-edits" data-id='downPayment'>
+                        <label class="show-edit-btn -red" for='downPayment' onclick='cleanField(this)'>
+                            <svg class="delete-mark">
+                                <use xlink:href="#delete"></use> 
+                            </svg>
+                        </label>    <!-- show-edit-btn -red -->
+                        <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="downPayment" id="downPayment" />
+                    </div>  <!-- data-id hidden area -->
+                </div>
+            </section>  <!-- downPayment -->
+            <section class="row-item-95">
+                <div class="fields-set">
+                    <div class="field-title">Monthly Payment:</div>
+                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.monthlyPayment) %></div>
+                </div>
+                <div class="fields-set">
+                    <label class="show-edit-btn" for='monthlyPayment' onclick='toggleEditField(this)'>edit</label>
+                    <div class="fields-set -hidden" name="agr-edits" data-id='monthlyPayment'>
+                        <label class="show-edit-btn -red" for='monthlyPayment' onclick='cleanField(this)'>
+                            <svg class="delete-mark">
+                                <use xlink:href="#delete"></use> 
+                            </svg>
+                        </label>    <!-- show-edit-btn -red -->
+                        <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="monthlyPayment" id="monthlyPayment" />
+                    </div>  <!-- data-id hidden area -->
+                </div>
+            </section>  <!-- monthlyPayment -->
+            <section class="row-item-95">
+                <div class="fields-set">
+                    <div class="field-title">Loan Payment:</div>
+                    <div class="field-value"><%= new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(user.agreement.loanPayment) %></div>
+                </div>
+                <div class="fields-set">
+                    <label class="show-edit-btn" for='loanPayment' onclick='toggleEditField(this)'>edit</label>
+                    <div class="fields-set -hidden" name="agr-edits" data-id='loanPayment'>
+                        <label class="show-edit-btn -red" for='loanPayment' onclick='cleanField(this)'>
+                            <svg class="delete-mark">
+                                <use xlink:href="#delete"></use> 
+                            </svg>
+                        </label>    <!-- show-edit-btn -red -->
+                        <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 step=.01 name="loanPayment" id="loanPayment" />
+                    </div>  <!-- data-id hidden area -->
+                </div>
+            </section>  <!-- loanPayment -->
+        </details>
+
+        <!-- Parents -->
+        <details class="row-item-85" id="parent-details">   <!-- id is used for open details after backlink -->
+            <summary class="field-accomplished">
+                <% if (user.agreement.parentFirstName) { %>
+                    Parent/Guardian [<%= user.agreement.parentFirstName %>]
+                <% } else { %>
+                    Parent/Guardian [empty]
+                <% } %>
+            </summary>
+            <section class="row-item-95">
+                <div class="fields-set">
+                    <div class="field-title">Parent Or Guardian First Name</div>
+                    <div class="field-value"><%= user.agreement.parentFirstName %></div>
+                </div>
+                <div class="fields-set">
+                    <label class="show-edit-btn" for='parentFirstName' onclick='toggleEditField(this)'>edit</label>
+                    <div class="fields-set -hidden" name="agr-edits" data-id='parentFirstName'>
+                        <label class="show-edit-btn -red" for='parentFirstName' onclick='cleanField(this)'>
+                            <svg class="delete-mark">
+                                <use xlink:href="#delete"></use> 
+                            </svg>
+                        </label>    <!-- show-edit-btn -red -->
+                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentFirstName" id="parentFirstName" />
+                    </div>  <!-- data-id hidden area -->
+                </div>
+            </section>  <!-- parentFirstName -->
+            <section class="row-item-95">
+                <div class="fields-set">
+                    <div class="field-title">Parent Or Guardian Last Name</div>
+                    <div class="field-value"><%= user.agreement.parentLastName %></div>
+                </div>
+                <div class="fields-set">
+                    <label class="show-edit-btn" for='parentLastName' onclick='toggleEditField(this)'>edit</label>
+                    <div class="fields-set -hidden" name="agr-edits" data-id='parentLastName'>
+                        <label class="show-edit-btn -red" for='parentLastName' onclick='cleanField(this)'>
+                            <svg class="delete-mark">
+                                <use xlink:href="#delete"></use> 
+                            </svg>
+                        </label>    <!-- show-edit-btn -red -->
+                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="parentLastName" id="parentLastName" />
+                    </div>  <!-- data-id hidden area -->
+                </div>
+            </section>  <!-- parentLastName -->
+        </details>
+
+
         <% if(user.agreement.schoolSignRep) { %>        <!-- Agreement signed, show fields for editing -->
-            <section class="row-item-85"><div class="gap-line"></div></section>
             <section class="row-item-85">
                 <div class="field-title -orange">Agreement is Signed on TTA's behalf by:</div>
                 <!-- uses signer.name instead of user.agreement.schoolSignRep(just an ID) because it defined already from server side -->
@@ -329,23 +346,17 @@
         </section>
     </form>     <!-- /admin/update-form3 -->
     
-    <section class="row-item-95"><div class="gap-line"></div></section>
-
 
     <!-- Payments section -->
     <% function leadZero(a) {return a.length < 2 ? `0${a}` : a} %>
     <% function getYYYYMMDD(date) { const a = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }).split('/'); return `${a[2]}-${leadZero(a[0])}-${leadZero(a[1])}`} %>
     <% function getHHMMSS(time) { const a = new Date(time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }).replace(' ',':').split(':'); return `${leadZero(a[0])}:${leadZero(a[1])}` } %>
 
-    <section class="row-item-95">
-        <div class="field-title -orange">Payments</div>
-    </section>
-
     <form action="/admin/update-payments" id="update-payments" method="post">
         <input type="hidden" name="userId" value="<%= user._id %>">
         <details class="row-item-95" id="payments-details">  <!-- id is used for open details after backlink -->
             <summary class="field-accomplished">
-                Details
+                Payments
             </summary>
             <div class="payment-table">
                 <p class='-table-header'>Payment Type</p>

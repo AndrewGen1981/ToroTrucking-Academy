@@ -549,7 +549,7 @@
 
 
         
-        <!-- @APPLIVATION FORM  id=block2 -->
+        <!-- @APPLICATION FORM  id=block2 -->
         <!-- EDIT group 'appl-edits' -->
 
         <section class="block-box -hidden" name='blockBox' id='block2'>
@@ -588,73 +588,70 @@
                     </section>  <!-- hdyfu -->
                     
                    <!-- Referral Info -->
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title -orange">Referral Person Info:</div>
-                        </div>
-                    </section>
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Full Name</div>
-                            <div class="field-value -italic"><%= user.application['ref-person-name'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='ref-person-name' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-name'>
-                                <label class="show-edit-btn -red" for='ref-person-name' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="ref-person-name" id="ref-person-name">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- ref-person-name -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Phone Number(Zelle)</div>
-                            <div class="field-value -italic"><%= user.application['ref-person-phone'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='ref-person-phone' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-phone'>
-                                <label class="show-edit-btn -red" for='ref-person-phone' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 name="ref-person-phone" id="ref-person-phone" pattern="[0-9]{10}" title="10 digits phone number">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- ref-person-phone -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Email Address(Zelle)</div>
-                            <div class="field-value -email -italic"><%= user.application['ref-person-email'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='ref-person-email' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-email'>
-                                <label class="show-edit-btn -red" for='ref-person-email' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="email" name="ref-person-email" id="ref-person-email" title="Zelle - based digital payments network. Can be used for prompt payments at Bank of America, BB&T, Capital One, JPMorgan Chase, PNC Bank, U.S. Bank and Wells Fargo.">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- ref-person-email -->
-
-                    <section class="row-item-85"><div class="gap-line"></div></section>
+                   <details class="row-item-85" id="referral-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            Referral Person Info
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Full Name</div>
+                                <div class="field-value -italic"><%= user.application['ref-person-name'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='ref-person-name' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-name'>
+                                    <label class="show-edit-btn -red" for='ref-person-name' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="ref-person-name" id="ref-person-name">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- ref-person-name -->
+                        
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Phone Number(Zelle)</div>
+                                <div class="field-value -italic"><%= user.application['ref-person-phone'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='ref-person-phone' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-phone'>
+                                    <label class="show-edit-btn -red" for='ref-person-phone' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 name="ref-person-phone" id="ref-person-phone" pattern="[0-9]{10}" title="10 digits phone number">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- ref-person-phone -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Email Address(Zelle)</div>
+                                <div class="field-value -email -italic"><%= user.application['ref-person-email'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='ref-person-email' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='ref-person-email'>
+                                    <label class="show-edit-btn -red" for='ref-person-email' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="email" name="ref-person-email" id="ref-person-email" title="Zelle - based digital payments network. Can be used for prompt payments at Bank of America, BB&T, Capital One, JPMorgan Chase, PNC Bank, U.S. Bank and Wells Fargo.">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- ref-person-email -->
+                    </details>
 
 
                     <!-- Emergency Info -->
                     <section class="row-item-85">
                         <div class="fields-set">
-                            <div class="field-title -orange">EMERGENCY CONTACTS:</div>
+                            <div class="field-title -orange">EMERGENCY CONTACTS</div>
                         </div>
                     </section>
 
@@ -712,13 +709,9 @@
                         </div>    <!-- right side of row -->
                     </section>  <!-- emerg-person-relation -->
 
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title -orange">Emergency Contact Address:</div>
-                        </div>
-                    </section>
 
-                    <section class="row-item-75">
+
+                    <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Street</div>
                             <div class="field-value"><%= user.application['emerg-person-street'] %></div>
@@ -736,7 +729,7 @@
                         </div>    <!-- right side of row -->
                     </section>  <!-- emerg-person-street -->
 
-                    <section class="row-item-75">
+                    <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">City</div>
                             <div class="field-value"><%= user.application['emerg-person-city'] %></div>
@@ -754,7 +747,7 @@
                         </div>    <!-- right side of row -->
                     </section>  <!-- emerg-person-city -->
 
-                    <section class="row-item-75">
+                    <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">State</div>
                             <div class="field-value"><%= user.application['emerg-person-state'] %></div>
@@ -827,7 +820,7 @@
                         </div>    <!-- right side of row -->
                     </section>  <!-- emerg-person-state -->
 
-                    <section class="row-item-75">
+                    <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Zip</div>
                             <div class="field-value"><%= user.application['emerg-person-zip'] %></div>
@@ -845,342 +838,334 @@
                         </div>    <!-- right side of row -->
                     </section>  <!-- emerg-person-zip -->
 
-
-                    
-                    <section class="row-item-85"><div class="gap-line"></div></section>
-                    
                     
                     <!-- Education info -->
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">EDUCATION INFO:</div>
-                        </div>
-                    </section>
+                    <details class="row-item-85" id="education-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            EDUCATION INFO
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Highest Grade Completed</div>
+                                <div class="field-value"><%= user.application['education-highest-grade'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-highest-grade' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-highest-grade'>
+                                    <label class="show-edit-btn -red" for='education-highest-grade' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=1 max=12 name="education-highest-grade" id="education-highest-grade" title='MAX - 12'>
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-highest-grade -->
 
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">Highest Grade Completed</div>
-                            <div class="field-value"><%= user.application['education-highest-grade'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-highest-grade' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-highest-grade'>
-                                <label class="show-edit-btn -red" for='education-highest-grade' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="number" min=1 max=12 name="education-highest-grade" id="education-highest-grade" title='MAX - 12'>
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-highest-grade -->
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">College</div>
+                                <div class="field-value"><%= user.application['education-colledge'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-colledge' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-colledge'>
+                                    <label class="show-edit-btn -red" for='education-colledge' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=1 max=4 name="education-colledge" id="education-colledge" title='MAX-4'>
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-colledge -->
 
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">College</div>
-                            <div class="field-value"><%= user.application['education-colledge'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-colledge' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-colledge'>
-                                <label class="show-edit-btn -red" for='education-colledge' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="number" min=1 max=4 name="education-colledge" id="education-colledge" title='MAX-4'>
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-colledge -->
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">High School Graduate?</div>
+                                <div class="field-value"><%= user.application.highSchoolGrade %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='highSchoolGrade' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='highSchoolGrade'>
+                                    <label class="show-edit-btn -red" for='highSchoolGrade' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <select class='input-box' onchange="checkAllChanged(this)" name="highSchoolGrade" id="highSchoolGrade">
+                                        <option value='DNU'>do not update</option>
+                                        <option value='Yes'>Yes</option>
+                                        <option value='No'>No</option>
+                                    </select>
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- highSchoolGrade -->
 
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">High School Graduate?</div>
-                            <div class="field-value"><%= user.application.highSchoolGrade %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='highSchoolGrade' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='highSchoolGrade'>
-                                <label class="show-edit-btn -red" for='highSchoolGrade' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <select class='input-box' onchange="checkAllChanged(this)" name="highSchoolGrade" id="highSchoolGrade">
-                                    <option value='DNU'>do not update</option>
-                                    <option value='Yes'>Yes</option>
-                                    <option value='No'>No</option>
-                                </select>
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- highSchoolGrade -->
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Graduation or GED Completion Date</div>
+                                <div class="field-value"><%= new Date(user.application['education-grade-date']).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-grade-date' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-grade-date'>
+                                    <label class="show-edit-btn -red" for='education-grade-date' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="date" name="education-grade-date" id="education-grade-date">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-grade-date -->
 
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">Graduation or GED Completion Date</div>
-                            <div class="field-value"><%= new Date(user.application['education-grade-date']).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-grade-date' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-grade-date'>
-                                <label class="show-edit-btn -red" for='education-grade-date' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="date" name="education-grade-date" id="education-grade-date">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-grade-date -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Last School Attended</div>
-                            <div class="field-value"><%= user.application['education-last-school'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school'>
-                                <label class="show-edit-btn -red" for='education-last-school' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school" id="education-last-school">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Degrees/Certificates</div>
-                            <div class="field-value"><%= user.application['education-last-school-degree'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school-degree' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-degree'>
-                                <label class="show-edit-btn -red" for='education-last-school-degree' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-degree" id="education-last-school-degree">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school-degree -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Street Address</div>
-                            <div class="field-value"><%= user.application['education-last-school-street'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school-street' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-street'>
-                                <label class="show-edit-btn -red" for='education-last-school-street' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-street" id="education-last-school-street">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school-street -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">City</div>
-                            <div class="field-value"><%= user.application['education-last-school-city'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school-city' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-city'>
-                                <label class="show-edit-btn -red" for='education-last-school-city' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-city" id="education-last-school-city">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school-city -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">State/Province/Region</div>
-                            <div class="field-value"><%= user.application['education-last-school-state'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school-state' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-state'>
-                                <label class="show-edit-btn -red" for='education-last-school-state' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <select autocomplete="off" class='input-box' onchange="checkAllChanged(this)" name="education-last-school-state" id="education-last-school-state">
-                                    <option value='DNU'>do not update</option>
-                                    <optgroup label="locations">
-                                        <option value='Washington'>Washington</option>
-                                    </optgroup>
-                                    <option value='Alaska'>Alaska</option>
-                                    <option value='Alabama'>Alabama</option>
-                                    <option value='Arkansas'>Arkansas</option>
-                                    <option value='Arizona'>Arizona</option>
-                                    <option value='California'>California</option>
-                                    <option value='Colorado'>Colorado</option>
-                                    <option value='Connecticut'>Connecticut</option>
-                                    <option value='Washington DC'>Washington DC</option>
-                                    <option value='Delaware'>Delaware</option>
-                                    <option value='Florida'>Florida</option>
-                                    <option value='Georgia'>Georgia</option>
-                                    <option value='Hawaii'>Hawaii</option>
-                                    <option value='Iowa'>Iowa</option>
-                                    <option value='Idaho'>Idaho</option>
-                                    <option value='Illinois'>Illinois</option>
-                                    <option value='Indiana'>Indiana</option>
-                                    <option value='Kansas'>Kansas</option>
-                                    <option value='Kentucky'>Kentucky</option>
-                                    <option value='Louisiana'>Louisiana</option>
-                                    <option value='Massachusetts'>Massachusetts</option>
-                                    <option value='Maryland'>Maryland</option>
-                                    <option value='Maine'>Maine</option>
-                                    <option value='Michigan'>Michigan</option>
-                                    <option value='Minnesota'>Minnesota</option>
-                                    <option value='Missouri'>Missouri</option>
-                                    <option value='Mississippi'>Mississippi</option>
-                                    <option value='Montana'>Montana</option>
-                                    <option value='North Carolina'>North Carolina</option>
-                                    <option value='North Dakota'>North Dakota</option>
-                                    <option value='Nebraska'>Nebraska</option>
-                                    <option value='New Hampshire'>New Hampshire</option>
-                                    <option value='New Jersey'>New Jersey</option>
-                                    <option value='New Mexico'>New Mexico</option>
-                                    <option value='Nevada'>Nevada</option>
-                                    <option value='New York'>New York</option>
-                                    <option value='Ohio'>Ohio</option>
-                                    <option value='Oklahoma'>Oklahoma</option>
-                                    <option value='Oregon'>Oregon</option>
-                                    <option value='Pennsylvania'>Pennsylvania</option>
-                                    <option value='Rhode Island'>Rhode Island</option>
-                                    <option value='South Carolina'>South Carolina</option>
-                                    <option value='South Dakota'>South Dakota</option>
-                                    <option value='Tennessee'>Tennessee</option>
-                                    <option value='Texas'>Texas</option>
-                                    <option value='Utah'>Utah</option>
-                                    <option value='Virginia'>Virginia</option>
-                                    <option value='Vermont'>Vermont</option>
-                                    <option value='Wisconsin'>Wisconsin</option>
-                                    <option value='West Virginia'>West Virginia</option>
-                                    <option value='Wyoming'>Wyoming</option>
-                                </select>
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school-state -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">Postal/Zip Code</div>
-                            <div class="field-value"><%= user.application['education-last-school-zip'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='education-last-school-zip' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-zip'>
-                                <label class="show-edit-btn -red" for='education-last-school-zip' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 name="education-last-school-zip" id="education-last-school-zip">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- education-last-school-zip -->
-
-
-                    <section class="row-item-85"><div class="gap-line"></div></section>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Last School Attended</div>
+                                <div class="field-value"><%= user.application['education-last-school'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school'>
+                                    <label class="show-edit-btn -red" for='education-last-school' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school" id="education-last-school">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Degrees/Certificates</div>
+                                <div class="field-value"><%= user.application['education-last-school-degree'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school-degree' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-degree'>
+                                    <label class="show-edit-btn -red" for='education-last-school-degree' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-degree" id="education-last-school-degree">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school-degree -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Street Address</div>
+                                <div class="field-value"><%= user.application['education-last-school-street'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school-street' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-street'>
+                                    <label class="show-edit-btn -red" for='education-last-school-street' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-street" id="education-last-school-street">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school-street -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">City</div>
+                                <div class="field-value"><%= user.application['education-last-school-city'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school-city' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-city'>
+                                    <label class="show-edit-btn -red" for='education-last-school-city' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="education-last-school-city" id="education-last-school-city">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school-city -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">State/Province/Region</div>
+                                <div class="field-value"><%= user.application['education-last-school-state'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school-state' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-state'>
+                                    <label class="show-edit-btn -red" for='education-last-school-state' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <select autocomplete="off" class='input-box' onchange="checkAllChanged(this)" name="education-last-school-state" id="education-last-school-state">
+                                        <option value='DNU'>do not update</option>
+                                        <optgroup label="locations">
+                                            <option value='Washington'>Washington</option>
+                                        </optgroup>
+                                        <option value='Alaska'>Alaska</option>
+                                        <option value='Alabama'>Alabama</option>
+                                        <option value='Arkansas'>Arkansas</option>
+                                        <option value='Arizona'>Arizona</option>
+                                        <option value='California'>California</option>
+                                        <option value='Colorado'>Colorado</option>
+                                        <option value='Connecticut'>Connecticut</option>
+                                        <option value='Washington DC'>Washington DC</option>
+                                        <option value='Delaware'>Delaware</option>
+                                        <option value='Florida'>Florida</option>
+                                        <option value='Georgia'>Georgia</option>
+                                        <option value='Hawaii'>Hawaii</option>
+                                        <option value='Iowa'>Iowa</option>
+                                        <option value='Idaho'>Idaho</option>
+                                        <option value='Illinois'>Illinois</option>
+                                        <option value='Indiana'>Indiana</option>
+                                        <option value='Kansas'>Kansas</option>
+                                        <option value='Kentucky'>Kentucky</option>
+                                        <option value='Louisiana'>Louisiana</option>
+                                        <option value='Massachusetts'>Massachusetts</option>
+                                        <option value='Maryland'>Maryland</option>
+                                        <option value='Maine'>Maine</option>
+                                        <option value='Michigan'>Michigan</option>
+                                        <option value='Minnesota'>Minnesota</option>
+                                        <option value='Missouri'>Missouri</option>
+                                        <option value='Mississippi'>Mississippi</option>
+                                        <option value='Montana'>Montana</option>
+                                        <option value='North Carolina'>North Carolina</option>
+                                        <option value='North Dakota'>North Dakota</option>
+                                        <option value='Nebraska'>Nebraska</option>
+                                        <option value='New Hampshire'>New Hampshire</option>
+                                        <option value='New Jersey'>New Jersey</option>
+                                        <option value='New Mexico'>New Mexico</option>
+                                        <option value='Nevada'>Nevada</option>
+                                        <option value='New York'>New York</option>
+                                        <option value='Ohio'>Ohio</option>
+                                        <option value='Oklahoma'>Oklahoma</option>
+                                        <option value='Oregon'>Oregon</option>
+                                        <option value='Pennsylvania'>Pennsylvania</option>
+                                        <option value='Rhode Island'>Rhode Island</option>
+                                        <option value='South Carolina'>South Carolina</option>
+                                        <option value='South Dakota'>South Dakota</option>
+                                        <option value='Tennessee'>Tennessee</option>
+                                        <option value='Texas'>Texas</option>
+                                        <option value='Utah'>Utah</option>
+                                        <option value='Virginia'>Virginia</option>
+                                        <option value='Vermont'>Vermont</option>
+                                        <option value='Wisconsin'>Wisconsin</option>
+                                        <option value='West Virginia'>West Virginia</option>
+                                        <option value='Wyoming'>Wyoming</option>
+                                    </select>
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school-state -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Postal/Zip Code</div>
+                                <div class="field-value"><%= user.application['education-last-school-zip'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='education-last-school-zip' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='education-last-school-zip'>
+                                    <label class="show-edit-btn -red" for='education-last-school-zip' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="number" min=0 name="education-last-school-zip" id="education-last-school-zip">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- education-last-school-zip -->
+                    </details>
 
 
                     <!-- Military info -->
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">MILITARY STATUS:</div>
-                        </div>
-                    </section>
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">Branch of Service</div>
-                            <div class="field-value"><%= user.application['military-branch'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='military-branch' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='military-branch'>
-                                <label class="show-edit-btn -red" for='military-branch' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-branch" id="military-branch">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- military-branch -->
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">FROM and TO</div>
-                            <div class="field-value"><%= user.application['military-from-to'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='military-from-to' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='military-from-to'>
-                                <label class="show-edit-btn -red" for='military-branch' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-from-to" id="military-from-to">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- military-from-to -->
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">Rank at Discharge</div>
-                            <div class="field-value"><%= user.application['military-rank'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='military-rank' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='military-rank'>
-                                <label class="show-edit-btn -red" for='military-rank' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-rank" id="military-rank">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- military-rank -->
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title">Date of Discharge</div>
-                            <div class="field-value"><%= user.application['military-discharge-date'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='military-discharge-date' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='military-discharge-date'>
-                                <label class="show-edit-btn -red" for='military-discharge-date' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="date" name="military-discharge-date" id="military-discharge-date">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- military-discharge-date -->
-
-
-                    <section class="row-item-85"><div class="gap-line"></div></section>
+                    <details class="row-item-85" id="military-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            <% if(user.application['military-branch']) { %>
+                                MILITARY STATUS [not empty]
+                            <% } else { %>
+                                MILITARY STATUS [empty]
+                            <% } %>
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Branch of Service</div>
+                                <div class="field-value"><%= user.application['military-branch'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='military-branch' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='military-branch'>
+                                    <label class="show-edit-btn -red" for='military-branch' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-branch" id="military-branch">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- military-branch -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">FROM and TO</div>
+                                <div class="field-value"><%= user.application['military-from-to'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='military-from-to' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='military-from-to'>
+                                    <label class="show-edit-btn -red" for='military-branch' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-from-to" id="military-from-to">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- military-from-to -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Rank at Discharge</div>
+                                <div class="field-value"><%= user.application['military-rank'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='military-rank' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='military-rank'>
+                                    <label class="show-edit-btn -red" for='military-rank' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="military-rank" id="military-rank">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- military-rank -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">Date of Discharge</div>
+                                <div class="field-value"><%= user.application['military-discharge-date'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='military-discharge-date' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='military-discharge-date'>
+                                    <label class="show-edit-btn -red" for='military-discharge-date' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="date" name="military-discharge-date" id="military-discharge-date">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- military-discharge-date -->
+                    </details>
 
 
                     <!-- License info -->
@@ -1282,215 +1267,196 @@
                     </section>  <!-- vehicle-license-state -->
 
 
-                    <section class="row-item-85"><div class="gap-line"></div></section>
-
-
                     <!-- Accidents info -->
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title -orange">ACCIDENT RECORDS:</div>
-                        </div>
-                    </section>
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">1. Date of Accident. State. Nature of Accident. Fault.</div>
-                            <div class="field-value -orange"><%= user.application['accident-record1'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='accident-record1' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='accident-record1'>
-                                <label class="show-edit-btn -red" for='accident-record1' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record1" id="accident-record1">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- accident-record1 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">2. Date of Accident. State. Nature of Accident. Fault.</div>
-                            <div class="field-value -orange"><%= user.application['accident-record2'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='accident-record2' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='accident-record2'>
-                                <label class="show-edit-btn -red" for='accident-record2' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record2" id="accident-record2">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- accident-record2 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">3. Date of Accident. State. Nature of Accident. Fault.</div>
-                            <div class="field-value -orange"><%= user.application['accident-record3'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='accident-record3' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='accident-record3'>
-                                <label class="show-edit-btn -red" for='accident-record3' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record3" id="accident-record3">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- accident-record3 -->
-
-
-                    <section class="row-item-85"><div class="gap-line"></div></section>
+                    <details class="row-item-85" id="accident-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            ACCIDENT RECORDS [<%= user.application['accident-record1'] %>]
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">1. Date of Accident. State. Nature of Accident. Fault.</div>
+                                <div class="field-value -orange"><%= user.application['accident-record1'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='accident-record1' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='accident-record1'>
+                                    <label class="show-edit-btn -red" for='accident-record1' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record1" id="accident-record1">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- accident-record1 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">2. Date of Accident. State. Nature of Accident. Fault.</div>
+                                <div class="field-value -orange"><%= user.application['accident-record2'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='accident-record2' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='accident-record2'>
+                                    <label class="show-edit-btn -red" for='accident-record2' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record2" id="accident-record2">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- accident-record2 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">3. Date of Accident. State. Nature of Accident. Fault.</div>
+                                <div class="field-value -orange"><%= user.application['accident-record3'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='accident-record3' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='accident-record3'>
+                                    <label class="show-edit-btn -red" for='accident-record3' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="accident-record3" id="accident-record3">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- accident-record3 -->
+                    </details>
 
 
                     <!-- TRAFFIC CONVICTIONS -->
-
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title -orange">TRAFFIC CONVICTIONS:</div>
-                        </div>
-                    </section>
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">1. Date. State. Violation. Penalty.</div>
-                            <div class="field-value -orange"><%= user.application['conviction-record1'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='conviction-record1' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record1'>
-                                <label class="show-edit-btn -red" for='conviction-record1' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record1" id="conviction-record1">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- conviction-record1 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">2. Date. State. Violation. Penalty.</div>
-                            <div class="field-value -orange"><%= user.application['conviction-record2'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='conviction-record2' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record2'>
-                                <label class="show-edit-btn -red" for='conviction-record2' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record2" id="conviction-record2">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- conviction-record2 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">3. Date. State. Violation. Penalty.</div>
-                            <div class="field-value -orange"><%= user.application['conviction-record3'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='conviction-record3' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record3'>
-                                <label class="show-edit-btn -red" for='conviction-record3' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record3" id="conviction-record3">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- conviction-record3 -->
-
-
-                    <section class="row-item-85"><div class="gap-line"></div></section>
+                    <details class="row-item-85" id="traffic-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            TRAFFIC CONVICTIONS [<%= user.application['conviction-record1'] %>]
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">1. Date. State. Violation. Penalty.</div>
+                                <div class="field-value -orange"><%= user.application['conviction-record1'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='conviction-record1' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record1'>
+                                    <label class="show-edit-btn -red" for='conviction-record1' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record1" id="conviction-record1">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- conviction-record1 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">2. Date. State. Violation. Penalty.</div>
+                                <div class="field-value -orange"><%= user.application['conviction-record2'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='conviction-record2' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record2'>
+                                    <label class="show-edit-btn -red" for='conviction-record2' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record2" id="conviction-record2">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- conviction-record2 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">3. Date. State. Violation. Penalty.</div>
+                                <div class="field-value -orange"><%= user.application['conviction-record3'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='conviction-record3' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='conviction-record3'>
+                                    <label class="show-edit-btn -red" for='conviction-record3' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="conviction-record3" id="conviction-record3">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- conviction-record3 -->
+                    </details>
 
 
                     <!-- CRIMINAL CONVICTIONS -->
+                    <details class="row-item-85" id="criminal-details">   <!-- id is used for open details after backlink -->
+                        <summary class="field-accomplished">
+                            CRIMINAL CONVICTIONS [<%= user.application['criminal-record1'] %>]
+                        </summary>
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">1. Date, County, Felony/Misdemeanor.</div>
+                                <div class="field-value -orange"><%= user.application['criminal-record1'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='criminal-record1' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record1'>
+                                    <label class="show-edit-btn -red" for='criminal-record1' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record1" id="criminal-record1">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- criminal-record1 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">2. Date, County, Felony/Misdemeanor.</div>
+                                <div class="field-value -orange"><%= user.application['criminal-record2'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='criminal-record2' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record2'>
+                                    <label class="show-edit-btn -red" for='criminal-record2' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record2" id="criminal-record2">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- criminal-record2 -->
+    
+                        <section class="row-item-95">
+                            <div class="fields-set">
+                                <div class="field-title">3. Date, County, Felony/Misdemeanor.</div>
+                                <div class="field-value -orange"><%= user.application['criminal-record3'] %></div>
+                            </div>
+                            <div class="fields-set">
+                                <label class="show-edit-btn" for='criminal-record3' onclick='toggleEditField(this)'>edit</label>
+                                <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record3'>
+                                    <label class="show-edit-btn -red" for='criminal-record3' onclick='cleanField(this)'>
+                                        <svg class="delete-mark">
+                                            <use xlink:href="#delete"></use> 
+                                        </svg>
+                                    </label>    <!-- show-edit-btn -red -->
+                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record3" id="criminal-record3">
+                                </div>  <!-- data-id hidden area -->
+                            </div>    <!-- right side of row -->
+                        </section>  <!-- criminal-record3 -->
+                    </details>
 
-                    <section class="row-item-85">
-                        <div class="fields-set">
-                            <div class="field-title -orange">CRIMINAL CONVICTIONS:</div>
-                        </div>
-                    </section>
 
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">1. Date, County, Felony/Misdemeanor.</div>
-                            <div class="field-value -orange"><%= user.application['criminal-record1'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='criminal-record1' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record1'>
-                                <label class="show-edit-btn -red" for='criminal-record1' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record1" id="criminal-record1">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- criminal-record1 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">2. Date, County, Felony/Misdemeanor.</div>
-                            <div class="field-value -orange"><%= user.application['criminal-record2'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='criminal-record2' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record2'>
-                                <label class="show-edit-btn -red" for='criminal-record2' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record2" id="criminal-record2">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- criminal-record2 -->
-
-                    <section class="row-item-75">
-                        <div class="fields-set">
-                            <div class="field-title">3. Date, County, Felony/Misdemeanor.</div>
-                            <div class="field-value -orange"><%= user.application['criminal-record3'] %></div>
-                        </div>
-                        <div class="fields-set">
-                            <label class="show-edit-btn" for='criminal-record3' onclick='toggleEditField(this)'>edit</label>
-                            <div class="fields-set -hidden" name="appl-edits" data-id='criminal-record3'>
-                                <label class="show-edit-btn -red" for='criminal-record3' onclick='cleanField(this)'>
-                                    <svg class="delete-mark">
-                                        <use xlink:href="#delete"></use> 
-                                    </svg>
-                                </label>    <!-- show-edit-btn -red -->
-                                <input class='input-box' onchange="checkAllChanged(this)" type="text" name="criminal-record3" id="criminal-record3">
-                            </div>  <!-- data-id hidden area -->
-                        </div>    <!-- right side of row -->
-                    </section>  <!-- criminal-record3 -->
-
-                    
-                    <section class="row-item-85"><div class="gap-line"></div></section>
-                    
 
                     <!-- Employers info -->
-
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title -orange">10 YEAR EMPLOYMENT HISTORY</div>
                         </div>
                     </section>
-
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Can contact/Verify:</div>
@@ -1500,153 +1466,162 @@
 
                     <% if(user.application.employers.length) { %>
                         <% user.application.employers.map((employer, index) => { %>
-
-                            <section class="row-item-85">
-                                <div class="fields-set">
-                                    <div class="field-title">#<%= index + 1 %>.Company</div>
-                                    <div class="field-value -italic"><%= employer['employer-company'] %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='employer<%= index %>-company' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-company'>
-                                        <label class="show-edit-btn -red" for='employer<%= index %>-company' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-company" id="employer<%= index %>-company">
-                                    </div>  <!-- data-id hidden area -->
-                                </div>    <!-- right side of row -->
-                            </section>  <!-- employer-company -->
-    
-                            <section class="row-item-75">
-                                <div class="fields-set">
-                                    <div class="field-title">Address,City,State,Zip</div>
-                                    <div class="field-value"><%= employer['employer-address'] %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='employer<%= index %>-address' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-address'>
-                                        <label class="show-edit-btn -red" for='employer<%= index %>-address' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-address" id="employer<%= index %>-address">
-                                    </div>  <!-- data-id hidden area -->
-                                </div>    <!-- right side of row -->
-                            </section>  <!-- employer-address -->
-    
-                            <section class="row-item-75">
-                                <div class="fields-set">
-                                    <div class="field-title">Supervisor, Phone</div>
-                                    <div class="field-value"><%= employer['employer-supervisor'] %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='employer<%= index %>-supervisor' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-supervisor'>
-                                        <label class="show-edit-btn -red" for='employer<%= index %>-supervisor' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-supervisor" id="employer<%= index %>-supervisor">
-                                    </div>  <!-- data-id hidden area -->
-                                </div>    <!-- right side of row -->
-                            </section>  <!-- employer-supervisor -->
-    
-                            <section class="row-item-75">
-                                <div class="fields-set">
-                                    <div class="field-title">Position Held, From To</div>
-                                    <div class="field-value"><%= employer['employer-position'] %></div>
-                                </div>
-                                <div class="fields-set">
-                                    <label class="show-edit-btn" for='employer<%= index %>-position' onclick='toggleEditField(this)'>edit</label>
-                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-position'>
-                                        <label class="show-edit-btn -red" for='employer<%= index %>-position' onclick='cleanField(this)'>
-                                            <svg class="delete-mark">
-                                                <use xlink:href="#delete"></use> 
-                                            </svg>
-                                        </label>    <!-- show-edit-btn -red -->
-                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-position" id="employer<%= index %>-position">
-                                    </div>  <!-- data-id hidden area -->
-                                </div>    <!-- right side of row -->
-                            </section>  <!-- employer-position -->
-
+                            <details class="row-item-85" id="company-details">   <!-- id is used for open details after backlink -->
+                                <summary class="field-accomplished">
+                                    #<%= index + 1 %> <%= employer['employer-company'].toUpperCase() %>
+                                </summary>
+                                <section class="row-item-95">
+                                    <div class="fields-set">
+                                        <div class="field-title">#<%= index + 1 %>.Company</div>
+                                        <div class="field-value -italic"><%= employer['employer-company'] %></div>
+                                    </div>
+                                    <div class="fields-set">
+                                        <label class="show-edit-btn" for='employer<%= index %>-company' onclick='toggleEditField(this)'>edit</label>
+                                        <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-company'>
+                                            <label class="show-edit-btn -red" for='employer<%= index %>-company' onclick='cleanField(this)'>
+                                                <svg class="delete-mark">
+                                                    <use xlink:href="#delete"></use> 
+                                                </svg>
+                                            </label>    <!-- show-edit-btn -red -->
+                                            <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-company" id="employer<%= index %>-company">
+                                        </div>  <!-- data-id hidden area -->
+                                    </div>    <!-- right side of row -->
+                                </section>  <!-- employer-company -->
+        
+                                <section class="row-item-95">
+                                    <div class="fields-set">
+                                        <div class="field-title">Address,City,State,Zip</div>
+                                        <div class="field-value"><%= employer['employer-address'] %></div>
+                                    </div>
+                                    <div class="fields-set">
+                                        <label class="show-edit-btn" for='employer<%= index %>-address' onclick='toggleEditField(this)'>edit</label>
+                                        <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-address'>
+                                            <label class="show-edit-btn -red" for='employer<%= index %>-address' onclick='cleanField(this)'>
+                                                <svg class="delete-mark">
+                                                    <use xlink:href="#delete"></use> 
+                                                </svg>
+                                            </label>    <!-- show-edit-btn -red -->
+                                            <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-address" id="employer<%= index %>-address">
+                                        </div>  <!-- data-id hidden area -->
+                                    </div>    <!-- right side of row -->
+                                </section>  <!-- employer-address -->
+        
+                                <section class="row-item-95">
+                                    <div class="fields-set">
+                                        <div class="field-title">Supervisor, Phone</div>
+                                        <div class="field-value"><%= employer['employer-supervisor'] %></div>
+                                    </div>
+                                    <div class="fields-set">
+                                        <label class="show-edit-btn" for='employer<%= index %>-supervisor' onclick='toggleEditField(this)'>edit</label>
+                                        <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-supervisor'>
+                                            <label class="show-edit-btn -red" for='employer<%= index %>-supervisor' onclick='cleanField(this)'>
+                                                <svg class="delete-mark">
+                                                    <use xlink:href="#delete"></use> 
+                                                </svg>
+                                            </label>    <!-- show-edit-btn -red -->
+                                            <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-supervisor" id="employer<%= index %>-supervisor">
+                                        </div>  <!-- data-id hidden area -->
+                                    </div>    <!-- right side of row -->
+                                </section>  <!-- employer-supervisor -->
+        
+                                <section class="row-item-95">
+                                    <div class="fields-set">
+                                        <div class="field-title">Position Held, From To</div>
+                                        <div class="field-value"><%= employer['employer-position'] %></div>
+                                    </div>
+                                    <div class="fields-set">
+                                        <label class="show-edit-btn" for='employer<%= index %>-position' onclick='toggleEditField(this)'>edit</label>
+                                        <div class="fields-set -hidden" name="appl-edits" data-id='employer<%= index %>-position'>
+                                            <label class="show-edit-btn -red" for='employer<%= index %>-position' onclick='cleanField(this)'>
+                                                <svg class="delete-mark">
+                                                    <use xlink:href="#delete"></use> 
+                                                </svg>
+                                            </label>    <!-- show-edit-btn -red -->
+                                            <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer<%= index %>-position" id="employer<%= index %>-position">
+                                        </div>  <!-- data-id hidden area -->
+                                    </div>    <!-- right side of row -->
+                                </section>  <!-- employer-position -->
+                            </details>
                         <% }) %>
                     <% } else { %>  <!-- noone entered, printing 1 blank for additing -->
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Company</div>
-                                <div class="field-value">no info, you can add...</div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='employer1-company' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="appl-edits" data-id='employer1-company'>
-                                    <label class="show-edit-btn -red" for='employer1-company' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-company" id="employer1-company">
-                                </div>  <!-- data-id hidden area -->
-                            </div>    <!-- right side of row -->
-                        </section>  <!-- employer1-company -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Address,City,State,Zip</div>
-                                <div class="field-value">no info, you can add...</div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='employer1-address' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="appl-edits" data-id='employer1-address'>
-                                    <label class="show-edit-btn -red" for='employer1-address' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-address" id="employer1-address">
-                                </div>  <!-- data-id hidden area -->
-                            </div>    <!-- right side of row -->
-                        </section>  <!-- employer1-address -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Supervisor, Phone</div>
-                                <div class="field-value">no info, you can add...</div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='employer1-supervisor' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="appl-edits" data-id='employer1-supervisor'>
-                                    <label class="show-edit-btn -red" for='employer1-supervisor' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-supervisor" id="employer1-supervisor">
-                                </div>  <!-- data-id hidden area -->
-                            </div>    <!-- right side of row -->
-                        </section>  <!-- employer1-supervisor -->
-
-                        <section class="row-item-85">
-                            <div class="fields-set">
-                                <div class="field-title">Position Held, From To</div>
-                                <div class="field-value">no info, you can add...</div>
-                            </div>
-                            <div class="fields-set">
-                                <label class="show-edit-btn" for='employer1-position' onclick='toggleEditField(this)'>edit</label>
-                                <div class="fields-set -hidden" name="appl-edits" data-id='employer1-position'>
-                                    <label class="show-edit-btn -red" for='employer1-position' onclick='cleanField(this)'>
-                                        <svg class="delete-mark">
-                                            <use xlink:href="#delete"></use> 
-                                        </svg>
-                                    </label>    <!-- show-edit-btn -red -->
-                                    <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-position" id="employer1-position">
-                                </div>  <!-- data-id hidden area -->
-                            </div>    <!-- right side of row -->
-                        </section>  <!-- employer1-position -->
+                        <details class="row-item-85" id="company-details">   <!-- id is used for open details after backlink -->
+                            <summary class="field-accomplished">
+                                No info, you can add
+                            </summary>
+                            <section class="row-item-95">
+                                <div class="fields-set">
+                                    <div class="field-title">Company</div>
+                                    <div class="field-value">no info, you can add...</div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='employer1-company' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer1-company'>
+                                        <label class="show-edit-btn -red" for='employer1-company' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-company" id="employer1-company">
+                                    </div>  <!-- data-id hidden area -->
+                                </div>    <!-- right side of row -->
+                            </section>  <!-- employer1-company -->
+    
+                            <section class="row-item-95">
+                                <div class="fields-set">
+                                    <div class="field-title">Address,City,State,Zip</div>
+                                    <div class="field-value">no info, you can add...</div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='employer1-address' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer1-address'>
+                                        <label class="show-edit-btn -red" for='employer1-address' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-address" id="employer1-address">
+                                    </div>  <!-- data-id hidden area -->
+                                </div>    <!-- right side of row -->
+                            </section>  <!-- employer1-address -->
+    
+                            <section class="row-item-95">
+                                <div class="fields-set">
+                                    <div class="field-title">Supervisor, Phone</div>
+                                    <div class="field-value">no info, you can add...</div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='employer1-supervisor' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer1-supervisor'>
+                                        <label class="show-edit-btn -red" for='employer1-supervisor' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-supervisor" id="employer1-supervisor">
+                                    </div>  <!-- data-id hidden area -->
+                                </div>    <!-- right side of row -->
+                            </section>  <!-- employer1-supervisor -->
+    
+                            <section class="row-item-95">
+                                <div class="fields-set">
+                                    <div class="field-title">Position Held, From To</div>
+                                    <div class="field-value">no info, you can add...</div>
+                                </div>
+                                <div class="fields-set">
+                                    <label class="show-edit-btn" for='employer1-position' onclick='toggleEditField(this)'>edit</label>
+                                    <div class="fields-set -hidden" name="appl-edits" data-id='employer1-position'>
+                                        <label class="show-edit-btn -red" for='employer1-position' onclick='cleanField(this)'>
+                                            <svg class="delete-mark">
+                                                <use xlink:href="#delete"></use> 
+                                            </svg>
+                                        </label>    <!-- show-edit-btn -red -->
+                                        <input class='input-box' onchange="checkAllChanged(this)" type="text" name="employer1-position" id="employer1-position">
+                                    </div>  <!-- data-id hidden area -->
+                                </div>    <!-- right side of row -->
+                            </section>  <!-- employer1-position -->
+                        </details>
                     <% } %>
+
 
                     <!-- contains all updated MODELS fields -->
                     <input type="hidden" name='whatWasUpdated'  data-updated='appl-edits' />
