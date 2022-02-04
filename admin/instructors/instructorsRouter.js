@@ -31,10 +31,10 @@ function ifInstructor (req, res, next) {
 
 async function getStudentData(id) {
     // returns Student data for tests by ID
-    const studentPopulated = ['key', 'TTT', 'status', 'location']
-    const userPopulated = ['email']
-    const dataAgrPopulated = ['class', 'transmission']
-    const dataCollPopulated = ['firstName', 'lastName', 'middleName']
+    const studentPopulated = 'key TTT status location'
+    const userPopulated = 'email'
+    const dataAgrPopulated = 'class transmission'
+    const dataCollPopulated = 'firstName lastName middleName'
 
     return await Student.findById(id).select(studentPopulated).populate([
         {
@@ -44,6 +44,9 @@ async function getStudentData(id) {
         {
             path: 'user', select: userPopulated,
             populate: { path: 'dataCollection', select: dataCollPopulated }
+        },
+        {
+            path: 'scoring', selected: 'scoringsInCab scoringsOutCab scoringsBacking scoringsCity'
         }
     ])
 }
@@ -266,13 +269,48 @@ instRouter.post('/scoring-print', (req, res) => {
             scoring, scoringCertificate,
             allowComments: true,    //  comments can be hidden if needed
             scoringComment,
-            backlink: `/admin/user/${userId}?activatetab=4&open=scorings`
+            backlink: userId ? `/admin/user/${userId}?activatetab=4&open=scorings` : undefined
          })
     } catch(e) {
         return res.status(404).send(`Error: ${e.message}`)
     }
 })
 
+
+// works the same as previouse but shows only last scoring
+// is used for scorings retriving from Student List
+instRouter.get('/scoring-print', async (req, res) => {
+    try {
+        const studentId = req.query.studentId
+        const scoringType = req.query.scoringType
+        const back = req.query.back
+
+        if (studentId && scoringType && back) {
+            const student = await Student.findById(studentId).select('scoring').populate('scoring')
+            if (student) {
+                if (student.scoring) {
+                    let scorArrayTitle = scoringType.replace('-', '')       // classes passed have look like '-scoringsInCab', '-scoringsOutCab' etc.
+                    let particularScoringArray = student.scoring[scorArrayTitle]
+                    if (particularScoringArray.length) {
+                        let lastScoring = particularScoringArray[particularScoringArray.length - 1]
+                        return res.render(path.join(__dirname+'/scoring-printable-view.ejs'), { 
+                            scoring: JSON.parse(lastScoring.details),
+                            scoringCertificate: lastScoring.certificate,
+                            allowComments: true,    //  comments can be hidden if needed
+                            scoringComment: lastScoring.comment,
+                            backlink: back
+                        })
+                    }
+                }
+            }
+        }
+        
+        return res.redirect(back)
+        
+    } catch(e) {
+        return res.status(404).send(`Error: ${e.message}`)
+    }
+})
 
 
 module.exports = instRouter

@@ -353,19 +353,34 @@ a.-lastName {
 
 /* Scoring States */
 .-scoring, .-isAllowed {
-    --width: 4.5rem;
+    --width: 4.2rem;
     text-align: center;
-    cursor:default;
+    font-size: 0.83rem !important;
 }
+
+.fa-check, .fa-ban, .fa-thumbs-up {
+    padding: 3px;
+    font-size: 1.2rem;
+    color: #333;
+    cursor:pointer;
+    transition: all 0.2s linear;
+}
+.fa-check:hover,
+.fa-ban:hover,
+.fa-thumbs-up:hover {
+    background-color: #a1a1a1;
+    color: #fff;
+    border-radius: 100%;
+}
+
 .-scoringPassed {
-    font-style: italic;
-    color: white;
-    background-color: #91c57d;
+    color: #52b3b6;
+    cursor: pointer;
 }
 .-scoringFailed {
-    font-style: italic;
-    color: white;
-    background-color: #f57546de;
+    color: #dd4848;
+    transform: rotate(180deg);
+    cursor: pointer;
 }
 
 

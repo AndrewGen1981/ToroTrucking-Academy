@@ -20,7 +20,11 @@
     
     <div class="scoring-box">
 
-        <a class='backlink' href="<%= backlink %>">back</a>
+        <% if(backlink) { %>
+            <a class='backlink' href="<%= backlink %>">back</a>
+        <% } else { %>
+            <a class='backlink' href="#" onclick="history.back()">back</a>
+        <% } %>
 
         <% if(!scoring) { %>
             <h1 class='title'>Oooopps... No scoring data were passed</h1>
@@ -143,7 +147,11 @@
         <% } %>     <!-- scoring data passed -->
 
         <footer>
-            <a class='backlink' href="<%= backlink %>">back</a>
+            <% if(backlink) { %>
+                <a class='backlink' href="<%= backlink %>">back</a>
+            <% } else { %>
+                <a class='backlink' href="#" onclick="history.back()">back</a>
+            <% } %>
         </footer>
 
     </div>      <!-- scoring-box -->

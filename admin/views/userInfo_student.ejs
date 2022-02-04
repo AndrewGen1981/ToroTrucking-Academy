@@ -88,11 +88,7 @@
         <!-- TOOL: function floatToPercent() -->
         <% function floatToPercent(d) { const D = d*100; const R = Math.trunc(D); const L = Math.round(10*(D % 1)); return `${R}.${L}%` } %>
         <!-- TOOL: function printDateTime() -->
-        <% function printDateTime(date) {  
-            const d = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' });
-            const t = new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false });
-            return `${d} (${t})`
-        } %>
+        <% function printDateTime(date) { const d = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }); const t = new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }); return `${d} (${t})` } %>
         <!-- TOOL: Clocks TTT, coordinates -->
         <% function strTTT(TTT) { const H = Math.trunc(TTT); const M = Math.round(60*(TTT % 1)); return M > 9 ? `${H}h:${M}m` : `${H}h:0${M}m` } %>
         <% function normTTT(TTT) { return `${ Math.round(TTT * 100) / 100 }h` } %>

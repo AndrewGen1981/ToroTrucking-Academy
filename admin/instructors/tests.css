@@ -386,6 +386,63 @@ input#certificate:checked ~ .cetrSignature {
     box-shadow: 0 12px 20px -11px rgb(122 172 172 / 73%);
 }
 
+/* Details sections */
+.prev-scorings {
+    width: 95%;
+    max-width: 1535px;
+    margin: 10px auto 25px auto;
+    padding: 5px;
+    
+    font-family: "BrixSlab-Regular";
+    color: #333;
+    background-color: rgba(51, 51, 51, 0.075);
+   
+    border-radius: 3px;
+}
+.prev-scorings summary {
+    font-family: "BrixSlab-MediumItalic";
+    text-transform: uppercase;
+    color:#00a16d;
+    cursor: pointer;
+}
+
+
+/* Student Scoring Details */
+.scoring-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    font-size: 0.83rem;
+}
+.scoring-details {
+    width: 100%;
+    height: 95%;
+
+    font-family: "BrixSlab-Regular";
+    text-align: left;
+    text-decoration: underline;
+    color: var(--orange-high-desert);
+    background-color: rgba(51, 51, 51, 0.05);
+
+    border: none;
+    cursor: pointer;
+}
+.-table-header {
+    padding: 5px 0;
+    background-color: rgba(51, 51, 51, 0.075);
+    font-weight: bold;
+}
+.field-warning {
+    color: var(--bad-todo1)
+}
+.field-accomplished {
+    color: var(--good-done1)
+}
+.field-yellow {
+    color: rgb(205, 156, 50);
+}
+.-hidden {
+    display: none;
+}
 
 
 @media (max-width: 1150px) {

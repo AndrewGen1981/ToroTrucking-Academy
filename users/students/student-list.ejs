@@ -235,12 +235,20 @@
                         <% } %>
 
                         <!-- Scoring -->
+                        
+                        <!-- link for get into payments directly -->
+                        <% let scoringLink = `/admin/user/${student.user._id}?activatetab=4&open=scorings` %>
+
                         <% if(student.scoring) { %>
 
                             <% if(student.scoring.isAllowed) { %>
-                                <div class='field -isAllowed'>Yes</div>
+                                <a href="<%= scoringLink %>" class='field -isAllowed'>
+                                    <i class="fas fa-check"></i>
+                                </a>
                             <% } else { %>
-                                <div class='field -isAllowed'>No</div>
+                                <a href="<%= scoringLink %>" class='field -isAllowed'>
+                                    <i class="fas fa-ban"></i>
+                                </a>
                             <% } %>
 
                             <% let scorArr = [student.scoring.scoringsInCab, student.scoring.scoringsOutCab, student.scoring.scoringsBacking, student.scoring.scoringsCity] %>
@@ -248,28 +256,49 @@
                             <% let scorClasses = ['-scoringsInCab', '-scoringsOutCab', '-scoringsBacking', '-scoringsCity'] %>
                             
                             <% scorArr.map((scor, index) => { %>
+                                <!-- link to show the last done scoring of particulat type -->
+                                <% let GETLink = `/admin/inst/scoring-print?studentId=${student._id}&scoringType=${scorClasses[index]}&back=/admin/student/list` %>
                                 <% if(scor.length) { %>
-                                    
                                     <% let lastScor = scor[scor.length - 1] %>
                                     <% let date = new Date(lastScor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
                                     <% let msg = lastScor.comment ? `[${date}] ${lastScor.instructor} says: ${lastScor.comment}` : `[${date}] ${lastScor.instructor}` %>
                                     <% let passedClass = lastScor.result ? '-scoringPassed' : '-scoringFailed' %>
-                                    <% let text = lastScor.result ? 'passed' : 'failed' %>
-                                    
-                                    <div class='field -scoring <%= scorClasses[index] %> <%= passedClass %>' title='<%= msg %>'><%= text %></div>
-
+                                    <div class='field -scoring'>
+                                        <a href="<%= GETLink %>" title='<%= msg %>'>
+                                            <i class="far fa-thumbs-up <%= scorClasses[index] %> <%= passedClass %>"></i>
+                                        </a>
+                                    </div>
                                 <% } else { %>
-                                    <div class='field -scoring <%= scorClasses[index] %>'></div>
+                                    <div class='field -scoring'>
+                                        <a href="<%= GETLink %>">
+                                            <i class="far fa-thumbs-up <%= scorClasses[index] %> -hidden"></i>
+                                        </a>
+                                    </div>
                                 <% } %>
                             <% }) %>
-
                         <% } else { %>
                             <div class='field -isAllowed'></div>
                             <!-- scoring type classes here not for styling only BUT for socket.io work -->
-                            <div class='field -scoring -scoringsInCab'></div>
-                            <div class='field -scoring -scoringsOutCab'></div>
-                            <div class='field -scoring -scoringsBacking'></div>
-                            <div class='field -scoring -scoringsCity'></div>
+                            <div class='field -scoring'>
+                                <a href="/admin/inst/scoring-print?studentId=<%= student._id %>&scoringType=-scoringsInCab&back=/admin/student/list">
+                                    <i class="far fa-thumbs-up -scoringsInCab -hidden"></i>
+                                </a>
+                            </div>
+                            <div class='field -scoring'>
+                                <a href="/admin/inst/scoring-print?studentId=<%= student._id %>&scoringType=-scoringsOutCab&back=/admin/student/list">
+                                    <i class="far fa-thumbs-up -scoringsOutCab -hidden"></i>
+                                </a>
+                            </div>
+                            <div class='field -scoring'>
+                                <a href="/admin/inst/scoring-print?studentId=<%= student._id %>&scoringType=-scoringsBacking&back=/admin/student/list">
+                                    <i class="far fa-thumbs-up -scoringsBacking -hidden"></i>
+                                </a>
+                            </div>
+                            <div class='field -scoring'>
+                                <a href="/admin/inst/scoring-print?studentId=<%= student._id %>&scoringType=-scoringsCity&back=/admin/student/list">
+                                    <i class="far fa-thumbs-up -scoringsCity -hidden"></i>
+                                </a>
+                            </div>
                         <% } %>
 
 
@@ -514,21 +543,19 @@
                                     case 'scoringsCity':
                                         // arrays of scorings
                                         if (!value.length) {    // scoring is deleted
-                                            el.textContent = ''
-                                            el.title = 'just deleted'
+                                            el.classList.add('-hidden')
                                             el.classList.remove('-scoringPassed')
                                             el.classList.remove('-scoringFailed')
                                         } else {    // added or updated
                                             let lastScor = value[value.length - 1]
                                             let date = new Date(lastScor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
                                             el.title = lastScor.comment ? `[${date}] ${lastScor.instructor} says: ${lastScor.comment}` : `[${date}] ${lastScor.instructor}`
+                                            el.classList.remove('-hidden')
                                             
                                             if (lastScor.result) {
-                                                el.textContent = 'passed'
                                                 el.classList.add('-scoringPassed')
                                                 el.classList.remove('-scoringFailed')
                                             } else {
-                                                el.textContent = 'failed'
                                                 el.classList.add('-scoringFailed')
                                                 el.classList.remove('-scoringPassed')
                                             }

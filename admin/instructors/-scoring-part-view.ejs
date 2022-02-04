@@ -67,7 +67,58 @@
             </p>
         </header>
 
+
+        <!-- TOOL: function printDateTime() -->
+        <% function printDateTime(date) { const d = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }); const t = new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }); return `${d} (${t})` } %>
+
         
+        <!-- SCORING Details -->
+        <% if (student.scoring) { %>
+            <details class="prev-scorings">
+                <summary>
+                    Scorings
+                </summary>
+                <div class="scoring-table">
+                    <div class="-table-header">Type</div>
+                    <div class="-table-header">Date</div>
+                    <div class="-table-header">Instructor</div>
+                    <div class="-table-header">Result</div>
+                    <div class="-table-header">Certificate</div>
+                    <!-- constants -->
+                    <% const scorings = student.scoring %>
+                    <% const scorArrays = [scorings.scoringsInCab, scorings.scoringsOutCab, scorings.scoringsBacking, scorings.scoringsCity] %>
+                    <% const scorTitles = ['pretrip In-Cab', 'pretrip Out-Cab', 'Backing Maneuvers', 'City Driving'] %>
+                    <!-- 2D scorings array -->
+                    <% scorArrays.map((scorArray, index) => { %>
+                        <% scorArray.map(scor => { %>
+
+                            <form action="/admin/inst/scoring-print" method="POST">
+                                <textarea class='-hidden' name="scoringDetails"><%= scor.details %></textarea>
+                                <textarea class='-hidden' name="scoringComment"><%= scor.comment %></textarea>
+                                <input type="hidden" name="scoringCertificate" value="<%= scor.certificate %>" />
+                                <button class='scoring-details' type='submit'><%= scorTitles[index] %></button>
+                            </form>
+
+                            <div><%= printDateTime(scor.created) %></div>
+                            <div><%= scor.instructor %></div>
+                            <!-- Result -->
+                            <% if (scor.result) { %>
+                                <div class="field-accomplished">passed</div>
+                            <% } else { %>
+                                <div class="field-warning">failed</div>
+                            <% } %>
+                            <!-- Certificate -->
+                            <% if (scor.certificate) { %>
+                                <div class="field-accomplished">Yes</div>
+                            <% } else { %>
+                                <div class="field-yellow">No</div>
+                            <% } %>
+                        <% }) %>
+                    <% }) %>
+                </div>  <!-- scoring-table -->
+            </details>
+        <% } %>   <!-- SCORING Details -->
+
 
         <section class="scoring-results">
             <h2>Scoring result is <span id='current-result'>0</span>/<span id='max-result'>0</span></h2>
@@ -108,7 +159,7 @@
                 <% }) %>
             <% } %>     <!-- if TEST passed -->
 
-            <form action="/admin/inst/scoring-save" method="POST">
+            <form action="/admin/inst/scoring-save" method="POST" id="scoring-save-form">
 
                 <input type="hidden" name="studentId" value="<%= student._id %>">
                 <input type="hidden" name="scoringType" value="<%= type %>">

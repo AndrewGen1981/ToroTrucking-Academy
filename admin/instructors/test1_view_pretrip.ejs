@@ -119,7 +119,7 @@
 
         
         // reset results on reset
-        document.forms[0].addEventListener('reset', (e) => {
+        document.getElementById('scoring-save-form').addEventListener('reset', (e) => {
             if (!confirm('This will reset test and above entered data will be lost. Are you sure?')) { 
                 e.preventDefault()
                 return
@@ -131,7 +131,7 @@
         // submit
         // On submit all scoring data loads to 'scoringData' text area as a JSON
 
-        document.forms[0].addEventListener('submit', (e) => {
+        document.getElementById('scoring-save-form').addEventListener('submit', (e) => {
             const receivedPoints = parseInt(document.querySelector('#current-result').textContent)
             if (!receivedPoints) { 
                 e.preventDefault()
