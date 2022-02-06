@@ -5,7 +5,6 @@ const { Mongoose } = require('mongoose')
 
 // CONFIG
 const admin = require('./config')
-const adminTools = require('./adminTools')
 
 // MODELS for mongoose
 const { User, Student, tools } = require('../users/userModel')
@@ -181,7 +180,36 @@ admRouter.post('/logout', redirectToLogin, (req, res) => {
 
 // @USERS AREA Routes
 admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
-    res.render(path.join(__dirname + '/views/__userArea.ejs'), { HTML:  await adminTools.getUsers({}, 100, 0) })
+    // shows users area with all registered students and applicants
+    try {
+        const adminProfile = admin.findAdminById(req.session.userId)
+        if (adminProfile) {
+            // find, sort in descending order and populate if students to get a location
+            const allUsers = await User.find()
+            .sort({ created: -1 })
+            .select('-balance -__v -payments -password')
+            .populate({path: 'student', select: 'location'})
+            // filtering only students due to admin's lcation + all UNSET + all, who are not students yet
+            const users = allUsers.filter(user => {
+                if (!user.student) {
+                    return user
+                } else {
+                    let location = user.student.location
+                    if (adminProfile.location === admin.LOCATION.All || location === admin.LOCATION.Unset || location === adminProfile.location || !location) {
+                        return user
+                    }
+                }
+            })
+            return res.render(path.join(__dirname + '/views/userArea.ejs'), { 
+                admName: adminProfile.name,
+                admLocation: adminProfile.location,
+                users
+            })
+        }
+        return res.status(404).send('Admin is not identified')
+    } catch (e) {
+        res.status(400).send(`Cannot retrieve users, issue is: ${e.massage}`)
+    }
 })
 
 

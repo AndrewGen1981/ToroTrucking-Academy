@@ -33,10 +33,10 @@
             <div class="register-box">Already have an account?<a href="/user/login">Log In</a></div>
             
             <section class='message-box'>
-                <% if (registErrorObj.isThere) { %>
+                <% if (isThereErrors) { %>
                     <h2>Error(s) found</h2>
                     <ol type='1'>
-                        <% registErrorObj.errors.map(err => { %>
+                        <% errors.map(err => { %>
                             <li><span><%= err.param.toUpperCase() %>: </span><strong><%= err.msg %></strong></li>
                         <% }) %>
                     </ol>

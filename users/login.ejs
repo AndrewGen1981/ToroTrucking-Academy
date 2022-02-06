@@ -41,10 +41,10 @@
                     <h2>Error found</h2>
                     <p><%= (error) %></p>
                 <% } %>
-                <% if (registErrorObj.isThere) { %>
+                <% if (isThereErrors) { %>
                     <h2>Errors found</h2>
                     <ol type='1'>
-                        <% registErrorObj.errors.map(err => { %>
+                        <% errors.map(err => { %>
                             <li><span><%= err.param.toUpperCase() %>:</span><strong><%= err.msg %></strong></li>
                         <% }) %>
                     </ol>

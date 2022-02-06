@@ -60,11 +60,11 @@
                 <section class="applicants-area">
                 
                 <% if(user.token === 'verified') { %>     <!-- if email is verified, then show forms -->
-                    <% if (user.applicantProgress.form1) { %>
+                    <% if (user.dataCollection) { %>
                         <a class="form-done" href="/user/print-form/1">STUDENT DATA COLLECTION FORM</a>
-                        <% if (user.applicantProgress.form2) { %>
+                        <% if (user.application) { %>
                             <a class="form-done" href="/user/print-form/2">APPLICATION FOR ENROLLMENT</a>
-                            <% if (user.applicantProgress.form3) { %>
+                            <% if (user.agreement) { %>
                                 <a class="form-done" href="/user/print-form/3">ENROLLMENT AGREEMENT</a>
                             <% } else { %>
                                 <a class="form-todo" href="/user/form3">

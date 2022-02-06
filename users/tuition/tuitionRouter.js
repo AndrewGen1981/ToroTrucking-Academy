@@ -42,7 +42,7 @@ const listOfLessons = [
 
 // user/tuition
 tuitionRouter.get('/', async(req, res) => {
-    const user = res.locals.user
+    const user = await User.findOne({ email: req.session.userId })
     if (user) {
         if (user.student) {
             const student = await Student.findById(user.student).select("tuition").populate("tuition")
@@ -61,7 +61,10 @@ tuitionRouter.get('/', async(req, res) => {
 })
 
 
-tuitionRouter.post('/', (req, res) => {
+tuitionRouter.post('/', async(req, res) => {
+    const user = await User.findOne({ email: req.session.userId })
+    if (!user) { return res.status(404).send(`No user found with ${req.session.userId}`) }
+
     const { video, videoProgress, testProgress } = req.body    // video id is being passed in body
     const testFileName = listOfLessons.indexOf(video) + 1   // try to find id in vidoe IDs array
     if (testFileName) {
@@ -79,12 +82,7 @@ tuitionRouter.post('/', (req, res) => {
                 })
                 videoData.videoProgress = videoProgress
                 videoData.testProgress = testProgress
-
-                res.render(path.join(__dirname+'/tuition-player.ejs'), { 
-                    user: res.locals.user,
-                    videoData,
-                    video
-                })
+                res.render(path.join(__dirname+'/tuition-player.ejs'), { user, videoData, video })
             }
         })
     }
@@ -97,8 +95,8 @@ tuitionRouter.use(express.json({
     type: ['application/json', 'text/plain']
  }))
 
-tuitionRouter.put('/update', async (req, res) => {
-    const user = res.locals.user
+tuitionRouter.put('/update', async(req, res) => {
+    const user = await User.findOne({ email: req.session.userId })
     const { userId, videoId, lesson, lessonTitle, currentRatio, currentTime, testProgress } = req.body
 
     if (user) {

@@ -5,7 +5,6 @@ const express = require('express')
 const session = require('express-session')
 
 const { body, validationResult } = require('express-validator')
-const registErrorObj = { isThere: false, errors: [] }
 
 const path = require('path')
 const bcrypt = require('bcrypt')
@@ -27,18 +26,9 @@ const { dataCollectionForm, getForm1Object } = require('./applicants/form1Model'
 const { applicationForm, getForm2Object } = require('./applicants/form2Model')
 const { agreementForm, getForm3Object } = require('./applicants/form3Model')
 
-
-// for forms filling out tracking
-const applicantProgress = {
-    form1: false,
-    form2: false,
-    form3: false
-}
-
 // POSTMAN and messages
 const { getInfoMessage, getIssueMessage } = require('./_messages')
 const postman = require('./postman/postman')
-
 
 // @SESSION setup
 const SESS_DURATION = 1000 * 60 * 60 * 2    //  2 hours for Applicants and Students
@@ -84,13 +74,6 @@ function redirectToHome (req, res, next) {
         res.redirect('/user/home')
     } else { next() }
 }
-userRouter.use(async (req, res, next) => {   // !!! general middleware - will be used before EACH ROUTE!!!
-    if (req.session.userId) {   // if there is one, then tries to find it in users array and inject it to LOCALS - spec.obj. for sharing data between functions
-        res.locals.user = await User.findOne({ email: req.session.userId })
-        res.locals.user.applicantProgress = applicantProgress
-    }
-    next()
-})
 
 
 
@@ -100,89 +83,71 @@ userRouter.use(async (req, res, next) => {   // !!! general middleware - will be
 // @GET REQUESTS
 userRouter.get('/', (req, res) => {
     res.redirect('/user/login')
-    // res.render(path.join(__dirname+'/welcome.ejs'), sess = req.session)
 })
 
+
 userRouter.get('/home', redirectToLogin, async(req, res) => {
+    try {
+        const user = await User.findById(req.session._id).select('-__v -password').populate({ path: 'agreement', select: 'visiting' })
+        if (!user) { return res.status(404).redirect('/user/logout') }      //  logs ouser out if user is undefined
+    
+        if (user.student) {
+            user.student = await Student.findById(user.student).select('-__v -user')
+            .populate({ path: 'tuition', select: 'created isAllowed avLessonsRate lessons' })
+            .populate('scoring')
+        }
 
-    if (!applicantProgress.form1) {     //  check if form1 is filled out. One time check
-        applicantProgress.form1 = await dataCollectionForm.exists({ email: req.session.userId })
-    }
-    if (!applicantProgress.form2 && applicantProgress.form1) {     //  check if form2 is filled out. One time check, but only after form1 = true
-        applicantProgress.form2 = await applicationForm.exists({ email: req.session.userId })
-    }
-    if (!applicantProgress.form3 && applicantProgress.form1 && applicantProgress.form2) {     //  check if form3 is filled out. One time check, but only after form1 = true & form2 = true
-        applicantProgress.form3 = await agreementForm.exists({ email: req.session.userId })
-    }
+        // checking for income messages
+        const { status, e } = req.query
+    
+        user.msg = status === 'issue' ? { class: 'issue', txt: getIssueMessage(e), e }
+        : status === 'ok' ? { class: 'success', txt: getInfoMessage(e), e }
+        : status === 'info' ? { class: 'info', txt: getInfoMessage(e), e }
+        : { class: 'info', txt: "Welcome back" }
 
-    // checking for income messages
-    const { status, e, obj } = req.query
-
-    res.locals.user.msg = status === 'issue' ? { class: 'issue', txt: getIssueMessage(e), e }
-    : status === 'ok' ? { class: 'success', txt: getInfoMessage(e), e }
-    : status === 'info' ? { class: 'info', txt: getInfoMessage(e), e }
-    : { class: 'info', txt: "Welcome back" }
-
-    // if Student, then show TTT and Clocks
-    const user = res.locals.user
-    // if user is a student and has clocks array already, then get student clocks's array - check tools to find out what is that
-    if (user.agreement && user.student) {       // only when Agreement is signed and full/part is determined AND user is a Student
-        
-        try {
-            const student = await Student.findById(user.student).populate([
-                {
-                    path: 'user', select: 'agreement', 
-                    populate: { path: 'agreement', select: 'visiting' }
-                },
-                {
-                    path: 'tuition', select: 'created isAllowed avLessonsRate lessons'
-                },
-                {
-                    path: 'scoring'
-                }
-            ])
-            
-            if (student.user.agreement.visiting && student.clocks) {
-                
+        // if Student, then show TTT and Clocks
+        // if user is a student and has clocks array already, then get student clocks's array - check tools to find out what is that
+        if (user.agreement && user.student) {       // only when Agreement is signed and full/part is determined AND user is a Student
+            if (user.agreement.visiting && user.student.clocks) {
                 // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
-                const minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
-                const { TTT, studentClocks } = tools.reCalculateTTT(student.clocks, minVisitingRequirements)       //  destructuring results
+                const minVisitingRequirements = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+                const { TTT, studentClocks } = tools.reCalculateTTT(user.student.clocks, minVisitingRequirements)       //  destructuring results
 
                 return res.render(path.join(__dirname+'/home.ejs'), { 
                     user, SESS_EXP: req.session.cookie._expires,
-                    tuition: student.tuition,
+                    tuition: user.student.tuition,
 
                     verTTT: TTT / (1000 * 60 *60),
                     verClocks: studentClocks,
-                    visiting: student.user.agreement.visiting,
+                    visiting: user.agreement.visiting,
 
-                    scorings: student.scoring
+                    scorings: user.student.scoring
                 })
-                            
             }   //  type is determined AND clocks are present
-        } catch(e) {
-            res.status(500).send(`Ooppps... ${e.message}`)
-        }
-    }   //  Agreement is signed AND user is a Student
-
-    res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires })
+        }   //  Agreement is signed AND user is a Student
+        return res.render(path.join(__dirname+'/home.ejs'), { user, SESS_EXP: req.session.cookie._expires })
+    } catch(e) {
+        return res.status(400).send(`Ooppps... ${e.message}`)
+    }
 })
-
 
 
 userRouter.get('/login', redirectToHome, (req, res) => {
     // checking for income messages
     const { status, e } = req.query
-
     res.render(path.join(__dirname+'/login.ejs'), {
         error: status === 'issue' ? getIssueMessage(e) : false,
         info: status === 'info' ? getInfoMessage(e) : false,
-        registErrorObj
+        isThereErrors: false,   // no errors yet
+        errors: []
     })
 })
 
 userRouter.get('/register', redirectToHome, (req, res) => {
-    res.render(path.join(__dirname+'/register.ejs'), { registErrorObj })
+    res.render(path.join(__dirname+'/register.ejs'), {
+        isThereErrors: false,   // no errors yet
+        errors: []
+    })
 })
 
 
@@ -197,12 +162,9 @@ userRouter.post('/login', redirectToHome, async (req, res) => {
         try {
             if (await bcrypt.compare(password, user.password)) {
                 req.session.userId = email
-                
-                // this will force forms list to reread
-                applicantProgress.form1 = false
-                applicantProgress.form2 = false
-                applicantProgress.form3 = false
-
+                // test lines to speedup DB operations, for findById instead of find({ email })
+                req.session.email = user.email
+                req.session._id = user._id
                 return res.redirect('/user/home')
             }
         } catch(e) { res.status(500).send() }
@@ -227,16 +189,13 @@ userRouter.post('/register', redirectToHome, body("email")
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        registErrorObj.isThere = true
-        registErrorObj.errors = errors.array()
-        return res.status(400).redirect('/user/register')
+        return res.status(400).render(path.join(__dirname+'/register.ejs'), {
+            isThereErrors: true,
+            errors: errors.array()
+        })
     }
 
     // Request is ok, can create a user
-    // clearning errors
-    registErrorObj.isThere = false
-    registErrorObj.errors = []
-
     const { name, email, password } = req.body
     const token = postman.generateAToken()      //  as default token was "not sent", now it will be generated automatically
 
@@ -256,6 +215,9 @@ userRouter.post('/register', redirectToHome, body("email")
                 // saving is OK
                 postman.sendATokenLetter(name, email, token, tokenLink)     // #1 Sending a token-letter
                 req.session.userId = newUser.email                          // #2 Saving for short-cut in session object to notify software that we have logged in user
+                // test lines to speedup DB operations, for findById instead of find({ email })
+                req.session.email = newUser.email
+                req.session._id = newUser._id
 
                 return res.status(200).redirect('/user/home?status=info&e=verTokenSent')    // #3 redirects to HOME with token sent notification
             })
@@ -265,11 +227,21 @@ userRouter.post('/register', redirectToHome, body("email")
     }
 })
 
+
+// @ LOGOUT routes
+// using this one to log user out from server side
+userRouter.get('/logout', redirectToLogin, (req, res) => {
+    // deleting session 
+    req.session.destroy(err => {
+        if (err) {
+            return res.redirect('/user/home')
+        }
+    })
+    res.clearCookie(SESS_NAME)
+    res.redirect('/user/login')
+})
+// using this one to log user out from client side
 userRouter.post('/logout', redirectToLogin, (req, res) => {
-    // forcing forms rereading in case of log out and back again with other user credentials
-    applicantProgress.form1 = false
-    applicantProgress.form2 = false
-    applicantProgress.form3 = false
     // deleting session 
     req.session.destroy(err => {
         if (err) {
@@ -283,31 +255,75 @@ userRouter.post('/logout', redirectToLogin, (req, res) => {
 
 
 // *REQUESTS for applicants
+// requests of forms for filling-in
 
+userRouter.get('/form1', redirectToLogin, async(req, res) => {
+    try {
+        const user = await User.findById(req.session._id).select('dataCollection')
+        if (!user) { return res.status(404).send(`Cannot find a user ${req.session._id}`) }
 
-
-userRouter.get('/form1', redirectToLogin, (req, res) => {
-    res.render(path.join(__dirname+'/applicants/form1.ejs'), {exists: applicantProgress.form1})
+        if (user.dataCollection) {      // check if exists already
+            res.redirect('/user/print-form/1')     // exist, redirect to print
+        } else {
+            res.render(path.join(__dirname+'/applicants/form1.ejs'))    // doesn't exist, fill-in
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
+    }
 })
 userRouter.get('/form2', redirectToLogin, async(req, res) => {
-    form1 = await dataCollectionForm.findOne({ email: req.session.userId })
-    if (form1) { res.render(path.join(__dirname+'/applicants/form2.ejs'), {form1, exists: applicantProgress.form2}) }
-    else { res.redirect('/user/home?status=issue&e=form1Read') }
+    try {
+        const user = await User.findById(req.session._id).select('dataCollection application').populate('dataCollection')
+        if (!user) { return res.status(404).send(`Cannot find a user ${req.session._id}`) }
+
+        if (user.application) {      // check if exists already
+            res.redirect('/user/print-form/2')     // exist, redirect to print
+        } else {    // doesn't exist, fill-in
+            if (user.dataCollection) {  // form #2 can be filled in only if dataCollection is finished
+                res.render(path.join(__dirname+'/applicants/form2.ejs'), { form1: user.dataCollection })
+            } else {
+                res.redirect('/user/home?status=issue&e=form1Read')
+            }
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
+    }
 })
 userRouter.get('/form3', redirectToLogin, async(req, res) => {
-    form1 = await dataCollectionForm.findOne({ email: req.session.userId })
-    if (form1 && applicantProgress.form2) { res.render(path.join(__dirname+'/applicants/form3.ejs'), {form1, exists: applicantProgress.form3}) }
-    else { 
-        if (!form1) { return res.redirect('/user/home?status=issue&e=form1Read') }
-        res.redirect('/user/home?status=issue&e=form2Read')
+    try {
+        const user = await User.findById(req.session._id).select('dataCollection application agreement').populate('dataCollection')
+        if (!user) { return res.status(404).send(`Cannot find a user ${req.session._id}`) }
+
+        if (user.agreement) {      // check if exists already
+            res.redirect('/user/print-form/3')     // exist, redirect to print
+        } else {    // doesn't exist, fill-in
+            if (user.dataCollection && user.application) {  // form #3 can be filled in only if dataCollection and application are finished
+                res.render(path.join(__dirname+'/applicants/form3.ejs'), { form1: user.dataCollection })
+            } else {    // applicant is trying to skip, define what exactly
+                if (user.dataCollection) {
+                    res.redirect('/user/home?status=issue&e=form2Read')
+                } else {
+                    res.redirect('/user/home?status=issue&e=form1Read')
+                }
+            }
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
     }
 })
 
 
-userRouter.post('/form1', redirectToLogin, (req, res) => {
+// @ SAVING filled-in forms
+
+userRouter.post('/form1', redirectToLogin, async(req, res) => {
     // checking if exists
-    if (applicantProgress.form1) {
-        return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+    try {
+        const user = await User.findById(req.session._id).select('dataCollection')
+        if (user.dataCollection) {
+            return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
     }
 
     const form1Object = getForm1Object(req.body, req.session.userId)
@@ -316,10 +332,7 @@ userRouter.post('/form1', redirectToLogin, (req, res) => {
             new dataCollectionForm(form1Object)
             .save()
             .then(async(newForm) => {
-                applicantProgress.form1 = true
-                
                 await User.findOneAndUpdate({ email: req.session.userId }, { dataCollection: newForm._id })        // saving backlink in User model
-                
                 res.redirect('/user/home?status=ok&e=okForm1')
             })
         } catch(e) {
@@ -332,10 +345,15 @@ userRouter.post('/form1', redirectToLogin, (req, res) => {
 })
 
 
-userRouter.post('/form2', redirectToLogin, (req, res) => {
+userRouter.post('/form2', redirectToLogin, async(req, res) => {
     // checking if exists
-    if (applicantProgress.form2) {
-        return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+    try {
+        const user = await User.findById(req.session._id).select('application')
+        if (user.application) {
+            return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
     }
 
     const form2Object = getForm2Object(req.body, req.session.userId)
@@ -344,10 +362,7 @@ userRouter.post('/form2', redirectToLogin, (req, res) => {
             new applicationForm(form2Object)
             .save()
             .then(async(newForm) => {
-                applicantProgress.form2 = true
-
                 await User.findOneAndUpdate({ email: req.session.userId }, { application: newForm._id })        // saving backlink in User model
-
                 res.redirect('/user/home?status=ok&e=okForm2')
             })
         } catch(e) {
@@ -360,10 +375,15 @@ userRouter.post('/form2', redirectToLogin, (req, res) => {
 })
 
 
-userRouter.post('/form3', redirectToLogin, (req, res) => {
+userRouter.post('/form3', redirectToLogin, async(req, res) => {
     // checking if exists
-    if (applicantProgress.form3) {
-        return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+    try {
+        const user = await User.findById(req.session._id).select('agreement')
+        if (user.agreement) {
+            return res.redirect('/user/home?status=issue&e=formAlreadyExists')
+        }
+    } catch(e) {
+        return res.status(404).send(`Issue: ${e}`)
     }
 
     const form3Object = getForm3Object(req.body, req.session.userId)
@@ -372,10 +392,7 @@ userRouter.post('/form3', redirectToLogin, (req, res) => {
             new agreementForm(form3Object)
             .save()
             .then(async(newForm) => {
-                applicantProgress.form3 = true
-
                 await User.findOneAndUpdate({ email: req.session.userId }, { agreement: newForm._id })        // saving backlink in User model
-
                 res.redirect('/user/home?status=ok&e=okForm3')
             })
         } catch(e) {
@@ -433,16 +450,13 @@ userRouter.post('/passwordreset', redirectToHome, body("email")
     // user has to provide us with personal login-email
     const errors = validationResult(req);       // is email valid and is it a login? via 'express-validator'
     if (!errors.isEmpty()) {
-        registErrorObj.isThere = true
-        registErrorObj.errors = errors.array()
-        return res.status(400).redirect('/user/login')
+        return res.status(400).render(path.join(__dirname+'/login.ejs'), {
+            isThereErrors: true,
+            errors: errors.array()
+        })
     }
 
     // Request is ok, can create a user
-    // clearning errors
-    registErrorObj.isThere = false
-    registErrorObj.errors = []
-
     const { email } = req.body
 
     // Reseting Password
@@ -455,8 +469,6 @@ userRouter.post('/passwordreset', redirectToHome, body("email")
         console.log(e)
         res.status(500).redirect('/user/login?status=issue&e=savingIssue')
     }
-
-    
 })
 
 
