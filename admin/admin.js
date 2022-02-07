@@ -523,28 +523,29 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
     const studentId = req.params.id    // receiving user _id from posting form
     const currentAdmin = admin.findAdminById(req.session.userId)
     let location    // this will be passed as 'location' to a clock
-
-    if (qrCONFIG.assignWithAdminsMachine) {     // allowed from admin's machine only?
-        if (req.session.userId) {     // let's check machine, if admin authorized
-            location = currentAdmin.location
-        } else {    // this is not an admin
-            return res.status(400).send("Issue: Unrecognized admin. Login and try again.")
-        }
-    } else {    // or allowed from any machine?
-        location = 'TURNED OFF'
-    }
-    
     try {
         //  getting today's date-prefix
         const diffDays = tools.getDatePrefix(new Date())
-        
+        //  clocks are allowed only to students, get student and check one
         const student = await Student.findById(studentId)
         if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
-
+        // check location and qrCONFIG.assignWithAdminsMachine
+        if (qrCONFIG.assignWithAdminsMachine) {     // allowed from admin's machine only?
+            // let's check machine, if admin authorized
+            if (!currentAdmin) { return res.status(400).send("Issue: Unrecognized admin. Login and try again.") }
+            if (currentAdmin.location != admin.LOCATION.All) {  
+                if (student.location != currentAdmin.location) { 
+                    return res.status(400).send(`Clocks are forbidden, wrong location. Student assigned to ${student.location}`)
+                }
+            }
+            location = currentAdmin.location
+        } else {    // or allowed from any machine?
+            location = 'TURNED OFF'
+        }
         // can be in status of: block, unblock, archive, delete
         // only 'unblock' is good for Clocking
         if (student.status != "unblock") { return res.status(200).send(`Forbidden: Student status is ${student.status}`) }
-
+        
         // check min time after last clock - 5 min to avoid doubling
         // counting todays clocks
         let todaysClocks = []

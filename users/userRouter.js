@@ -449,7 +449,9 @@ userRouter.post('/passwordreset', redirectToHome, body("email")
     // user has to provide us with personal login-email
     const errors = validationResult(req);       // is email valid and is it a login? via 'express-validator'
     if (!errors.isEmpty()) {
-        return res.status(400).render(path.join(__dirname+'/login.ejs'), {
+        return res.status(404).render(path.join(__dirname+'/login.ejs'), {
+            error: false,
+            info: false,
             isThereErrors: true,
             errors: errors.array()
         })

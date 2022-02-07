@@ -95,6 +95,12 @@
     color: white;
 }
 
+.message-box ol * {
+    list-style-position: inside;
+    font-size: 0.83rem !important;
+    color: wheat;
+}
+
 .sign-regist-form-box {
     width: 80%;
     min-width: 300px;
