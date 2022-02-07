@@ -10,23 +10,30 @@
 :root {
     --header-height: 3rem;
     --titles-row-height: 3.2rem;
-    --left-cols-color: #c7c7c7;
+    --left-cols-color: #bbbbbb;
     --borders-color: var(--gray60-pacific-cloud);
     /* fixed rows width */
-    --name-fixed-col-width: 6.5rem;
+    --lastname-fixed-col-width: 8rem;
+    --name-fixed-col-width: 6rem;
     --key-fixed-col-width: 3.5rem;
     --TTT-fixed-col-width: 5rem;
-    --balance-fixed-col-width: 6rem;
+    --balance-fixed-col-width: 5rem;
     
     /* deltas */
     /* fixed2 delta from fixed1 */
-    --delta1: var(--name-fixed-col-width);
+    --delta1: var(--lastname-fixed-col-width);
     /* fixed3 delta from fixed2 */
-    --delta2: calc(2 * var(--name-fixed-col-width) - 1px);
+    --delta2: calc(var(--delta1) + var(--name-fixed-col-width));
     /* fixed4 delta from fixed3 */
     --delta3: calc(var(--delta2) + var(--key-fixed-col-width));
     /* fixed5 delta from fixed4 */
     --delta4: calc(var(--delta3) + var(--TTT-fixed-col-width));
+
+    --accent1: white;
+    --accent-bad: #dd4848;
+    /* for search */
+    --filter-accent: #43a84366;
+    --filter-accent1: #43a843;
 }
 
 
@@ -36,27 +43,27 @@
     color: white !important;
 }
 .-dataCol-color-group {
-    background: #785e9f !important;
+    background-color: #444 !important;
     color: white !important;
 }
 .-agr-color-group {
-    background: #505050 !important;
+    background-color: #444 !important;
     color: white !important;
 }
 .-cost-color-group {
-    background: #676767;
+    background-color: #444 !important;
     color: white !important;
 }
 .-sign-color-group {
-    background: #9f5e85;
+    background-color: #444 !important;
     color: white !important;
 }
 .-learn-color-group {
-    background: #0e8f93;
-    color: white !important;
+    background-color: #444 !important;
+    color: wheat !important;
 }
 .-scoring-color-group {
-    background: #505050 !important;
+    background-color: #444 !important;
     color: white !important;
 }
 
@@ -98,18 +105,21 @@
 
 .student-list-row {
     width:fit-content;
+    height: 2rem;
+
     display: flex;
     flex-wrap: nowrap;
 
     border-bottom: 1px solid var(--borders-color);
 }
 .student-list-row:nth-child(even) {
-    background-color: #ebebeb;
+    background-color: #e0e0e0;
 }
 
-#student-row-0 {
+.student-list-body {
     margin-top: var(--header-height);
 }
+
 
 /* fixed rows */
 .-fixed1 {
@@ -158,6 +168,7 @@
     font-size: 0.9rem !important;
     text-align: center !important;
     text-transform: capitalize !important;
+    white-space: normal !important;
 }
 
 .field {
@@ -168,19 +179,27 @@
     min-width: var(--width);
 
     font-family: 'BrixSlab-Light';
-    font-size: 15px;
+    font-size: 14px;
     font-weight: normal;
 
+    white-space: nowrap;
     overflow-x: hidden;
     border-right: 1px solid var(--borders-color);
 }
-.-firstName, .-lastName, .-middleName {
+.-lastName {
+    --width: var(--lastname-fixed-col-width);
+    background-color: var(--left-cols-color);
+    font-style: italic;
+}
+.-firstName, .-middleName {
     --width: var(--name-fixed-col-width);
     background-color: var(--left-cols-color);
     font-style: italic;
 }
-a.-lastName {
-    color:#333;
+.student-list-row a {
+    font-family: 'BrixSlab-LightItalic';
+    font-size: 0.83rem;
+    color:#111111;
 }
 .-key {
     --width: var(--key-fixed-col-width);
@@ -191,6 +210,9 @@ a.-lastName {
     --width: 7rem;
     background-color: var(--left-cols-color);
     text-align: center;
+}
+.-unset-location {
+    color: var(--accent-bad);
 }
 .-qr {
     --width: 3rem;
@@ -208,8 +230,8 @@ a.-lastName {
 }
 .-TTT {
     --width: var(--TTT-fixed-col-width);
-    background-color: var(--orange-high-desert);
-    color: white;
+    background-color: var(--left-cols-color);
+    color: var(--accent1);
     text-align: center;
 }
 .-balance {
@@ -219,108 +241,114 @@ a.-lastName {
 }
 .-status {
     --width: 5rem;
-    background-color: var(--left-cols-color);
     text-align: center;
 }
 .-status-block {
     color: var(--orange-high-desert);
 }
-.-status-unblock {
+/* .-status-unblock {
     color: var(--good-done1);
-}
+} */
 .-status-archive {
     color: yellow;
 }
 
 .-email {
     --width: 15rem;
-    background-color: var(--left-cols-color);
     text-transform: lowercase;
 }
 .-email-verified {
     --width: 5rem;
-    background-color: var(--left-cols-color);
     text-align: center;
 }
-.-email-trusted {
+/* .-email-trusted {
     color: var(--good-done1);
-}
+} */
 .-email-unsafe {
     color: var(--bad-todo1);
 }
 .-street {
-    --width: 12.5rem;
+    --width: 15rem;
     text-transform: uppercase;
 }
 .-city {
-    --width: 7rem;
+    --width: 9rem;
     text-transform: uppercase;
     text-align: center;
 }
 .-state {
-    --width: 7.5rem;
+    --width: 3.5rem;
     text-transform: uppercase;
     text-align: center;
 }
 .-zip {
-    --width: 4rem;
+    --width: 3.5rem;
     text-align: center;
 }
 .-phone {
-    --width: 6.7rem;
+    --width: 7rem;
     text-transform: uppercase;
     text-align: center;
 }
 .-DOB {
-    --width: 6rem;
+    --width: 5.5rem;
     text-align: center;
 }
 .-SSN {
-    --width: 6.7rem;
+    --width: 5.5rem;
     text-align: center;
 }
 
 .-class {
-    --width: 7rem;
+    --width: 8rem;
     text-align: center;
 }
 .-transmission {
-    --width: 7rem;
+    --width: 6rem;
     text-align: center;
 }
 .-visiting {
-    --width: 8rem;
+    --width: 6rem;
     text-align: center;
 }
 
-.-tuitionCost, .-totalCost {
-    --width: 7rem;
+.-tuitionCost, .-totalCost,
+.-regisrFee, .-supplyFee, .-otherFee {
+    --width: 5rem;
+    font-size: 0.83rem;
+    font-style: italic;
     text-align: right;
 }
 
-.-regisrFee, .-supplyFee, .-otherFee {
-    --width: 6.5rem;
-    text-align: right;
+.-tuitionCost[data-amount='0'],
+.-totalCost[data-amount='0'],
+.-regisrFee[data-amount='0'],
+.-supplyFee[data-amount='0'],
+.-otherFee[data-amount='0'] {
+    color: lightgray;
+}
+
+.-totalCost {
+    font-weight: bolder;
+    color: #5324d4;
 }
 
 .-payment {
-    --width: 16rem;
-    white-space: nowrap;
+    --width: 17rem;
 }
 .-thirdPartyList {
-    --width: 8rem;
-    white-space: nowrap;
+    --width: 17rem;
 }
 
 .-created,
 .-schoolSignDate,
 .-updatedDate {
-    --width: 6rem;
+    --width: 5.5rem;
     text-align: center;
 }
 .-schoolSignRep,
 .-updatedAdmin {
-    --width: 6rem;
+    --width: 5.5rem;
     text-align: center;
 }
 
@@ -329,26 +357,27 @@ a.-lastName {
     --width: 5rem;
     text-align: center;
 }
-.-tuitionDisabled {
-    background-color: #dd4848;
+
+
+.-tuitionDisabled, .-tuitionDone, .-tuitionProgress {
     font-family: 'BrixSlab-LightItalic';
-    font-size: 14px;
-    color: #fff;
     text-decoration: none;
 }
+.-tuitionDisabled {
+    background-color: #dd4848;
+    color: #fff;
+}
+.-tuitionDone, .-tuitionProgress {
+    color: #333333;
+}
 .-tuitionProgress {
-    --col1: #52b3b6;
+    --col1: transparent;
     --col2: #ebf900;
     --right: calc(var(--progress) + 5%);
 
     background: -webkit-linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
     background: -moz-linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
     background: linear-gradient(90deg, var(--col1) var(--progress), var(--col2) var(--right));
-
-    font-family: 'BrixSlab-LightItalic';
-    font-size: 14px;
-    color: #333333;
-    text-decoration: none;
 }
 
 /* Scoring States */
@@ -360,7 +389,7 @@ a.-lastName {
 
 .fa-check, .fa-ban, .fa-thumbs-up {
     padding: 3px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #333;
     cursor:pointer;
     transition: all 0.2s linear;
@@ -478,12 +507,12 @@ a.-lastName {
 
 /* Balance styles */
 .balance-zero {
-    --col1: #9acfc3;
+    /* --col1: #9acfc3;
     --col2: #56b5b8;
 
     background: -webkit-linear-gradient(90deg, var(--col1), var(--col2));
     background: -moz-linear-gradient(90deg, var(--col1), var(--col2));
-    background: linear-gradient(90deg, var(--col1), var(--col2));
+    background: linear-gradient(90deg, var(--col1), var(--col2)); */
 
     padding-right: 3px;
 
@@ -493,8 +522,8 @@ a.-lastName {
     text-decoration: none;
 }
 .balance-student-owe {
-    --col1: #56b5b8;
-    --col2: #dd4848;
+    --col1: var(--left-cols-color);
+    --col2: var(--accent-bad);
     --right: calc(var(--perc) + 3%);
 
     background: -webkit-linear-gradient(90deg, var(--col1) var(--perc), var(--col2) var(--right));
@@ -516,4 +545,27 @@ a.-lastName {
     font-size: 14px;
     color: #333333;
     text-decoration: none;
+}
+
+
+/* search-bar */
+#search-bar {
+    margin-left: 20px;
+    padding: 3px 5px;
+
+    font-family: "BrixSlab-LightItalic";
+    font-size: 0.93rem;
+    color: #fff;
+
+    max-width: 10em;
+
+    background: transparent;
+    border: 1px solid #fff;
+    outline: unset;
+}
+#search-bar:focus {
+    background-color: var(--filter-accent);
+}
+.-visible > .-lastName {
+    color: var(--filter-accent1) !important;
 }

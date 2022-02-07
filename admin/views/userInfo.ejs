@@ -300,7 +300,7 @@
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Phone Number</div>
-                            <div class="field-value"><%= user.dataCollection.phone %></div>
+                            <a class="field-value" href="tel:<%= user.dataCollection.phone %>"><%= user.dataCollection.phone %></a>
                         </div>
                         <div class="fields-set">
                             <label class="show-edit-btn" for='phone' onclick='toggleEditField(this)'>edit</label>
@@ -676,7 +676,7 @@
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Phone Number</div>
-                            <div class="field-value"><%= user.application['emerg-person-phone'] %></div>
+                            <a class="field-value" href="tel:<%= user.application['emerg-person-phone'] %>"><%= user.application['emerg-person-phone'] %></a>
                         </div>
                         <div class="fields-set">
                             <label class="show-edit-btn" for='emerg-person-phone' onclick='toggleEditField(this)'>edit</label>

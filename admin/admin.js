@@ -11,8 +11,10 @@ const { User, Student, tools } = require('../users/userModel')
 const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
-const { qrCONFIG } = require('./config-qr')
 const { Tuition } = require('../users/tuition/tuitionModel')
+const { StudentScoring, InstructorScoring } = require('./instructors/scoringModel')
+
+const { qrCONFIG } = require('./config-qr')
 
 // Charts
 const chart = require('./adminProfileCharts')
@@ -332,6 +334,11 @@ admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
                 const student = await Student.findById(user.student)
                 if (student) {
                     if (student.tuition) { await Tuition.findByIdAndDelete(student.tuition) }   // deliting Tuition info
+                    if (student.scoring) { 
+                        // deleting { StudentScoring, InstructorScoring }
+                        await StudentScoring.findByIdAndDelete(student.scoring)
+                        await InstructorScoring.deleteMany({ 'examinedStudent_str_ref' : student._id })
+                    }
                     await student.remove()
                 }
             }
@@ -347,7 +354,7 @@ admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
                 await dataCollectionForm.findByIdAndDelete(user.dataCollection)
             }
 
-            // TODO: delete Instructors data, Graduation data and etc. here too !!!
+            // TODO: delete Graduation data and etc. here too !!!
 
             // deleting a user
             await user.remove()

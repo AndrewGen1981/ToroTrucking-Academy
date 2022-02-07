@@ -46,15 +46,20 @@
             <section class='schema-row' id='schema-headers-users'>
                 <!-- HEADERS -->
                 <div class='schema-col-index'>#</div>
-                <div class='schema-col-name'>User</div>
-                <div class='schema-col-email'>Emal</div>
+                <div class='schema-col-name'>
+                    <span>Nickname</span>
+                    <input type="search" id="nick-search" oninput="filterColumn(this, '.schema-col-name')">
+                </div>
+
+                <div class='schema-col-email'>Email</div>
+
                 <div class='schema-col-token'>Verified</div>
                 <div class='schema-col-created'>Created</div>
-                <div class='schema-col-lastSESS'>last session</div>
+                <div class='schema-col-lastSESS'>last session timestamp</div>
                 <div class='schema-col-dataCollection'>data collection<br>form</div>
                 <div class='schema-col-application'>application<br>form</div>
                 <div class='schema-col-agreement'>agreement<br>form</div>
-                <div class='schema-col-student'>is student?</div>
+                <div class='schema-col-student'>is<br>student?</div>
             </section>      <!-- schema-row -->
         </header>
     </nav>
@@ -71,7 +76,7 @@
                 <section class='schema-row' name='schema-row<%= index + 1  %>' id='row-<%= item._id %>'>
                     <div class='schema-col-index' id='index-<%=item._id %>'><%= index + 1 %></div>
                     <a class='schema-col-name' id='name-<%=item._id %>' href='/admin/user/<%= item._id %>'><%= capitalize(item.name) %></a>
-                    <div class='schema-col-email' id='email-<%= item._id %>'><%= item.email %></div>
+                    <a class='schema-col-email' id='email-<%= item._id %>' href='mailto:<%= item.email %>'><%= item.email %></a>
         
                     <% if (item.token === 'not sent') { %>
                         <div class='schema-col-token token-not-sent' id='token-<%= item._id %>'>not sent</div>
@@ -122,6 +127,8 @@
     <footer>
         <span>2022&bull;</span>
         <a href="http://www.boltcdl.com" target="_blank">Bolt&#169;</a>
+        <span>&bull;</span>
+        <a href="tel:+12532004466">253.200.4466</a>
     </footer>
 
 
@@ -213,6 +220,47 @@
                 } 
             }   // if user
         })  // socket.on 'users-collection-update'
+    </script>
+
+
+    <!-- NON Module scripts -->
+    <script>
+        // Working with filters
+
+        // Entry point
+        applyStoredFilter('.schema-col-name')
+
+        function applyStoredFilter(columnClass) {
+            if (!columnClass) { return }
+            let filter = localStorage.getItem(`user-area-filter${columnClass}`)
+            if (filter) {
+                let headerEl = document.querySelector(columnClass)
+                if (headerEl) {
+                    let searchInput = headerEl.querySelector('input')
+                    if (searchInput) {
+                        searchInput.value = filter
+                        filterColumn(searchInput, columnClass)
+                    }
+                }
+            }
+        }
+
+        function filterColumn(input, columnClass) {
+            if (!input || !columnClass) { return }
+            const filter = input.value.toLowerCase()
+            const items = document.querySelectorAll(columnClass)
+            if (!items) { return }
+            if (items.length < 2) { return }
+            for (let i=1; i<items.length; i++) {
+                let row = items[i].parentElement
+                let toShow = items[i].textContent.toLowerCase().includes(filter)
+                row.classList.toggle('-hidden', !toShow)
+                row.classList.toggle('-visible', toShow && filter)
+            }
+            // saves to localStorage to retrieve after page reload
+            localStorage.setItem(`user-area-filter${columnClass}`, filter)
+        }
+
     </script>
 
     

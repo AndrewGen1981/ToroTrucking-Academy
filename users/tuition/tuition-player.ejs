@@ -140,6 +140,7 @@
     }
 
     function updateOnServer() {
+      // DO NOT put extra safety from "dry fetch", otherwise it will disable tests data fetching after video stopped
       fetch('/user/tuition/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -222,7 +223,7 @@
 
       lesson.fetchTimer = setInterval(() => {    // fetch to SERVER each 5 seconds
         lesson.currentTime = event.target.getCurrentTime()
-        if (lesson.currRatio != lesson.prevRatio) {   // video not paused
+        if (lesson.currRatio != lesson.prevRatio) {   // video not paused THIS prevents from fetching when video on pause or stoped
           progressIndicator.textContent = `Progress on this lesson is ${Math.round(parseFloat(lesson.maxRatio)*1000) / 10}%`
           lesson.prevRatio = lesson.currRatio
           updateOnServer()
@@ -233,7 +234,6 @@
 
 
     function onPlayerStateChange(event) {
-
       // for Quality modes - it is doesn't work from YT side
       if (event.data  == YT.PlayerState.PLAYING) {
         // setting up playbackQuality
@@ -261,6 +261,9 @@
     
     function stopVideo() {
       player.stopVideo()
+      // DO NOT clear 'lesson.fetchTimer' here!!!
+      // it has inner block from fetching on pause or when stopped
+      // otherwise it will stop fetching when video stopped and retrieve again or rewind after stop
     }
 
 

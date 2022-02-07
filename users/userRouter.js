@@ -77,7 +77,6 @@ function redirectToHome (req, res, next) {
 
 
 
-
 // *ROUTES FOR USERS (applicants and Students)
 
 // @GET REQUESTS
@@ -89,7 +88,7 @@ userRouter.get('/', (req, res) => {
 userRouter.get('/home', redirectToLogin, async(req, res) => {
     try {
         const user = await User.findById(req.session._id).select('-__v -password').populate({ path: 'agreement', select: 'visiting' })
-        if (!user) { return res.status(404).redirect('/user/logout') }      //  logs ouser out if user is undefined
+        if (!user) { return res.status(404).redirect('/user/logout') }      //  logs user out if user is undefined
     
         if (user.student) {
             user.student = await Student.findById(user.student).select('-__v -user')
@@ -186,7 +185,7 @@ userRouter.post('/register', redirectToHome, body("email")
     body('password').isLength({ min: 5 }).withMessage("Minimum length is 5 symbols"),     // password must be at least 5 chars long
     async (req, res) => {
     
-    // Finds the validation errors in this request and wraps them in an object with handy functions
+    // Finds the validation errors in this request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).render(path.join(__dirname+'/register.ejs'), {
@@ -456,7 +455,7 @@ userRouter.post('/passwordreset', redirectToHome, body("email")
         })
     }
 
-    // Request is ok, can create a user
+    // Request is ok, can change a user
     const { email } = req.body
 
     // Reseting Password

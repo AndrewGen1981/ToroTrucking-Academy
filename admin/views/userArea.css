@@ -9,6 +9,8 @@
     --max-content-width: 1650px;
     --nav-height: 120px;
     --header-height: 52px;
+
+    --filter-accent: #43a84366;
 }
 
 /* NAV BAR */
@@ -81,7 +83,8 @@ header {
     max-width: var(--max-content-width);
     margin: 0 auto;
 }
-#schema-headers-users > div {
+#schema-headers-users > div,
+#schema-headers-users > div span {
     padding: 5px 0;
     
     font-family: "BrixSlab-LightItalic";
@@ -91,13 +94,43 @@ header {
     text-align: center;
     text-transform: capitalize;   
 }
+#schema-headers-users .schema-col-lastSESS {
+    justify-content: center !important;
+}
+
+/* search-bars */
+#schema-headers-users .schema-col-name {
+    text-align: left;
+}
+#nick-search {
+    margin: 0 0 2px 5px;
+    padding: 3px 5px;
+
+    font-family: "BrixSlab-LightItalic";
+    font-size: 0.93rem;
+    color: #fff;
+
+    max-width: 10em;
+
+    background: transparent;
+    border: 1px solid #fff;
+    outline: unset;
+}
+#nick-search:focus {
+    background-color: var(--filter-accent);
+}
 
 
 /* BODY */
 .schema-users {
+    --margin: calc(var(--nav-height) + var(--header-height));
+
     width: 95%;
     max-width: var(--max-content-width);
-    margin: calc(var(--nav-height) + var(--header-height)) auto;
+    /* to keep footer at the end of the screen */
+    min-height: calc(100vh - 2 *  var(--margin));
+
+    margin: var(--margin) auto;
 }
 .schema-row {
     padding: 4px 0;
@@ -109,6 +142,11 @@ header {
 .schema-row:nth-of-type(even) {
     background-color: var(--blue20-slate);
 }
+.-visible {
+    background-color: var(--filter-accent) !important;
+    border-bottom: 1px solid var(--filter-accent);
+}
+
 
 .schema-col-index {
     width: 6%;
@@ -126,6 +164,7 @@ header {
     min-width: 14.67rem;
 
     font-family: "BrixSlab-LightItalic";
+    text-decoration: none;
     text-align: left;
 
     color: var(--orange-high-desert);
