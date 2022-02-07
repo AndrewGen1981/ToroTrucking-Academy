@@ -55,14 +55,6 @@ admRouter.use(session({
 }))
 
 
-// ADMIN obj contains info about logged admin. Used for edit and signing procedures
-let currentAdmin = {
-    id: undefined,
-    name: undefined,
-    first: undefined,
-    last: undefined,
-    title: undefined
-}
 
 function extractAdminFields(adminProfile) {
     return {
@@ -72,15 +64,6 @@ function extractAdminFields(adminProfile) {
         last: adminProfile.name.split(' ')[1],
         title: adminProfile.title
     }
-}
-
-function updateAdminInfoIfNeeded(adminProfile) {
-    if (!adminProfile) { return false }
-    if (!adminProfile.id) { return false }
-    if (!adminProfile.name) { return false }
-    if (adminProfile.name === currentAdmin.name) { return false }      // we have this admin already
-
-    currentAdmin = extractAdminFields(adminProfile)
 }
 
 
@@ -104,7 +87,7 @@ admRouter.use((req, res, next) => {   // !!! general middleware - will be used b
         const profile = admin.findAdminById(req.session.userId)
 
         res.locals.user = profile
-        updateAdminInfoIfNeeded(profile)
+        // updateAdminInfoIfNeeded(profile)
     }
     next()
 })
@@ -216,20 +199,6 @@ admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
 
 
 // @USERS/APPLICANTS/STUDENTS profiles form admin
-
-function getDocsSigner(agreement) {
-    // getting info about signer on School's behalf
-    // signer should be recorded in applicant data, let's check
-    if (!agreement) { return currentAdmin } // no current user will sign
-    if (!agreement.schoolSignRep) { return currentAdmin } // no current user will sign
-    
-    const adm = admin.findAdminById(agreement.schoolSignRep)
-    if (!adm) { return currentAdmin } // wrong admin id passed
-
-    return extractAdminFields(adm)
-}
-
-
 admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
     const id = req.params.id    //  user id
     const tab = req.query.activatetab       // what tab to show at start
@@ -263,8 +232,15 @@ admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
             }
         })
 
-        // getting info about signer on School's behalf
-        const signer = getDocsSigner(user.agreement)
+        // current admin will sign or, if Agreement is signed alredy, the one in the agreement
+        let adm = admin.findAdminById(req.session.userId)
+        if (user.agreement) {
+            if (user.agreement.schoolSignRep) {
+                adm = admin.findAdminById(user.agreement.schoolSignRep)
+            }
+        }
+        const signer = extractAdminFields(adm)
+
         // getting pdf object for DPF printing
         const pdfObj = user.dataCollection ? JSON.stringify(pdf.form1ToPDF(user.dataCollection)) : {}
         
@@ -386,8 +362,14 @@ admRouter.get('/print-form/:id', redirectToLogin, ifCanRead, async(req, res) => 
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }
 
-        // getting info about signer on School's behalf
-        const signer = getDocsSigner(user.agreement)
+        // current admin will sign or, if Agreement is signed alredy, the one in the agreement
+        let adm = admin.findAdminById(req.session.userId)
+        if (user.agreement) {
+            if (user.agreement.schoolSignRep) {
+                adm = admin.findAdminById(user.agreement.schoolSignRep)
+            }
+        }
+        const signer = extractAdminFields(adm)
 
         if (form === 'form1') {
             return res.render(path.join(__dirname+'/views/_view-form1.ejs'), { user, signer })
@@ -539,12 +521,11 @@ function qrRedirectToLogin (req, res, next) {
 // route /admin/qr/:id
 admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
     const studentId = req.params.id    // receiving user _id from posting form
+    const currentAdmin = admin.findAdminById(req.session.userId)
     let location    // this will be passed as 'location' to a clock
 
     if (qrCONFIG.assignWithAdminsMachine) {     // allowed from admin's machine only?
         if (req.session.userId) {     // let's check machine, if admin authorized
-            const adminId = req.session.userId
-            const currentAdmin = admin.findAdminById(adminId)
             location = currentAdmin.location
         } else {    // this is not an admin
             return res.status(400).send("Issue: Unrecognized admin. Login and try again.")
@@ -573,7 +554,7 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
             }
         })
 
-        if (todaysClocks.length !== 0) {    // if this is NOT a 1st clock for today, then go further, if not - check 5 mins and full/part option
+        if (todaysClocks.length > 0) {    // if this is NOT a 1st clock for today, then go further, if not - check 5 mins and full/part option
             const time1 = new Date(todaysClocks[todaysClocks.length-1].date)
             const time2 = new Date()
             const hours_between_clocks = Math.abs(time2 - time1) / (3600000)
@@ -587,7 +568,7 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
 
             // checking if passed 4/6 hours if qrCONFIG.checkFullPartTimeStudents && this is Clock OUT
             if (qrCONFIG.checkFullPartTimeStudents && ((todaysClocks.length % 2) !== 0)) { 
-                const user = await User.findById(student.user).populate('agreement')
+                const user = await User.findById(student.user).populate('agreement').select('visiting')
                 minTime = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
                 
                 if (hours_between_clocks < minTime*0.97) {    //    duration is LESS, than minimum required time * 0.97(ratio to skip last minutes)

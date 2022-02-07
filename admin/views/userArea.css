@@ -157,8 +157,18 @@ header {
     width: 22%;
     min-width: 14.67rem;
     text-align: left;
-    color: #333
+    color: #333;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+
 }
+.-location-is-unset {
+    margin-right: 8px;
+    fill: #bd7676;
+}
+
 .schema-col-email {
     width: 22%;
     min-width: 14.67rem;
