@@ -21,23 +21,28 @@ const test1_preTrip_A_incab = [
         ]
     },  // end of block
     {
+        // 'important' flag means that if at least 1 fail, then all test is fail
         title: 'Air Checks',
         items: [
             {
                 item: 'Air Leak',
-                checks: [ '4 PSI, 3 PSI, 1 Min', 'Brake', 'Stabilize', '1 Min', 'Drop < 4', 'Pass' ]
+                checks: [ '4 PSI, 3 PSI, 1 Min', 'Brake', 'Stabilize', '1 Min', 'Drop < 4', 'Pass' ],
+                important: true
             },
             {
                 item: 'Low Air Warn',
-                checks: [ 'at or Above 55', 'Pump Brake', 'Note PSI', 'Working Prop' ]
+                checks: [ 'at or Above 55', 'Pump Brake', 'Note PSI', 'Working Prop' ],
+                important: true
             },
             {
                 item: 'T, T Prot Valve',
-                checks: [ 'Should pop Approx 40', 'Pump Brake', 'Note PSI', 'Working Prop' ]
+                checks: [ 'Should pop Approx 40', 'Pump Brake', 'Note PSI', 'Working Prop' ],
+                important: true
             },
             {
                 item: 'Safety Start',
-                checks: [ 'Remove Chocks(A)', 'Neut', 'Brake', 'Start', 'Clutch(M)' ]
+                checks: [ 'Remove Chocks(A)', 'Neut', 'Brake', 'Start', 'Clutch(M)' ],
+                important: true
             },
         ]
     },  // end of block

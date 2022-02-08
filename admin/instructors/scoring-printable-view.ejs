@@ -96,6 +96,12 @@
                     <p class="item-title">result</p>
                     <h3 id='result'><%= scoring.ifPassed ? 'passed' : 'failed' %></h3>
                 </div>
+                <% if(scoring.importantCoveredRatio) { %>
+                    <div class="block-item">
+                        <p class="item-title">percentage of coverage of mandatory inspections</p>
+                        <h3 id='importantCoveredRatio'><%= Math.round(scoring.importantCoveredRatio * 1000) / 10 %>%</h3>
+                    </div>
+                <% } %>
             </section>      <!-- block-box -test-data -->
 
             <!-- Certificates -->

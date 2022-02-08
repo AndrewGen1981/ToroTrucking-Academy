@@ -6,6 +6,8 @@
     --left-cols-color: #c7c7c7;
     --borders-color: var(--gray60-pacific-cloud);
     --max-width: 1500px;
+
+    --filter-accent: #43a84366;
 }
 
 *, *::before, *::after {
@@ -62,6 +64,26 @@
 
     color: white;
 }
+.as-of-date {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.as-of-date input {
+    margin-left: 1rem;
+    padding: 0 5px;
+
+    font-family: "Industrial Medium";
+    font-size: 1.6rem;
+
+    color: wheat;
+    background-color: var(--filter-accent);
+
+    border: 1px solid #fff;
+    outline: none;
+}
+
+
 nav {
     display: inline-flex;
 }

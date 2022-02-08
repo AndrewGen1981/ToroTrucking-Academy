@@ -21,11 +21,35 @@
     
     <% function printTime24(date) { return new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }) } %>
 
+    <% function leadingZero(digit) { return digit.length < 10 ? `0${digit}` : digit } %>
+    <% function usYYYYMMDD(date) { 
+        const d = date ? new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
+        : new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' });
+
+        let arr = d.split('/')
+        return arr.length > 1 ? `${arr[2]}-${leadingZero(arr[0])}-${leadingZero(arr[1])}` : false
+    } %>
+
+    <% function usDate(date) { 
+        return date ? new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
+        : new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' });
+    } %>
+
     <div class="ins-list-box">
 
-        <% if(inStudents) { %>
+        <% if(locals.inStudents) { %>
             <header class="ins-list-header">
-                <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></h2>
+                <form class="as-of-date" id="as-of-date" action="/admin/student" method="POST">
+                    <label class='ins-title' for="clocked-as-of">Clocked in as of</label>
+                    <% if(locals.today) { %>
+                        <input type="date" name="clockedAsOf" id="clocked-as-of" value="<%= usYYYYMMDD() %>" onchange="getListAsOfDate(this)">
+                    <% } else { %>
+                        <input type="date" name="clockedAsOf" id="clocked-as-of" value="<%= usYYYYMMDD(locals.date) %>" onchange="getListAsOfDate(this)">
+                    <% } %>
+                </form>
+
+
+                <!-- <h2 class='ins-title'>Clocked in as of <%= new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></h2> -->
                 <nav>
                     <a class='-btn' href="/admin/profile/" title='HOME'>
                         <i class="fas fa-home"></i>
@@ -61,10 +85,7 @@
             </div>  <!-- titles -->
 
             <% if(inStudents.length > 0) { %>
-
-
                 <% inStudents.map((student, index) => { %>
-                    
                     <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>'>
 
                         <% let name = `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName}` %>
@@ -118,45 +139,53 @@
 
 
                         <!-- Scorings -->
-                        <% let test1Info = 'submit' %>
-                        <% let test2Info = 'submit' %>
-                        <% let test3Info = 'submit' %>
-                        <% let test4Info = 'submit' %>
+                        <% let test1Info = locals.today ? 'submit' : '' %>
+                        <% let test2Info = locals.today ? 'submit' : '' %>
+                        <% let test3Info = locals.today ? 'submit' : '' %>
+                        <% let test4Info = locals.today ? 'submit' : '' %>
 
                         <% if (student.scoring) { %>
-                            <% function getInfo(arr){ return arr.length ? `${arr.length} (${new Date(arr[arr.length-1].created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })})` : 'submit' } %>
+                            <% function getInfo(arr, NA){ return arr.length ? `${arr.length}[${usDate(arr[arr.length-1].created)}]` : NA } %>
 
-                            <% test1Info = getInfo(student.scoring.scoringsInCab) %>
-                            <% test2Info = getInfo(student.scoring.scoringsOutCab) %>
-                            <% test3Info = getInfo(student.scoring.scoringsBacking) %>
-                            <% test4Info = getInfo(student.scoring.scoringsCity) %>
+                            <% test1Info = getInfo(student.scoring.scoringsInCab, test1Info) %>
+                            <% test2Info = getInfo(student.scoring.scoringsOutCab, test2Info) %>
+                            <% test3Info = getInfo(student.scoring.scoringsBacking, test3Info) %>
+                            <% test4Info = getInfo(student.scoring.scoringsCity, test4Info) %>
                         <% } %>
 
-                        <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
-                            <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test1Info %></button>
-                        </form>
-                        <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
-                            <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test2Info %></button>
-                        </form>
-                        <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
-                            <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test3Info %></button>
-                        </form>
-                        <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
-                            <input type="hidden" name="studentId" value="<%= student._id %>" />
-                            <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test4Info %></button>
-                        </form>
-                        
+                        <% if (locals.today) { %>
+                            <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
+                                <input type="hidden" name="studentId" value="<%= student._id %>" />
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test1Info %></button>
+                            </form>
+                            <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
+                                <input type="hidden" name="studentId" value="<%= student._id %>" />
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test2Info %></button>
+                            </form>
+                            <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
+                                <input type="hidden" name="studentId" value="<%= student._id %>" />
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test3Info %></button>
+                            </form>
+                            <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
+                                <input type="hidden" name="studentId" value="<%= student._id %>" />
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test4Info %></button>
+                            </form>
+                        <% } else { %>
+                            <div class='field -incab-scoring'><%= test1Info %></div>
+                            <div class='field -incab-scoring'><%= test2Info %></div>
+                            <div class='field -incab-scoring'><%= test3Info %></div>
+                            <div class='field -incab-scoring'><%= test4Info %></div>
+                        <% } %>
 
                     </div>  <!-- student-list-row -->
                 <% }) %>
 
             <% } else { %>
-                <div class="student-list-row" id='student-row-0' name='empty-list'>
-                    <div class="empty-list">so far no one is there...</div>
-                </div>
+                <% if (locals.today) { %>
+                    <div class="student-list-row" id='student-row-0' name='empty-list'>
+                        <div class="empty-list">so far no one is there...</div>
+                    </div>
+                <% } %>
             <% } %>
         <% } %>     <!-- if inStudents is defined -->
 
@@ -275,6 +304,20 @@
                 }   // operation is update
             }   // if student is defined
         })  // socket.on('students-update')
+
+    </script>
+
+
+    <script>
+
+        function getListAsOfDate(dateInput) {
+            if (dateInput.value) {
+                const form = document.querySelector('#as-of-date')
+                if (form) {
+                    form.submit()
+                }
+            }
+        }
 
     </script>
 

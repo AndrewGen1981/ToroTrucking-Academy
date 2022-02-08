@@ -376,6 +376,8 @@ input#certificate:checked ~ .cetrSignature {
     
     cursor: pointer;
     transition: all 0.2s ease-in;
+
+    margin-bottom: 100px !important;
 }
 .-submit {
     color: wheat;
@@ -442,6 +444,12 @@ input#certificate:checked ~ .cetrSignature {
 }
 .-hidden {
     display: none;
+}
+
+
+/* IMPORTANT GROUPS */
+label[data-importantlabel="YES"] {
+    color: #e46868;
 }
 
 

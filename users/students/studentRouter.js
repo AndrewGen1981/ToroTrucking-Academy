@@ -47,37 +47,71 @@ function ifCanReadOrInstructor (req, res, next) {
 
 // @Students ROUTES
 
+// tool to get students for INs
+    async function getStudentsForINs(date, location) {
+        const studentPopulated = 'key TTT clocks location'
+        const userPopulated = 'dataCollection'
+        const dataCollPopulated = 'firstName lastName middleName' 
+        const scoringPopulated = 'scoringsInCab scoringsOutCab scoringsBacking scoringsCity'
+
+        const filter = location === admin.LOCATION.All ? { status: 'unblock' } : { status: 'unblock', location }
+
+        let students
+
+        try {
+            students = await Student.find(filter).select(studentPopulated).populate([
+                {
+                    path: 'user', select: userPopulated,
+                    populate: { path: 'dataCollection', select: dataCollPopulated }
+                },
+                {
+                    path: 'scoring', select: scoringPopulated
+                }
+            ]).sort({"location" : 1, "key": 1})
+        } catch(e) {
+            console.log(`Error on getting students fot INs list: ${e.message}`)
+            return []
+        }
+
+        let inStudents = []
+        const today = tools.getDatePrefix(date).toString()
+
+        students.map(student => {
+            let todayClocks = student.clocks.filter(clock => { return clock.key == today })
+            if (todayClocks.length) {
+                student.clocks = todayClocks
+                inStudents.push(student)
+            }
+        })
+
+        return inStudents
+    }
+// 
+
+
 // INs route is a root one
 studentRouter.get('/', ifCanReadOrInstructor, async (req, res) => {
-    // auth is good
-    const studentPopulated = ['key', 'TTT', 'clocks', 'location']
-    const userPopulated = ['dataCollection']
-    const dataCollPopulated = [ 'firstName', 'lastName', 'middleName' ]
-    const scoringPopulated = ['scoringsInCab', 'scoringsOutCab', 'scoringsBacking', 'scoringsCity']
-
-    const students = await Student.find({ status: 'unblock' }).select(studentPopulated).populate([
-        {
-            path: 'user', select: userPopulated,
-            populate: { path: 'dataCollection', select: dataCollPopulated }
-        },
-        {
-            path: 'scoring', select: scoringPopulated
-        }
-    ]).sort({"location" : 1, "key": 1})
-
-    let inStudents = []
-    const today = tools.getDatePrefix(new Date()).toString()
-
-    students.map(student => {
-        let todayClocks = student.clocks.filter(clock => { return clock.key == today })
-        if (todayClocks.length) {
-            student.clocks = todayClocks
-            inStudents.push(student)
-        }
-    })
-
-    res.render(path.join(__dirname+'/INs.ejs'), { inStudents })
+    const adminProfile = admin.findAdminById(req.session.userId)
+    const inStudents = await getStudentsForINs(new Date(), adminProfile.location)
+    res.render(path.join(__dirname+'/INs.ejs'), { inStudents, today: true })
 })
+
+// INs route for not today's date
+studentRouter.post('/', ifCanReadOrInstructor, async (req, res) => {
+    const { clockedAsOf } = req.body
+    if (!clockedAsOf) {
+        // date to retrieve not passed, just redirecting to ordinary GET INs
+        return res.status(400).redirect('/admin/student')
+    }
+
+    const date = `${clockedAsOf}T00:00:00-08:00`
+    const adminProfile = admin.findAdminById(req.session.userId)
+    const inStudents = await getStudentsForINs(new Date(date), adminProfile.location)
+
+    const today = tools.getDatePrefix(date).toString() === tools.getDatePrefix(new Date()).toString()
+    res.render(path.join(__dirname+'/INs.ejs'), { inStudents, today, date })
+})
+
 
 
 // Student List populate constants

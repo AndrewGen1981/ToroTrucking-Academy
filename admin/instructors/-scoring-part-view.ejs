@@ -127,6 +127,7 @@
 
     
         <% let count %>
+        <% let important %>
     
         <div class="main-test-box">
             <% if (test) { %>
@@ -140,14 +141,19 @@
                             <% block.items.map((subblock, i) => { %>
                                 <section class="item-box">
                                     <h3 class="item-title"><%= subblock.item %></h3>
+
+                                    <% important = subblock.important ? 'YES' : 'NO' %>
+
                                     <div class="item">
                                         <% count += subblock.checks.length %>
                                         <% subblock.checks.map((check, j) => { %>
-                                            <span class="skill">
+                                            <span class="skill">            
                                                 <input class="skill-checkbox" type="checkbox" name="<%= `block${N}_item${i}_skill${j}` %>" 
                                                     id="<%= `block${N}_item${i}_skill${j}` %>" data-qty="block_<%= N %>"
-                                                    data-value="<%= check %>" onchange="updateQty('block_<%= N %>')" />
-                                                <label for="<%= `block${N}_item${i}_skill${j}` %>"><%= check %></label>
+                                                    data-value="<%= check %>" onchange="updateQty('block_<%= N %>')"
+                                                    data-important="<%= important %>" />
+
+                                                <label for="<%= `block${N}_item${i}_skill${j}` %>" data-importantlabel="<%= important %>"><%= check %></label>
                                             </span>
                                         <% }) %>
                                     </div>
@@ -181,7 +187,6 @@
 
                 <div class="buttons-box">
                     <button class="-btn -submit" type="submit">Submit</button>
-                    <button class="-btn" type="reset">Reset</button>
                     <p>Toro Trucking Academy © 2022</p>
                 </div>
             </form>

@@ -32,6 +32,7 @@
 
         const totals = document.getElementsByName("block-total")
         const results = document.getElementsByClassName("section-result")
+        const checks = document.querySelectorAll('.skill-checkbox')
         const persOfPass = 0.9
                 
         // INIT - initing blocks with qty of items
@@ -49,6 +50,21 @@
                 }
             }
             document.querySelector('#max-result').textContent = max
+        }
+
+
+        // some blocks can have 'important' flag, if set, then fail to check al least one item of that block leads to entire test failure
+        function checkImportant() {
+            let qtyOfImportant = 0      // total q-ty of checks with 'important' flag
+            let gotOfImportant = 0      // checked q-ty of checks with 'important' flag
+            for (let i=0; i < checks.length; i++) {
+                if (checks[i].dataset.important === 'YES') {
+                    qtyOfImportant += 1
+                    gotOfImportant += checks[i].checked ? 1 : 0
+                }
+            }
+            // cannot div on 0, so result will bw 1 or less than 1 always
+            return qtyOfImportant === 0 ? 1 : gotOfImportant/qtyOfImportant
         }
 
 
@@ -110,22 +126,15 @@
             if((sum/max) < persOfPass) {
                 document.querySelector('#pass-fail').textContent = `Fail (${Math.round(sum * 1000/max)/10}%)`
             } else {
-                document.querySelector('#pass-fail').textContent = `Passed (${Math.round(sum * 1000/max)/10}%)`
+                // check important, cannot pass if not all important checked
+                if (checkImportant() < 1) {
+                    document.querySelector('#pass-fail').textContent = `Fail (${Math.round(sum * 1000/max)/10}%) - still missed important checks`
+                } else {
+                    document.querySelector('#pass-fail').textContent = `Passed (${Math.round(sum * 1000/max)/10}%)`
+                }
             }
-
-            
-
         }
 
-        
-        // reset results on reset
-        document.getElementById('scoring-save-form').addEventListener('reset', (e) => {
-            if (!confirm('This will reset test and above entered data will be lost. Are you sure?')) { 
-                e.preventDefault()
-                return
-            }
-            InitQtyTotals()
-        })
 
         
         // submit
@@ -144,7 +153,8 @@
             }
             
             const maxPoints = parseInt(document.querySelector('#max-result').textContent)
-            
+            const importantCoveredRatio = checkImportant()  // important checkmarks covered ratio
+
             const jsonScoring = {
                 studentName: "<%= student.user.dataCollection.firstName %> <%= student.user.dataCollection.middleName %> <%= student.user.dataCollection.lastName %>",
                 studentEmail: "<%= student.user.email %>",
@@ -167,7 +177,9 @@
                 maxPoints,
                 receivedPoints,
                 limit: persOfPass,
-                ifPassed: (persOfPass < (receivedPoints/maxPoints)),
+                ifPassed: ((persOfPass < (receivedPoints/maxPoints)) && (importantCoveredRatio == 1)),
+
+                importantCoveredRatio,      // this field, unlike others, can be present in some JSONs and missed in other, depending if there important checkmarks
 
                 blocks: []
             }

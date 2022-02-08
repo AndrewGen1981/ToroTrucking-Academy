@@ -1,5 +1,6 @@
 const test1_preTrip_B_incab = [
     {
+        // 'important' flag means that if at least 1 fail, then all test is fail
         title: 'General',
         items: [
             {
@@ -8,19 +9,23 @@ const test1_preTrip_B_incab = [
             },
             {
                 item: 'Building Air',
-                checks: ['120-140 Gov should cutout', 'Notes Gov cutout']
+                checks: ['120-140 Gov should cutout', 'Notes Gov cutout'],
+                important: true
             },
             {
                 item: 'Three Air Checks',
-                checks: ['Place in gear', 'Key Off', 'Key On', 'Brakes Released', 'Wheel Chocks']
+                checks: ['Place in gear', 'Key Off', 'Key On', 'Brakes Released', 'Wheel Chocks'],
+                important: true
             },
             {
                 item: 'Air Leak Check',
-                checks: ['>3 PSI', '1 Minute', 'Air needle stabilized', 'Time starts/ends now', 'Notes Result']
+                checks: ['>3 PSI', '1 Minute', 'Air needle stabilized', 'Time starts/ends now', 'Notes Result'],
+                important: true
             },
             {
                 item: 'Low Air Warning',
-                checks: ['AT or ABOVE 60 PSI', 'Notes Result']
+                checks: ['AT or ABOVE 60 PSI', 'Notes Result'],
+                important: true
             },
             {
                 item: 'Protection Valves',

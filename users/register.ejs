@@ -33,7 +33,7 @@
             <div class="register-box">Already have an account?<a href="/user/login">Log In</a></div>
             
             <section class='message-box'>
-                <% if (isThereErrors) { %>
+                <% if (locals.isThereErrors) { %>
                     <h2>Error(s) found</h2>
                     <ol type='1'>
                         <% errors.map(err => { %>

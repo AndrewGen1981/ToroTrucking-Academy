@@ -33,15 +33,15 @@
             <div class="register-box">Don't have an account?<a href="/user/register">Register</a></div>
             
             <section class='message-box'>
-                <% if (info) { %>
+                <% if (locals.info) { %>
                     <h2>Info</h2>
-                    <p><%= (info) %></p>
+                    <p><%= (locals.info) %></p>
                 <% } %>
-                <% if (error) { %>
+                <% if (locals.error) { %>
                     <h2>Error found</h2>
-                    <p><%= (error) %></p>
+                    <p><%= (locals.error) %></p>
                 <% } %>
-                <% if (isThereErrors) { %>
+                <% if (locals.isThereErrors) { %>
                     <h2>Errors found</h2>
                     <ol type='1'>
                         <% errors.map(err => { %>

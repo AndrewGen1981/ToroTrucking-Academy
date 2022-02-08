@@ -70,7 +70,7 @@ const PROFILES = [
 
 
     // TEST INSTRUCTORS
-    { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: LOCATION.Kent, password: process.env.INST0001_PASS, auth: AUTH.instructor },
+    { id: "Inst0001", name: "John Smith", title:'Instructor', email: "smith@torocdl.com", location: LOCATION.All, password: process.env.INST0001_PASS, auth: AUTH.instructor },
 ]
 
 
