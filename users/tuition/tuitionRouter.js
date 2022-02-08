@@ -157,7 +157,7 @@ tuitionRouter.put('/update', async(req, res) => {
                     return res.status(500).send(`Oooppps... Database issue`)
                 }
             }
-            return res.status(500).send(`Server bad request: LESSON=${videoId} COVERED=${correntRatio}`)
+            return res.status(500).send(`Server bad request: LESSON=${videoId} COVERED=${currentRatio}`)
         }
         return res.status(500).send(`User mismatch`)
     } else {
