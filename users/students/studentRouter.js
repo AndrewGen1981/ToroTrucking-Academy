@@ -107,8 +107,8 @@ studentRouter.post('/', ifCanReadOrInstructor, async (req, res) => {
     const date = `${clockedAsOf}T00:00:00-08:00`
     const adminProfile = admin.findAdminById(req.session.userId)
     const inStudents = await getStudentsForINs(new Date(date), adminProfile.location)
+    const today = tools.getDatePrefix(new Date(date)).toString() === tools.getDatePrefix(new Date()).toString()
 
-    const today = tools.getDatePrefix(date).toString() === tools.getDatePrefix(new Date()).toString()
     res.render(path.join(__dirname+'/INs.ejs'), { inStudents, today, date })
 })
 
