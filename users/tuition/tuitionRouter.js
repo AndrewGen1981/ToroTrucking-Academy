@@ -42,7 +42,7 @@ const listOfLessons = [
 
 // user/tuition
 tuitionRouter.get('/', async(req, res) => {
-    const user = await User.findOne({ email: req.session.userId })
+    const user = await User.findById(req.session._id)
     if (user) {
         if (user.student) {
             const student = await Student.findById(user.student).select("tuition").populate("tuition")
@@ -62,7 +62,7 @@ tuitionRouter.get('/', async(req, res) => {
 
 
 tuitionRouter.post('/', async(req, res) => {
-    const user = await User.findOne({ email: req.session.userId })
+    const user = await User.findById(req.session._id)
     if (!user) { return res.status(404).send(`No user found with ${req.session.userId}`) }
 
     const { video, videoProgress, testProgress } = req.body    // video id is being passed in body
@@ -96,7 +96,10 @@ tuitionRouter.use(express.json({
  }))
 
 tuitionRouter.put('/update', async(req, res) => {
-    const user = await User.findOne({ email: req.session.userId })
+    const user = await User.findById(req.session._id).select('name student').populate({
+        path: 'student', select: 'tuition'
+    })
+
     const { userId, videoId, lesson, lessonTitle, currentRatio, currentTime, testProgress } = req.body
 
     if (user) {
@@ -105,9 +108,8 @@ tuitionRouter.put('/update', async(req, res) => {
             if (!user.student) { return res.status(400).send(`Looks like You are not a Student ${user.name}`) }
             if ( videoId && currentRatio) {
                 try {
-                    const student = await Student.findById(user.student).select('tuition')
-                    if(student.tuition) {
-                        const tuition = await Tuition.findById(student.tuition).select('lessons')
+                    if(user.student.tuition) {
+                        const tuition = await Tuition.findById(user.student.tuition).select('lessons')
 
                         //  tuition is assigned, now check if lesson exists
                         let done = false
@@ -157,6 +159,10 @@ tuitionRouter.put('/update', async(req, res) => {
                     return res.status(500).send(`Oooppps... Database issue`)
                 }
             }
+            // DEV string. TODO: catch why sometimes !videoId or !currentRatio
+            console.log(`Server bad request: LESSON=${videoId} COVERED=${currentRatio}`)
+            console.log(req)
+            // DEV
             return res.status(500).send(`Server bad request: LESSON=${videoId} COVERED=${currentRatio}`)
         }
         return res.status(500).send(`User mismatch`)
