@@ -167,7 +167,7 @@
                 <label class='-one-row' for="raceChoice7" onclick="otherRaceChoice.focus()">
                     <input type="radio" id="raceChoice7" name="race" value="Other">
                     <span>Other</span>
-                    <input class='input-text' type="text" name="otherRaceChoice" id="otherRaceChoice" onchange="raceChoice7.checked = true">
+                    <input class='input-text' type="text" name="otherRaceChoice" id="otherRaceChoice" oninput="raceChoice7.checked = true">
                 </label>
             </div>
         </section>      <!-- RACE section -->
@@ -290,6 +290,22 @@
         </div>
 
     </form>
+
+
+    <script>
+
+        document.querySelector('.applicant-form').addEventListener('submit', (e) => {
+            const raceOtherRadio = document.querySelector('#raceChoice7')
+            const raceOtherInput = document.querySelector('#otherRaceChoice')
+
+            if (raceOtherRadio.checked && !raceOtherInput.value) {
+                e.preventDefault()
+                alert(`Dear applicant, you set race choice to "Other", however didn't specify your exact race in the text field nearby. Do it please, otherwise, your form wouldn't be saved.`)
+                return 
+            }
+        })
+
+    </script>
 
 </body>
 </html>

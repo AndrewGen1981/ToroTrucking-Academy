@@ -549,7 +549,10 @@
 
 
 /* search-bar */
-#search-bar {
+#search-bar, #location-select {
+    min-width: 150px;
+    min-height: 2em;
+
     margin-left: 20px;
     padding: 3px 5px;
 
@@ -563,8 +566,11 @@
     border: 1px solid #fff;
     outline: unset;
 }
-#search-bar:focus {
+#search-bar:focus, #location-select:focus {
     background-color: var(--filter-accent);
+}
+#location-select option {
+    background-color: #424242;
 }
 .-visible > .-lastName {
     color: var(--filter-accent1) !important;

@@ -52,10 +52,26 @@
                             <i class="fas fa-sync-alt"></i>
                         </a>
                         <input type="search" id="search-bar" placeholder="search" oninput="filterColumn(this)">
+
+                        <% if(locals.locations && locals.adminProfile) { %>
+                            <% if(Object.keys(locations).length) { %>
+                                <select name="location-select" id="location-select" onchange="reloadStudentListforLocation(this.value, reloadForLocation)">
+                                    <% Object.keys(locations).map(key => { %>
+                                        <% if(locations[key] === locals.shownLocation) { %>
+                                            <option value="<%= locations[key] %>" selected><%= locations[key] %></option>
+                                        <% } else { %>
+                                            <option value="<%= locations[key] %>"><%= locations[key] %></option>
+                                        <% } %>
+                                    <% }) %>
+                                </select>
+                                <a href="#" id="reloadForLocation" class="-hidden"></a>
+                            <% } %>
+                        <% } %>
+
                     </div>
                     <div class="admin-box">
-                        <% if(adminProfile) { %>
-                            <p class="welcome-admin">Welcome <%= adminProfile.name %>.<span>Access granted to location "<%= adminProfile.location %>"</span></p>
+                        <% if(locals.adminProfile) { %>
+                            <p class="welcome-admin">Welcome <%= adminProfile.name %><span>"<%= adminProfile.location %>"</span></p>
                         <% } %>
                     </div>
                 </header>
@@ -595,6 +611,15 @@
                 rows[i].classList.toggle('-visible', toShow && filter)
             }
         }
+
+
+        // reloadStudentListforLocation
+        function reloadStudentListforLocation(location, a) {
+            if (!location || !a) { return }
+            a.setAttribute('href', `/admin/student/list?location=${location}`)
+            a.click()
+        }
+
     </script>
 
 </body>

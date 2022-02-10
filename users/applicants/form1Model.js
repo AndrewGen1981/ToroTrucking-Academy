@@ -60,7 +60,9 @@ function getForm1Object(body, userEmail) {
         DOB: body.DOB,
         SSN: body.SSN,
         
-        race: body.race != "Other" ? body.race : body.otherRaceChoice,
+        race: body.race != "Other" ? body.race
+        : body.otherRaceChoice ? body.otherRaceChoice : "other",        //  debug Feb.09.2022, otherRaceChoice can be blank, this crashes when save to DB
+
         hispanic: body.hispanic,
         disabled: body.disabled,
         veteran: body.veteran,

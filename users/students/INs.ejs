@@ -21,7 +21,7 @@
     
     <% function printTime24(date) { return new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }) } %>
 
-    <% function leadingZero(digit) { return digit.length < 10 ? `0${digit}` : digit } %>
+    <% function leadingZero(digit) { return parseInt(digit) < 10 ? `0${digit}` : digit } %>
     <% function usYYYYMMDD(date) { 
         const d = date ? new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
         : new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' });
@@ -181,11 +181,13 @@
                 <% }) %>
 
             <% } else { %>
-                <% if (locals.today) { %>
-                    <div class="student-list-row" id='student-row-0' name='empty-list'>
+                <div class="student-list-row" id='student-row-0' name='empty-list'>
+                    <% if (locals.today) { %>
                         <div class="empty-list">so far no one is there...</div>
-                    </div>
-                <% } %>
+                    <% } else { %>
+                        <div class="empty-list"></div>
+                    <% } %>
+                </div>
             <% } %>
         <% } %>     <!-- if inStudents is defined -->
 
@@ -241,23 +243,27 @@
         // @WHEN Students changed
         socket.on('students-update', student => {
             if (student) {
-
                 // if list was empty, then 1st row 'so far no one is there...' should be deleted
                 const emptyList = document.getElementsByClassName('empty-list')[0]
                 if (emptyList) {
                     document.querySelector('#reload-ins').click()
                     return
                 }
-
-                // document.querySelector('#reload-user-area').click()
-
+                // update a specific field
                 const id = student.documentKey._id
                 if (student.operationType === "update") {
                     const updatedRow = document.querySelector(`[data-student='${id}']`)
                     if (updatedRow != null) {
                         const fields = student.updateDescription.updatedFields
                         for (const [key, value] of Object.entries(fields)) {
-                            let el = updatedRow.querySelector(`.-${key}`)
+                            let el
+                            try {
+                                el = updatedRow.querySelector(`.-${key}`)
+                            } catch(e) {
+                                console.log(e.message)
+                                console.log(key)
+                                console.log(fields)
+                            }
                             if (el) {
                                 switch (key) {
                                     case 'TTT':

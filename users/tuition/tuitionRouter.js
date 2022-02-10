@@ -159,13 +159,14 @@ tuitionRouter.put('/update', async(req, res) => {
                     return res.status(500).send(`Oooppps... Database issue`)
                 }
             }
-            // DEV string. TODO: catch why sometimes !videoId or !currentRatio
-            console.log(`Server bad request: LESSON=${videoId} COVERED=${currentRatio}`)
-            console.log(req)
-            // DEV
-            return res.status(500).send(`Server bad request: LESSON=${videoId} COVERED=${currentRatio}`)
+            if(!videoId) {
+                console.log(`Lesson is not defined: LESSON=${videoId} COVERED=${currentRatio}`)
+                return res.status(404).send(`Lesson is not defined: LESSON=${videoId} COVERED=${currentRatio}`)
+            } else {
+                return res.status(200)
+            }
         }
-        return res.status(500).send(`User mismatch`)
+        return res.status(404).send(`User mismatch`)
     } else {
         res.status(400).send("You are logged out...")
     }    

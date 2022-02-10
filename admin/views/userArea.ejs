@@ -201,7 +201,7 @@
                         if (fields.dataCollection) { toggleStepCheck(document.querySelector(`#dataCollection-${id}`), fields.dataCollection.length) }     // dataCollection
                         if (fields.application) { toggleStepCheck(document.querySelector(`#application-${id}`), fields.application.length) }     // application
                         if (fields.agreement) { toggleStepCheck(document.querySelector(`#agreement-${id}`), fields.agreement.length) }     // agreement
-                        if (fields.key > -1) { toggleStepCheck(document.querySelector(`#student-${id}`), fields.key > 0) }     // if student
+                        if (fields.student) { toggleStepCheck(document.querySelector(`#student-${id}`), fields.student.length) }     // if student
                         
                     }   // updatedRow != null
                 }   // user.operationType === "update"
@@ -256,11 +256,12 @@
             if (!input || !columnClass) { return }
             const filter = input.value.toLowerCase()
             const items = document.querySelectorAll(columnClass)
+            const emails = document.querySelectorAll('.schema-col-email')
             if (!items) { return }
             if (items.length < 2) { return }
             for (let i=1; i<items.length; i++) {
                 let row = items[i].parentElement
-                let toShow = items[i].textContent.toLowerCase().includes(filter)
+                let toShow = items[i].textContent.toLowerCase().includes(filter) || emails[i].textContent.toLowerCase().includes(filter)
                 row.classList.toggle('-hidden', !toShow)
                 row.classList.toggle('-visible', toShow && filter)
             }

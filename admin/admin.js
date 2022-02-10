@@ -83,11 +83,8 @@ function redirectToHome (req, res, next) {
 }
 admRouter.use((req, res, next) => {   // !!! general middleware - will be used before EACH ROUTE!!!
     if (req.session.userId) {   // if there is one, then tries to find it in users array and inject it to LOCALS - spec.obj. for sharing data between functions
-        
         const profile = admin.findAdminById(req.session.userId)
-
         res.locals.user = profile
-        // updateAdminInfoIfNeeded(profile)
     }
     next()
 })
@@ -106,6 +103,15 @@ function ifCanWrite (req, res, next) {
     if (!admin.checkAdminsAuth(adminId, 'write')) {
         return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write" })
     } else { next() }
+}
+function ifCanReadOrInstructor (req, res, next) {
+    // check Admin's Auth - if INSTRUCTOR
+    const adminId = req.session.userId
+
+    if (admin.checkAdminsAuth(adminId, 'read')) { return next() }
+    if (admin.checkAdminsAuth(adminId, 'instructor')) { return next() }
+
+    return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
 }
 
 
@@ -199,7 +205,7 @@ admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
 
 
 // @USERS/APPLICANTS/STUDENTS profiles form admin
-admRouter.get('/user/:id', redirectToLogin, ifCanRead, async(req, res) => {
+admRouter.get('/user/:id', redirectToLogin, ifCanReadOrInstructor, async(req, res) => {
     const id = req.params.id    //  user id
     const tab = req.query.activatetab       // what tab to show at start
     const open = req.query.open             // what details group to open

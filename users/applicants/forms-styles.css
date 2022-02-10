@@ -152,9 +152,6 @@ label {
     background-color: var(--blue15-slate);
     color: var(--black40-worn);
 }
-input#raceChoice7 {
-    appearance: none;
-}
 
 .-smaller {
     width: 12rem;

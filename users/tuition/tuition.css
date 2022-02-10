@@ -55,7 +55,39 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .title-box {
     width: 100%;
     text-align: center;
+    position: relative;
 }
+
+.close-video {
+    position: absolute;
+    right: 7.5%; bottom: 0;
+    width: 35px;
+    height: 35px;
+
+    fill: #6a686aba;
+    
+    border-radius: 100%;
+    box-shadow: 0 0 10px 2px #6a686aba;
+
+    z-index: 10;
+}
+.-close-quize-not-done {
+    fill: hsl(349, 79%, 50%);
+    transition: all 0.25s ease-in;
+}
+.-close-quize-not-done:hover {
+    transform: scale(0.75);
+}
+
+.-close-quize-done {
+    fill: #16ce62;
+    transform: rotate(90deg);
+    transition: all 0.25s ease-in;
+}
+.-close-quize-done:hover {
+    transform: scale(1.25);
+}
+
 .lesson-title {
     margin-top: 2rem;
 
@@ -389,7 +421,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
     background-color: #000000;
 
-    text-align: right;
+    text-align: center;
 }
 .center-nav a {
     width: 175px;
@@ -420,6 +452,20 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     row-gap: 0.5rem;
 
     background-color: #000000;
+}
+
+.videoSection {
+    position: relative;
+}
+.video-num {
+    position: absolute;
+    top: 0; left: 0;
+
+    font-family: "BrixSlab-ExtraLight";
+    font-size: 1.5rem;
+
+    color: #fff;
+    z-index: 10;
 }
 
 

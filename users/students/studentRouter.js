@@ -13,11 +13,6 @@ const { User, Student, StudentCONFIG, tools } = require('../userModel')
 const { Tuition } = require('../tuition/tuitionModel')
 const chart = require('../../admin/adminProfileCharts')
 
-// do I need this here?
-// const { dataCollectionForm } = require('../applicants/form1Model')
-// const { applicationForm } = require('../applicants/form2Model')
-// const { agreementForm } = require('../applicants/form3Model')
-
 
 // @Middleware
 function ifCanRead (req, res, next) {
@@ -132,17 +127,31 @@ const studentListPopulate = [
 
 
 // @GET admin/student/list
-studentRouter.get('/list', ifCanRead, async(req, res) => {
-    // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
+studentRouter.get('/list', ifCanReadOrInstructor, async(req, res) => {
+    // get admin
     const adminProfile = admin.findAdminById(req.session.userId)
-    let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
-    // query to Mongo DB
+    // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
+    const defaulLocationFilter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
+
+    // location can be passed in a query
+    const requestedLocation = req.query.location
+    let requestedLocationFilter = {}    // All as default
+    if (requestedLocation) {
+        if (requestedLocation != admin.LOCATION.All) {  // if not All, then specify
+            requestedLocationFilter = { location: requestedLocation }
+        }
+    }
+
+    // 'shownLocation' is a parament to set locations selected property to what was realy shown
+    const shownLocation = requestedLocation ? requestedLocation : adminProfile.location
+   
+    const filter = requestedLocation ? requestedLocationFilter : defaulLocationFilter
     const students = await Student.find(filter).select(studentPopulated).populate(studentListPopulate)
-    res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile })
+    res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile, shownLocation, locations: admin.LOCATION })
 })
 
 // for showing a shorter Student List variants, for exapmle when click on admin-profile-chart-columns
-studentRouter.get('/shortlist', ifCanRead, async(req, res) => {
+studentRouter.get('/shortlist', ifCanReadOrInstructor, async(req, res) => {
     const year = req.query.year
     const month = req.query.month
     const location = req.query.location
@@ -167,11 +176,12 @@ studentRouter.get('/shortlist', ifCanRead, async(req, res) => {
                     location
                 }
             ).select(studentPopulated).populate(studentListPopulate)
-            return res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile })
+            return res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile, shownLocation: adminProfile.location, locations: admin.LOCATION })
         }
     }
     res.redirect('/admin/profile')
 })
+
 
 
 // @POST admin/student/new/id
