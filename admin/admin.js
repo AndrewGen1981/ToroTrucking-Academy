@@ -844,9 +844,11 @@ function calculateBalance(user, payments) {
 
 // @ admin/student routes
 admRouter.use('/student', redirectToLogin, require('../users/students/studentRouter'))
-
 // @ admin/inst routes
 admRouter.use('/inst', redirectToLogin, require('./instructors/instructorsRouter'))
+// @ admin/charts routes
+admRouter.use('/charts', redirectToLogin, ifCanRead, require('./charts/chartsRouter'))
+
 
 
 module.exports = admRouter

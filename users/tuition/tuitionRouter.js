@@ -96,19 +96,25 @@ tuitionRouter.use(express.json({
  }))
 
 tuitionRouter.put('/update', async(req, res) => {
-    const user = await User.findById(req.session._id).select('name student').populate({
-        path: 'student', select: 'tuition'
-    })
+    let user
+    // TODO: check if 1st try - catch works
+    try {
+        user = await User.findById(req.session._id).select('name student').populate({
+            path: 'student', select: 'tuition'
+        })
+    } catch(e) {
+        return res.status(404).end(`Issue when searching your record: ${e.message}`)
+    }
 
     const { userId, videoId, lesson, lessonTitle, currentRatio, currentTime, testProgress } = req.body
 
     if (user) {
         // extra safety step, should be equal. Check if it is needed
         if (user._id.toString() === userId) {
-            if (!user.student) { return res.status(400).send(`Looks like You are not a Student ${user.name}`) }
+            if (!user.student) { return res.status(400).end(`Looks like You are not a Student ${user.name}`) }
             if ( videoId && currentRatio) {
                 try {
-                    if(user.student.tuition) {
+                    if (user.student.tuition) {
                         const tuition = await Tuition.findById(user.student.tuition).select('lessons')
 
                         //  tuition is assigned, now check if lesson exists
@@ -154,21 +160,16 @@ tuitionRouter.put('/update', async(req, res) => {
                         await tuition.save()
                         return res.status(200).end()
                     }
-                    return res.status(400).send(`You don't have any lessons yet. Contact your administrator`)
+                    return res.status(400).end(`You don't have any lessons yet. Contact your administrator`)
                 } catch(e) {
-                    return res.status(500).send(`Oooppps... Database issue`)
+                    return res.status(500).end(`Oooppps... Database issue`)
                 }
             }
-            if(!videoId) {
-                console.log(`Lesson is not defined: LESSON=${videoId} COVERED=${currentRatio}`)
-                return res.status(404).send(`Lesson is not defined: LESSON=${videoId} COVERED=${currentRatio}`)
-            } else {
-                return res.status(200)
-            }
+            return res.status(404).end(`Lesson is not defined: LESSON=${videoId} COVERED=${currentRatio}`)
         }
-        return res.status(404).send(`User mismatch`)
+        return res.status(404).end(`User mismatch`)
     } else {
-        res.status(400).send("You are logged out...")
+        return res.status(400).end("You are logged out...")
     }    
 })
 

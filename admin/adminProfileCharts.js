@@ -26,7 +26,7 @@ async function newStudentsInvolvingChart(deltaMonth) {
     const locations = Object.values(LOCATION)
     // creating blank array with correct item names
     for (let i=0; i <= deltaMonth; i++){
-        let index = (month + i) % 12     // aIndex can be greater than monthNames length
+        let index = (month + i) % 12     // index can be greater than monthNames length
         let year = startYear + Math.trunc((month + i) / 12)
         analyticsArray.push({  // correct item names
             month: monthNames[index],
@@ -50,7 +50,96 @@ async function newStudentsInvolvingChart(deltaMonth) {
 }
 
 
+
+async function accountsReceivableChart() {
+    try {
+        const allUsers = await User.where("agreement").select("name balance payments").populate([
+            { path: "agreement", select: "tuitionCost regisrFee supplyFee otherFee -_id" },
+            { path: "student", select: "location -_id" },
+        ])
+
+        // init data per locations
+        let data = []
+        Object.values(LOCATION).filter(location => {
+            if (location != LOCATION.All) {
+                data.push({
+                    location,
+                    totalCost: 0,
+                    totalPaid: 0,
+                    totalDebt: 0,
+                    users: []
+                })
+            }
+        })
+
+        if (allUsers) {
+            allUsers.map(user => {
+                if(user.agreement) {
+                    let cost = user.agreement.tuitionCost ? user.agreement.tuitionCost : 0
+                    cost += user.agreement.regisrFee ? user.agreement.regisrFee : 0
+                    cost += user.agreement.supplyFee ? user.agreement.supplyFee : 0
+                    cost += user.agreement.otherFee ? user.agreement.otherFee : 0
+
+                    let paid = 0
+                    if(user.payments) {
+                        user.payments.map(pmt => {
+                            paid += pmt.ammount
+                        })
+                    }
+
+                    let debt = cost - paid
+    
+                    if (debt) {
+                        let location = user.student ? user.student.location : LOCATION.Unset
+                        for (let i=0; i<data.length; i++) {
+                            if(data[i].location === location) {
+                                data[i].users.push({
+                                    _id: user._id, 
+                                    name: user.name,
+                                    cost, paid, debt,
+                                    location
+                                })
+                                data[i].totalCost += cost
+                                data[i].totalPaid += paid
+                                data[i].totalDebt += debt
+                                break
+                            }
+                        }
+                    }
+                }
+            })
+            // calculating average data
+            data.map(locationData => {
+                let n = locationData.users.length
+
+                locationData.avCost = n ? locationData.totalCost / n : 0
+                locationData.avPaid = n ? locationData.totalPaid / n : 0
+                locationData.avDebt = n ? locationData.totalDebt / n : 0
+
+                locationData.ratioPaid = locationData.totalCost ? locationData.totalPaid / locationData.totalCost : 0
+                locationData.ratioDebt = locationData.totalCost ? locationData.totalDebt / locationData.totalCost : 0
+            })
+            return {
+                result: true,
+                data
+            }
+        } else {
+            return {
+                result: false,
+                message: 'no users found'
+            }
+        }
+    } catch(e) {
+        return {
+            result: false,
+            message: e.message
+        }
+    }
+}
+
+
 module.exports = {
     newStudentsInvolvingChart,
+    accountsReceivableChart,
     monthNames
 }

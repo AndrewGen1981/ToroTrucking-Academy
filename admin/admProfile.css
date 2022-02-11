@@ -1,5 +1,6 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css');
 
+
 /* @GENERAL */
 *, *::before, *::after {
     margin: 0;
@@ -62,7 +63,7 @@
 
     display: inline-flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     
     position: fixed;
     top: 0;
@@ -73,6 +74,52 @@
     box-shadow: 0px 3px 10px 0px var(--main-color60);
 
     z-index: 1;
+}
+.tool-bar {
+    width: 100%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.charts-bar {
+    min-width: 200px;
+    display: inline-flex;
+}
+.chart-item {
+    width: 4.5rem;
+    padding: 0 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+}
+.chart-ico {
+    width: 2rem;
+    height: 2rem;
+    fill: #33628b;
+    transition: all 0.3s ease-in;
+}
+.chart-item span {
+    font-family: "BrixSlab-Light";
+    font-size: 0.63rem;
+    text-align: center;
+    color: #686868;
+
+    transition: all 0.5s ease-in;
+}
+.chart-item:hover .chart-ico {
+    padding: 4px;
+    fill:#fff;
+    background-color: #33628b;
+    border-radius: 5px;
+}
+.chart-item:hover span {
+    letter-spacing: 0.5px;
+    opacity: 0.35;
 }
 
 .top-side-name {

@@ -56,11 +56,11 @@
                         <% if(locals.locations && locals.adminProfile) { %>
                             <% if(Object.keys(locations).length) { %>
                                 <select name="location-select" id="location-select" onchange="reloadStudentListforLocation(this.value, reloadForLocation)">
-                                    <% Object.keys(locations).map(key => { %>
-                                        <% if(locations[key] === locals.shownLocation) { %>
-                                            <option value="<%= locations[key] %>" selected><%= locations[key] %></option>
+                                    <% Object.values(locations).map(value => { %>
+                                        <% if(value === locals.shownLocation) { %>
+                                            <option value="<%= value %>" selected><%= value %></option>
                                         <% } else { %>
-                                            <option value="<%= locations[key] %>"><%= locations[key] %></option>
+                                            <option value="<%= value %>"><%= value %></option>
                                         <% } %>
                                     <% }) %>
                                 </select>
