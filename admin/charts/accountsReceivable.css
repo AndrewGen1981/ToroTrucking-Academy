@@ -66,7 +66,7 @@ header {
     background-color: #f3f3f3;
     border-bottom: 1px solid lightgray;
 
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
 }
 .chart {
     width: 100%;
@@ -239,3 +239,63 @@ header {
 .av-cost, .av-paid, .av-debt, .av-weight {
     text-align: right;
 }
+
+.-header {
+    color: #f39665;
+}
+
+
+/* pie chart */
+:root {
+    --pie-width: calc(var(--chart-width) / 5);
+}
+.pie-charts-box {
+    width: var(--chart-width);
+    height: calc(var(--pie-width) * 1.1);
+    margin: 0 auto;
+    margin-bottom: 3rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: #f3f3f3;
+}
+.pie {
+    --w: var(--pie-width);
+
+    width:var(--w);
+    aspect-ratio:1;
+    position:relative;
+    display:inline-grid;
+    margin:5px;
+    place-content:center;
+
+    font-family: "BrixSlab-Bold";
+    font-size: 1.65rem;
+    color: #333;
+
+    opacity: 0.5;
+    transition: all 0.5s linear;
+}
+.pie:before,
+.pie:after {
+    content:"";
+    position:absolute;
+    border-radius:50%;
+}
+.pie:before {
+    inset:0;
+    background:
+        radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+        conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+            mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+}
+.pie:after {
+    inset:calc(50% - var(--b)/2);
+    background:var(--c);
+    transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+}
+
+

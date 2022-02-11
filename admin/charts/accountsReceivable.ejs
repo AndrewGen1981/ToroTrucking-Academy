@@ -72,6 +72,15 @@
                     <% }) %>
                 </div>
             </div>
+            <div class="pie-charts-box">
+                <div class="pie-charts-box-inner">
+                    <% locationsData.map((data, index) => { %>
+                        <% let perc = grandTotalDebt ? data.totalDebt / grandTotalDebt : 0 %>
+                        <div class="pie" style="--p:<%= perc * 100 %>;--b:18px;--c:<%= colorArray[index] %>;"><%= formatToPercents(perc) %></div>
+                    <% }) %>
+                </div>
+            </div>
+            
             
             <h2 class="chart-subtitle">Account Receivable Details</h1>
             <p class="chart-subtitle1">* Describes the structure of the data that form the above diagram</p>
@@ -81,8 +90,15 @@
                     <section class="location-data-header" style="--color:<%= colorArray[index] %>;"></section>
                     <h2 class="location-title"><%= data.location %></h2>
                     <div class="users-table">
+                        <!-- headers -->
+                        <span class="user-name -header">Student/Applicant</span>
+                        <span class="user-cost -header">Cost Of Tuition</span>
+                        <span class="user-paid -header">Already Paid</span>
+                        <span class="user-debt -header">Still Owes</span>
+                        <span class="user-weight -header">Weight in Total Debts</span>
+
                         <% data.users.map(user => { %>
-                            <a class="user-name" href="/admin/user/<%= user._id %>?activatetab=3&open=payments" class="user-name"><%= user.name.toLowerCase() %></a>
+                            <a class="user-name" href="/admin/user/<%= user._id %>?activatetab=3&open=payments"><%= user.name.toLowerCase() %></a>
                             <span class="user-cost"><%= usNumberFormat.format(user.cost) %></span>
                             <span class="user-paid"><%= usNumberFormat.format(user.paid) %></span>
                             <span class="user-debt"><%= usNumberFormat.format(user.debt) %></span>
@@ -122,14 +138,71 @@
         socket.on('users-collection-update', data => {
             if (data) {
                 document.location.reload()
-            }   // if data is defined
+            }
         })
 
         socket.on('agreements-update', data => {
             if (data) {
                 document.location.reload()
-            }   // if data is defined
+            }
         })
+
+    </script>
+
+
+    <script defer>
+
+        // column animation
+        const columns = document.querySelectorAll(".chart-column")
+        if (columns) {
+            for(let i=0; i< columns.length; i++) {
+                
+                let col = {
+                    node: columns[i],
+                    p: columns[i].style.getPropertyValue("--heightRatio"),
+                    p1: 0.001,
+                    timer: undefined
+                }
+               
+                col.timer = setInterval(() => {
+                    col.node.style.setProperty("--heightRatio", col.p1)
+
+                    if (col.p1 > col.p) {
+                        col.p1 = col.p
+                        clearInterval(col.timer)
+                    } else {
+                        col.p1 += 0.01
+                    }
+                }, 1)
+                
+            }
+        }
+
+        // pie animation
+        const pies = document.querySelectorAll(".pie")
+        if (pies) {
+            for(let i=0; i< pies.length; i++) {
+                
+                let pie = {
+                    node: pies[i],
+                    p: pies[i].style.getPropertyValue("--p"),
+                    p1: 0.001,
+                    timer: undefined
+                }
+               
+                pie.timer = setInterval(() => {
+                    pie.node.style.setProperty("--p", pie.p1)
+
+                    if (Math.log(pie.p / pie.p1) < 0.001) {
+                        pie.p1 = pie.p
+                        clearInterval(pie.timer)
+                    } else {
+                        pie.p1 += Math.log(pie.p / pie.p1)
+                    }
+                }, 25)
+                
+            }
+        }
 
     </script>
 
