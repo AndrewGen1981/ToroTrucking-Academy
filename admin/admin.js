@@ -285,27 +285,34 @@ admRouter.use(express.json({
 // for user data updating (block/unblock/archive/delete)
 admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
     const { studentId, userId, action } = req.body
-    if (!action) { return res.status(400).send('Action is not defined') }
-    if (!userId) { return res.status(404).send('User is not defined') }
+    if (!action) { return res.status(400).end({issue: 'Action is not defined'}) }
+    if (!userId) { return res.status(404).end({issue: 'User is not defined'}) }
     // studentId CAN be undefined, when deleting a user
 
     if (action === "block" || action === "unblock") {
         try {
-            if (!studentId) { return res.status(400).send('Not A Student') }
-
-            const student = await Student.findById(studentId)
-            if (!student) { return res.status(404).send('Student is not defined') }
-            
-            student.status = action
-            await student.save()
+            if (!studentId) { return res.status(400).end('Not A Student') }
+            await Student.findByIdAndUpdate(studentId, { status: action })
             return res.status(200).end()
         } catch(e) {
-            return res.status(500).send(`Issue: ${e.message}`)
+            return res.status(500).end({ issue: e.message })
         }
     }
 
     // action === archive TODO: should it transfer all archived data to other collection? or just filter data when showing student list
 
+    // Changes staus to 'graduated'
+    if (action === "graduate") {
+        try {
+            if (!studentId) { return res.status(400).end('Not A Student') }
+            await Student.findByIdAndUpdate(studentId, { status: "graduated" })
+            return res.status(200).end()
+        } catch(e) {
+            return res.status(404).end({ issue: e.message })
+        }
+    }
+
+    // Deleting a record and all related
     if (action === "delete") {
         const user = await User.findById(userId)
         if (!user) { return res.status(404).send('User is not defined') }

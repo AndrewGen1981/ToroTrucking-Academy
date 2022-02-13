@@ -316,7 +316,7 @@ studentRouter.get("/change-tuition-access/:id", ifCanWrite, async(req, res) => {
 
 
 // @POST admin/student/print-bulk-qr
-studentRouter.post('/print-bulk-qr', (req, res) => {
+studentRouter.post('/print-bulk-qr', ifCanRead, (req, res) => {
     // BULK QRs printing
     let { qrsToPrint, qrsNamesToPrint, qrsKeysToPrint, qrsClassesToPrint } = req.body
 
@@ -330,6 +330,40 @@ studentRouter.post('/print-bulk-qr', (req, res) => {
     res.render(path.join(__dirname+'/qr_bulk-print.ejs'), { qrsToPrint, qrsNamesToPrint, qrsKeysToPrint, qrsClassesToPrint })
 })
 
+
+// @GET admin/student/skills-test
+// ?TTT=100
+studentRouter.get('/skills-test', ifCanRead, async (req, res) => {
+    const minTTT = req.query.TTT || 100
+    try {
+        const students = await Student
+            .where("TTT").gte(parseFloat(minTTT))
+            .where("status").equals("unblock")
+            .select("key TTT created location")
+            .populate([
+                { 
+                    path: "user", populate: {
+                        path: "dataCollection", select: "firstName lastName middleName DOB phone"
+                    }
+                },
+                { 
+                    path: "user", populate: {
+                        path: "application", select: "vehicle-license"
+                    }
+                },
+                { 
+                    path: "user", select: "balance payments", populate: {
+                        path: "agreement", select: "class transmission tuitionCost regisrFee supplyFee otherFee"
+                    }
+                },
+                { path: "tuition", select: "avLessonsRate" },
+                { path: "scoring", select: "scoringsInCab scoringsOutCab scoringsBacking scoringsCity" }
+        ]).sort({location: 1, TTT: -1})
+        res.status(200).render(path.join(__dirname+"/skills-test.ejs"), { students, minTTT })
+    } catch(e) {
+        res.status(500).send(`Server issue: ${e.message}`)
+    }
+})
 
 
 

@@ -128,12 +128,17 @@ header {
 
     position: absolute;
     left: 0;
-    top: -1.2rem;
+    top: -1.35rem;
 
     font-family: "BrixSlab-Medium";
     font-size: 0.93rem;
-    color:#575757;
     text-align: center;
+    
+    background-color: #f3f3f333;
+    color:#575757;
+
+    padding: 2px;
+    border-radius: 2px;
 
     z-index: 2;
 }

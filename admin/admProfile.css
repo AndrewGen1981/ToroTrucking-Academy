@@ -145,15 +145,21 @@
     flex-wrap: wrap;
 }
 
-.fas {
+.fas, .-btn > svg {
+    margin-right: 10px;
+
+    width: 1.5rem;
     font-size: 1.5rem;
+
     color: #ffff00f3;
-    margin-right: 7px;
+    fill: #ffff00f3;
+    
 
     transition: all 0.25s linear;
 }
-.-btn:hover>.fas {
+.-btn:hover>.fas, .-btn:hover>svg {
     color: #ffd900;
+    fill: #ffd900;
     transform: translateY(-1px);
 }
 
