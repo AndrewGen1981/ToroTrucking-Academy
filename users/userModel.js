@@ -118,8 +118,14 @@ const studentSchema = new mongoose.Schema({
     scoring: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'studentScoringSchema'
-    }
-
+    },
+    skillsTest: [{
+        testLocation: String,
+        testType: String,
+        endorsements: String,
+        strf: String,
+        scheduledDate: { type: Date, default: new Date() }
+    }],
 }, {
     collection: "Student List"
 })

@@ -331,6 +331,9 @@ studentRouter.post('/print-bulk-qr', ifCanRead, (req, res) => {
 })
 
 
+// bringing skills test location names and color schemes for initial tests and retests
+const skillsTestLocations = require('./skills-test-config')
+
 // @GET admin/student/skills-test
 // ?TTT=100
 studentRouter.get('/skills-test', ifCanRead, async (req, res) => {
@@ -339,7 +342,7 @@ studentRouter.get('/skills-test', ifCanRead, async (req, res) => {
         const students = await Student
             .where("TTT").gte(parseFloat(minTTT))
             .where("status").equals("unblock")
-            .select("key TTT created location")
+            .select("key TTT created location skillsTest")
             .populate([
                 { 
                     path: "user", populate: {
@@ -359,11 +362,150 @@ studentRouter.get('/skills-test', ifCanRead, async (req, res) => {
                 { path: "tuition", select: "avLessonsRate" },
                 { path: "scoring", select: "scoringsInCab scoringsOutCab scoringsBacking scoringsCity" }
         ]).sort({location: 1, TTT: -1})
-        res.status(200).render(path.join(__dirname+"/skills-test.ejs"), { students, minTTT })
+        res.status(200).render(path.join(__dirname+"/skills-test.ejs"), { students, minTTT, skillsTestLocations })
     } catch(e) {
         res.status(500).send(`Server issue: ${e.message}`)
     }
 })
+
+
+// @PUT Updates data about skills test inside Student
+studentRouter.put('/skills-test', ifCanWrite, async(req, res) => {
+    try {
+        const skillsData = req.body
+        if (!skillsData || !skillsData.students) { res.status(404).end() }
+        skillsData.students.map(async(student) => {
+            if (student && student.studentId) {
+                let grad = await Student.findById(student.studentId)
+                grad.skillsTest.push({
+                    testLocation: skillsData.testLocation,
+                    testType: student.testType,
+                    endorsements: student.endorsements,
+                    strf: student.strf,
+                    scheduledDate: student.scheduledDate
+                })
+                await grad.save()
+            }
+        })
+        res.status(200).end()
+    } catch(e) {
+        res.status(500).send(`Server issue: ${e.message}`)
+    }
+})
+
+
+// @DEL Deletes a specific skills test inside Student record
+// skills test _id should be passed in body
+studentRouter.delete('/skills-test/:id', ifCanWrite, async(req, res) => {
+    try {
+        const dataStr = req.params.id
+        if (dataStr) {
+            params = dataStr.split('&')     // params[0] - student._id; params[1] - test._id`
+            if (params.length === 2) {
+                const student = await Student.findById(params[0])
+                if (student.skillsTest) {
+                    student.skillsTest = student.skillsTest.filter(test => test._id != params[1])
+                    await student.save()
+                    return res.status(200).json({ newTests: student.skillsTest })
+                }
+            }
+        }
+        return res.status(400).send('Wrong parametrs sent')
+    } catch(e) {
+        res.status(500).send(`Server issue: ${e.message}`)
+    }
+})
+
+
+// @GET skills-calendar
+// ?year=2022&month=2
+studentRouter.get('/skills-calendar', ifCanWrite, async(req, res) => {
+    // parsing query for year and month
+    const date = new Date()
+    // start date year and month
+    let year = parseInt(req.query.year || date.getFullYear())
+    year = year > 2000 ? year : date.getFullYear()
+    const month = parseInt(req.query.month || (date.getMonth() + 1))
+
+    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0))       //  00:00:00Z
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59))         //  day = 0 - last day of prev.month
+
+    try {
+        // select for NON-EMPTY arrays in record ONLY!!!
+        const students = await Student.find({ skillsTest: { $exists: true, $ne: [] } })
+        .select("key skillsTest").populate({ path: "user", select: "name" })
+        // check selection was successful
+        if (!students) { res.status(404).send('No students found') }
+        // array of days (between start and end dates) will be passed to an engine
+        // creating array of blank days - days without any appointments
+        const days = []
+        let currentDate = new Date(startDate)
+        while (currentDate <= endDate) {     // NOT including endDate
+            days.push({ date: new Date(currentDate), students: [] })
+            currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1))
+        }
+        // students is an array of ALL students with skill tests, but I need only those who are in this particular date frame
+        const studentsKeys = []
+        const studentsInRange = []
+        // moving though students selection to get those, which are in [startDate - endDate] range
+        students.map(student => {
+            student.skillsTest.map(test => {
+                if (test.scheduledDate >= startDate && test.scheduledDate <= endDate) {
+                    // if skills-test date is in range, then calc. position of element in array to update one
+                    let index = Math.trunc((test.scheduledDate - startDate) / 86400000)     // (24*60*60*1000) = 86400000
+                    // updating a day record
+                    days[index].students.push({
+                        // general student data
+                        studentId : student._id,
+                        userId : student.user._id,
+                        key : student.key,
+                        name : student.user.name,
+                        // skills-test data
+                        testId: test._id,
+                        testLocation : test.testLocation,
+                        testType : test.testType,
+                        endorsements : test.endorsements,
+                        strf : test.strf,
+                    })
+                    // adding this student to studentsKeys if not there yet
+                    if (!studentsKeys.includes(student.key)) {
+                        // to make it easier in ejs, passing students' data few arrays
+                        studentsKeys.push(student.key)
+                        studentsInRange.push({
+                            studentId : student._id,
+                            userId : student.user._id,
+                            name: student.user.name,
+                            short: getShortName(student.user.name),
+                            allSkillsTests: student.skillsTest
+                        })
+                    }
+                }
+            })      //  skill-tests.map
+        })      // students.map
+
+        res.status(200).render(path.join(__dirname+"/skills-calendar.ejs"), { days, studentsKeys, studentsInRange, skillsTestLocations })
+    } catch(e) {
+        res.status(500).send(`Server issue: ${e.message}`)
+    }
+})
+
+
+// tool - creating short names, like GA from Gen And
+function getShortName(name) {
+    const arr = name
+    .replace(/[^a-z\s]/gi, '')      // remove all spec.symbols and digits
+    .toUpperCase()                  // upper case
+    .split(' ')                     // to array
+    .filter(el => el)               // delete all empty elements (when space at the end and etc.)
+
+    if (!arr || !arr.length) { return }
+
+    if (arr.length === 1) {
+        return arr[0][0]
+    } else {
+        return `${arr[0][0]}${arr[arr.length-1][0]}`
+    }
+}
 
 
 

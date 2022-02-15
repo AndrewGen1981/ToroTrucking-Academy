@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | Skills Test Calendar</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="../../static/css/colors.css">
+
+    <link rel="stylesheet" href="/users/students/skills-calendar.css">
+
+</head>
+<body>
+
+    <!-- TOOLS -->
+    <% const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %>
+    <% const daysOfWeekShort = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] %>
+    <% const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"] %>
+    <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
+    <% function dayColorClass(num) { return (num === 0 || num === 6) ? "-weekend" : num === 1 ? "-monday" : "-day-of-week" } %>
+    
+    <%
+        function getLocColor(searchLocation) {
+            if (locals.skillsTestLocations) {
+                for (let i=0; i < skillsTestLocations.length; i++) {
+                    if (searchLocation === skillsTestLocations[i].location) {
+                        return skillsTestLocations[i]
+                    }
+                }
+            }
+            return false
+        }
+    %>
+
+    <section class="calendar-box">
+        <% if(days && studentsKeys && studentsInRange) { %>
+            <div class="calendar-titles">
+                <!-- identify Year and Month, using 1st array element -->
+                <% const d = new Date(days[0].date) %>
+                <% const m = (d.getMonth() + 1) < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1 %>
+                <% const link = `/admin/student/skills-calendar?year=${d.getFullYear()}&month=${m}` %>
+                <h1 class="calendar-title">Skills Test Calendar</h1>
+                <section class="data-titles">
+                    <h2 class="calendar-year-title" data-year="<%= d.getFullYear() %>"><%= d.getFullYear() %></h2>
+                    <span>&bull;</span>
+                    <h3 class="calendar-month-title" data-month="<%= m %>"><%= monthNames[d.getMonth()] %></h3>
+                </section>
+                <input type="date" id="calendar-date" value="<%= d.getFullYear() %>-<%= m %>-01" onchange="reloadCalendar(this)" />
+                <a id="reload-calendar" href="<%= link %>">
+                    <svg viewBox="0 0 512 512">
+                        <path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/>
+                    </svg>
+                </a>
+            </div>
+            <!-- table headers with dates -->
+            <% let today = new Date() %>
+            <div class="calendar-row -headers">
+                <div class="calendar-cell calendar-student-name"></div>
+                <% days.map((day, index) => { %>
+                    <% let isToday = (new Date() - day.date) >= 0 && (new Date() - day.date) <= 86400000 %>
+                    <div class="calendar-cell <%= isToday ? '-today' : '' %>" style="--d: <%= index / 20 %>s">
+                        <% dayOfWeek = day.date.getDay() %>
+                        <span class="calendar-date <%= dayColorClass(dayOfWeek) %>"><%= day.date.getDate() %></span>
+                        <span class="calendar-day <%= dayColorClass(dayOfWeek) %>"><%= daysOfWeekShort[dayOfWeek] %></span>
+                    </div>
+                <% }) %>
+            </div>
+            <!-- going through students array to place what scheduled -->
+            <% studentsKeys.map((studentKey, k) => { %>
+                <div class="calendar-row">
+                    <div class="calendar-cell calendar-student-name">
+                        <!-- getting info about all the skills tests -->
+                        <% 
+                            let stInfo = "Skills Tests:"
+                            studentsInRange[k].allSkillsTests.map(skTest => {
+                                stInfo += `\n${formatDate(skTest.scheduledDate)}: ${skTest.testLocation} - ${skTest.testType}; endor.${skTest.endorsements}`
+                            })
+                        %>
+                        <!-- full & short student's names -->
+                        <span class="short-name" data-studentId="<%= studentsInRange[k].studentId %>" title="<%= stInfo %>"><%= studentsInRange[k].short %></span>
+                        <span class="full-name"><%= studentsInRange[k].name %></span>
+                    </div>
+                    <% days.map((day, index) => { %>
+                        <div class="calendar-cell" style="--d: <%= index / 20 %>s">    
+                            <% if(day.students) { %>
+                                <% if(day.students.length) { %>
+                                    <% let freeSpot = true %>
+                                    <% day.students.map(stdt => { %>
+                                        <% if(stdt.key === studentKey) { %>
+                                            <% freeSpot = false %>
+                                            <!-- skillsTestLocations -->
+                                            <% let info = `${stdt.name.toUpperCase()} - ${stdt.key}\n${stdt.testLocation}\n${stdt.testType}` %>
+                                            <% let spot = getLocColor(stdt.testLocation) %>
+                                            <% if(!spot) { %>
+                                                <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>">
+                                                    <span></span>
+                                                    <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                        <svg viewBox="0 0 512 512">
+                                                            <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                        </svg>
+                                                    </div>
+                                                </span>
+                                            <% } else { %>
+                                                <% if(stdt.testType === 'Initial') { %>
+                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>" style="--c:<%= spot.initialColor %>">
+                                                        <span>I</span>
+                                                        <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                            <svg viewBox="0 0 512 512">
+                                                                <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </span>
+                                                <% } else { %>
+                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>" style="--c:<%= spot.retestColor %>">
+                                                        <span>R</span>
+                                                        <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                            <svg viewBox="0 0 512 512">
+                                                                <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                            </svg>
+                                                        </div>
+                                                    </span>
+                                                <% } %>
+                                            <% } %>
+                                        <% } %>
+                                    <% }) %>
+                                    <% if(freeSpot) { %>
+                                        <span class="calendar-spot -free-spot"></span>
+                                    <% } %>
+                                <% } else { %>
+                                    <span class="calendar-spot -free-spot"></span>
+                                <% } %>
+                            <% } else { %>
+                                <span class="calendar-spot -free-spot"></span>
+                            <% } %>
+                        </div>
+                    <% }) %>
+                </div>
+            <% }) %>
+
+        <% } else { %>
+            <div class="error">No info was passed...</div>
+        <% } %>
+    </section>      <!-- calendar-box -->
+
+
+    <script>
+
+        // reloads due to dataInput update
+        function reloadCalendar(dateInput) {
+            if (!dateInput) { return }
+            if (!dateInput.value) { return }
+
+            const year = document.querySelector('.calendar-year-title')
+            const month = document.querySelector('.calendar-month-title')
+            if (!year || !month) { return }
+
+            const dataSplitedArr = dateInput.value.split('-')
+
+            if (year.dataset.year === dataSplitedArr[0] && month.dataset.month === dataSplitedArr[1]) { return }
+
+            const calendar = document.querySelector('#reload-calendar')
+            const link = `/admin/student/skills-calendar?year=${dataSplitedArr[0]}&month=${dataSplitedArr[1]}`
+
+            calendar.setAttribute('href', link)
+            calendar.click()
+        }
+
+
+        // deletes a specific skills-test
+        function deleteTest(deleteBtn) {
+            if (!deleteBtn) { return }
+            const spot = deleteBtn.parentElement
+            if (!spot) { return }
+            spot.classList.toggle('-occupied-spot-to-delete')
+            setTimeout(async() => {
+                if (!confirm('Would you like to delete scheduled skills test?')) {
+                    spot.classList.toggle('-occupied-spot-to-delete')
+                    return
+                } else {
+                    // delete skills test request
+                    const dataStr = `${deleteBtn.dataset.student}&${spot.dataset.test}`
+                    const response = await fetch(`/admin/student/skills-test/${dataStr}`, {
+                        method: "DELETE",
+                    })
+                    if (response.status === 200) {
+                        spot.remove()
+                        let shortName = document.querySelector(`[data-studentid="${deleteBtn.dataset.student}"]`)
+                        console.log(shortName)
+                        console.log(response)
+                        // student.skillsTest
+
+                        // setTimeout(() => {
+                        // }, 1000)
+                    } else {
+                        alert(`Issue, server responded: ${response.statusText}`)
+                        spot.classList.toggle('-occupied-spot-to-delete')
+                    }
+                }
+            }, 500)
+        }
+
+    </script>
+</body>
+</html>

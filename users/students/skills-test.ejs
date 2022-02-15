@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTA | Student List</title>
+    <title>TTA | Skills Test</title>
 
     <link rel="shortcut icon" href="../../static/images/thumb.png">
     
@@ -22,6 +22,15 @@
     <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
     <% const usNumberFormat = new Intl.NumberFormat('us-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
 
+    <%
+        function getHistory(student) {
+            let history = 'Scheduled Tests'
+            student.skillsTest.map((record, index) => {
+                history += `\n#${index + 1} ${formatDate(record.scheduledDate)} - ${record.testType} - ${record.testLocation}`
+            })
+            return history
+        }
+    %>
 
     <div class="skills-test-box">
 
@@ -46,9 +55,11 @@
                     <svg class="cart-item" viewBox="0 0 576 512" onclick="showSkillsTestModal()">
                         <path d="M96 0C107.5 0 117.4 8.19 119.6 19.51L121.1 32H541.8C562.1 32 578.3 52.25 572.6 72.66L518.6 264.7C514.7 278.5 502.1 288 487.8 288H170.7L179.9 336H488C501.3 336 512 346.7 512 360C512 373.3 501.3 384 488 384H159.1C148.5 384 138.6 375.8 136.4 364.5L76.14 48H24C10.75 48 0 37.25 0 24C0 10.75 10.75 0 24 0H96zM272 180H316V224C316 235 324.1 244 336 244C347 244 356 235 356 224V180H400C411 180 420 171 420 160C420 148.1 411 140 400 140H356V96C356 84.95 347 76 336 76C324.1 76 316 84.95 316 96V140H272C260.1 140 252 148.1 252 160C252 171 260.1 180 272 180zM128 464C128 437.5 149.5 416 176 416C202.5 416 224 437.5 224 464C224 490.5 202.5 512 176 512C149.5 512 128 490.5 128 464zM512 464C512 490.5 490.5 512 464 512C437.5 512 416 490.5 416 464C416 437.5 437.5 416 464 416C490.5 416 512 437.5 512 464z"/>
                     </svg>
-                    <svg class="calendar-item -active-toolbar-item" viewBox="0 0 448 512">
-                        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/>
-                    </svg>
+                    <a href='/admin/student/skills-calendar'>
+                        <svg class="calendar-item -active-toolbar-item" viewBox="0 0 448 512">
+                            <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z"/>
+                        </svg>
+                    </a>
                 </div>  <!-- cart -->
                 <section class="stars">
                     <div class="stars-item">
@@ -98,6 +109,9 @@
             <span class="cell -scoringsOutCab">OUT-CAB Scoring</span>
             <span class="cell -scoringsBacking">BACKING Scoring</span>
             <span class="cell -scoringsCity">CITY Scoring</span>
+            
+            <!-- prev. skills test data -->
+            <span class="cell -skills-history">Skills Test History</span>
 
             <!-- Push to Skills Test Section -->
             <span class="cell -schedule-date-time">Skills test Date</span>
@@ -108,8 +122,9 @@
         <% if (students) { %>
             <% students.map(student => { %>
                 <% if (student.user) { %>
-                    <div class="report-row" data-student="<%= student._id %>" data-user="<%= student.user._id %>">
-                        <a href="/admin/user/<%= student.user._id %>" class="cell -lastName -sticky"><%= student.user.dataCollection ? student.user.dataCollection.lastName : "" %></a>
+                    <div class="report-row" data-student="<%= student._id %>" data-user="<%= student.user._id %>" data-skillsHistory="<%= student.skillsTest ? student.skillsTest.length : 0 %>">
+                        <% let link = `/admin/user/${student.user._id}` %>
+                        <a href="<%= link %>" class="cell -lastName -sticky" title="student's profile"><%= student.user.dataCollection ? student.user.dataCollection.lastName : "" %></a>
                         <span class="cell -firstName -sticky"><%= student.user.dataCollection ? student.user.dataCollection.firstName : "" %></span>
                         <span class="cell -middleName"><%= student.user.dataCollection ? student.user.dataCollection.middleName : "" %></span>
 
@@ -119,7 +134,10 @@
                         <span class="cell -location"><%= student.location %></span>
 
                         <span class="cell -date -dob"><%= student.user.dataCollection ? formatDate(student.user.dataCollection.DOB) : "" %></span>
-                        <span class="cell -phone"><%= student.user.dataCollection ? student.user.dataCollection.phone : "" %></span>
+
+                        <% let phone = student.user.dataCollection ? student.user.dataCollection.phone : "" %>
+                        <a href="tel:<%= phone %>" class="cell -phone" title="call <%= phone %>"><%= phone %></a>
+
                         <% 
                             let balance = 0
                             if (student.user.payments) {
@@ -134,7 +152,8 @@
                                 balance -= student.user.agreement.otherFee || 0
                             }
                         %>
-                        <span class="cell -balance <%= balance ? '-not-zero-balance' : '-zero-balance' %>"><%= usNumberFormat.format(balance) %></span>
+
+                        <a href="<%= link + '?activatetab=3&open=payments' %>" class="cell -balance <%= balance ? '-not-zero-balance' : '-zero-balance' %>" title="check payments"><%= usNumberFormat.format(balance) %></a>
 
                         <% let license = student.user.application ? student.user.application['vehicle-license'] : "" %>
                         <span class="cell -drvLicense <%= license.length === 12 ? '-good-license' : '-wrong-license' %>"><%= license.toUpperCase() %></span>
@@ -142,7 +161,7 @@
                         <span class="cell -class"><%= student.user.agreement ? student.user.agreement.class : "" %></span>
                         <span class="cell -transmission"><%= student.user.agreement ? student.user.agreement.transmission.replace("Transmission", "") : "" %></span>
 
-                        <span class="cell -avLessonsRate <%= student.tuition.avLessonsRate >= 0.85 ? '-tuition-passed' : '-tuition-failed' %>"><%= student.tuition ? `${ Math.round(student.tuition.avLessonsRate * 1000) / 10}%` : 0 %></span>
+                        <a href="<%= link + '?activatetab=4&open=tuition' %>" class="cell -avLessonsRate <%= student.tuition.avLessonsRate >= 0.85 ? '-tuition-passed' : '-tuition-failed' %>"><%= student.tuition ? `${ Math.round(student.tuition.avLessonsRate * 1000) / 10}%` : 0 %></a>
                         
                         <% if (student.scoring) { %>
                             <div class="cell -scoringsInCab"><%= student.scoring.scoringsInCab.length %>
@@ -257,10 +276,25 @@
                         <% } %>
 
 
+                        <% if (student.skillsTest) { %>
+                            <% if (student.skillsTest.length) { %>
+                                <span class="cell -skills-history" title="<%= getHistory(student) %>">
+                                    <div class="-skills-history-exists">
+                                        <%= student.skillsTest.length %>
+                                    </div>
+                                </span>
+                            <% } else { %>
+                                <span class="cell -skills-history"></span>
+                            <% } %>
+                        <% } else { %>
+                            <span class="cell -skills-history"></span>
+                        <% } %>
+
+
                         <!-- Push to Skills Test Section -->
                         <input class="cell -schedule-date-time -schedule-date-time-empty" type="datetime-local" name="schedule-date-time" onchange="checkDateInput(this)" />
                         <!-- dummy empty -->
-                        <div class="cell -empty-cell"></div>
+                        <span class="cell -empty-cell"></span>
 
                     </div>          <!-- report-row -->
                 <% } %>         <!-- if (student.user) -->
@@ -270,14 +304,19 @@
             <!-- blank-modal-layout is for cover all skills test working area, which is wider than 100vw -->
             <!-- modal-skills-test-report width = 100vw -->
             <div class="blank-modal-layout -hidden">
+            <!-- <div class="blank-modal-layout"> -->
                 <section class="modal-skills-test-report">
                     <div class="modal-skills-header-row -top-row">
                         <img class="modal-skills-ico" src="/static/images/cdl-lic.jpg" alt="CDL License">
                         <h3 class="modal-skills-title">CDL School Student Skills Testing Schedule</h3>
-                        <svg class="modal-skills-test-close" viewBox="0 0 320 512" onclick="closeSkillsTestModal()">
-                            <path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-                        </svg>
+                        <nav>
+                            <span class="modal-skills-submit" onclick="submitSkillsTest()">submit</span>
+                            <svg class="modal-skills-test-close" viewBox="0 0 320 512" onclick="closeSkillsTestModal()">
+                                <path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+                            </svg>
+                        </nav>
                     </div> <!-- header-row -->
+                    <!-- hidden form for  -->
                     <div class="modal-skills-header-row">
                         <div class="item">
                             <span class="key">School Name:</span>
@@ -297,9 +336,20 @@
                             <span class="key">Testing Coordinator:</span>
                             <span class="value"></span>
                         </div>
+
+
+                        <select id="skills-test-location" class="item">
+                            <% skillsTestLocations.map((spot, index) => { %>
+                                <% if (index === 0) { %>
+                                    <option value="<%= spot.location %>" selected><%= spot.location %></option>
+                                <% } else { %>
+                                    <option value="<%= spot.location %>"><%= spot.location %></option>
+                                <%  } %>        
+                            <%  }) %>
+                        </select>
                         <div class="item">
                             <span class="key">Phone Number:</span>
-                            <span class="value">Office (253) 212-9463</span>
+                            <input type="text" class="value" id="office-phone" value="Office (253) 212-9463" placeholder="phone #" />
                         </div>
                     </div>       <!-- header-row -->
                     <div class="modal-skills-table">
@@ -322,6 +372,7 @@
     
                         <!-- template row -->
                         <div class="modal-skills-table-row -template-row" id="template-row">
+                            <div class="delele-student-from-skills-test" title="delete student" onclick="deleteStudent(this)">-</div>
                             <span class="-m-license-number"></span>
                             <span class="-m-last-name"></span>
                             <span class="-m-first-name"></span>
@@ -371,7 +422,6 @@
     <script>
         // REFRESH button for diff. TTT
         function updateRefresh(numInput) {
-            console.log('refr')
             const link = document.querySelector('#refresh-skills')
             if (numInput && link) {
                 link.setAttribute('href', `/admin/student/skills-test?TTT=${numInput.value}`)
@@ -452,12 +502,27 @@
                     pushedStudentRows.forEach((pushedStudentRow, index) => {
                         let clone = template.cloneNode(true)
 
+                        // skillsHistory
                         clone.querySelector('.-m-license-number').textContent = pushedStudentRow.querySelector('.-drvLicense').textContent
                         clone.querySelector('.-m-last-name').textContent = pushedStudentRow.querySelector('.-lastName').textContent.toUpperCase()
                         clone.querySelector('.-m-first-name').textContent = pushedStudentRow.querySelector('.-firstName').textContent.toUpperCase()
                         clone.querySelector('.-m-dob').textContent = pushedStudentRow.querySelector('.-dob').textContent
                         clone.querySelector('.-m-phone').textContent = pushedStudentRow.querySelector('.-phone').textContent
                         clone.querySelector('.-m-class').textContent = pushedStudentRow.querySelector('.-class').textContent.replace("CDL Class", "")
+
+                        let skillsHistory = parseInt(pushedStudentRow.dataset.skillshistory)
+                        if (skillsHistory) {
+                            let testTypeSelect = clone.querySelector('.-m-test-type select')
+                            if (testTypeSelect) {
+                                testTypeSelect.querySelectorAll('option').forEach(option => {
+                                    option.removeAttribute('selected')
+                                    if (option.value === 'Retest') {
+                                        option.setAttribute('selected', 'true')
+                                    }
+                                })
+                            }
+                        }
+
                         clone.querySelector('.-m-transmission').textContent = pushedStudentRow.querySelector('.-transmission').textContent
                         clone.querySelector('.-m-preferred-date').textContent = pushedStudentRow.querySelector('.-schedule-date-time').value.replace("T", "\n")
 
@@ -472,14 +537,13 @@
                 }
                 // showing modal
                 if (parseInt(selectedQty.textContent)) {
-                    // document.querySelector(".skills-test-box").classList.add('-skills-test-box-for-modals')
                     document.querySelector(".blank-modal-layout").classList.remove('-hidden')
                 }
             }
         }
 
+
         function closeSkillsTestModal() {
-            // document.querySelector(".skills-test-box").classList.remove('-skills-test-box-for-modals')
             document.querySelector(".blank-modal-layout").classList.add('-hidden')
             const addedRows = document.querySelectorAll('.modal-skills-line-added')
             if (addedRows) {
@@ -488,6 +552,50 @@
                 })
             }
         }
+
+
+        async function submitSkillsTest() {
+            const addedRows = document.querySelectorAll('.modal-skills-line-added')
+            if (!addedRows) { return }
+            if (!addedRows.length) { return }
+            if (!confirm(`Would you like to schedule Skills Test for selected students(${addedRows.length})?`)) { return }
+            // formating data to JSON
+            const skillsTestData = { 
+                testLocation: document.querySelector('#skills-test-location').value,
+                students: [],
+            }
+            addedRows.forEach(addedRow => {
+                let student = {
+                    studentId: addedRow.dataset.student,
+                    userId: addedRow.dataset.user,
+                    testType: addedRow.querySelector('.-m-test-type select').value,
+                    endorsements: addedRow.querySelector('.-m-endorsements input').value,
+                    strf: addedRow.querySelector('.-m-strf select').value,
+                    scheduledDate: new Date(addedRow.querySelector('.-m-preferred-date').textContent.replace("\n","T")+":00-08:00"),
+                }
+                skillsTestData.students.push(student)
+            })
+            // update request
+            const response = await fetch('/admin/student/skills-test', {
+                method: "PUT",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(skillsTestData)
+            })
+            if (response.status === 200) {
+                setTimeout(() => {
+                    document.querySelector('#refresh-skills').click()
+                }, 1000)
+            } else {
+                alert(`Issue, server responded: ${response.statusText}`)
+            }
+        }
+
+
+        function deleteStudent(delButton) {
+            if (!delButton) { return }
+            delButton.parentElement.remove()
+        }
+
 
     </script>
 
