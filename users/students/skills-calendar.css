@@ -168,6 +168,8 @@ body, html {
     background: -moz-linear-gradient(90deg, var(--col1), var(--col2));
     background: -webkit-linear-gradient(90deg, var(--col1), var(--col2));
     background: linear-gradient(90deg, var(--col1), var(--col2));
+
+    z-index: 1;
 }
 
 /* Spots */
