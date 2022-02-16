@@ -124,9 +124,6 @@ admRouter.get('/', redirectToHome, (req, res) => {
 })
 
 admRouter.get('/profile', redirectToLogin, async(req, res) => {
-
-
-
     res.render(path.join(__dirname+'/admProfile.ejs'), {
         user: res.locals.user,
         analyticsArray: await chart.newStudentsInvolvingChart(12)

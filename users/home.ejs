@@ -27,6 +27,12 @@
         </symbol>
     </svg>
 
+    
+    <!-- TOOLS -->
+    <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
+    <% function formatDateTime(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })+' - '+new Date(textDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour24: false }) : '-' } %>
+    
+
     <header>
         <nav class="nav-menu">
            <a class="nav-item" href="/">Home</a>
@@ -366,11 +372,8 @@
 
                             <% scorArrays.map((scorArray, index) => { %>
                                 <% scorArray.map(scor => { %>
-                                    <div class="scoring-table-cell"><%= scorTitles[index] %></div>
-                                    <div class="scoring-table-cell">
-                                        <%= new Date(scor.created).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %>
-                                        <%= new Date(scor.created).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }) %>
-                                    </div>
+                                    <a href="/user/scoring-print?scoring=<%= scorings._id %>&scoringform=<%= scor._id %>" class="scoring-table-cell"><%= scorTitles[index] %></a>
+                                    <div class="scoring-table-cell"><%= formatDateTime(scor.created) %></div>
                                     <div class="scoring-table-cell -hide-if-small"><%= scor.instructor %></div>
 
                                     <% if (scor.result) { %>
@@ -391,6 +394,30 @@
                         </div>  <!-- scoring-table -->
                     <% } %>
                 <% } %>     <!-- if there are any scorings -->
+
+
+                <!-- Skills Tests History -->
+                <% if(user.student.skillsTest) { %>
+                    <h3 class="block-title">Scheduled Skills Test</h3>
+                    <div class="block-item">
+                        <span class="block-key">Found appointments<span class="block-value"><%= user.student.skillsTest.length %></span></span>
+                    </div>
+                    <div class="skills-test-table">
+                        <div class="skills-test-table-cell -skills-test-header">Type</div>
+                        <div class="skills-test-table-cell -skills-test-header">Date Time**</div>
+                        <div class="skills-test-table-cell -skills-test-header">Location</div>
+                        <div class="skills-test-table-cell -skills-test-header -hide-if-small">Endorsements</div>
+
+                        <% user.student.skillsTest.map(test => { %>
+                            <div class="skills-test-table-cell"><%= test.testType %></div>
+                            <div class="skills-test-table-cell"><%= formatDateTime(test.scheduledDate) %></div>
+                            <div class="skills-test-table-cell"><%= test.testLocation %></div>
+                            <div class="skills-test-table-cell -hide-if-small"><%= test.endorsements %></div>
+                        <% }) %>
+                    </div>      <!-- skills-test table -->
+                    <span class="block-value -info1">** Double-check exact time with the school's manager, because some skills test locations do not provide timeframes, and mentioned below is just a preliminary or general.</span>
+                <% } %>     <!-- if there are any scorings -->
+
 
             <% } %>     <!-- USER is a STUDENT -->
         <% } %>     <!-- USER is OK -->

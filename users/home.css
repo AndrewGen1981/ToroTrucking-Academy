@@ -416,7 +416,7 @@ header::after {
 
     width: 100%;
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 2fr 1fr 1fr;
 
     border: 1px solid #2d2d2d;
     border-radius: 3px;
@@ -438,7 +438,35 @@ header::after {
 }
 
 
-.-header, .-scoring-header {
+/* Skills Tests Table */
+.skills-test-table {
+    margin: 1rem 0;
+
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 3px;
+
+    overflow: hidden;
+}
+.skills-test-table-cell {
+    --hgl-color: #f7f7f7;
+
+    padding: 0.2rem 0;
+    text-align: center;
+}
+.skills-test-table-cell:not(.-skills-test-header):nth-child(8n+1),
+.skills-test-table-cell:not(.-skills-test-header):nth-child(8n+2),
+.skills-test-table-cell:not(.-skills-test-header):nth-child(8n+3),
+.skills-test-table-cell:not(.-skills-test-header):nth-child(8n+4) {
+    background-color: var(--hgl-color);
+}
+
+/* tables headers */
+.-header, .-scoring-header,
+.-skills-test-header {
     padding: 0.25rem 0;
 
     font-size: 0.83rem;
@@ -450,6 +478,9 @@ header::after {
 }
 .-scoring-header {
     background-color: var(--blue-slate);
+}
+.-skills-test-header {
+    background-color: #34415a;
 }
 
 .-info1 {
@@ -676,6 +707,9 @@ header::after {
     .clocks-table, .scoring-table {
         grid-template-columns: repeat(4, 1fr);
     }
+    .skills-test-table {
+        grid-template-columns: 1fr 2fr 2fr;
+    }
 }
 @media (max-width: 400px) {
     .block-item {
@@ -688,7 +722,9 @@ header::after {
     .nav-right-item {
         margin: 0 0.25rem;
     }
-    .clocks-table-cell, .scoring-table-cell {
+    .clocks-table-cell,
+    .scoring-table-cell,
+    .skills-test-table-cell {
         font-size: 13px;
     }
 }

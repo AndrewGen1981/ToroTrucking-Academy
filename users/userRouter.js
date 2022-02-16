@@ -25,6 +25,7 @@ const { User, Student, tools } = require('./userModel')
 const { dataCollectionForm, getForm1Object } = require('./applicants/form1Model')
 const { applicationForm, getForm2Object } = require('./applicants/form2Model')
 const { agreementForm, getForm3Object } = require('./applicants/form3Model')
+const { StudentScoring } = require('../admin/instructors/scoringModel')
 
 // POSTMAN and messages
 const { getInfoMessage, getIssueMessage } = require('./_messages')
@@ -582,6 +583,50 @@ userRouter.get('/print-form/:id', redirectToLogin, async(req, res) => {
         }
     } catch(e) {
         res.status(500).send(`Something is happened... ${e.message}. Try later please.`)
+    }
+})
+
+
+
+// printable scoring view
+// prints a scoring for student without comments
+// uses QUERY ?scoring={scoring._id}&scoringform={_id of a particular scor.form inside scoring arrays}
+userRouter.get('/scoring-print', redirectToLogin, async(req, res) => {
+    const { scoring, scoringform } = req.query
+    if (!scoring || !scoringform) { return res.status(400).send(`Bad request. Please specify what scoring to find`) }
+    try {
+
+        const scorings = await StudentScoring.findById(scoring)
+        if (!scorings) { return res.status(404).send(`Student scoring with id ${scoring} is not found`) }
+
+        const scoringGroups = [scorings.scoringsInCab, scorings.scoringsOutCab, scorings.scoringsBacking, scorings.scoringsCity]
+
+        let foundScoring = undefined
+
+        scoringGroups.map(scoringGroup => {
+            if (scoringGroup) {
+                scoringGroup.map(scor => {
+                    if (!foundScoring && scor._id.toString() === scoringform) {
+                        foundScoring = scor
+                    }
+                })
+            }
+        })
+        
+        if (foundScoring) {
+            return res.render(path.join(global.__basedir+'/admin/instructors/scoring-printable-view.ejs'), { 
+                scoring: JSON.parse(foundScoring.details),
+                scoringCertificate: foundScoring.certificate,
+                allowComments: false,    //  comments can be hidden if needed
+                scoringComment: "",
+                backlink: undefined // will just go back with browser history
+            })
+        }
+
+        return res.status(404).send(`We've found a scorings group, but didn't find a scoring with id ${scoringform} inside of it`)
+
+    } catch(e) {
+        return res.status(404).send(`Error: ${e.message}`)
     }
 })
 
