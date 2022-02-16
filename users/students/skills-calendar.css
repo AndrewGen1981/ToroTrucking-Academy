@@ -31,6 +31,8 @@ body, html {
     text-align: center;
     border-bottom: 1px solid var(--accent-col2);
     margin-bottom: 0.5rem;
+
+    position: relative;
 }
 .calendar-title {
     font-family: "Industrial Bold";
@@ -66,14 +68,11 @@ body, html {
     background-color: #ffffff45;
     cursor: pointer;
 }
-#reload-calendar svg {
-    width: 25px;
-    height: 25px;
-    fill: #fff;
-
+.calendar-box menu {
     position: absolute;
-    top: 1%; right: 0.56%;
+    left: 0.5rem; bottom: 0.5rem;
 }
+
 
 /* CALENDAR BODY */
 .calendar-row {
@@ -158,10 +157,11 @@ body, html {
     position: absolute;
     top: 0; left: 2.15rem;
 
-    font-family: "BrixSlab-ExtraLight";
-    letter-spacing: 0.75px;
-    color: rgb(180, 180, 180);
-    font-size: 0.65rem;
+    font-family: "BrixSlab-Light";
+    font-size: 0.7rem;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+    color: #f5deb3;
 
     background: var(--col1);
     background: -o-linear-gradient(90deg, var(--col1), var(--col2));

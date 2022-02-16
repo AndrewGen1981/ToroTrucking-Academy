@@ -540,7 +540,9 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
         //  getting today's date-prefix
         const diffDays = tools.getDatePrefix(new Date())
         //  clocks are allowed only to students, get student and check one
-        const student = await Student.findById(studentId)
+        const student = await Student.findById(studentId).select('-tuition -scoring -skillsTest')
+        const user = await User.findById(student.user).populate('agreement').select('visiting')
+
         if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
         // check location and qrCONFIG.assignWithAdminsMachine
         if (qrCONFIG.assignWithAdminsMachine) {     // allowed from admin's machine only?
@@ -582,7 +584,6 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
 
             // checking if passed 4/6 hours if qrCONFIG.checkFullPartTimeStudents && this is Clock OUT
             if (qrCONFIG.checkFullPartTimeStudents && ((todaysClocks.length % 2) !== 0)) { 
-                const user = await User.findById(student.user).populate('agreement').select('visiting')
                 minTime = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
                 
                 if (hours_between_clocks < minTime*0.97) {    //    duration is LESS, than minimum required time * 0.97(ratio to skip last minutes)
@@ -607,6 +608,10 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
             // GEO NOT required, 'nr' will return to /admin/geo-update
             student.clocks.push({ date: new Date(), key: diffDays, lat: 'nr', lon: 'nr', location })
         }
+
+        // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
+        const minVisitingRequirements = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
+        student.TTT = tools.reCalculateTTT(student.clocks, minVisitingRequirements).TTT / (1000 * 60 *60)
 
         await student.save()
 
@@ -636,22 +641,14 @@ admRouter.post('/qr-update-geo', async (req, res) => {
     if (error === 'ok') {   // can be 'not required' also
         try {
             const student = await Student.findById(studentId).populate([
-                {
-                    path: 'user', populate: { path: 'dataCollection' }
-                },
-                {
-                    path: 'user', populate: { path: 'agreement' }
-                }
+                { path: 'user', populate: { path: 'dataCollection' } },
+                { path: 'user', populate: { path: 'agreement' } }
             ])
-
-            // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
-            const minVisitingRequirements = student.user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4
 
             for(let i=0; i<student.clocks.length; i++) {    // updates lat and lon in a clock referred as 'clockBacklink'
                 if(student.clocks[i]._id.toString() === clockBacklink) {
                     student.clocks[i].lat = lat
                     student.clocks[i].lon = lon
-                    student.TTT = tools.reCalculateTTT(student.clocks, minVisitingRequirements).TTT / (1000 * 60 *60)
                     await student.save()
                     break
                 }
@@ -665,7 +662,6 @@ admRouter.post('/qr-update-geo', async (req, res) => {
         } catch(e) {
             return res.status(400).send(`Issue occursed in UPDATE-GEO: ${e.message}`)
         }
-        
     }    
 })
 

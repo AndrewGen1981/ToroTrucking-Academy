@@ -420,6 +420,8 @@ studentRouter.delete('/skills-test/:id', ifCanWrite, async(req, res) => {
 // @GET skills-calendar
 // ?year=2022&month=2
 studentRouter.get('/skills-calendar', ifCanWrite, async(req, res) => {
+    // backlink to skills-test (setting a minTTT like it was before)
+    const minTTT = req.query.backtoTTT
     // parsing query for year and month
     const date = new Date()
     // start date year and month
@@ -463,6 +465,7 @@ studentRouter.get('/skills-calendar', ifCanWrite, async(req, res) => {
                         // skills-test data
                         testId: test._id,
                         testLocation : test.testLocation,
+                        testDateTime : test.scheduledDate,
                         testType : test.testType,
                         endorsements : test.endorsements,
                         strf : test.strf,
@@ -483,7 +486,7 @@ studentRouter.get('/skills-calendar', ifCanWrite, async(req, res) => {
             })      //  skill-tests.map
         })      // students.map
 
-        res.status(200).render(path.join(__dirname+"/skills-calendar.ejs"), { days, studentsKeys, studentsInRange, skillsTestLocations })
+        res.status(200).render(path.join(__dirname+"/skills-calendar.ejs"), { minTTT, days, studentsKeys, studentsInRange, skillsTestLocations })
     } catch(e) {
         res.status(500).send(`Server issue: ${e.message}`)
     }
