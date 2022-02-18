@@ -86,7 +86,7 @@
                 </div>
                  <div class="block-item">
                     <p class="item-title">test type</p>
-                    <% if(scoring.scoringType === 'INCAB') { %>
+                    <% if(scoring.scoringType === 'INCAB' || scoring.scoringType === 'OUTCAB') { %>
                         <p>ascending (as many points as possible), lower limit is <%= Math.round(scoring.maxPoints * scoring.limit) %> points</p>
                     <% } else { %>
                         <p>descending (as few points as possible, points are treated as a penalty), maximum <%= scoring.limit %> penatly points allowed</p>
