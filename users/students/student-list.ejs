@@ -55,7 +55,7 @@
 
                         <% if(locals.locations && locals.adminProfile) { %>
                             <% if(Object.keys(locations).length) { %>
-                                <select name="location-select" id="location-select" onchange="reloadStudentListforLocation(this.value, reloadForLocation)">
+                                <select id="locationSelect" onchange="reloadStudentListWithQuery(locationSelect, enrollmentStatusSelect, reloadWithQuery)">
                                     <% Object.values(locations).map(value => { %>
                                         <% if(value === locals.shownLocation) { %>
                                             <option value="<%= value %>" selected><%= value %></option>
@@ -64,8 +64,21 @@
                                         <% } %>
                                     <% }) %>
                                 </select>
-                                <a href="#" id="reloadForLocation" class="-hidden"></a>
+                                <a href="#" id="reloadWithQuery" class="-hidden"></a>
                             <% } %>
+                        <% } %>
+
+                        <!-- Enrollment Status -->
+                        <% if(locals.enrollmentStatuses && locals.shownEnrollmentStatus) { %>
+                            <select id="enrollmentStatusSelect" onchange="reloadStudentListWithQuery(locationSelect, enrollmentStatusSelect, reloadWithQuery)">
+                                <% enrollmentStatuses.map(enrollmentStatus => { %>
+                                    <% if(enrollmentStatus.key === shownEnrollmentStatus) { %>
+                                        <option value="<%= enrollmentStatus.key %>" selected><%= enrollmentStatus.value %></option>
+                                    <% } else { %>
+                                        <option value="<%= enrollmentStatus.key %>"><%= enrollmentStatus.value %></option>
+                                    <% } %>
+                                <% }) %>
+                            </select>
                         <% } %>
 
                     </div>
@@ -613,10 +626,10 @@
         }
 
 
-        // reloadStudentListforLocation
-        function reloadStudentListforLocation(location, a) {
-            if (!location || !a) { return }
-            a.setAttribute('href', `/admin/student/list?location=${location}`)
+        // reload Student List for Location or Enrollment status
+        function reloadStudentListWithQuery(location, enrollmentStatus, a) {
+            if (!location || !enrollmentStatus || !a) { return }
+            a.setAttribute('href', `/admin/student/list?location=${location.value}&graduate=${enrollmentStatus.value}`)
             a.click()
         }
 

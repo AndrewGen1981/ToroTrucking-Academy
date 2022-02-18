@@ -258,13 +258,17 @@ admRouter.get('/user/:id', redirectToLogin, ifCanReadOrInstructor, async(req, re
                 return res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer,
                     verTTT: TTT / (1000 * 60 *60),
                     verClocks: studentClocks,
-                    tab, open
+                    tab, open,
+                    enrollmentStatuses: tools.enrollmentStatusesArray,
                 })
                             
             }   //  type is determined AND clocks are present
         }   //  Agreement is signed AND user is a Student
         
-        res.render(path.join(__dirname+'/views/userInfo.ejs'), { user, pdfObj, signer, tab, open })
+        res.render(path.join(__dirname+'/views/userInfo.ejs'), { 
+            user, pdfObj, signer, tab, open,
+            enrollmentStatuses: tools.enrollmentStatusesArray,
+        })
 
     } catch(e) {
         res.status(500).send(`Something is happened... ${e.message}. Try later please.`)

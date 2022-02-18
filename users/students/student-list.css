@@ -549,15 +549,17 @@
 
 
 /* search-bar */
-#search-bar, #location-select {
+#search-bar,
+#locationSelect,
+#enrollmentStatusSelect {
     min-width: 150px;
     min-height: 2em;
 
-    margin-left: 20px;
-    padding: 3px 5px;
+    margin-left: 3px;
+    padding: 3px;
 
     font-family: "BrixSlab-LightItalic";
-    font-size: 0.93rem;
+    font-size: 0.87rem;
     color: #fff;
 
     max-width: 10em;
@@ -566,10 +568,16 @@
     border: 1px solid #fff;
     outline: unset;
 }
-#search-bar:focus, #location-select:focus {
+#enrollmentStatusSelect {
+    min-width: 300px;
+}
+#search-bar:focus,
+#locationSelect:focus,
+#enrollmentStatusSelect:focus {
     background-color: var(--filter-accent);
 }
-#location-select option {
+#locationSelect option,
+#enrollmentStatusSelect option {
     background-color: #424242;
 }
 .-visible > .-lastName {

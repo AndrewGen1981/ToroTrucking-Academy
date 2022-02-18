@@ -301,7 +301,14 @@ module.exports = {
         getDatePrefix,
         getDatePrefixZeroZone,
         getTodayClocksInfo,
-        reCalculateTTT
+        reCalculateTTT,
+        enrollmentStatusesArray: [
+            { key: 'no', value: 'Still enrolled in the program'},
+            { key: 'passed', value: 'Graduated from the program'},
+            { key: 'failed', value: 'Withdrew/terminated from the program'},
+            { key: 'declined', value: 'Withdrew/terminated from the program (Declined)'},
+            { key: 'military', value: 'Military leave of absence'},
+        ]
     }
 }
 

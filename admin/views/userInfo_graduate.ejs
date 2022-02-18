@@ -10,7 +10,6 @@
     <section class="row-item-95">
         <div class="field-title -noTextTransformation">Whether student graduate the programm (<%= user.agreement ? user.agreement.class || "please check student's class" : "no agreement found" %>)</div>
         <%
-            const enrollmentStatuses = [ "No info", "Still enrolled in the program", "Graduated from the program", "Withdrew/terminated from the program", "Withdrew/terminated from the program (Declined)", "Military leave of absence" ]
             const gradClass = user.student.graduate === "passed" ? "field-accomplished"
             : user.student.graduate === "failed" ? "field-warning"
             : user.student.graduate === "declined" ? "-orange"
@@ -21,8 +20,10 @@
     <section class="row-item-95">
         <div class="field-title">Enrollment status</div>
         <select id="enrollmentStatus" class="input-box">
+            <option value="No info">No info</option>
             <% enrollmentStatuses.map(enrollmentStatus => { %>
-                <option value="<%= enrollmentStatus %>" <%= enrollmentStatus === user.student.enrollmentStatus ? 'selected' : '' %> ><%= enrollmentStatus %></option>
+                <% let ifSelected = enrollmentStatus.value === user.student.enrollmentStatus ? 'selected' : '' %>
+                <option value="<%= enrollmentStatus.value %>" <%= ifSelected %> ><%= enrollmentStatus.value %></option>
             <% }) %>
         </select>
         <span class="-btn-type2" onclick="updateEnrollmentStatus()">Update Status</span>
@@ -34,7 +35,6 @@
     </section>
 
     <% if(user.student.skillsTest) { %>
-        
         <!-- divider line -->
         <%- include('../../static/partial/--divider-line.ejs') %>
         

@@ -114,7 +114,7 @@ const studentPopulated = 'key email TTT created status location'
 const userPopulated = 'token payments'
 const studentListPopulate = [
     {
-        path: 'user', select: userPopulated,
+        path: 'user', select: 'dataCollection',
         populate: { path: 'dataCollection', select: 'firstName lastName middleName street city state zip phone DOB SSN' }
     },
     {
@@ -132,7 +132,6 @@ studentRouter.get('/list', ifCanReadOrInstructor, async(req, res) => {
     const adminProfile = admin.findAdminById(req.session.userId)
     // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
     const defaulLocationFilter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
-
     // location can be passed in a query
     const requestedLocation = req.query.location
     let requestedLocationFilter = {}    // All as default
@@ -141,13 +140,20 @@ studentRouter.get('/list', ifCanReadOrInstructor, async(req, res) => {
             requestedLocationFilter = { location: requestedLocation }
         }
     }
-
     // 'shownLocation' is a parament to set locations selected property to what was realy shown
     const shownLocation = requestedLocation ? requestedLocation : adminProfile.location
-   
+    //    adding location to a filter
     const filter = requestedLocation ? requestedLocationFilter : defaulLocationFilter
+    // adding enrollment status to a filter
+    filter.graduate = req.query.graduate || 'no'
+    // DB query
     const students = await Student.find(filter).select(studentPopulated).populate(studentListPopulate)
-    res.render(path.join(__dirname+'/student-list.ejs'), { students, adminProfile, shownLocation, locations: admin.LOCATION })
+    res.render(path.join(__dirname+'/student-list.ejs'), { 
+        students, adminProfile,
+        shownLocation, locations: admin.LOCATION,
+        shownEnrollmentStatus: req.query.graduate || 'no',
+        enrollmentStatuses: tools.enrollmentStatusesArray,
+    })
 })
 
 // for showing a shorter Student List variants, for exapmle when click on admin-profile-chart-columns
@@ -509,7 +515,6 @@ function getShortName(name) {
         return `${arr[0][0]}${arr[arr.length-1][0]}`
     }
 }
-
 
 
 module.exports = studentRouter
