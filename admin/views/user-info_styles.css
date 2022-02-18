@@ -156,7 +156,7 @@ menu span, menu a {
     flex-wrap: nowrap;
 }
 .block-title {
-    min-width: 25%;
+    min-width: 20%;
     line-height: 3rem;
 
     font-family: 'WindSong', cursive;
@@ -164,28 +164,14 @@ menu span, menu a {
     text-align: center;
 
     color: gray;
+    background-color: #fbfbfb;
 
     cursor: pointer;
-}
-
-@keyframes fill-color {
-    0% {
-        opacity: 0;
-        transform: translateX(-5%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-        background-color: var(--blue80-slate);
-    }
+    transition: all 0.25s linear;
 }
 
 .block-title:hover:not(.-nav-item-active) {
     color: wheat;
-
-    animation: fill-color 0.5s linear;
-    animation-delay: 0.2s;
-
     background-color: var(--blue80-slate);
 }
 .-nav-item-active {
@@ -357,6 +343,9 @@ menu span, menu a {
 }
 .-coord {
     color: var(--good-done1);
+}
+.-noTextTransformation {
+    text-transform: none;
 }
 
 /* TUITION */
@@ -668,9 +657,7 @@ summary {
     fill: #edc800;
 }
 
-
-
-
+/* Payments + and - */
 
 .-fa-plus, .-fa-minus {
     width: 20px;
@@ -718,6 +705,22 @@ summary {
 }
 .balance-company-owe {
     background-color: #f3da6e !important;
+}
+
+
+/* Student Data Details */
+.skills-test-table {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr;
+}
+
+.divider-line {
+    margin-top: 1rem;
+    width: 100%;
+    height: 25px;
+    fill: #535b65cf;
+    transform: rotate(180deg);
 }
 
 /* 

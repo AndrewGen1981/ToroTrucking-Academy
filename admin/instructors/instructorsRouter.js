@@ -116,7 +116,7 @@ instRouter.post('/backing', ifInstructor, async (req, res) => {
     try {
         const student = await getStudentData(studentId)
         return res.render(path.join(__dirname + '/test2_view_backing.ejs'), {
-            title: 'Backing Manuvers Scoring',
+            title: 'Backing Maneuvers Scoring',
             examiner: admin.findAdminById(req.session.userId),
             test: test2_backing,
             type: 'BACKING',

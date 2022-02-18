@@ -91,8 +91,17 @@ const studentSchema = new mongoose.Schema({
     email: { type: String, lowercase: true, required: true },
     created: { type: Date, default: new Date() },
     
-    status: {type: String, default: "unblock"},
     location: {type: String, default: "UNSET"},
+    // 'status' is for show current status of the student
+    status: {type: String, default: "unblock"},         // unblock/block
+    graduate: {type: String, default: "no"},           // no/passed/failed/declined/military
+    enrollmentStatus: {type: String, default: "Still enrolled in the program"},
+    // 'enrollmentStatus' is for specifying the reason of graduating
+    // Still enrolled in the program
+    // Graduated from the program
+    // Withdrew/terminated from the program
+    // Military leave of absence
+    enrollmentStatusUpdate: { type: Date, default: new Date() },
 
     user: {
         type: mongoose.SchemaTypes.ObjectId,

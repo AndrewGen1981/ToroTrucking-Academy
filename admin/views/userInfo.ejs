@@ -108,6 +108,7 @@
                 <div class="block-title" name='block2' onclick='toggleBlock(this)'>Application</div>
                 <div class="block-title" name='block3' onclick='toggleBlock(this)'>Agreement</div>
                 <div class="block-title" name='block4' onclick='toggleBlock(this)'>Student Data</div>
+                <div class="block-title" name='block5' onclick='toggleBlock(this)'>Graduate</div>
             </div>
         </nav>
         
@@ -1697,6 +1698,15 @@
             </div>   <!-- block4 -->
         </section>  <!-- block-box -->
 
+
+        <!-- @GRADUATE  id=block5 -->
+        <section class="block-box -hidden" name='blockBox' id='block5'>
+            <h2 class="block-header">Info about graduating</h2>
+            <div class='block-box-inner'>
+                <%- include('userInfo_graduate.ejs') %>
+            </div>   <!-- block5 -->
+        </section>  <!-- block-box -->
+
     </div>  <!-- main-box -->
 
     
@@ -1952,6 +1962,9 @@
 
         // 'tab', if set, choose what tab to show
         switch ('<%= tab %>') {
+            case '5':
+                document.querySelector('[name=block5]').click()
+            break;
             case '4':
                 document.querySelector('[name=block4]').click()
             break;

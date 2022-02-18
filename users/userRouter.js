@@ -157,7 +157,7 @@ userRouter.post('/login', redirectToHome, async (req, res) => {
     if (email && password) {
         const user = await User.findOneAndUpdate({ email }, { lastSESS: new Date }) // updating last session time
         if (!user) {    //  no user with such an email
-            return res.status(400).redirect('/user/login?status=issue&e=wrongUserOrPassword')  // can not find a user
+            return res.redirect('/user/login?status=issue&e=wrongUserOrPassword')  // can not find a user
         }
         try {
             if (await bcrypt.compare(password, user.password)) {
@@ -167,9 +167,9 @@ userRouter.post('/login', redirectToHome, async (req, res) => {
                 req.session._id = user._id
                 return res.redirect('/user/home')
             }
-        } catch(e) { res.status(500).send() }
+        } catch(e) { res.status(500).end() }
     } 
-    res.status(400).redirect('/user/login?status=issue&e=wrongUserOrPassword')  // wrong password
+    res.redirect('/user/login?status=issue&e=wrongUserOrPassword')  // wrong password
 })
 
 
@@ -189,7 +189,7 @@ userRouter.post('/register', redirectToHome, body("email")
     // Finds the validation errors in this request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).render(path.join(__dirname+'/register.ejs'), {
+        return res.render(path.join(__dirname+'/register.ejs'), {
             isThereErrors: true,
             errors: errors.array()
         })
@@ -450,7 +450,7 @@ userRouter.post('/passwordreset', redirectToHome, body("email")
     // user has to provide us with personal login-email
     const errors = validationResult(req);       // is email valid and is it a login? via 'express-validator'
     if (!errors.isEmpty()) {
-        return res.status(404).render(path.join(__dirname+'/login.ejs'), {
+        return res.render(path.join(__dirname+'/login.ejs'), {
             error: false,
             info: false,
             isThereErrors: true,
