@@ -15,7 +15,7 @@
             : user.student.graduate === "declined" ? "-orange"
             : user.student.graduate === "military" ? "field-yellow" : ""
         %>
-        <div class="field-value <%= gradClass %>"><%= user.student.graduate || 'not yet' %></div>
+        <div class="field-value <%= gradClass %>"><%= user.student.graduate === 'no' ? user.student.graduate : `Yes(${user.student.graduate})` %></div>
     </section>
     <section class="row-item-95">
         <div class="field-title">Enrollment status</div>

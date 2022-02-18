@@ -723,6 +723,11 @@ summary {
     transform: rotate(180deg);
 }
 
+
+#enrollmentStatus {
+    width: fit-content;
+}
+
 /* 
 @BRIX font family
 
