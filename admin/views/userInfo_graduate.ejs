@@ -10,7 +10,7 @@
     <section class="row-item-95">
         <div class="field-title -noTextTransformation">Whether student graduate the programm (<%= user.agreement ? user.agreement.class || "please check student's class" : "no agreement found" %>)</div>
         <%
-            const enrollmentStatuses = [ "No info", "Still enrolled in the program", "Graduated from the program", "Withdrew/terminated from the program", "Military leave of absence" ]
+            const enrollmentStatuses = [ "No info", "Still enrolled in the program", "Graduated from the program", "Withdrew/terminated from the program", "Withdrew/terminated from the program (Declined)", "Military leave of absence" ]
             const gradClass = user.student.graduate === "passed" ? "field-accomplished"
             : user.student.graduate === "failed" ? "field-warning"
             : user.student.graduate === "declined" ? "-orange"
@@ -65,17 +65,20 @@
     <% } %>
 
 
-
+    <!-- scripts, avail. if Student -->
     <script defer>
         function updateEnrollmentStatus() {
             const enrollmentStatusSelect = document.querySelector("#enrollmentStatus")
             if (enrollmentStatusSelect) {
                 if (enrollmentStatusSelect.value.toUpperCase() === "NO INFO") { return alert("Choose enrollment status, please") }
                 if (enrollmentStatusSelect.value === "<%= user.student.enrollmentStatus %>") { return alert('Choose another enrollment status, please. Student is already has status "<%= user.student.enrollmentStatus %>"') }
-                console.log(enrollmentStatusSelect.value)
+
+                menuAction(enrollmentStatusSelect.value)
             }
         }
     </script>
+
+
     
 <% } else {%>
     <section class="row-item-85">

@@ -203,6 +203,10 @@ body, html {
     fill: #f38a8ad6;
     transition: all 0.25s linear;
 }
+.-occupied-spot:hover {
+    z-index: 10;
+}
 .-occupied-spot:hover .delete-btn {
     display: block;
+    z-index: 100;
 }

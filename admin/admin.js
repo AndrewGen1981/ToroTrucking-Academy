@@ -282,37 +282,66 @@ admRouter.use(express.json({
 // for user data updating (block/unblock/archive/delete)
 admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
     const { studentId, userId, action } = req.body
-    if (!action) { return res.status(400).end({issue: 'Action is not defined'}) }
-    if (!userId) { return res.status(404).end({issue: 'User is not defined'}) }
+    if (!action) { return res.status(400).json({ issue: 'Action is not defined' }) }
+    if (!userId) { return res.status(404).json({ issue: 'User is not defined' }) }
     // studentId CAN be undefined, when deleting a user
 
     if (action === "block" || action === "unblock") {
         try {
-            if (!studentId) { return res.status(400).end('Not A Student') }
+            if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
             await Student.findByIdAndUpdate(studentId, { status: action })
             return res.status(200).end()
         } catch(e) {
-            return res.status(500).end({ issue: e.message })
+            return res.status(500).json({ issue: e.message })
         }
     }
 
     // action === archive TODO: should it transfer all archived data to other collection? or just filter data when showing student list
 
-    // Changes staus to 'graduated'
-    if (action === "graduate") {
+    // Changes Graduate stauses
+    async function updateGraduateStauses(studentId, enrollmentStatus, graduate) {
+        // TOOL for statuses updating
         try {
-            if (!studentId) { return res.status(400).end('Not A Student') }
-            await Student.findByIdAndUpdate(studentId, { status: "graduated" })
-            return res.status(200).end()
-        } catch(e) {
-            return res.status(404).end({ issue: e.message })
-        }
+            await Student.findByIdAndUpdate(studentId, { graduate, enrollmentStatus, enrollmentStatusUpdate: new Date() })
+            return 200
+        } catch(e) { return e.message }
+    }
+    // working with Statuses
+    if (action === "Still enrolled in the program") {
+        if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
+        let result = await updateGraduateStauses(studentId, action, 'no')
+        if (result === 200) { return res.status(200).end() }
+        return res.status(404).json({ issue: result })
+    }
+    if (action === "Graduated from the program") {
+        if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
+        let result = await updateGraduateStauses(studentId, action, 'passed')
+        if (result === 200) { return res.status(200).end() }
+        return res.status(404).json({ issue: result })
+    }
+    if (action === "Withdrew/terminated from the program") {
+        if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
+        let result = await updateGraduateStauses(studentId, action, 'failed')
+        if (result === 200) { return res.status(200).end() }
+        return res.status(404).json({ issue: result })
+    }
+    if (action === "Withdrew/terminated from the program (Declined)") {
+        if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
+        let result = await updateGraduateStauses(studentId, action, 'declined')
+        if (result === 200) { return res.status(200).end() }
+        return res.status(404).json({ issue: result })
+    }
+    if (action === "Military leave of absence") {
+        if (!studentId) { return res.status(400).json({ issue: 'Not A Student' }) }
+        let result = await updateGraduateStauses(studentId, action, 'military')
+        if (result === 200) { return res.status(200).end() }
+        return res.status(404).json({ issue: result })
     }
 
     // Deleting a record and all related
     if (action === "delete") {
         const user = await User.findById(userId)
-        if (!user) { return res.status(404).send('User is not defined') }
+        if (!user) { return res.status(404).json({ issue: 'User is not defined' }) }
 
         try {
             // deliting student info
@@ -347,12 +376,12 @@ admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
 
             return res.status(200).end()
         } catch(e) {
-            return res.status(500).send(`Issue: ${e.message}`)
+            return res.status(500).json({ issue: e.message })
         }
     }
 
     // action was not found
-    res.status(400).end()
+    res.status(404).json({ issue: "Action is not defined" })
 })
 
 

@@ -94,12 +94,13 @@ const studentSchema = new mongoose.Schema({
     location: {type: String, default: "UNSET"},
     // 'status' is for show current status of the student
     status: {type: String, default: "unblock"},         // unblock/block
-    graduate: {type: String, default: "no"},           // no/passed/failed/declined/military
+    graduate: {type: String, default: "no", lowercase: true, required: true},           // no/passed/failed/declined/military
     enrollmentStatus: {type: String, default: "Still enrolled in the program"},
     // 'enrollmentStatus' is for specifying the reason of graduating
     // Still enrolled in the program
     // Graduated from the program
     // Withdrew/terminated from the program
+    // Withdrew/terminated from the program (Declined) - my status, to track all terminated voluntarily at the initiative of the student
     // Military leave of absence
     enrollmentStatusUpdate: { type: Date, default: new Date() },
 
