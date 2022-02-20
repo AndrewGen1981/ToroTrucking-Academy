@@ -703,4 +703,76 @@ studentRouter.get("/wbdrs", ifCanRead, async (req, res) => {
 });
 
 
+// @GET expulsion
+studentRouter.get("/expulsion", ifCanRead, async (req, res) => {
+  try {
+    const adminProfile = admin.findAdminById(req.session.userId);
+    // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
+    let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
+    filter.graduate = "no"
+
+    const students = await Student.find(filter)
+    .select('created key email TTT location clocks')
+    .populate({
+      path: "user", select: "lastSESS balance",
+      populate: { path: "dataCollection", select: "firstName lastName phone -_id" }
+    })
+
+    if (!students) { res.status(404).send("No students found") }
+ 
+    const today = new Date()
+    const date1 = new Date(Date.UTC(today.getFullYear(), today.getMonth() - 2, 1, 0, 0, 0))
+    const date2 = new Date(Date.UTC(today.getFullYear(), today.getMonth() - 1, 1, 0, 0, 0))
+    const date3 = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 0, 0, 0))
+
+    const activeStudents = []
+
+    students.map(student => {
+      let expulsionStudentInfo = {
+        userId: student.user._id,
+        // general data
+        fullName: `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName}`,
+        key: student.key,
+        location: student.location,
+        phone: student.user.dataCollection.phone,
+        email: student.email,
+        balance: student.user.balance,
+        TTT: student.TTT,
+        // general dates
+        tuitionStartDate: student.created,
+        lastVisitedDate: student.clocks.length ? student.clocks[student.clocks.length - 1].date : false,
+        lastSessionDate: student.user.lastSESS,
+        // clock's info
+        totalClocks: student.clocks.length,
+        month1Clocks: 0,
+        month2Clocks: 0,
+        month3Clocks: 0,
+        // attendFlags
+        month1attendFlag: student.created < date2,
+        month2attendFlag: student.created < date3,
+        month3attendFlag: student.created < today,
+      }
+      student.clocks.forEach(clock => {
+        if (clock.date >= date1 && clock.date < date2) {
+          expulsionStudentInfo.month1Clocks += 1
+        } else {
+          if (clock.date >= date2 && clock.date < date3) {
+            expulsionStudentInfo.month2Clocks += 1
+          } else {
+            if (clock.date >= date3 && clock.date <= today) {
+              expulsionStudentInfo.month3Clocks += 1
+            }
+          }
+        }
+      })
+      activeStudents.push(expulsionStudentInfo)
+    })
+
+    return res.status(200).render(path.join(__dirname + "/expulsion.ejs"), { activeStudents, date1, date2, date3 })
+  } catch (e) {
+    res.status(500).send(`Server issue: ${e.message}`)
+  } 
+})
+
+
 module.exports = studentRouter;
