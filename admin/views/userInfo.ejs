@@ -319,7 +319,7 @@
                     <section class="row-item-85">
                         <div class="fields-set">
                             <div class="field-title">Date of birth</div>
-                            <div class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
+                            <div class="field-value"><%= new Date(user.dataCollection.DOB).toLocaleDateString('en-US') %></div>
                         </div>
                         <div class="fields-set">
                             <label class="show-edit-btn" for='DOB' onclick='toggleEditField(this)'>edit</label>

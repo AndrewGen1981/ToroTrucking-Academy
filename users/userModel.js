@@ -132,7 +132,9 @@ const studentSchema = new mongoose.Schema({
     skillsTest: [{
         testLocation: String,
         testType: String,
+        vehicleType: String,
         endorsements: String,
+        brakes: String,
         strf: String,
         scheduledDate: { type: Date, default: new Date() }
     }],

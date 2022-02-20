@@ -304,6 +304,7 @@
             <!-- MODAL Dialogues Section -->
             <!-- blank-modal-layout is for cover all skills test working area, which is wider than 100vw -->
             <!-- modal-skills-test-report width = 100vw -->
+
             <div class="blank-modal-layout -hidden">
             <!-- <div class="blank-modal-layout"> -->
                 <section class="modal-skills-test-report">
@@ -390,14 +391,39 @@
                                 </select>
                             </span>
                             
-                            <span class="-m-vehicle-type">Combo- Tractor/Semi-Trailer</span>
-
-                            <span class="-m-endorsements">
-                                <input type="text" value="None" />
+                            <span class="-m-vehicle-type">
+                                <select>
+                                    <option value="Straight Truck" selected>Straight Truck</option>
+                                    <option value="Coach/Transit Bus">Coach/Transit Bus</option>
+                                    <option value="Combo- Tractor/Semi-Trailer">Combo- Tractor/Semi-Trailer</option>
+                                    <option value="Combo- Truck/Trailer">Combo- Truck/Trailer</option>
+                                    <option value="School Bus">School Bus</option>
+                                </select>
                             </span>
 
-                            <span class="-m-brakes">Full Air</span>
-                            <span class="-m-transmission"></span>
+                            <span class="-m-endorsements">
+                                <select>
+                                    <option value="None" selected>None</option>
+                                    <option value="Hazmat">Hazmat</option>
+                                    <option value="Passenger">Passenger</option>
+                                    <option value="School Bus">School Bus</option>
+                                </select>
+                            </span>
+
+                            <span class="-m-brakes">
+                                <select>
+                                    <option value="Full Air" selected>Full Air</option>
+                                    <option value="Partial (Z)">Partial (Z)</option>
+                                    <option value="Hydraulic (L)">Hydraulic (L)</option>
+                                </select>
+                            </span>
+
+                            <span class="-m-transmission">
+                                <select>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Manual">Manual</option>
+                                </select>
+                            </span>
                             
                             <span class="-m-strf">
                                 <select>
@@ -526,7 +552,16 @@
                             }
                         }
 
-                        clone.querySelector('.-m-transmission').textContent = pushedStudentRow.querySelector('.-transmission').textContent
+                        let transmOptions = clone.querySelectorAll('.-m-transmission option')
+                        
+                        if (transmOptions) {
+                            transmOptions.forEach(transmOption => {
+                                if (transmOption.innerText === pushedStudentRow.querySelector('.-transmission').textContent.replace(' ', '')) {
+                                    transmOption.setAttribute('selected', 'true')
+                                }
+                            })
+                        }
+                        
                         clone.querySelector('.-m-preferred-date').textContent = pushedStudentRow.querySelector('.-schedule-date-time').value.replace("T", "\n")
 
                         clone.id = `modal-skills-line-${index}`
@@ -572,7 +607,9 @@
                     studentId: addedRow.dataset.student,
                     userId: addedRow.dataset.user,
                     testType: addedRow.querySelector('.-m-test-type select').value,
-                    endorsements: addedRow.querySelector('.-m-endorsements input').value,
+                    vehicleType: addedRow.querySelector('.-m-vehicle-type select').value,
+                    endorsements: addedRow.querySelector('.-m-endorsements select').value,
+                    brakes: addedRow.querySelector('.-m-brakes select').value,
                     strf: addedRow.querySelector('.-m-strf select').value,
                     scheduledDate: new Date(addedRow.querySelector('.-m-preferred-date').textContent.replace("\n","T")+":00-08:00"),
                 }
