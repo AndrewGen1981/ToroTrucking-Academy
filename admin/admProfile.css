@@ -200,6 +200,10 @@
     min-height: var(--top-side-heihgt);
     text-transform: uppercase;
 }
+.-main-page img {
+    width: 2.5rem;
+    margin-right: 5px;
+}
 .log-out-form {
     width: 100%;
 }

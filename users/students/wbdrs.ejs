@@ -36,11 +36,11 @@
             <% const year = locals.reportYear || parseInt(new Date().getFullYear()) %>
             <menu type="toolbar">
                 <%- include("../../static/partial/--admin-menu.ejs") %>
-                <a class="-admin-menu-btn" href="/admin/student/wbdrs">
+                <a class="-admin-menu-btn" href="/admin/student/wbdrs" title="Reload report">
                     <svg viewBox="0 0 512 512"><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/></svg>
                 </a>
 
-                <a class="-admin-menu-btn" onclick="downloadCSV(this)" target="_blank">
+                <a class="-admin-menu-btn" onclick="downloadCSV(this)" target="_blank" title="Download as CSV">
                     <svg viewBox="0 0 384 512">
                         <path d="M256 0v128h128L256 0zM224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM128 280C128 284.4 124.4 288 120 288H112C103.1 288 96 295.1 96 304v32C96 344.9 103.1 352 112 352h8C124.4 352 128 355.6 128 360v16C128 380.4 124.4 384 120 384H112C85.5 384 64 362.5 64 336v-32C64 277.5 85.5 256 112 256h8C124.4 256 128 259.6 128 264V280zM172.3 384H160c-4.375 0-8-3.625-8-8v-16C152 355.6 155.6 352 160 352h12.25c6 0 10.38-3.5 10.38-6.625c0-1.25-.75-2.625-2.125-3.875l-21.88-18.75C150.3 315.5 145.4 305.3 145.4 294.6C145.4 273.4 164.4 256 187.8 256H200c4.375 0 8 3.625 8 8v16C208 284.4 204.4 288 200 288H187.8c-6 0-10.38 3.5-10.38 6.625c0 1.25 .75 2.625 2.125 3.875l21.88 18.75c8.375 7.25 13.25 17.5 13.25 28.12C214.6 366.6 195.6 384 172.3 384zM288 284.8V264C288 259.6 291.6 256 296 256h16C316.4 256 320 259.6 320 264v20.75c0 35.5-12.88 69-36.25 94.13C280.8 382.1 276.5 384 272 384s-8.75-1.875-11.75-5.125C236.9 353.8 224 320.3 224 284.8V264C224 259.6 227.6 256 232 256h16C252.4 256 256 259.6 256 264v20.75c0 20.38 5.75 40.25 16 56.88C282.3 325 288 305.1 288 284.8z"/>
                     </svg>
@@ -97,8 +97,12 @@
                 <% students.map((student, index) => { %>
                     <% if(student.user) { %>
                         <% if(student.user.agreement && student.user.dataCollection) { %>
-                            <div class="table-row">
-                                <span class="cell -index"><%= index + 1 %></span>
+                            <div class="table-row" id="table-row-<%= student._id %>">
+                                <span class="cell -index">
+                                    <%= index + 1 %>
+                                    <div class="delete-row" title="delete row from report" onclick="deleteRow('table-row-<%= student._id %>')">-</div>
+                                </span>
+
                                 <span class="cell -location"><%= student.location.split(',')[0] %></span>
                                 <span class="cell -class"><%= student.user.agreement.class %></span>
                                 <span class="cell -awardType">Certificate</span>
@@ -211,7 +215,7 @@
             
             rows.forEach(row => {
                 let cells = row.querySelectorAll('.cell')
-                cells.forEach(cell => { csv += `${cell.textContent.replace(/#/gi, "N")},` })
+                cells.forEach((cell, index) => { csv += index ? `${cell.textContent.replace(/#/gi, "N")},` : "" })
                 csv += "\n"
             })
 
@@ -219,6 +223,14 @@
             a.setAttribute("download", "WBDRS.csv")
         }
 
+
+        // Delete row
+        function deleteRow(id) {
+            if (!id) { return }
+            const row = document.querySelector(`#${id}`)
+            if (!row) { return }
+            row.remove()
+        }
 
     </script>
 
