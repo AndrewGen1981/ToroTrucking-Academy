@@ -251,46 +251,36 @@ studentRouter.get("/shortlist", ifCanReadOrInstructor, async (req, res) => {
   res.redirect("/admin/profile");
 });
 
+
 // @POST admin/student/new/id
 studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
-  // auth is good
   const userId = req.params.id; // receiving user _id from posting form
-
   try {
     const user = await User.findById(userId); // finds a user with given _id
-    if (!user) {
-      return res.status(404).send(`Cannot find user with id: ${userId}`);
-    }
+    if (!user) { return res.status(404).send(`Cannot find user with id: ${userId}`) }
 
     // Only 1 student can be assigned to 1 user, let's check maybe there is already Student with given user._id
     const existingStudent = await Student.findOne({ user: userId });
-    if (existingStudent) {
-      return res
-        .status(500)
-        .send(`This user is a student alredy, key is ${existingStudent.key}`);
-    }
+    if (existingStudent) { return res.status(500).send(`This user is a student alredy, key is ${existingStudent.key}`) }
 
     // working with Student-List cofigurations - receiving
-    const studentConfigurations = await StudentCONFIG.findOne({
-      configType: "student-list",
-    });
-    const lastStudentKey = studentConfigurations.lastStudentKey + 1;
-    await StudentCONFIG.updateOne(
-      { configType: "student-list" },
-      { lastStudentKey }
-    );
+    const studentConfigurations = await StudentCONFIG.findOne({ configType: "student-list" })
+    studentConfigurations.lastStudentKey += 1
+    const lastStudentKey = studentConfigurations.lastStudentKey
+    await studentConfigurations.save()
+
+    // defining admin and searching Students
+    const adminProfile = admin.findAdminById(req.session.userId)
 
     // creating a new Student
     const student = await new Student({
-      key: lastStudentKey,
-      email: user.email,
-      user: userId,
-    }).save();
+      key: lastStudentKey, email: user.email, user: userId,
+      location: adminProfile.location === admin.LOCATION.All ? admin.LOCATION.Unset : adminProfile.location   // assigning a location if not 'All'
+    }).save()
 
     // saving backlink in a User model on new Student
-    user.student = student._id;
+    user.student = student._id
     await user.save();
-
     // creating new Tuition record for this Student
     const tuition = await new Tuition({
       key: lastStudentKey,
@@ -306,6 +296,7 @@ studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
 
   res.status(200).redirect("/admin/user-area"); // ok, redirecting to users area
 });
+
 
 // Updates Location
 studentRouter.post("/update-location", ifCanWrite, async (req, res) => {
@@ -752,15 +743,19 @@ studentRouter.get("/expulsion", ifCanRead, async (req, res) => {
         month2attendFlag: student.created < date3,
         month3attendFlag: student.created < today,
       }
+      let dateKey = ""
       student.clocks.forEach(clock => {
-        if (clock.date >= date1 && clock.date < date2) {
+        if (clock.date >= date1 && clock.date < date2 && clock.key != dateKey) {
           expulsionStudentInfo.month1Clocks += 1
+          dateKey = clock.key     // to calculate days, but not clocks
         } else {
-          if (clock.date >= date2 && clock.date < date3) {
+          if (clock.date >= date2 && clock.date < date3 && clock.key != dateKey) {
             expulsionStudentInfo.month2Clocks += 1
+            dateKey = clock.key     // to calculate days, but not clocks
           } else {
-            if (clock.date >= date3 && clock.date <= today) {
+            if (clock.date >= date3 && clock.date <= today && clock.key != dateKey) {
               expulsionStudentInfo.month3Clocks += 1
+              dateKey = clock.key     // to calculate days, but not clocks
             }
           }
         }
