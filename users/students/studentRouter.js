@@ -42,12 +42,8 @@ function ifCanReadOrInstructor(req, res, next) {
   // check Admin's Auth - if INSTRUCTOR
   const adminId = req.session.userId;
 
-  if (admin.checkAdminsAuth(adminId, "read")) {
-    return next();
-  }
-  if (admin.checkAdminsAuth(adminId, "instructor")) {
-    return next();
-  }
+  if (admin.checkAdminsAuth(adminId, "read")) { return next() }
+  if (admin.checkAdminsAuth(adminId, "instructor")) { return next() }
 
   return res.render(
     path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"),
@@ -55,8 +51,8 @@ function ifCanReadOrInstructor(req, res, next) {
   );
 }
 
-// @Students ROUTES
 
+// @Students ROUTES
 // tool to get students for INs
 async function getStudentsForINs(date, location) {
   const studentPopulated = "key TTT clocks location";
@@ -64,10 +60,9 @@ async function getStudentsForINs(date, location) {
   const dataCollPopulated = "firstName lastName middleName";
   const scoringPopulated = "scoringsInCab scoringsOutCab scoringsBacking scoringsCity";
 
-  const filter =
-    location === admin.LOCATION.All
-      ? { status: "unblock" }
-      : { status: "unblock", location };
+  const filter = location === admin.LOCATION.All ? {} : { location };
+  filter.status = "unblock"
+  filter.graduate = "no"
 
   let students;
 
@@ -108,6 +103,7 @@ async function getStudentsForINs(date, location) {
 }
 //
 
+
 // INs route is a root one
 studentRouter.get("/", ifCanReadOrInstructor, async (req, res) => {
   const adminProfile = admin.findAdminById(req.session.userId);
@@ -145,8 +141,7 @@ const studentListPopulate = [
     select: "dataCollection",
     populate: {
       path: "dataCollection",
-      select:
-        "firstName lastName middleName street city state zip phone DOB SSN",
+      select: "firstName lastName middleName street city state zip phone DOB SSN",
     },
   },
   {
@@ -154,15 +149,13 @@ const studentListPopulate = [
     select: userPopulated,
     populate: {
       path: "agreement",
-      select:
-        "program class transmission visiting tuitionCost regisrFee supplyFee otherFee payment thirdPartyList schoolSignDate schoolSignRep updatedAdmin updatedDate",
+      select: "program class transmission visiting tuitionCost regisrFee supplyFee otherFee payment thirdPartyList schoolSignDate schoolSignRep updatedAdmin updatedDate",
     },
   },
   { path: "tuition", select: "isAllowed avLessonsRate" },
   {
     path: "scoring",
-    select:
-      "isAllowed scoringsInCab scoringsOutCab scoringsBacking scoringsCity",
+    select: "isAllowed scoringsInCab scoringsOutCab scoringsBacking scoringsCity",
   },
 ];
 
@@ -208,16 +201,17 @@ studentRouter.get("/list", ifCanReadOrInstructor, async (req, res) => {
   });
 });
 
+
 // for showing a shorter Student List variants, for exapmle when click on admin-profile-chart-columns
+// or when clicking on graduates charts column
 studentRouter.get("/shortlist", ifCanReadOrInstructor, async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const location = req.query.location;
+  const graduate = req.query.graduate;
   if (year && month && location) {
     // TOOL: leading zero
-    function leadingZero(n) {
-      return n < 10 ? `0${n}` : `${n}`;
-    }
+    function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
     // calculating period for request
     const n1 = chart.monthNames.indexOf(month) + 1;
     const n2 = (n1 + 1) % 12;
@@ -229,23 +223,37 @@ studentRouter.get("/shortlist", ifCanReadOrInstructor, async (req, res) => {
     const endDate = `${endYear}-${leadingZero(n2)}-01T00:00:00Z`;
     // defining admin and searching Students
     const adminProfile = admin.findAdminById(req.session.userId);
-    if (
+    const isLocation = 
       adminProfile.location === admin.LOCATION.All ||
       location === admin.LOCATION.Unset ||
       location === adminProfile.location
-    ) {
-      const students = await Student.find({
-        created: { $gte: startDate, $lte: endDate },
-        location,
-      })
+    if (isLocation) {
+      const filter = { location }
+      // add graduate to a filter if was passed
+      if (graduate) {
+        filter.enrollmentStatusUpdate = { $gte: startDate, $lte: endDate }
+        filter.graduate = graduate
+      } else {
+        filter.created = { $gte: startDate, $lte: endDate }
+      }
+      // get students with filter
+      const students = await Student
+        .find(filter)
         .select(studentPopulated)
         .populate(studentListPopulate);
-      return res.render(path.join(__dirname + "/student-list.ejs"), {
+      // form object to pass into engine
+      const passedLocals = {
         students,
         adminProfile,
-        shownLocation: adminProfile.location,
+        shownLocation: location,
         locations: admin.LOCATION,
-      });
+      }
+      // add graduate if needed. If NOT should be not passed to engine at all
+      if (graduate) {
+        passedLocals.shownEnrollmentStatus = graduate
+        passedLocals.enrollmentStatuses = tools.enrollmentStatusesArray
+      }
+      return res.render(path.join(__dirname + "/student-list.ejs"), passedLocals);
     }
   }
   res.redirect("/admin/profile");

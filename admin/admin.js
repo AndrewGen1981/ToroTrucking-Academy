@@ -570,7 +570,7 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
         //  getting today's date-prefix
         const diffDays = tools.getDatePrefix(new Date())
         //  clocks are allowed only to students, get student and check one
-        const student = await Student.findById(studentId).select('-tuition -scoring -skillsTest')
+        const student = await Student.findById(studentId).select('-tuition -scoring -skillsTest -__v')
         const user = await User.findById(student.user).populate('agreement').select('visiting')
 
         if (!student) { return res.status(400).send(`Issue: Cannot find a Student with id ${studentId}`) }
@@ -588,8 +588,9 @@ admRouter.get('/qr/:id', qrRedirectToLogin, ifCanRead, async (req, res) => {
             location = 'TURNED OFF'
         }
         // can be in status of: block, unblock, archive, delete
-        // only 'unblock' is good for Clocking
+        // only 'unblock' and not graduated student is good for Clocking
         if (student.status != "unblock") { return res.status(200).send(`Forbidden: Student status is ${student.status}`) }
+        if (student.graduate != "no") { return res.status(200).send(`Forbidden: Student enrollment status is ${student.enrollmentStatus}`) }
         
         // check min time after last clock - 5 min to avoid doubling
         // counting todays clocks

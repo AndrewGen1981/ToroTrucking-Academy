@@ -33,7 +33,7 @@ async function newStudentsInvolvingChart(deltaMonth) {
             year,
             newStudents: 0,
             locations,      // works like a pointer!!! if 1 element will change, each will change in entire array !!!
-            locationValues: locations.map(l => {return 0})      // cannot !!! assign some constant here, IT WILL work like a POINTER!!!
+            locationValues: locations.map(l => { return 0 })      // Creating an array with the same dimension as 'locations'. This will be values. Cannot !!! assign some constant here, IT WILL work like a POINTER!!!
         })
     }
     // filling in blank array with data
@@ -138,8 +138,74 @@ async function accountsReceivableChart() {
 }
 
 
+// biulding a dynamic chart of enrollment statuses for the period
+async function enrollmentStatusesChart(deltaMonth) {
+    // preparing Start Date, deltaMonth is a period in month
+    const date = new Date()
+    // current Year and start Year
+    const currentYear = date.getFullYear()
+    const startYear = currentYear - Math.trunc(deltaMonth / 12)
+    // current month and start Month
+    const month = date.getMonth()
+    const startMonth = month + 1 + deltaMonth % 12
+    // leading zero
+    const textStartDate = startMonth > 9 ? `${startYear}-${startMonth}-01T00:00:00+00:00` : `${startYear}-0${startMonth}-01T00:00:00+00:00`
+    const startDate = new Date(textStartDate)       // all dates are in 0-timezone in Mongo
+    // getting students due criterias 
+    const students = await Student
+        .where("enrollmentStatusUpdate").gt(startDate)
+        .where("graduate").ne("no")
+        .select("enrollmentStatusUpdate location graduate -_id")
+    // results to return
+    let analyticsArray = []
+    // initing: LOCATION to array and locationValues will be 0 array with the same length as LOCATION
+    const locations = Object.values(LOCATION)
+    // creating blank array with correct item names
+    for (let i=0; i <= deltaMonth; i++){
+        let index = (month + i) % 12     // index can be greater than monthNames length
+        let year = startYear + Math.trunc((month + i) / 12)
+        analyticsArray.push({  // correct item names
+            month: monthNames[index],
+            year,
+            graduatedStudents: 0,   // for general statistic about all locations
+            locations,      // works like a pointer!!! if 1 element will change, each will change in entire array !!!
+            locationPassed: locations.map(l => { return 0 }),      // Creating an array with the same dimension as 'locations'. This will be values. Cannot !!! assign some constant here, IT WILL work like a POINTER!!!
+            locationFailed: locations.map(l => { return 0 }),      // Creating an array of Failed
+            locationDeclined: locations.map(l => { return 0 }),      // Creating an array of Declined
+            locationMilitary: locations.map(l => { return 0 }),      // Creating an array of Military
+        })
+    }
+    // filling in blank array with data
+    students.map(student => {
+        let graduated = new Date(student.enrollmentStatusUpdate)
+        let i = (graduated.getFullYear() - startYear)*12 + graduated.getMonth() + 1 - startMonth
+        analyticsArray[i].graduatedStudents += 1
+        let loc = locations.indexOf(student.location)
+        if (loc > -1) {
+            switch (student.graduate) {
+                case "passed":
+                    analyticsArray[i].locationPassed[loc] += 1
+                break;
+                case "failed":
+                    analyticsArray[i].locationFailed[loc] += 1
+                break;
+                case "declined":
+                    analyticsArray[i].locationDeclined[loc] += 1
+                break;
+                case "military":
+                    analyticsArray[i].locationMilitary[loc] += 1
+                break;
+            }
+        }
+    })
+    return analyticsArray
+}
+
+
+
 module.exports = {
     newStudentsInvolvingChart,
     accountsReceivableChart,
+    enrollmentStatusesChart,
     monthNames
 }
