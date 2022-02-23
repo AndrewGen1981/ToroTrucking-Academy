@@ -259,48 +259,48 @@
                             let el
                             try {
                                 el = updatedRow.querySelector(`.-${key}`)
+                                if (el) {
+                                    switch (key) {
+                                        case 'TTT':
+                                            el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
+                                        break
+                                        case 'clocks':
+                                            let elIN = updatedRow.querySelector('.-in')
+                                            let elOUT = updatedRow.querySelector('.-out')
+    
+                                            let lastClock = value[value.length - 1]
+                                            let todaysClocks = value.filter(item => { return item.key === lastClock.key })
+    
+                                            if (todaysClocks.length % 2 === 0) {    //  EVEN: last is clock out
+                                                if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
+                                                    elOUT.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
+                                                } else {
+                                                    elOUT.removeAttribute("href")
+                                                }
+                                                elOUT.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
+                                                elOUT.classList.add('-not-present')
+                                            } else {
+                                                if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
+                                                    elIN.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
+                                                } else {
+                                                    elIN.removeAttribute("href")
+                                                }
+                                                elIN.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
+                                                elOUT.textContent ='...'    // if returned back
+                                                elOUT.removeAttribute("href")
+                                                elOUT.classList.remove('-not-present')
+                                            }
+    
+                                            disableAllWhoOut()
+    
+                                        break
+                                        default: el.textContent = value
+                                    }
+                                }
                             } catch(e) {
                                 console.log(e.message)
                                 console.log(key)
                                 console.log(fields)
-                            }
-                            if (el) {
-                                switch (key) {
-                                    case 'TTT':
-                                        el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
-                                    break
-                                    case 'clocks':
-                                        let elIN = updatedRow.querySelector('.-in')
-                                        let elOUT = updatedRow.querySelector('.-out')
-
-                                        let lastClock = value[value.length - 1]
-                                        let todaysClocks = value.filter(item => { return item.key === lastClock.key })
-
-                                        if (todaysClocks.length % 2 === 0) {    //  EVEN: last is clock out
-                                            if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
-                                                elOUT.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
-                                            } else {
-                                                elOUT.removeAttribute("href")
-                                            }
-                                            elOUT.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
-                                            elOUT.classList.add('-not-present')
-                                        } else {
-                                            if (!isNaN(lastClock.lat) && !isNaN(lastClock.lon)) {
-                                                elIN.href = `http://www.google.com/maps/place/${lastClock.lat},${lastClock.lon}`
-                                            } else {
-                                                elIN.removeAttribute("href")
-                                            }
-                                            elIN.textContent = new Date(lastClock.date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false })
-                                            elOUT.textContent ='...'    // if returned back
-                                            elOUT.removeAttribute("href")
-                                            elOUT.classList.remove('-not-present')
-                                        }
-
-                                        disableAllWhoOut()
-
-                                    break
-                                    default: el.textContent = value
-                                }
                             }
                         }
                     }  else {    // new one came, indicate him

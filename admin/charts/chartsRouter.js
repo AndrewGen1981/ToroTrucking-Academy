@@ -28,4 +28,15 @@ chartsRouter.get('/PF', async (req, res) => {
 })
 
 
+// @GET Instructors Activity
+chartsRouter.get('/IA', async (req, res) => {
+    const chartData = await charts.instructorsActivityChart(12)
+    if(chartData.length) {
+        res.render(path.join(__dirname+'/instructorsActivity.ejs'), { chartData })
+    } else {
+        res.status(404).send("No data found")
+    }
+})
+
+
 module.exports = chartsRouter

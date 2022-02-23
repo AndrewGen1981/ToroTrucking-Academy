@@ -33,7 +33,7 @@
         const totals = document.getElementsByName("block-total")
         const results = document.getElementsByClassName("section-result")
         const checks = document.querySelectorAll('.skill-checkbox')
-        const persOfPass = 0.9
+        const persOfPass = 0.8
                 
         // INIT - initing blocks with qty of items
         function InitQtyTotals() {
@@ -100,7 +100,7 @@
             }
 
             let perc = qtyEl.dataset.correct / qtyEl.dataset.total
-            if (perc > 0.95) {
+            if (perc > 0.8) {
                 changeView(2, ['-done1-3', '-done2-3', '-done3-3'])
             } else {
                 if (perc > 0.65) {

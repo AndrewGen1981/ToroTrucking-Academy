@@ -1,6 +1,7 @@
 // get LOCATION from CONFIG
 const { LOCATION } = require('./config')
 const { User, Student } = require('../users/userModel')
+const { InstructorScoring } = require('./instructors/scoringModel')
 
 // Constants for charts
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -202,10 +203,82 @@ async function enrollmentStatusesChart(deltaMonth) {
 }
 
 
+// biulding a dynamic chart of enrollment statuses for the period
+async function instructorsActivityChart(deltaMonth) {
+    // preparing Start Date, deltaMonth is a period in month
+    const date = new Date()
+    // current Year and start Year
+    const currentYear = date.getFullYear()
+    const startYear = currentYear - Math.trunc(deltaMonth / 12)
+    // current month and start Month
+    const month = date.getMonth()
+    const startMonth = month + 1 + deltaMonth % 12
+    // leading zero
+    const textStartDate = startMonth > 9 ? `${startYear}-${startMonth}-01T00:00:00+00:00` : `${startYear}-0${startMonth}-01T00:00:00+00:00`
+    const startDate = new Date(textStartDate)       // all dates are in 0-timezone in Mongo
+    // getting instructorScorings due criterias 
+    const instructorScorings = await InstructorScoring
+        .where("created").gt(startDate)
+        .select("created instructorId instructorName scoringType scoring_certificate -_id")
+    // results to return
+    let analyticsArray = []
+    // gather instructors
+    const _instructorIds = []
+    const _instructorNames = []
+    const _scoringTypes = []
+    instructorScorings.forEach(instructorScoring => {
+        if (!_instructorIds.includes(instructorScoring.instructorId)) {
+            _instructorIds.push(instructorScoring.instructorId)
+            _instructorNames.push(instructorScoring.instructorName)
+        }
+        if (!_scoringTypes.includes(instructorScoring.scoringType)) {
+            _scoringTypes.push(instructorScoring.scoringType)
+        }
+    })
+    // creating blank array with correct item names
+    for (let i=0; i <= deltaMonth; i++){
+        let index = (month + i) % 12     // index can be greater than monthNames length
+        let year = startYear + Math.trunc((month + i) / 12)
+        analyticsArray.push({  // correct item names
+            // period info
+            month: monthNames[index],
+            year,
+            // general info about scorings
+            scorings: 0,
+            // scorings per instructors
+            instructorIds: _instructorIds,
+            instructorNames: _instructorNames,
+            scoringsDoneByInstructors: _instructorIds.map(instId => { return 0 }),
+            // scorings per their types
+            scoringTypes: _scoringTypes,
+            scoringsDoneByType: _scoringTypes.map(scoringType => { return 0 }),
+        })
+    }
+    // filling in blank array with data
+    instructorScorings.forEach(instructorScoring => {
+        let created = new Date(instructorScoring.created)
+        let i = (created.getFullYear() - startYear)*12 + created.getMonth() + 1 - startMonth
+        // gather general info about scorings 
+        analyticsArray[i].scorings += 1
+        // gather statistic about Scorings Done By Instructors
+        let inst = _instructorIds.indexOf(instructorScoring.instructorId)
+        if (inst > -1) {
+            analyticsArray[i].scoringsDoneByInstructors[inst] += 1
+        }
+        // gather statistic about Scorings Done By Types 
+        let scoringType = _scoringTypes.indexOf(instructorScoring.scoringType)
+        if (scoringType > -1) {
+            analyticsArray[i].scoringsDoneByType[scoringType] += 1
+        }
+    })
+    return analyticsArray
+}
+
 
 module.exports = {
     newStudentsInvolvingChart,
     accountsReceivableChart,
     enrollmentStatusesChart,
+    instructorsActivityChart,
     monthNames
 }

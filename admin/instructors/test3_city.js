@@ -1,6 +1,6 @@
 const test3_city = [
     {
-        title: 'Turns LEFT',
+        title: 'Turns and Intersections',
         items: [
             {
                 item: 'Traffic Checks',
@@ -11,124 +11,36 @@ const test3_city = [
                 checks: [ '1', '1', '1', '1' ]
             },
             {
-                item: 'Decelerates, coast',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
                 item: 'Correct lane',
                 checks: [ '1', '1', '1', '1' ]
             },
             {
-                item: 'If Stop: Necessary',
+                item: 'Decelerates/coast',
                 checks: [ '1', '1', '1', '1' ]
             },
             {
-                item: 'If Stop: Smooth',
+                item: 'Smooth stop',
                 checks: [ '1', '1', '1', '1' ]
             },
             {
-                item: 'If Stop: Gap, Stop line',
+                item: 'Complete stop',
                 checks: [ '1', '1', '1', '1' ]
             },
             {
-                item: 'If Stop: Roll back',
+                item: 'Stop line',
                 checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Wheels straight',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Turning: Traffic checks',
-                checks: [ '1', '1', '1', '1' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'Turns RIGHT',
-        items: [
-            {
-                item: 'Traffic Checks',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Signal',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Decelerates, coast',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Correct lane',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Necessary',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Smooth',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Gap, Stop line',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Roll back',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'If Stop: Wheels straight',
-                checks: [ '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Turning: Traffic checks',
-                checks: [ '1', '1', '1', '1' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'Intersections',
-        items: [
-            {
-                item: 'Traffic checks',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-            {
-                item: 'Decel, coast',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-            {
-                item: 'Correct lane',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'Intersections Stops',
-        items: [
-            {
-                item: 'Smooth',
-                checks: [ 'Stoped', 'Stoped']
-            },
-            {
-                item: 'Gap, stop line',
-                checks: [ 'Stoped', 'Stoped']
             },
             {
                 item: 'Roll back',
-                checks: [ 'Stoped', 'Stoped']
+                checks: [ '1', '1', '1', '1' ]
             },
-        ]
-    },  // end of block
-    {
-        title: 'Intersections Drive Through',
-        items: [
             {
-                item: 'Traffic checks',
-                checks: [ 'Through', 'Through']
+                item: 'Wheels straight',
+                checks: [ '1', '1', '1', '1' ]
+            },
+            {
+                item: 'Outage',
+                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
             },
             {
                 item: 'Both hands',
@@ -142,31 +54,6 @@ const test3_city = [
                 item: 'Yield',
                 checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
             },
-            {
-                item: 'Lane',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-            {
-                item: 'Outage',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'Intersections Completion',
-        items: [
-            {
-                item: 'Traffic Checks',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-            {
-                item: 'Maintains lane',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
-            {
-                item: 'Accelerates',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
-            },
         ]
     },  // end of block
     {
@@ -174,10 +61,6 @@ const test3_city = [
         items: [
             {
                 item: 'Seatbelt Violation',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Accident',
                 checks: [ '1' ]
             },
             {
@@ -206,10 +89,6 @@ const test3_city = [
                 checks: [ 'STD', 'HAZ/Pass' ]
             },
             {
-                item: '4-ways on HAZ/Pass',
-                checks: [ 'HAZ/Pass' ]
-            },
-            {
                 item: 'Decelerates, coast',
                 checks: [ 'STD', 'HAZ/Pass' ]
             },
@@ -217,52 +96,29 @@ const test3_city = [
                 item: 'Right lane',
                 checks: [ 'STD', 'HAZ/Pass' ]
             },
-        ]
-    },  // end of block
-    {
-        title: 'RR Crossing STOP',
-        items: [
-            {
-                item: 'Stop 15-50 feet',
-                checks: [ 'HAZ/Pass' ]
-            },
-            {
-                item: 'Stop',
-                checks: [ 'HAZ/Pass' ]
-            },
-            {
-                item: 'Traffic & train checks',
-                checks: [ 'HAZ/Pass' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'RR Crossing CROSSING',
-        items: [
             {
                 item: 'Gears',
-                checks: [ 'STD', 'HAZ/Pass' ]
-            },
-            {
-                item: 'Traffic & train checks',
                 checks: [ 'STD', 'HAZ/Pass' ]
             },
             {
                 item: 'Outage',
                 checks: [ 'STD', 'HAZ/Pass' ]
             },
-        ]
-    },  // end of block
-    {
-        title: 'RR Crossing COMPLETION',
-        items: [
-            {
-                item: '4-ways off (HAZ/Pass)',
-                checks: [ 'HAZ/Pass' ]
-            },
             {
                 item: 'Accelerates',
                 checks: [ 'STD', 'HAZ/Pass' ]
+            },
+            {
+                item: '4-ways (HAZ/Pass)',
+                checks: [ 'HAZ/Pass' ]
+            },
+            {
+                item: 'Stop 15-50 ft (HAZ/Pass)',
+                checks: [ 'HAZ/Pass' ]
+            },
+            {
+                item: 'Stop (HAZ/Pass)',
+                checks: [ 'HAZ/Pass' ]
             },
         ]
     },  // end of block
@@ -271,23 +127,23 @@ const test3_city = [
         items: [
             {
                 item: 'Traffic checks',
-                checks: [ 'Left', 'Right', 'Left', 'Right' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Signal',
-                checks: [ 'Left', 'Right', 'Left', 'Right' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Spacing',
-                checks: [ 'Left', 'Right', 'Left', 'Right' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Smooth Change',
-                checks: [ 'Left', 'Right', 'Left', 'Right' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Cancel Signal',
-                checks: [ 'Left', 'Right', 'Left', 'Right' ]
+                checks: [ '1', '1', '1', '1' ]
             },
         ]
     },  // end of block
@@ -296,32 +152,32 @@ const test3_city = [
         items: [
             {
                 item: 'Speed/enter',
-                checks: [ 'Left', 'Right' ]
+                checks: [ '1', '1' ]
             },
             {
                 item: 'Speed/through',
-                checks: [ 'Left', 'Right' ]
+                checks: [ '1', '1' ]
             },
             {
                 item: 'Maintains lane',
-                checks: [ 'Left', 'Right' ]
+                checks: [ '1', '1' ]
             },
             {
                 item: 'Traffic checks',
-                checks: [ 'Left', 'Right' ]
+                checks: [ '1', '1' ]
             },
         ]
     },  // end of block
     {
-        title: 'Roadside Stop/Start APPROACH',
+        title: 'Roadside Stops',
         items: [
             {
                 item: 'Traffic checks',
-                checks: [ '1' ]
+                checks: [ '1', '1' ]
             },
             {
-                item: 'Signal on',
-                checks: [ '1' ]
+                item: 'Signal on/off',
+                checks: [ '1', '1' ]
             },
             {
                 item: 'Correct lane',
@@ -331,62 +187,32 @@ const test3_city = [
                 item: 'Decelerates, coast',
                 checks: [ '1' ]
             },
-        ]
-    },  // end of block
-    {
-        title: 'Roadside STOP',
-        items: [
+            {
+                item: '4-ways on/off',
+                checks: [ '1', '1' ]
+            },
+            {
+                item: 'Parking brake on/off',
+                checks: [ '1', '1' ]
+            },
             {
                 item: 'Position, curb',
                 checks: [ '1' ]
             },
             {
-                item: 'Not blocking traffic, hydrant',
+                item: 'Blocking traffic, hydrant',
                 checks: [ '1' ]
             },
             {
                 item: 'Roll back',
-                checks: [ '1' ]
+                checks: [ '1', '1' ]
             },
             {
-                item: 'Signal off, 4-way on',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Set parking brake',
-                checks: [ '1' ]
-            },
-        ]
-    },  // end of block
-    {
-        title: 'Roadside RESUME',
-        items: [
-            {
-                item: 'Traffic checks',
-                checks: [ '1' ]
-            },
-            {
-                item: '4-way off, signal on',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Release parking brake',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Roll back',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Not stall engine',
+                item: 'Engine stall',
                 checks: [ '1' ]
             },
             {
                 item: 'Accelerates',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Cancel signal',
                 checks: [ '1' ]
             },
         ]
@@ -395,62 +221,41 @@ const test3_city = [
         title: 'Freeway',
         items: [
             {
-                item: 'Merge On: Traffic checks',
-                checks: [ '1' ]
+                item: 'Traffic checks',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Merge On: Signal',
-                checks: [ '1' ]
+                item: 'Signal on/off',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Merge On: Merge',
-                checks: [ '1' ]
+                item: 'Accelerate',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Merge On: Cancel signal',
-                checks: [ '1' ]
+                item: 'Merge',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Driving: Traffic Checks',
-                checks: [ '1' ]
+                item: 'Maintains lane',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Driving: Maintains lane',
-                checks: [ '1' ]
+                item: 'Speed',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Driving: Speed',
-                checks: [ '1' ]
+                item: 'Following distance',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Driving: Following distance',
-                checks: [ '1' ]
+                item: 'Decelerate',
+                checks: [ '1', '1', '1' ]
             },
             {
-                item: 'Exit: Traffic Checks',
-                checks: [ '1' ]
+                item: 'Ramp speed',
+                checks: [ '1', '1', '1' ]
             },
-            {
-                item: 'Exit: Signal',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Exit: Merge, spacing',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Exit: Decelerates/exit lane',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Exit: Ramp speed',
-                checks: [ '1' ]
-            },
-            {
-                item: 'Exit: Cancel signal',
-                checks: [ '1' ]
-            },
-
         ]
     },  // end of block
     {

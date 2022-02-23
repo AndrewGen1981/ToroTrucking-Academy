@@ -3,16 +3,8 @@ const test2_backing = [
         title: 'Straight Line Backing',
         items: [
             {
-                item: 'Mirror Check',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Warning Devices',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
                 item: 'Pull-Ups',
-                checks: [ '0', '1', '1', '1', '1', '1' ]
+                checks: [ '0', '1', '1', '1', '1', '1', '1', '1' ]
             },
             {
                 item: 'Encroachment',
@@ -32,16 +24,8 @@ const test2_backing = [
         title: 'Offset Backing',
         items: [
             {
-                item: 'Mirror Check',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Warning Devices',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
                 item: 'Pull-Ups',
-                checks: [ '0', '0', '1', '1', '1', '1' ]
+                checks: [ '0', '0', '1', '1', '1', '1', '1', '1' ]
             },
             {
                 item: 'Encroachment',
@@ -61,16 +45,8 @@ const test2_backing = [
         title: 'Alley Dock Backing',
         items: [
             {
-                item: 'Mirror Check',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
-                item: 'Warning Devices',
-                checks: [ '1', '1', '1', '1', '1', '1' ]
-            },
-            {
                 item: 'Pull-Ups',
-                checks: [ '0', '0', '1', '1', '1', '1' ]
+                checks: [ '0', '0', '1', '1', '1', '1', '1', '1' ]
             },
             {
                 item: 'Encroachment',

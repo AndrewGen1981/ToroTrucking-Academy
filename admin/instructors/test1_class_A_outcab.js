@@ -154,11 +154,11 @@ const test1_preTrip_A_outcab = [
             },
             {
                 item: 'Fuel Tank, Cap',
-                checks: [ 'Sec Mount', 'Damage', 'Leak', 'Cap: Tight', 'Missing', 'Leak' ]
+                checks: [ 'Sec Mount', 'Damage', 'Tank Leak', 'Cap: Tight', 'Missing', 'Cap Leak' ]
             },
             {
                 item: 'DEF Tank, Cap',
-                checks: [ 'Sec Mount', 'Damage', 'Leak', 'Cap: Tight', 'Missing', 'Leak' ]
+                checks: [ 'Sec Mount', 'Damage', 'Tank Leak', 'Cap: Tight', 'Missing', 'Cap Leak' ]
             },
             {
                 item: 'Catwalk & Steps',
