@@ -14,6 +14,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: default;
 }
 
 /* HEADERS COLOR GROUPS */
@@ -171,7 +172,6 @@ a.-name {
 }
 .-TTT {
     background-color: var(--orange15-high-desert);
-    /* color: rgb(216, 108, 89); */
     text-align: center;
 }
 .-presentStatus, .-in, .-out {
@@ -208,7 +208,9 @@ a.-name {
     font-size: 2rem;
     color: var(--bad-todo)
 }
-
+.-smallMsg {
+    display: none;
+}
 
 
 /* 
@@ -230,3 +232,95 @@ font-family: "BrixSlab-Bold";
 font-family: "BrixSlab-BlackItalic";
 
 */
+
+@media (max-width: 1250px) {
+    .-key, .-TTT, .-presentStatus {
+        width: 6%;
+    }
+}
+@media (max-width: 1150px) {
+    :root {
+        font-size: 14px;
+    }
+}
+@media (max-width: 975px) {
+    :root {
+        font-size: 13px;
+    }
+    .field {
+        overflow-x: hidden;
+    }
+    .-right-color-group span {
+        display: none;
+    }
+}
+@media (max-width: 750px) {
+    :root {
+        font-size: 12px;
+        --header-height: 6rem;
+    }
+    .ins-list-header {
+        flex-direction: column;
+    }
+    .-btn {
+        width: 35px;
+        height: 25px;
+    }
+    .-clocks {
+        width: 7%;
+    }
+    .sec {
+        display: none;
+    }
+    .loc1 {
+        display: none;
+    }
+}
+@media (max-width: 650px) {
+    .-name {
+        width: 30%;
+    }
+    .-location {
+        width: 15%;
+    }
+    .-key, .-TTT, .-presentStatus {
+        width: 7%;
+    }
+    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
+        width: 5%;
+    }
+    .-bigMsg {
+        display: none;
+    }
+    .-smallMsg {
+        display: block;
+    }
+}
+@media (max-width: 600px) {
+    .-name {
+        width: 27%;
+    }
+    .-location {
+        width: 14%;
+    }
+    /* .-key, .-TTT, .-presentStatus {
+        width: 7%;
+    } */
+    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
+        width: 6%;
+    }
+}
+@media (max-width: 450px) {
+    :root {
+        font-size: 11px;
+        --header-height: 8.5rem;
+    }
+    .as-of-date {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    #clocked-as-of {
+        margin: 1px 0;
+    }
+}

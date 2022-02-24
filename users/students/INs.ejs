@@ -19,7 +19,7 @@
 </head>
 <body>
     
-    <% function printTime24(date) { return new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }) } %>
+    <% function printTime24(date) { return new Date(date).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }).split(':') } %>
 
     <% function leadingZero(digit) { return parseInt(digit) < 10 ? `0${digit}` : digit } %>
     <% function usYYYYMMDD(date) { 
@@ -75,13 +75,13 @@
                 <div class='field -TTT -header -left-color-group'>TTT</div>
 
                 <div class="field -presentStatus -header -clock-color-group">Status</div>
-                <div class="field -in -header -clock-color-group">Clock IN</div>
-                <div class="field -out -header -clock-color-group">Clock OUT</div>
+                <div class="field -clocks -in -header -clock-color-group">Clock IN</div>
+                <div class="field -clocks -out -header -clock-color-group">Clock OUT</div>
 
-                <div class="field -incab-scoring -header -right-color-group">IN-CAB Scoring</div>
-                <div class="field -outcab-scoring -header -right-color-group">OUT-CAB Scoring</div>
-                <div class="field -backing-scoring -header -right-color-group">Backing Scoring</div>
-                <div class="field -city-scoring -header -right-color-group">City Scoring</div>
+                <div class="field -incab-scoring -header -right-color-group">IN-CAB <span>Scoring</span></div>
+                <div class="field -outcab-scoring -header -right-color-group">OUT-CAB <span>Scoring</span></div>
+                <div class="field -backing-scoring -header -right-color-group">Backing <span>Scoring</span></div>
+                <div class="field -city-scoring -header -right-color-group">City <span>Scoring</span></div>
             </div>  <!-- titles -->
 
             <% if(inStudents.length > 0) { %>
@@ -92,7 +92,14 @@
                         <a href='/admin/user/<%= student.user._id %>' class='field -name'><%= name %></a>
 
                         <div class='field -key'><%= student.key %></div>
-                        <div class='field -location'><%= student.location %></div>
+
+                        <% let locationArr = student.location.split(',') %>
+                        <div class='field -location'>
+                            <% locationArr.forEach((a, index) => { %>
+                                <span class="loc<%= index %>"><%= a %></span>
+                            <% }) %>
+                        </div>
+
                         <div class='field -TTT'><%= Math.trunc(student.TTT) %>h</div>
                         
                         <% if (student.clocks.length % 2 === 0) { %>    <!-- EVEN: last is clock out -->
@@ -100,23 +107,29 @@
                             <div class='field -presentStatus'>OUT</div>
                             
                             <% let clockIN = student.clocks[student.clocks.length - 2] %>
+                            <% let clockInArr = printTime24(clockIN.date) %>
+
                             <% let clockOUT = student.clocks[student.clocks.length - 1] %>
+                            <% let clockOutArr = printTime24(clockOUT.date) %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= printTime24(clockIN.date) %>
+                                    <span class="hours"><%= clockInArr[0] %></span><span class="minutes">:<%= clockInArr[1] %></span><span class="sec">:<%= clockInArr[2] %></span>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= printTime24(clockIN.date) %></a>
+                                <a class='field -clocks -in' target="_blank">
+                                    <span class="hours"><%= clockInArr[0] %></span><span class="minutes">:<%= clockInArr[1] %></span><span class="sec">:<%= clockInArr[2] %></span>
+                                </a>
                             <% } %>
-
 
                             <% if (!isNaN(clockOUT.lat) && !isNaN(clockOUT.lon)) { %>
                                 <a class='field -clocks -out -not-present' href="http://www.google.com/maps/place/<%= clockOUT.lat %>,<%= clockOUT.lon %>" target="_blank">
-                                    <%= printTime24(clockOUT.date) %>
+                                    <span class="hours"><%= clockOutArr[0] %></span><span class="minutes">:<%= clockOutArr[1] %></span><span class="sec">:<%= clockOutArr[2] %></span>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -out -not-present' target="_blank"><%= printTime24(clockOUT.date) %></a>
+                                <a class='field -clocks -out -not-present' target="_blank">
+                                    <span class="hours"><%= clockOutArr[0] %></span><span class="minutes">:<%= clockOutArr[1] %></span><span class="sec">:<%= clockOutArr[2] %></span>
+                                </a>
                             <% } %>
 
 
@@ -125,13 +138,16 @@
                             <div class='field -presentStatus'>IN</div>
 
                             <% let clockIN = student.clocks[student.clocks.length - 1] %>
+                            <% let clockInArr = printTime24(clockIN.date) %>
 
                             <% if (!isNaN(clockIN.lat) && !isNaN(clockIN.lon)) { %>
                                 <a class='field -clocks -in' href="http://www.google.com/maps/place/<%= clockIN.lat %>,<%= clockIN.lon %>" target="_blank">
-                                    <%= printTime24(clockIN.date) %>
+                                    <span class="hours"><%= clockInArr[0] %></span><span class="minutes">:<%= clockInArr[1] %></span><span class="sec">:<%= clockInArr[2] %></span>
                                 </a>
                             <% } else { %>
-                                <a class='field -clocks -in' target="_blank"><%= printTime24(clockIN.date) %></a>
+                                <a class='field -clocks -in' target="_blank">
+                                    <span class="hours"><%= clockInArr[0] %></span><span class="minutes">:<%= clockInArr[1] %></span><span class="sec">:<%= clockInArr[2] %></span>
+                                </a>
                             <% } %>
 
                             <a class='field -clocks -out' target="_blank">...</a>
@@ -144,39 +160,72 @@
                         <% let test3Info = locals.today ? 'submit' : '' %>
                         <% let test4Info = locals.today ? 'submit' : '' %>
 
-                        <% if (student.scoring) { %>
-                            <% function getInfo(arr, NA){ return arr.length ? `${arr.length}[${usDate(arr[arr.length-1].created)}]` : NA } %>
+                        <% let test1InfoSmall = locals.today ? 'S' : '' %>
+                        <% let test2InfoSmall = locals.today ? 'S' : '' %>
+                        <% let test3InfoSmall = locals.today ? 'S' : '' %>
+                        <% let test4InfoSmall = locals.today ? 'S' : '' %>
 
+                        <% if (student.scoring) { %>
+                            <% function getInfo(arr, NA) { return arr.length ? `${arr.length}[${usDate(arr[arr.length-1].created)}]` : NA } %>
                             <% test1Info = getInfo(student.scoring.scoringsInCab, test1Info) %>
                             <% test2Info = getInfo(student.scoring.scoringsOutCab, test2Info) %>
                             <% test3Info = getInfo(student.scoring.scoringsBacking, test3Info) %>
                             <% test4Info = getInfo(student.scoring.scoringsCity, test4Info) %>
+                            
+                            <% function getInfoSmall(arr, NA) { return arr.length ? arr.length : NA } %>
+                            <% test1InfoSmall = getInfoSmall(student.scoring.scoringsInCab, test1Info) %>
+                            <% test2InfoSmall = getInfoSmall(student.scoring.scoringsOutCab, test2Info) %>
+                            <% test3InfoSmall = getInfoSmall(student.scoring.scoringsBacking, test3Info) %>
+                            <% test4InfoSmall = getInfoSmall(student.scoring.scoringsCity, test4Info) %>
                         <% } %>
 
                         <% if (locals.today) { %>
                             <form method='POST' action="/admin/inst/incab" class='field -incab-scoring'>
                                 <input type="hidden" name="studentId" value="<%= student._id %>" />
-                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test1Info %></button>
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>' title="<%= test1Info %>">
+                                    <span class="-bigMsg"><%= test1Info %></span>
+                                    <span class="-smallMsg"><%= test1InfoSmall %></span>
+                                </button>
                             </form>
                             <form method='POST' action="/admin/inst/outcab" class='field -outcab-scoring'>
                                 <input type="hidden" name="studentId" value="<%= student._id %>" />
-                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test2Info %></button>
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>' title="<%= test2Info %>">
+                                    <span class="-bigMsg"><%= test2Info %></span>
+                                    <span class="-smallMsg"><%= test2InfoSmall %></span>
+                                </button>
                             </form>
                             <form method='POST' action="/admin/inst/backing" class='field -backing-scoring'>
                                 <input type="hidden" name="studentId" value="<%= student._id %>" />
-                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test3Info %></button>
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>' title="<%= test3Info %>">
+                                    <span class="-bigMsg"><%= test3Info %></span>
+                                    <span class="-smallMsg"><%= test3InfoSmall %></span>
+                                </button>
                             </form>
                             <form method='POST' action="/admin/inst/city" class='field -city-scoring'>
                                 <input type="hidden" name="studentId" value="<%= student._id %>" />
-                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>'><%= test4Info %></button>
+                                <button class='-btn-scoring' type="submit" data-test='student-row-<%= index %>' title="<%= test4Info %>">
+                                    <span class="-bigMsg"><%= test4Info %></span>
+                                    <span class="-smallMsg"><%= test4InfoSmall %></span>
+                                </button>
                             </form>
                         <% } else { %>
-                            <div class='field -incab-scoring'><%= test1Info %></div>
-                            <div class='field -incab-scoring'><%= test2Info %></div>
-                            <div class='field -incab-scoring'><%= test3Info %></div>
-                            <div class='field -incab-scoring'><%= test4Info %></div>
+                            <div class='field -incab-scoring' title="<%= test1Info %>">
+                                <span class="-bigMsg"><%= test1Info %></span>
+                                <span class="-smallMsg"><%= test1InfoSmall %></span>
+                            </div>
+                            <div class='field -outcab-scoring' title="<%= test2Info %>">
+                                <span class="-bigMsg"><%= test2Info %></span>
+                                <span class="-smallMsg"><%= test2InfoSmall %></span>
+                            </div>
+                            <div class='field -backing-scoring' title="<%= test3Info %>">
+                                <span class="-bigMsg"><%= test3Info %></span>
+                                <span class="-smallMsg"><%= test3InfoSmall %></span>
+                            </div>
+                            <div class='field -city-scoring' title="<%= test4Info %>">
+                                <span class="-bigMsg"><%= test4Info %></span>
+                                <span class="-smallMsg"><%= test4InfoSmall %></span>
+                            </div>
                         <% } %>
-
                     </div>  <!-- student-list-row -->
                 <% }) %>
 
