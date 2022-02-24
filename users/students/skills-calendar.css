@@ -194,19 +194,58 @@ body, html {
 .-occupied-spot-to-delete {
     --c: red !important;
 }
-.delete-btn {
-    position: absolute;
-    top: -0.75em; right: -0.8em;
-    width: 13px;
-    height: 13px;
+.-occupied-spot-to-updateStatus {
+    --c: yellow !important;
+}
+
+.tool-bar {
+    padding: 1px 2px;
     display: none;
-    fill: #f38a8ad6;
+    /* display: inline-flex; */
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    top: -1.1em; right: -0.8em;
+    
+    color: #fff;
+    background-color: #333333bf;
+    border-radius: 2px;
+
     transition: all 0.25s linear;
 }
+
 .-occupied-spot:hover {
     z-index: 10;
 }
-.-occupied-spot:hover .delete-btn {
-    display: block;
+.-occupied-spot:hover .tool-bar {
+    display: inline-flex;
     z-index: 100;
+}
+
+.-tool-btn {
+    margin: 1px 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+
+    width: 13px;
+    height: 13px;
+
+    transition: all 0.2s linear;
+}
+.-tool-btn:hover {
+    transform: translateY(-1px);
+}
+
+.delete-btn {
+    fill: #f38a8ad6;
+}
+.graduate-btn {
+    color: greenyellow;
+    border: 1px solid greenyellow;
+}
+.withdraw-btn {
+    color: #fbdbcf;
+    border: 1px solid #fbdbcf;
 }

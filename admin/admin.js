@@ -287,8 +287,6 @@ admRouter.use(express.json({
 admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
     const { studentId, userId, action } = req.body
     if (!action) { return res.status(400).json({ issue: 'Action is not defined' }) }
-    if (!userId) { return res.status(404).json({ issue: 'User is not defined' }) }
-    // studentId CAN be undefined, when deleting a user
 
     if (action === "block" || action === "unblock") {
         try {
@@ -344,6 +342,7 @@ admRouter.put('/user', redirectToLogin, ifCanWrite, async(req, res) => {
 
     // Deleting a record and all related
     if (action === "delete") {
+        if (!userId) { return res.status(404).json({ issue: 'User is not defined' }) }
         const user = await User.findById(userId)
         if (!user) { return res.status(404).json({ issue: 'User is not defined' }) }
 

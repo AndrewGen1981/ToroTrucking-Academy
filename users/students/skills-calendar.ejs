@@ -112,20 +112,28 @@
                                             <% if(!spot) { %>
                                                 <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>">
                                                     <span></span>
-                                                    <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
-                                                        <svg viewBox="0 0 512 512">
-                                                            <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
-                                                        </svg>
+                                                    <div class="tool-bar">
+                                                        <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                            <svg viewBox="0 0 512 512">
+                                                                <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                            </svg>
+                                                        </div>
+                                                        <div class="-tool-btn graduate-btn" title="make Graduated" data-student="<%= stdt.studentId %>" onclick="graduateStudent(this)">G</div>
+                                                        <div class="-tool-btn withdraw-btn" title="make Withdrew" data-student="<%= stdt.studentId %>" onclick="withdrawStudent(this)">W</div>
                                                     </div>
                                                 </span>
                                             <% } else { %>
                                                 <% if(stdt.testType === 'Initial') { %>
                                                     <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>" style="--c:<%= spot.initialColor %>">
                                                         <span>I</span>
-                                                        <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
-                                                            <svg viewBox="0 0 512 512">
-                                                                <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
-                                                            </svg>
+                                                        <div class="tool-bar">
+                                                            <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                                <svg viewBox="0 0 512 512">
+                                                                    <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                                </svg>
+                                                            </div>
+                                                            <div class="-tool-btn graduate-btn" title="make Graduated" data-student="<%= stdt.studentId %>" onclick="graduateStudent(this)">G</div>
+                                                            <div class="-tool-btn withdraw-btn" title="make Withdrew" data-student="<%= stdt.studentId %>" onclick="withdrawStudent(this)">W</div>
                                                         </div>
                                                     </span>
                                                 <% } else { %>
@@ -136,10 +144,14 @@
                                                             : "Rd"
                                                         %>
                                                         <span><%= retest %></span>
-                                                        <div class="delete-btn" title="delete" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
-                                                            <svg viewBox="0 0 512 512">
-                                                                <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
-                                                            </svg>
+                                                        <div class="tool-bar">
+                                                            <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
+                                                                <svg viewBox="0 0 512 512">
+                                                                    <path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/>
+                                                                </svg>
+                                                            </div>
+                                                            <div class="-tool-btn graduate-btn" title="make Graduated" data-student="<%= stdt.studentId %>" onclick="graduateStudent(this)">G</div>
+                                                            <div class="-tool-btn withdraw-btn" title="make Withdrew" data-student="<%= stdt.studentId %>" onclick="withdrawStudent(this)">W</div>
                                                         </div>
                                                     </span>
                                                 <% } %>
@@ -192,7 +204,7 @@
         // deletes a specific skills-test
         function deleteTest(deleteBtn) {
             if (!deleteBtn) { return }
-            const spot = deleteBtn.parentElement
+            const spot = deleteBtn.parentElement.parentElement
             if (!spot) { return }
             spot.classList.toggle('-occupied-spot-to-delete')
             setTimeout(async() => {
@@ -207,8 +219,6 @@
                     })
                     if (response.status === 200) {
                         spot.remove()
-                        // let shortName = document.querySelector(`[data-studentid="${deleteBtn.dataset.student}"]`)
-                        // console.log(shortName)
                     } else {
                         alert(`Issue, server responded: ${response.statusText}`)
                         spot.classList.toggle('-occupied-spot-to-delete')
@@ -216,6 +226,50 @@
                 }
             }, 500)
         }
+
+
+
+        // TOOL: update enrollment status
+        function updateStudentStatus(btnElement, action) {
+            if (!btnElement) { return }
+            const spot = btnElement.parentElement.parentElement
+            if (!spot) { return }
+            spot.classList.toggle('-occupied-spot-to-updateStatus')
+            setTimeout(async() => {
+                if (!confirm(`Would you like to update status to "${action}"?`)) {
+                    spot.classList.toggle('-occupied-spot-to-updateStatus')
+                    return
+                } else {
+                    const response = await fetch('/admin/user', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            studentId: btnElement.dataset.student,
+                            action
+                        })
+                    })
+                    if (response.status === 200) {
+                        alert(`Enrollment updated to "${action}"`)
+                    } else {
+                        alert(`Issue, server responded: ${response.statusText}`)
+                    }
+                    spot.classList.toggle('-occupied-spot-to-updateStatus')
+                }
+            }, 500)
+        }
+
+
+        // graduateStudent(graduateBtn)
+        function graduateStudent(graduateBtn) {
+            updateStudentStatus(graduateBtn, "Graduated from the program")
+        }
+
+
+        // withdrawStudent(withdrawBtn)
+        function withdrawStudent(withdrawBtn) {
+            updateStudentStatus(withdrawBtn, "Withdrew/terminated from the program")
+        }
+
 
     </script>
 </body>

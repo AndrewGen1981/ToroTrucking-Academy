@@ -97,7 +97,7 @@
                     <div class='field -key -header -left-color-group -fixed3'>Key</div>
                     <div class='field -location -header -left-color-group'>Location</div>
                     <div class='field -qr -header -left-color-group'>Need QR?</div>
-                    <div class='field -TTT -header -left-color-group -fixed4'>TTT</div>
+                    <div class='field -TTT -header -left-color-group -fixed4'>TTT<br>(hours)</div>
 
                     <div class='field -balance -header -left-color-group -fixed5'>Balance</div>
 
@@ -171,7 +171,7 @@
                                 </label>
                             <!-- form elements to be passed to QRs bulk print -->
                             
-                            <div class='field -TTT -fixed4'><%= Math.trunc(student.TTT) %>h:<%= Math.round(60*(student.TTT % 1)) %>m</div>
+                            <div class='field -TTT -fixed4'><%= Math.round(student.TTT) %></div>
     
                             <!-- calculating total cost -->
                             <% let tuitionCost = parseFloat(student.user.agreement.tuitionCost) %>
@@ -444,7 +444,7 @@
                             if (el) {
                                 switch (key) {
                                     case 'TTT':
-                                        el.textContent = `${Math.trunc(value)}h:${Math.round(60*(value % 1))}m`
+                                        el.textContent = `${ Math.round(value) }'`
                                     break
                                     case 'created':
                                         el.textContent = value ? new Date(value).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-'

@@ -40,19 +40,19 @@ const test3_city = [
             },
             {
                 item: 'Outage',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Both hands',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
+                ecks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Gears',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
+                ecks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Yield',
-                checks: [ 'Stoped', 'Stoped', 'Through', 'Through' ]
+                ecks: [ '1', '1', '1', '1' ]
             },
         ]
     },  // end of block
@@ -86,27 +86,27 @@ const test3_city = [
         items: [
             {
                 item: 'Traffic & train checks',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: 'Decelerates, coast',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: 'Right lane',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: 'Gears',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: 'Outage',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: 'Accelerates',
-                checks: [ 'STD', 'HAZ/Pass' ]
+                checks: [ 'HAZ/Pass' ]
             },
             {
                 item: '4-ways (HAZ/Pass)',
