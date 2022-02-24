@@ -14,7 +14,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: default;
 }
 
 /* HEADERS COLOR GROUPS */
@@ -148,13 +147,14 @@ nav {
     font-size: 0.9rem !important;
     text-align: center !important;
     text-transform: capitalize !important;
+    cursor: default;
 }
 
 .field {
     width: 10%;
     padding: 0.2rem;
     font-family: "BrixSlab-Regular";
-    border-right: 1px solid var(--borders-color);
+    border-right: 1px solid var(--borders-color);    
 }
 
 .-name {
@@ -169,14 +169,23 @@ a.-name {
 
 .-key {
     text-align: center;
+    cursor: default;
 }
 .-TTT {
     background-color: var(--orange15-high-desert);
     text-align: center;
+    cursor: default;
+}
+.-location {
+    cursor: default;
 }
 .-presentStatus, .-in, .-out {
     text-align: center;
 }
+.-presentStatus {
+    cursor: default;
+}
+
 .-not-present {
     background-color: #999999 !important;
 }
@@ -188,6 +197,7 @@ a.-name {
 .-incab-scoring, .-outcab-scoring,
 .-backing-scoring, .-city-scoring {
     text-align: center;
+    cursor: default;
 }
 .-incab-scoring button, .-outcab-scoring button,
 .-backing-scoring button, .-city-scoring button {
@@ -303,9 +313,6 @@ font-family: "BrixSlab-BlackItalic";
     .-location {
         width: 14%;
     }
-    /* .-key, .-TTT, .-presentStatus {
-        width: 7%;
-    } */
     .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
         width: 6%;
     }
