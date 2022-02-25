@@ -51,7 +51,7 @@ const PROFILES = [
     
     // KENT managers & instructors:
     { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
-    { id: "Sylling0001", name: "Jalyn Sylling", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
+    { id: "Sylling0001", name: "Jalyn Sylling", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SYLLING0001_PASS, auth: AUTH.editor },
     // + Robert Littleton manager/instructor
     { id: "Littleton0001", name: "Robert Littleton", title:'Manager', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.editor },
     { id: "LittletonInst0001", name: "Robert Littleton", title:'Instructor', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.instructor },    
@@ -61,6 +61,8 @@ const PROFILES = [
     { id: "PerryInst0001", name: "Trever Perry", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.PERRY0001_PASS, auth: AUTH.instructor },
     // + Omar Hussein instructor
     { id: "HusseinInst0001", name: "Omar Hussein", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.HUSSEIN0001_PASS, auth: AUTH.instructor },
+    // + Ivan Garcia instructor
+    { id: "GarciaInst0001", name: "Ivan Garcia", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.GARCIA0001_PASS, auth: AUTH.instructor },
 
 
     // Troutdale Office managers & instructors:

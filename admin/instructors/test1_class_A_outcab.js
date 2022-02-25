@@ -1,21 +1,4 @@
-const test1_preTrip_A_outcab = [    
-    {
-        title: 'Tractor & Trailer Brake Checks',
-        items: [
-            {
-                item: 'Tractor Brake',
-                checks: [ 'Release Trailer Brake', 'Tractor BR Off', 'Truck no Move', 'Brake On' ]
-            },
-            {
-                item: 'Trailer Brake',
-                checks: [ 'Release Tractor Brake', 'Trailer BR Off', 'Truck no Move', 'Brake On' ]
-            },
-            {
-                item: 'Service Brake',
-                checks: [ 'Release Both', 'Move 5-10 Ft', 'Working, No R/L', 'Brakes On' ]
-            },
-        ]
-    },  // end of block
+const test1_preTrip_A_outcab = [
     {
         title: 'Front of Vehicle, Lights and Reflectors',
         items: [

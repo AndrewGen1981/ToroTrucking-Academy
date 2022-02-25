@@ -924,7 +924,7 @@ admRouter.post('/schedule/:id', redirectToLogin, ifCanWrite, async(req, res) => 
                 if (student.schedule) {
                     // check if scheduled appointment exist, if not - add
                 } else {
-                    await new Schedule({
+                    let schedule = await new Schedule({
                         student: student._id,
                         appointments: [{
                             date: spotData,
@@ -933,6 +933,8 @@ admRouter.post('/schedule/:id', redirectToLogin, ifCanWrite, async(req, res) => 
                             location: student.location,
                         }]
                     }).save()
+                    student.schedule = schedule._id
+                    await student.save()
                 }
 
                 return res.end()
