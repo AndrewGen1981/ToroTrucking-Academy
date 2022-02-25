@@ -138,8 +138,29 @@ const studentSchema = new mongoose.Schema({
         strf: String,
         scheduledDate: { type: Date, default: new Date() }
     }],
+    schedule: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Schedule'
+    },
 }, {
     collection: "Student List"
+})
+
+
+// scheduleSchema for handling schedule
+const scheduleSchema = new mongoose.Schema({
+    student: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Student'
+    },
+    appointments: [{
+        date: Date,
+        type: String,
+        transmission: String,
+        location: String,
+    }]
+}, {
+    collection: "Schedule"
 })
 
 
@@ -299,6 +320,7 @@ module.exports = {
     User: mongoose.model('userSchema', userSchema),
     Student: mongoose.model('Student', studentSchema),
     StudentCONFIG: mongoose.model('StudentCONFIG', configSchema),
+    Schedule: mongoose.model('Schedule', scheduleSchema),
     tools: {
         getDatePrefix,
         getDatePrefixZeroZone,

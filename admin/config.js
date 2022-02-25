@@ -50,7 +50,8 @@ const PROFILES = [
 
     
     // KENT managers & instructors:
-    { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },    
+    { id: "Salazar0001", name: "Michelle Salazar", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
+    { id: "Sylling0001", name: "Jalyn Sylling", title:'Manager', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
     // + Robert Littleton manager/instructor
     { id: "Littleton0001", name: "Robert Littleton", title:'Manager', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.editor },
     { id: "LittletonInst0001", name: "Robert Littleton", title:'Instructor', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.instructor },    

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | User Area</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="/static/css/colors.css">
+
+    <link rel="stylesheet" href="/admin/views/schedule.css">
+
+</head>
+<body>
+
+    <% if (locals.startDate && locals.spotsArray && students) { %>
+
+        <%
+            const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+            function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
+
+            const year = startDate.getFullYear()
+            const month = startDate.getMonth()
+            const monday = startDate.getDate()
+        %>
+
+        <div class="schedule-box">
+
+            <input type="date" onchange="reloadDueToInput(this, reloadHref)" value="<%= year %>-<%= leadingZero(month + 1) %>-<%= leadingZero(monday) %>" />
+            <a href="#" id="reloadHref"></a>
+
+            <form class="calendar-box" action="/admin/schedule/backing1" method="POST" id="backing1">
+                <h2 class="calendar-title">Calendar</h2>
+                <input type="text" name="transmission" value="AUTO" readonly />
+                <div class="calendar">
+                    <!-- left column -->
+                    <div class="calendar-column">
+                        <div class="day-of-week">
+                            <span class="day-title">Day</span>
+                            <span class="day-date">Timestamp</span>
+                        </div>
+                        <div class="spot -header">
+                            <% spotsArray.forEach((spot, index) => { %>
+                                <div class="time-spot -left-header"><%= spot %></div>
+                            <% }) %>
+                        </div>
+                    </div>      <!-- calendar-column -->
+
+                    <!-- rest columns -->
+                    <% for(let i=0; i < 2; i++) { %>
+                        <% daysOfWeek.forEach((day, dayIndex) => { %>
+                            <% 
+                                let date = new Date(Date.UTC(year, month, monday + dayIndex + i*7, 0, 0, 0))
+                                let y = date.getFullYear()
+                                let m = monthNames[date.getMonth()]
+                                let d = leadingZero(date.getDate())
+
+                                let dateKey = `${y}-${leadingZero(date.getMonth())}-${d}`
+                            %>
+                            <div class="calendar-column">
+                                <div class="day-of-week">
+                                    <span class="day-title"><%= day %></span>
+                                    <span class="day-date"><%= `${m}.${d}.${y}` %></span>
+                                </div>
+                                <% spotsArray.forEach(spot => { %>
+                                    <select class="spot -spot-data" name="spot">
+                                        <option class="time-spot" value="empty">empty</option>
+                                        <% students.forEach(student => { %>
+                                            <% 
+                                                let stdNameKey = ''
+                                                if (student.user) {
+                                                    if(student.user.dataCollection) {
+                                                        stdNameKey = `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`
+                                                    }
+                                                }
+                                            %>
+                                            <option class="time-spot" value="<%= student._id %>@<%= dateKey %>@<%= spot %>"><%= stdNameKey %></option>
+                                        <% }) %>
+                                    </select>
+                                <% }) %>
+                            </div>      <!-- calendar-column -->
+                        <% }) %>
+                    <% } %>
+                </div>    <!-- calendar -->
+                <textarea class="formTextArray" name="formTextArray"></textarea>
+                <div class="-submit" onclick="submitForm(backing1)">Submit</div>
+            </form>      <!-- calendar-box -->
+        </div>      <!-- schedule-box -->
+
+    <% } else { %>
+        <h2 class="error-message">No core data passed...</h2>
+    <% } %>
+
+
+    <script>
+
+        function reloadDueToInput(dateInput, ref) {
+            if (!dateInput || !ref) { return }
+            ref.setAttribute('href', `/admin/schedule?date=${dateInput.value}`)
+            ref.click()
+        }
+
+
+        function submitForm(schForm) {
+            if (!schForm) { return }
+            const spots = schForm.querySelectorAll(".-spot-data")
+            const formTextArray = schForm.querySelector(".formTextArray")
+
+            if (!spots || !formTextArray) { return }
+            spots.forEach(spot => {
+                if (spot.value != "empty") {
+                    formTextArray.value += `${spot.value},`
+                }
+            })
+            schForm.submit()
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+/* @GENERAL */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.schedule-box {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.-hidden {
+    display: none;
+}
+
+.calendar-box {
+    width: 100%;
+}
+.two-weeks-box {
+    width: 100%;
+    display: inline-flex;
+}
+
+
+.calendar {
+    width: 50%;
+    display: flex;
+}
+.calendar-column {
+    margin-right: 1px;
+    width: 12%;
+    display: flex;
+    flex-direction: column;
+}
+.day-of-week {
+    display: flex;
+    flex-direction: column;
+}
+
+.day-date {
+    font-size: 0.8rem;
+}
+
+.-left-header {
+    border-bottom: 1px solid gray;
+}

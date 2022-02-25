@@ -7,7 +7,7 @@ const { Mongoose } = require('mongoose')
 const admin = require('./config')
 
 // MODELS for mongoose
-const { User, Student, tools } = require('../users/userModel')
+const { User, Student, Schedule, tools } = require('../users/userModel')
 const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
@@ -872,6 +872,76 @@ function calculateBalance(user, payments) {
     }
     return balance
 }
+
+
+// @GET /schedule
+// schedule, query ?date="2022-02-24"
+admRouter.get('/schedule', redirectToLogin, ifCanWrite, async(req, res) => {
+    const date = req.query.date ? new Date(req.query.date) : new Date()
+    const startDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1, 0, 0, 0))
+    const spotsArray = ['8:00', '8:45', '9:30', '10:15', '11:00', '12:30', '13:15', '14:00', '14:45', '15:30', '16:15']
+    const daysOfWeek = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']
+
+    // get admin
+    const adminProfile = admin.findAdminById(req.session.userId)
+    const filter = adminProfile.location === admin.LOCATION.All ? {} : { location: adminProfile.location }
+    filter.graduate = "no"
+        
+    const students = await Student.find(filter).select('key').populate([
+        { 
+            path: "user",
+            select: "dataCollection",
+            populate: {
+                path: "dataCollection",
+                select: "firstName lastName",
+            },
+        },
+        { path: 'schedule' }
+    ])
+    
+    res.render(path.join(__dirname+'/views/schedule.ejs'), { students, startDate, spotsArray, daysOfWeek })
+})
+
+
+// @POST /schedule
+admRouter.post('/schedule/:id', redirectToLogin, ifCanWrite, async(req, res) => {
+    const scheduleId = req.params.id
+    const { formTextArray, transmission } = req.body
+    if (scheduleId && formTextArray) {
+        const items = formTextArray.split(',')
+        items.forEach(async(item) => {
+            if (item) {
+                let data = item.split('@')
+                let studentId = data[0]
+                let dateStr = data[1]
+                let timeStr = data[2].split(":")
+                let h = parseInt(timeStr[0]) < 10 ? `0${parseInt(timeStr[0])}` : timeStr[0]
+                let m = parseInt(timeStr[1]) < 10 ? `0${parseInt(timeStr[1])}` : timeStr[1]
+    
+                let spotData = new Date(`${dateStr}T${h}:${m}Z`)
+
+                let student = await Student.findById(studentId).populate("schedule")
+                if (student.schedule) {
+                    // check if scheduled appointment exist, if not - add
+                } else {
+                    await new Schedule({
+                        student: student._id,
+                        appointments: [{
+                            date: spotData,
+                            type: scheduleId,
+                            transmission,
+                            location: student.location,
+                        }]
+                    }).save()
+                }
+
+                return res.end()
+            }
+        })
+    } else {
+        return res.send('Schedule type or data was not defined')
+    }
+})
 
 
 
