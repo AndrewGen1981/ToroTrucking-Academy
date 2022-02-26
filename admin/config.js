@@ -47,6 +47,8 @@ const PROFILES = [
     { id: "MudgettInst0001", name: "Jeffrey Mudgett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MUDGETT0001_PASS, auth: AUTH.instructor },
     // + Uladzimar Martynau ( Instructor )
     { id: "MartynauInst0001", name: "Uladzimar Martynau", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARTYNAU0001_PASS, auth: AUTH.instructor },
+    // + Corey Sanford ( Instructor )
+    { id: "SanfordInst0001", name: "Corey Sanford", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SANFORD0001_PASS, auth: AUTH.instructor },
 
     
     // KENT managers & instructors:

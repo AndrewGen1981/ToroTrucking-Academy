@@ -26,6 +26,29 @@
 
             function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
 
+            function checkIfBusy(spotDate) {
+                let result = false
+                if (scheduledAppointments.length) {
+                    scheduledAppointments = scheduledAppointments.filter(appointment => {
+                        if (appointment.appDate == `${spotDate}`) {
+                            result = appointment.studentNameKey
+                        } else {
+                            return appointment
+                        }
+                    })
+                }
+                return result
+            }
+
+            function getOptionTitle(student) {
+                if (student.user) {
+                    if(student.user.dataCollection) {
+                        return `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`
+                    }
+                }
+                return
+            }
+
             const year = startDate.getFullYear()
             const month = startDate.getMonth()
             const monday = startDate.getDate()
@@ -38,31 +61,34 @@
 
             <form class="calendar-box" action="/admin/schedule/backing1" method="POST" id="backing1">
                 <h2 class="calendar-title">Calendar</h2>
-                <input type="text" name="transmission" value="AUTO" readonly />
-                <div class="calendar">
-                    <!-- left column -->
-                    <div class="calendar-column">
-                        <div class="day-of-week">
-                            <span class="day-title">Day</span>
-                            <span class="day-date">Timestamp</span>
-                        </div>
-                        <div class="spot -header">
-                            <% spotsArray.forEach((spot, index) => { %>
-                                <div class="time-spot -left-header"><%= spot %></div>
-                            <% }) %>
-                        </div>
-                    </div>      <!-- calendar-column -->
+                
+                <input type="text" name="calTransmission" value="AUTO" readonly />
+                <input type="text" name="calLocation" value="Tacoma, WA" readonly />
 
-                    <!-- rest columns -->
-                    <% for(let i=0; i < 2; i++) { %>
+                <section class="two-weeks-box">
+                    <div class="calendar">
+                        <!-- left column -->
+                        <div class="calendar-column -week-one">
+                            <div class="day-of-week">
+                                <span class="day-title">Day</span>
+                                <span class="day-date">Timestamp</span>
+                            </div>
+                            <div class="spot -header">
+                                <% spotsArray.forEach((spot, index) => { %>
+                                    <div class="time-spot -left-header"><%= spot %></div>
+                                <% }) %>
+                            </div>
+                        </div>      <!-- calendar-column -->
+    
+                        <!-- rest columns -->
                         <% daysOfWeek.forEach((day, dayIndex) => { %>
                             <% 
-                                let date = new Date(Date.UTC(year, month, monday + dayIndex + i*7, 0, 0, 0))
+                                let date = new Date(Date.UTC(year, month, monday + dayIndex, 0, 0, 0))
                                 let y = date.getFullYear()
                                 let m = monthNames[date.getMonth()]
                                 let d = leadingZero(date.getDate())
-
-                                let dateKey = `${y}-${leadingZero(date.getMonth())}-${d}`
+    
+                                let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
                             %>
                             <div class="calendar-column">
                                 <div class="day-of-week">
@@ -70,27 +96,92 @@
                                     <span class="day-date"><%= `${m}.${d}.${y}` %></span>
                                 </div>
                                 <% spotsArray.forEach(spot => { %>
-                                    <select class="spot -spot-data" name="spot">
-                                        <option class="time-spot" value="empty">empty</option>
-                                        <% students.forEach(student => { %>
-                                            <% 
-                                                let stdNameKey = ''
-                                                if (student.user) {
-                                                    if(student.user.dataCollection) {
-                                                        stdNameKey = `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`
-                                                    }
-                                                }
-                                            %>
-                                            <option class="time-spot" value="<%= student._id %>@<%= dateKey %>@<%= spot %>"><%= stdNameKey %></option>
-                                        <% }) %>
-                                    </select>
+                                    <% let occupiedBy = checkIfBusy(new Date(`${dateKey}T${spot}:00.000Z`)) %>
+    
+                                    <% if(occupiedBy) { %>
+                                        <div class="spot -occupied">
+                                            <span class="student-namekey"><%= occupiedBy %></span>
+                                            <div class="tool-bar">
+                                                <svg class="delete-btn" viewBox="0 0 512 512">
+                                                    <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <select class="spot -spot-data" name="spot">
+                                            <option class="time-spot" value="empty">empty</option>
+                                            <% students.forEach(student => { %>
+                                                <option class="time-spot" value="<%= student._id %>@<%= dateKey %>@<%= spot %>"><%= getOptionTitle(student) %></option>
+                                            <% }) %>
+                                        </select>
+                                    <% } %>
+    
                                 <% }) %>
                             </div>      <!-- calendar-column -->
                         <% }) %>
-                    <% } %>
-                </div>    <!-- calendar -->
-                <textarea class="formTextArray" name="formTextArray"></textarea>
+                    </div>    <!-- calendar -->
+    
+                    <div class="calendar">
+                        <!-- left column -->
+                        <div class="calendar-column -week-two">
+                            <div class="day-of-week">
+                                <span class="day-title">Day</span>
+                                <span class="day-date">Timestamp</span>
+                            </div>
+                            <div class="spot -header">
+                                <% spotsArray.forEach((spot, index) => { %>
+                                    <div class="time-spot -left-header"><%= spot %></div>
+                                <% }) %>
+                            </div>
+                        </div>      <!-- calendar-column -->
+    
+                        <!-- rest columns -->
+                        <% daysOfWeek.forEach((day, dayIndex) => { %>
+                            <% 
+                                let date = new Date(Date.UTC(year, month, monday + dayIndex + 7, 0, 0, 0))
+                                let y = date.getFullYear()
+                                let m = monthNames[date.getMonth()]
+                                let d = leadingZero(date.getDate())
+    
+                                let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
+                            %>
+                            <div class="calendar-column">
+                                <div class="day-of-week">
+                                    <span class="day-title"><%= day %></span>
+                                    <span class="day-date"><%= `${m}.${d}.${y}` %></span>
+                                </div>
+                                <% spotsArray.forEach(spot => { %>
+                                    <% let occupiedBy = checkIfBusy(new Date(`${dateKey}T${spot}:00.000Z`)) %>
+    
+                                    <% if(occupiedBy) { %>
+                                        <div class="spot -occupied">
+                                            <span class="student-namekey"><%= occupiedBy %></span>
+                                            <div class="tool-bar">
+                                                <div class="tool-bar">
+                                                    <svg class="delete-btn" viewBox="0 0 512 512">
+                                                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <select class="spot -spot-data" name="spot">
+                                            <option class="time-spot" value="empty">empty</option>
+                                            <% students.forEach(student => { %>
+                                                <option class="time-spot" value="<%= student._id %>@<%= dateKey %>@<%= spot %>"><%= getOptionTitle(student) %></option>
+                                            <% }) %>
+                                        </select>
+                                    <% } %>
+    
+                                <% }) %>
+                            </div>      <!-- calendar-column -->
+                        <% }) %>
+                    </div>    <!-- calendar -->
+                </section>      <!-- two-weeks-box -->
+
+                <textarea class="calTextArray -hidden" name="formTextArray"></textarea>
                 <div class="-submit" onclick="submitForm(backing1)">Submit</div>
+
             </form>      <!-- calendar-box -->
         </div>      <!-- schedule-box -->
 
@@ -113,7 +204,10 @@
             const spots = schForm.querySelectorAll(".-spot-data")
             const formTextArray = schForm.querySelector(".formTextArray")
 
-            if (!spots || !formTextArray) { return }
+            if (!spots || !formTextArray) {
+                alert('Nothing is changed')
+                return
+            }
             spots.forEach(spot => {
                 if (spot.value != "empty") {
                     formTextArray.value += `${spot.value},`

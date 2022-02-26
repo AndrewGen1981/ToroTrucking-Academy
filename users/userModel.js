@@ -154,10 +154,10 @@ const scheduleSchema = new mongoose.Schema({
         ref: 'Student'
     },
     appointments: [{
-        date: Date,
-        type: String,
-        transmission: String,
-        location: String,
+        appDate: { type: Date, default: new Date() },
+        appType: String,
+        appTransmission: String,
+        appLocation: String,
     }]
 }, {
     collection: "Schedule"
