@@ -11,17 +11,47 @@
     --accent3: #1d1e3d;
     --accent4: #2c314a;
     --accent5: #2c314a47;
-}
-
-.schedule-box {
-    width: 95%;
-    margin: 0 auto;
+    --accent6: #ef47e729;
 }
 
 header {
     width: 100%;
-    height: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: var(--accent3);
+    color: #fff;
+}
+.back-button {
+    margin: 15px 2px;
+
+    width: 2.75rem;
+    height: 2.75rem;
+    fill: var(--accent4);
+    transition: all 0.25s linear;
+}
+.back-button:hover {
+    fill: #ffffffde;
+    transform: translateX(-2px) scale(1.01);
+}
+header input {
+    margin: 0 1px;
+    padding: 0 2px;
+
+    width: 15%;
+    max-width: 170px;
+    height: 2.1rem;
+
+    font-family: "BrixSlab-Regular";
+    font-size: 1.1rem;
+}
+
+.schedule-box {
+    width: 95%;
+    max-width: 1550px;
+    margin: 0 auto;
 }
 
 .-hidden {
@@ -31,37 +61,65 @@ header {
 .calendar-box {
     width: 100%;
 }
-.two-weeks-box {
-    width: 100%;
-    display: inline-flex;
+.calendar-title {
+    font-family: "Industrial Bold";
+    font-size: 2.2rem;
+    color: var(--accent5);
 }
-
-
 .calendar {
-    width: 50%;
+    width: 100%;
     display: flex;
 }
+
 .calendar-column {
-    margin-right: 1px;
-    width: 12%;
+    width: 14%;
     display: flex;
     flex-direction: column;
 }
-.-week-two {
-    display: none;
-}
+
 .day-of-week {
     display: flex;
     flex-direction: column;
 }
-
+.day-title {
+    font-family: "BrixSlab-Medium";
+    font-size: 1.2rem;
+}
 .day-date {
+    padding: 2px 1px;
+
+    font-family: "BrixSlab-LightItalic";
     font-size: 0.8rem;
+    color: var(--accent2);
+    
+    border-bottom: 1px solid var(--accent1);
+    margin-bottom: 5px;
+}
+.-today {
+    color: darkgreen;
+    background-color: var(--accent1);
+    border-radius: 5px 5px 0 0;
 }
 
-.-left-header {
+/* .-left-header .time-spot {
+    border-bottom: 1px solid gray;
+} */
+
+.time-spot, .spot, .-spot-data {
+    padding: 0 1px;
+
+    width: 100%;
+    height: 2rem;
+
+    display: block;
+
+    font-family: "BrixSlab-Light";
+    font-size: 1rem;
+
+    border: none;
     border-bottom: 1px solid gray;
 }
+
 
 .-blocked, .-occupied, .-empty {
     width: 100%;

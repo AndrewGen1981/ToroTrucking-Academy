@@ -44,15 +44,15 @@ const test3_city = [
             },
             {
                 item: 'Both hands',
-                ecks: [ '1', '1', '1', '1' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Gears',
-                ecks: [ '1', '1', '1', '1' ]
+                checks: [ '1', '1', '1', '1' ]
             },
             {
                 item: 'Yield',
-                ecks: [ '1', '1', '1', '1' ]
+                checks: [ '1', '1', '1', '1' ]
             },
         ]
     },  // end of block

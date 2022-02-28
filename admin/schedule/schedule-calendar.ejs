@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../../static/css/fonts.css">
     <link rel="stylesheet" href="../../static/css/brix-family.css">
 
-    <link rel="stylesheet" href="/static/css/colors.css">
 
     <link rel="stylesheet" href="/admin/schedule/schedule.css">
 
@@ -71,7 +70,11 @@
 
         <header>
             <a href="#" id="reloadHref"></a>
-            <a href="/admin/schedule">Schedule Center</a>
+            <a href="/admin/schedule">
+                <svg class="back-button" viewBox="0 0 512 512">
+                    <path d="M0 256c0 141.4 114.6 256 256 256s256-114.6 256-256c0-141.4-114.6-256-256-256S0 114.6 0 256zM246.1 129.2C252.1 131.7 256 137.5 256 144v64h96c17.67 0 32 14.33 32 32v32c0 17.67-14.33 32-32 32h-96v64c0 6.469-3.891 12.31-9.875 14.78c-5.984 2.484-12.86 1.109-17.44-3.469l-112-112c-6.248-6.248-6.248-16.38 0-22.62l112-112C233.3 128.1 240.1 126.7 246.1 129.2z"/>
+                </svg>
+            </a>
             <input type="date" class="schedule-input" onchange="reloadDueToInput(this, reloadHref)" value="<%= year %>-<%= leadingZero(month + 1) %>-<%= leadingZero(monday) %>" />
             <input type="text" class="schedule-transmission" name="calTransmission" value="<%= calendarTransmission %>" readonly />
             <input type="text" class="schedule-location" name="calLocation" value="<%= calendarLocation %>" readonly />
@@ -82,14 +85,14 @@
                 <h2 class="calendar-title"><%= calendarTitle %></h2>
                 <div class="calendar">
                     <!-- left column -->
-                    <div class="calendar-column -week-one">
+                    <div class="calendar-column -left-header">
                         <div class="day-of-week">
                             <span class="day-title">Day</span>
                             <span class="day-date">Timestamp</span>
                         </div>
                         <div class="spot -header">
                             <% spotsArray.forEach((spot, index) => { %>
-                                <div class="time-spot -left-header"><%= spot %></div>
+                                <div class="time-spot"><%= spot %></div>
                             <% }) %>
                         </div>
                     </div>      <!-- calendar-column -->
@@ -105,7 +108,7 @@
                         <div class="calendar-column">
                             <div class="day-of-week">
                                 <span class="day-title"><%= day %></span>
-                                <span class="day-date"><%= `${m}.${d}.${y}` %></span>
+                                <span class="day-date" data-date="<%= dateKey %>"><%= `${m}.${d}.${y}` %></span>
                             </div>
                             <% spotsArray.forEach((spot, spotIndex) => { %>
 
@@ -182,6 +185,26 @@
 
 
     <script defer>
+
+        // checkIfToday - entry point
+        checkIfToday()
+
+
+        function checkIfToday() {
+            const today = new Date()
+            const days = document.querySelectorAll(".day-date")
+            days.forEach(day => {
+                let dayDate = new Date(`${day.dataset.date}T00:00Z`)
+                if (!isNaN(today - dayDate)) {
+                    let delta = (today - dayDate) / (24*60*60*1000)
+                    if (delta > 0 && delta < 24) {
+                        day.classList.add("-today")
+                    } else {
+                        day.classList.remove("-today")
+                    }
+                }
+            })
+        }
 
         function reloadDueToInput(dateInput, ref) {
             if (!dateInput || !ref) { return }
