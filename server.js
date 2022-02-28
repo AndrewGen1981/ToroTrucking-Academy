@@ -69,6 +69,7 @@ const { applicationForm } = require('./users/applicants/form2Model')
 const { agreementForm } = require('./users/applicants/form3Model')
 const { Tuition } = require('./users/tuition/tuitionModel')
 const { StudentScoring } = require('./admin/instructors/scoringModel')
+const { ScheduleBlocked } = require('./admin/schedule/schTemplateModel')
 
 // turning on USER changes watch with mongoose
 User.watch().on('change', data => {
@@ -94,4 +95,7 @@ StudentScoring.watch().on('change', data => {
 })
 Schedule.watch().on('change', data => {
     io.emit('schedule-update', data)
+})
+ScheduleBlocked.watch().on('change', data => {
+    io.emit('schedule-blocked-update', data)
 })

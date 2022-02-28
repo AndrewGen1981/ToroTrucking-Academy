@@ -117,20 +117,9 @@
         }
 
         
-        // reset results on reset
-        document.forms[0].addEventListener('reset', (e) => {
-            if (!confirm('This will reset test and above entered data will be lost. Are you sure?')) { 
-                e.preventDefault()
-                return
-            }
-            InitQtyTotals()
-        })
-
-        
         // submit
         // On submit all scoring data loads to 'scoringData' text area as a JSON
-
-        document.forms[0].addEventListener('submit', (e) => {
+        document.getElementById('scoring-save-form').addEventListener('submit', (e) => {
             // receivedPoints contains not points but qty of checked to include '0 point' relults
             const allSkillInputs = document.querySelectorAll('.skill-checkbox')
             let receivedPoints = 0

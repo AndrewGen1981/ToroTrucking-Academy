@@ -139,7 +139,6 @@
         
         // submit
         // On submit all scoring data loads to 'scoringData' text area as a JSON
-
         document.getElementById('scoring-save-form').addEventListener('submit', (e) => {
             const receivedPoints = parseInt(document.querySelector('#current-result').textContent)
             if (!receivedPoints) { 

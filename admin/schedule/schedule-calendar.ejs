@@ -115,7 +115,7 @@
                                 <% if (blockedArray.includes(`${dayIndex}:${spotIndex}`)) { %>
                                     <div class="spot -blocked">
                                         <span class="closed-spot">closed</span>
-                                        <div class="tool-bar-right">
+                                        <div class="tool-bar">
                                             <svg class="block-btn" viewBox="0 0 576 512"
                                                 data-column="<%= dayIndex %>"
                                                 data-row="<%= spotIndex %>"
@@ -157,7 +157,7 @@
                                                     <option class="time-spot" value="<%= student._id %>"><%= getOptionTitle(student) %></option>
                                                 <% }) %>
                                             </select>
-                                            <div class="tool-bar-right">
+                                            <div class="tool-bar">
                                                 <svg class="block-btn" viewBox="0 0 448 512"
                                                     data-column="<%= dayIndex %>"
                                                     data-row="<%= spotIndex %>"
@@ -330,6 +330,12 @@
         // @WHEN Students changed
         socket.on('schedule-update', schedule => {
             if (schedule) {
+                document.location.reload()
+            }
+        })
+
+        socket.on('schedule-blocked-update', blockedCell => {
+            if (blockedCell) {
                 document.location.reload()
             }
         })

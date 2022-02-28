@@ -192,6 +192,7 @@ schRouter.put('/', async(req, res) => {
                         await scheduleBlocked.save()
                     }
                 }
+                return res.status(200).end()
             }
         }
         if (action === "UNBLOCK SCHEDULE CELL") {
@@ -207,6 +208,7 @@ schRouter.put('/', async(req, res) => {
                         })
                         scheduleBlocked.schBlockedDays = newSchBlockedDays
                         await scheduleBlocked.save()
+                        return res.status(200).end()
                     }
                 }
             }
