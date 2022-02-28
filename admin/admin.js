@@ -874,112 +874,6 @@ function calculateBalance(user, payments) {
 }
 
 
-// @GET /schedule
-// schedule, query ?date="2022-02-24"
-admRouter.get('/schedule', redirectToLogin, ifCanWrite, async(req, res) => {
-    const date = req.query.date ? new Date(req.query.date) : new Date()
-    // calendar term
-    const startDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1, 0, 0, 0))
-    const endDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 15, 0, 0, 0))
-    // headers to pass
-    const spotsArray = ['08:00', '08:45', '09:30', '10:15', '11:00', '12:30', '13:15', '14:00', '14:45', '15:30', '16:15']
-    const daysOfWeek = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']
-
-    // get admin
-    const adminProfile = admin.findAdminById(req.session.userId)
-    const filter = adminProfile.location === admin.LOCATION.All ? {} : { location: adminProfile.location }
-    filter.graduate = "no"
-        
-    const students = await Student.find(filter).select('key').populate([
-        { 
-            path: "user",
-            select: "dataCollection",
-            populate: {
-                path: "dataCollection",
-                select: "firstName lastName",
-            },
-        },
-        { path: 'schedule' }
-    ])
-
-    // selecting appointments for this period
-    const scheduledAppointments = []
-    students.forEach(student => {
-        if(student.schedule) {
-            student.schedule.appointments.forEach(appointment => {
-                if(appointment.appDate >= startDate && appointment.appDate <= endDate) {
-                    scheduledAppointments.push({
-                        appDate: appointment.appDate,
-                        appType: appointment.appType,
-                        appTransmission: appointment.appTransmission,
-                        appLocation: appointment.appLocation,
-                        studentNameKey: `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`
-                    })
-                }
-            })
-        }
-    })
-    
-    res.render(path.join(__dirname+'/views/schedule.ejs'), { 
-        students, scheduledAppointments,
-        startDate, spotsArray, daysOfWeek
-    })
-})
-
-
-// @POST /schedule
-admRouter.post('/schedule/:id', redirectToLogin, ifCanWrite, async(req, res) => {
-    const scheduleId = req.params.id
-    const { calTextArray, calTransmission, calLocation } = req.body
-    if (scheduleId && calTextArray && calTransmission && calLocation) {
-        try {
-            const items = calTextArray.split(',')
-            items.forEach(async(item) => {
-                if (item) {
-                    let data = item.split('@')
-                    let studentId = data[0]
-                    let dateStr = data[1]
-                    let timeStr = data[2].split(":")
-                    let h = parseInt(timeStr[0]) < 10 ? `0${parseInt(timeStr[0])}` : timeStr[0]
-                    let m = parseInt(timeStr[1]) < 10 ? `0${parseInt(timeStr[1])}` : timeStr[1]
-        
-                    let spotData = new Date(`${dateStr}T${h}:${m}Z`)
-
-                    let student = await Student.findById(studentId).populate("schedule")
-                    if (student.schedule) {
-                        // check if scheduled appointment exist, if not - add
-                        let schedule = await Schedule.findById(student.schedule)
-                        await schedule.appointments.push({
-                            appDate: spotData,
-                            appType: scheduleId,
-                            appTransmission: calTransmission,
-                            appLocation: calLocation,
-                        }).save()
-                    } else {
-                        let schedule = await new Schedule({
-                            student: student._id,
-                            appointments: [{
-                                appDate: spotData,
-                                appType: scheduleId,
-                                appTransmission: calTransmission,
-                                appLocation: calLocation,
-                            }]
-                        }).save()
-                        student.schedule = schedule._id
-                        await student.save()
-                    }
-
-                    return res.end()
-                }
-            })
-        } catch(e) {
-            return res.status(400).send(`Issue: ${e.message}`)
-        }
-    } else {
-        return res.send('Schedule type or data was not defined')
-    }
-})
-
 
 
 // @ admin/student routes
@@ -988,6 +882,8 @@ admRouter.use('/student', redirectToLogin, require('../users/students/studentRou
 admRouter.use('/inst', redirectToLogin, require('./instructors/instructorsRouter'))
 // @ admin/charts routes
 admRouter.use('/charts', redirectToLogin, ifCanRead, require('./charts/chartsRouter'))
+// @ admin/schedule
+admRouter.use('/schedule', redirectToLogin, ifCanWrite, require('./schedule/scheduleRouter'))
 
 
 

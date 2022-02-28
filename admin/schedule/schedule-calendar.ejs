@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA | User Area</title>
+
+    <link rel="shortcut icon" href="../../static/images/thumb.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../static/css/fonts.css">
+    <link rel="stylesheet" href="../../static/css/brix-family.css">
+
+    <link rel="stylesheet" href="/static/css/colors.css">
+
+    <link rel="stylesheet" href="/admin/schedule/schedule.css">
+
+</head>
+<body>
+
+    <% if (locals.startDate && locals.spotsArray && locals.students && locals.calendarLocation) { %>
+
+        <%
+            const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+            const year = startDate.getFullYear()
+            const month = startDate.getMonth()
+            const monday = startDate.getDate()
+            const calendarTitles = {
+                "city": "CITY DRIVING", 
+                "backing1": "STRAIGHT LINE BACKING",
+                "backing2": "OFFSET BACKING",
+                "backing3": "ALLEY DOCK BACKING"
+            }
+            const calendarType = schType
+            const calendarTitle = calendarTitles[schType]
+
+            function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
+
+            function checkIfBusy(spotDate, calendarLocation, calendarType) {
+                let result = false
+                if (scheduledAppointments.length) {
+                    scheduledAppointments = scheduledAppointments.filter(appointment => {
+                        if (appointment.appDate == `${spotDate}` 
+                         && appointment.appLocation === calendarLocation
+                         && appointment.appType === calendarType) {
+                            result = {
+                                studentNameKey: appointment.studentNameKey,
+                                appointmentId: appointment.appointmentId,
+                                studentId: appointment.studentId,
+                                scheduleId: appointment.scheduleId,
+                                appointmentId: appointment.appointmentId,
+                            }
+                        } else {
+                            return appointment
+                        }
+                    })
+                }
+                return result
+            }
+
+            function getOptionTitle(student) {
+                if (student.user) {
+                    if(student.user.dataCollection) {
+                        return `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`
+                    }
+                }
+                return
+            }
+        %>
+
+        <header>
+            <a href="#" id="reloadHref"></a>
+            <a href="/admin/schedule">Schedule Center</a>
+            <input type="date" class="schedule-input" onchange="reloadDueToInput(this, reloadHref)" value="<%= year %>-<%= leadingZero(month + 1) %>-<%= leadingZero(monday) %>" />
+            <input type="text" class="schedule-transmission" name="calTransmission" value="<%= calendarTransmission %>" readonly />
+            <input type="text" class="schedule-location" name="calLocation" value="<%= calendarLocation %>" readonly />
+        </header>
+
+        <div class="schedule-box">
+            <section class="calendar-box" action="/admin/schedule/<%= calendarType %>" method="POST" id="<%= calendarType %>">
+                <h2 class="calendar-title"><%= calendarTitle %></h2>
+                <div class="calendar">
+                    <!-- left column -->
+                    <div class="calendar-column -week-one">
+                        <div class="day-of-week">
+                            <span class="day-title">Day</span>
+                            <span class="day-date">Timestamp</span>
+                        </div>
+                        <div class="spot -header">
+                            <% spotsArray.forEach((spot, index) => { %>
+                                <div class="time-spot -left-header"><%= spot %></div>
+                            <% }) %>
+                        </div>
+                    </div>      <!-- calendar-column -->
+                    <!-- rest columns -->
+                    <% daysOfWeek.forEach((day, dayIndex) => { %>
+                        <% 
+                            let date = new Date(Date.UTC(year, month, monday + dayIndex, 0, 0, 0))
+                            let y = date.getFullYear()
+                            let m = monthNames[date.getMonth()]
+                            let d = leadingZero(date.getDate())
+                            let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
+                        %>
+                        <div class="calendar-column">
+                            <div class="day-of-week">
+                                <span class="day-title"><%= day %></span>
+                                <span class="day-date"><%= `${m}.${d}.${y}` %></span>
+                            </div>
+                            <% spotsArray.forEach((spot, spotIndex) => { %>
+
+                                <% if (blockedArray.includes(`${dayIndex}:${spotIndex}`)) { %>
+                                    <div class="spot -blocked">
+                                        <span class="closed-spot">closed</span>
+                                        <div class="tool-bar-right">
+                                            <svg class="block-btn" viewBox="0 0 576 512"
+                                                data-column="<%= dayIndex %>"
+                                                data-row="<%= spotIndex %>"
+                                                data-type="<%= calendarType %>"
+                                                data-transmission="<%= calendarTransmission %>"
+                                                data-location="<%= calendarLocation %>"
+                                                onclick="unBlockScheduleCell(this)">
+                                                <path d="M352 192H384C419.3 192 448 220.7 448 256V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V256C0 220.7 28.65 192 64 192H288V144C288 64.47 352.5 0 432 0C511.5 0 576 64.47 576 144V192C576 209.7 561.7 224 544 224C526.3 224 512 209.7 512 192V144C512 99.82 476.2 64 432 64C387.8 64 352 99.82 352 144V192z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <% let occupiedBy = checkIfBusy(new Date(`${dateKey}T${spot}:00.000Z`), calendarLocation, calendarType) %>
+                                    <% if(occupiedBy) { %>
+                                        <!-- if occupied, then can just delete -->
+                                        <div class="spot -occupied">
+                                            <span class="student-namekey"><%= occupiedBy.studentNameKey %></span>
+                                            <div class="tool-bar">
+                                                <svg class="delete-btn" viewBox="0 0 512 512"
+                                                    data-student="<%= occupiedBy.studentId %>"
+                                                    data-schedule="<%= occupiedBy.scheduleId %>"
+                                                    data-appointment="<%= occupiedBy.appointmentId %>"
+                                                    onclick="deleteScheduled(this)">
+                                                    <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <!-- if not occupied, then can add -->
+                                        <div class="spot -empty">
+                                            <select class="-spot-data"
+                                                data-date="<%= dateKey %>@<%= spot %>"
+                                                data-type="<%= calendarType %>"
+                                                data-transmission="<%= calendarTransmission %>"
+                                                data-location="<%= calendarLocation %>"
+                                                onclick="addToSchedule(this)">
+                                                <option class="time-spot" value="empty">empty</option>
+                                                <% students.forEach(student => { %>
+                                                    <option class="time-spot" value="<%= student._id %>"><%= getOptionTitle(student) %></option>
+                                                <% }) %>
+                                            </select>
+                                            <div class="tool-bar-right">
+                                                <svg class="block-btn" viewBox="0 0 448 512"
+                                                    data-column="<%= dayIndex %>"
+                                                    data-row="<%= spotIndex %>"
+                                                    data-type="<%= calendarType %>"
+                                                    data-transmission="<%= calendarTransmission %>"
+                                                    data-location="<%= calendarLocation %>"
+                                                    onclick="blockScheduleCell(this)">
+                                                    <path d="M80 192V144C80 64.47 144.5 0 224 0C303.5 0 368 64.47 368 144V192H384C419.3 192 448 220.7 448 256V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V256C0 220.7 28.65 192 64 192H80zM144 192H304V144C304 99.82 268.2 64 224 64C179.8 64 144 99.82 144 144V192z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    <% } %>     <!-- check if occupied -->
+                                <% } %>     <!-- check if blocked -->
+                            <% }) %>
+                        </div>      <!-- calendar-column -->
+                    <% }) %>
+                </div>          <!-- calendar -->
+            </section>      <!-- calendar-box -->
+
+        </div>      <!-- schedule-box -->
+
+    <% } else { %>
+        <h2 class="error-message">No core data passed...</h2>
+    <% } %>
+
+
+    <script defer>
+
+        function reloadDueToInput(dateInput, ref) {
+            if (!dateInput || !ref) { return }
+
+            const transmission = document.querySelector(".schedule-transmission")
+            const location = document.querySelector(".schedule-location")
+
+            if (!transmission || !location) { return }
+
+            let link = '/admin/schedule/<%= schType %>?'
+            link += `date=${dateInput.value}&`
+            link += `calendarTransmission=${transmission.value}&`
+            link += `calendarLocation=${location.value}`
+
+            ref.setAttribute('href', link)
+            ref.click()
+        }
+
+
+        async function deleteScheduled(delSvg) {
+            if (!delSvg) { return }
+            if (!delSvg.dataset.appointment) { return }
+
+            const response = await fetch('/admin/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studentId: delSvg.dataset.student,
+                    scheduleId: delSvg.dataset.schedule,
+                    appointmentId: delSvg.dataset.appointment,
+                    viewStartDate: document.querySelector('.schedule-input').value,
+                    action: "DELETE SCHEDULED"
+                })
+            })
+
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            }
+        }
+
+
+        async function addToSchedule(select) {
+            if (!select) { return }
+            if (select.value === "empty") { return }
+
+            const response = await fetch('/admin/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studentId: select.value,
+                    date: select.dataset.date,
+                    type: select.dataset.type,
+                    transmission: select.dataset.transmission,
+                    location: select.dataset.location,
+                    action: "ADD TO SCHEDULE"
+                })
+            })
+
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            }
+        }
+
+
+        async function blockScheduleCell(blockSvg) {
+            if (!blockSvg) { return }
+
+            const response = await fetch('/admin/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    column: blockSvg.dataset.column,
+                    row: blockSvg.dataset.row,
+                    type: blockSvg.dataset.type,
+                    transmission: blockSvg.dataset.transmission,
+                    location: blockSvg.dataset.location,
+                    action: "BLOCK SCHEDULE CELL"
+                })
+            })
+
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            }
+        }
+
+
+        async function unBlockScheduleCell(blockSvg) {
+            if (!blockSvg) { return }
+
+            const response = await fetch('/admin/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    column: blockSvg.dataset.column,
+                    row: blockSvg.dataset.row,
+                    type: blockSvg.dataset.type,
+                    transmission: blockSvg.dataset.transmission,
+                    location: blockSvg.dataset.location,
+                    action: "UNBLOCK SCHEDULE CELL"
+                })
+            })
+
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            }
+        }
+
+
+    </script>
+
+    <script type="module" defer>
+
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+
+
+        // server emits, so have to check if changes are related to this particular client
+        // @WHEN Students changed
+        socket.on('schedule-update', schedule => {
+            if (schedule) {
+                document.location.reload()
+            }
+        })
+
+    </script>
+
+
+</body>
+</html>

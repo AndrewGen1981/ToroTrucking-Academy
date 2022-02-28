@@ -63,7 +63,7 @@ const io = require('socket.io')(server, {
 })
 
 // Has to bring in a MODELS here, just to create a WATCHER with SOCKET inside
-const { User, Student } = require('./users/userModel')
+const { User, Student, Schedule } = require('./users/userModel')
 const { dataCollectionForm } = require('./users/applicants/form1Model')
 const { applicationForm } = require('./users/applicants/form2Model')
 const { agreementForm } = require('./users/applicants/form3Model')
@@ -91,4 +91,7 @@ Tuition.watch().on('change', data => {
 })
 StudentScoring.watch().on('change', data => {
     io.emit('scoring-update', data)
+})
+Schedule.watch().on('change', data => {
+    io.emit('schedule-update', data)
 })
