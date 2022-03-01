@@ -17,15 +17,47 @@
 header {
     width: 100%;
 
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
     background-color: var(--accent3);
     color: #fff;
 }
-.back-button {
-    margin: 15px 2px;
+.main-inputs, menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-inputs {
+    width: 100%;
+    margin: 30px 0 5px 0;
+}
+menu {
+    margin-bottom: 3px;
+}
+.back, .forth {
+    margin: 0 1px;
+
+    width: 30px;
+    height: 30px;
+
+    fill: var(--accent1);
+    transition: all 0.25s linear;
+
+    border-radius: 100%;
+}
+.forth {
+    transform: rotate(180deg);
+}
+.back:hover, .forth:hover {
+    fill: #43a843c7;
+    box-shadow: 0 0 7px 1px #ffffffde;
+}
+
+.back-button, .close-button {
+    margin: 0 4px;
 
     width: 2.75rem;
     height: 2.75rem;
@@ -36,7 +68,13 @@ header {
     fill: #ffffffde;
     transform: translateX(-2px) scale(1.01);
 }
-header input {
+.close-button:hover {
+    fill: #ffffffde;
+    transform: translateX(1px) scale(1.01);
+}
+
+
+.main-inputs input {
     margin: 0 1px;
     padding: 0 2px;
 
@@ -52,10 +90,8 @@ header input {
     width: 95%;
     max-width: 1550px;
     margin: 0 auto;
-}
 
-.-hidden {
-    display: none;
+    position: relative;
 }
 
 .calendar-box {
@@ -199,4 +235,59 @@ header input {
 
 .-blocked:hover .tool-bar {
     display: inline-flex;
+}
+
+/* Modal window */
+.modal-window-wait {
+    padding: 10px;
+
+    position: absolute;
+    top: 50%; left: 50%;
+
+    width: 250px;
+
+    transform: translateX(-50%) translateY(-50%);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #2c314a;
+    border-radius: 10px;
+}
+.modal-window-wait h3 {
+    font-family: "BrixSlab-Regular";
+    text-transform: uppercase;
+    text-align: center;
+    color: wheat;
+    margin-bottom: 5px;
+}
+.modal-window-wait p {
+    font-family: "BrixSlab-ExtraLight";
+    text-align: center;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+
+/* wait animation */
+@keyframes rotate {
+    to { transform: rotate(-360deg); }
+}
+.-rotate {
+    animation: rotate 3s ease-out infinite;
+}
+.modal-window-wait svg {
+    margin: 10px 0;
+
+    width: 50px;
+    height: 50px;
+
+    fill: #b4dcb4;
+}
+
+
+.-hidden {
+    display: none;
 }

@@ -70,14 +70,29 @@
 
         <header>
             <a href="#" id="reloadHref"></a>
-            <a href="/admin/schedule">
-                <svg class="back-button" viewBox="0 0 512 512">
-                    <path d="M0 256c0 141.4 114.6 256 256 256s256-114.6 256-256c0-141.4-114.6-256-256-256S0 114.6 0 256zM246.1 129.2C252.1 131.7 256 137.5 256 144v64h96c17.67 0 32 14.33 32 32v32c0 17.67-14.33 32-32 32h-96v64c0 6.469-3.891 12.31-9.875 14.78c-5.984 2.484-12.86 1.109-17.44-3.469l-112-112c-6.248-6.248-6.248-16.38 0-22.62l112-112C233.3 128.1 240.1 126.7 246.1 129.2z"/>
+            <div class="main-inputs">
+                <input type="date" class="schedule-input" onchange="reloadDueToInput(this, reloadHref)" value="<%= year %>-<%= leadingZero(month + 1) %>-<%= leadingZero(monday) %>" />
+                <input type="text" class="schedule-transmission" name="calTransmission" value="<%= calendarTransmission %>" readonly />
+                <input type="text" class="schedule-location" name="calLocation" value="<%= calendarLocation %>" readonly />
+            </div>
+            <menu type="toolbar">
+                <a href="/admin/schedule" title="back to Schedule Center">
+                    <svg class="back-button" viewBox="0 0 512 512">
+                        <path d="M0 256c0 141.4 114.6 256 256 256s256-114.6 256-256c0-141.4-114.6-256-256-256S0 114.6 0 256zM246.1 129.2C252.1 131.7 256 137.5 256 144v64h96c17.67 0 32 14.33 32 32v32c0 17.67-14.33 32-32 32h-96v64c0 6.469-3.891 12.31-9.875 14.78c-5.984 2.484-12.86 1.109-17.44-3.469l-112-112c-6.248-6.248-6.248-16.38 0-22.62l112-112C233.3 128.1 240.1 126.7 246.1 129.2z"/>
+                    </svg>
+                </a>
+                <svg class="back" viewBox="0 0 512 512" onclick="changeWeek(-1)">
+                    <path d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM310.6 345.4c12.5 12.5 12.5 32.75 0 45.25s-32.75 12.5-45.25 0l-112-112C147.1 272.4 144 264.2 144 256s3.125-16.38 9.375-22.62l112-112c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L221.3 256L310.6 345.4z"/>
                 </svg>
-            </a>
-            <input type="date" class="schedule-input" onchange="reloadDueToInput(this, reloadHref)" value="<%= year %>-<%= leadingZero(month + 1) %>-<%= leadingZero(monday) %>" />
-            <input type="text" class="schedule-transmission" name="calTransmission" value="<%= calendarTransmission %>" readonly />
-            <input type="text" class="schedule-location" name="calLocation" value="<%= calendarLocation %>" readonly />
+                <svg class="forth" viewBox="0 0 512 512" onclick="changeWeek(1)">
+                    <path d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM310.6 345.4c12.5 12.5 12.5 32.75 0 45.25s-32.75 12.5-45.25 0l-112-112C147.1 272.4 144 264.2 144 256s3.125-16.38 9.375-22.62l112-112c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L221.3 256L310.6 345.4z"/>
+                </svg>
+                <a href="/admin/profile" title="close Schedule">
+                    <svg class="close-button" viewBox="0 0 512 512">
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/>
+                    </svg>
+                </a>
+            </menu>
         </header>
 
         <div class="schedule-box">
@@ -177,6 +192,15 @@
                 </div>          <!-- calendar -->
             </section>      <!-- calendar-box -->
 
+            <!-- hidden window, shows only when something updates -->
+            <div class="modal-window-wait -hidden">
+                <h3>Please wait</h3>
+                <p>working on your request...</p>
+                <svg class="wait-svg" viewBox="0 0 512 512">
+                    <path d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C201.7 512 151.2 495 109.7 466.1C95.2 455.1 91.64 436 101.8 421.5C111.9 407 131.8 403.5 146.3 413.6C177.4 435.3 215.2 448 256 448C362 448 448 362 448 256C448 149.1 362 64 256 64C202.1 64 155 85.46 120.2 120.2L151 151C166.1 166.1 155.4 192 134.1 192H24C10.75 192 0 181.3 0 168V57.94C0 36.56 25.85 25.85 40.97 40.97L74.98 74.98C121.3 28.69 185.3 0 255.1 0L256 0zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"/>
+                </svg>
+            </div>      <!-- modal-window-wait -->
+
         </div>      <!-- schedule-box -->
 
     <% } else { %>
@@ -187,8 +211,7 @@
     <script defer>
 
         // checkIfToday - entry point
-        checkIfToday()
-
+        checkIfToday()      // entry point
 
         function checkIfToday() {
             const today = new Date()
@@ -197,7 +220,7 @@
                 let dayDate = new Date(`${day.dataset.date}T00:00Z`)
                 if (!isNaN(today - dayDate)) {
                     let delta = (today - dayDate) / (24*60*60*1000)
-                    if (delta > 0 && delta < 24) {
+                    if (delta > 0 && delta < 1) {
                         day.classList.add("-today")
                     } else {
                         day.classList.remove("-today")
@@ -205,6 +228,18 @@
                 }
             })
         }
+
+
+        // show wait window
+        function showWaitModalWindow() {
+            const modal = document.querySelector(".modal-window-wait")
+            const waitSvg = document.querySelector(".wait-svg")
+            if (modal) {
+                waitSvg.classList.add("-rotate")
+                modal.classList.remove("-hidden")
+            }
+        }
+
 
         function reloadDueToInput(dateInput, ref) {
             if (!dateInput || !ref) { return }
@@ -239,10 +274,11 @@
                     action: "DELETE SCHEDULED"
                 })
             })
-
             if (response.status != 200) {
                 const res = await response.json()
                 return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
             }
         }
 
@@ -263,10 +299,11 @@
                     action: "ADD TO SCHEDULE"
                 })
             })
-
             if (response.status != 200) {
                 const res = await response.json()
                 return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
             }
         }
 
@@ -286,10 +323,11 @@
                     action: "BLOCK SCHEDULE CELL"
                 })
             })
-
             if (response.status != 200) {
                 const res = await response.json()
                 return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
             }
         }
 
@@ -309,15 +347,36 @@
                     action: "UNBLOCK SCHEDULE CELL"
                 })
             })
-
             if (response.status != 200) {
                 const res = await response.json()
                 return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
             }
         }
 
 
+        function changeWeek(delta) {
+            function lZero(n) { return n < 10 ? `0${n}` : `${n}` }
+            const dateInput = document.querySelector(".schedule-input")
+            const ref = document.querySelector("#reloadHref")
+            if (dateInput && ref) {
+                const date = dateInput.value
+                if (date) {
+                    const splitedDate = date.split('-')
+                    const y = parseInt(splitedDate[0])
+                    const m = parseInt(splitedDate[1])
+                    const d = parseInt(splitedDate[2]) + delta*7
+                    const newDate = new Date(Date.UTC(y, m - 1, d, 0, 0, 0))
+                    dateInput.value = `${newDate.getFullYear()}-${lZero(newDate.getMonth()+1)}-${lZero(newDate.getDate())}`
+                    reloadDueToInput(dateInput, ref)
+                    showWaitModalWindow()
+                }
+            }
+        }
+
     </script>
+
 
     <script type="module" defer>
 
