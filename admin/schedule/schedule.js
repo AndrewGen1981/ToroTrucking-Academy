@@ -15,6 +15,12 @@ const calendarTitles = {
     "backing3": "ALLEY DOCK BACKING",
     "city": "CITY DRIVING", 
 }
+const calendarLimits = {
+    "backing1": 4,
+    "backing2": 4,
+    "backing3": 4,
+    "city": 4, 
+}
 
 
 // TOOL Midleware
@@ -110,6 +116,8 @@ async function getCalendarDataForStudent(schType, schTransmission, schLocation, 
                    && appointment.appTransmission === schTransmission
                    && appointment.appLocation === schLocation) {
                     scheduledAppointments.push({
+                        scheduleId: schedule._id,
+                        appointmentId: appointment._id,
                         appDate: appointment.appDate,
                         appType: appointment.appType,
                         appTransmission: appointment.appTransmission,
@@ -125,7 +133,8 @@ async function getCalendarDataForStudent(schType, schTransmission, schLocation, 
         startDate, spotsArray, daysOfWeek,
         schTransmission, schLocation,
         blockedArray, schType,
-        calendarTitles
+        calendarTitles,
+        calendarLimits
     }
 }
 

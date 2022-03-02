@@ -37,7 +37,13 @@
                 if (scheduledAppointments.length) {
                     scheduledAppointments = scheduledAppointments.filter(appointment => {
                         if (appointment.appDate == `${spotDate}`) {
-                            result = appointment.isItMe ? "ME" : "NOTME"
+                            result = appointment.isItMe 
+                            ? { 
+                                who: "ME", 
+                                scheduleId: appointment.scheduleId, 
+                                appointmentId: appointment.appointmentId
+                            }
+                            : { who: "NOTME" }
                         } else {
                             return appointment
                         }
@@ -45,18 +51,21 @@
                 }
                 return result
             }
-
         %>
 
         <header>
-            <a class="nav-item -back" href="/user/home"><< BACK</a>
-            <% Object.keys(calendarTitles).forEach(key => { %>
-                <% if (schType === key) { %>
-                    <a class="nav-item -current" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
-                <% } else { %>
-                    <a class="nav-item" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
-                <% } %>
-            <% }) %>
+            <h1 class="header-title" data-limit="<%= calendarLimits[schType] %>">Schedule an Appointment</h1>
+            <p class="header-description">each student has 4 appointments limit for backing and city driving</p>
+            <menu type="toolbar">
+                <a class="nav-item -back" href="/user/home"><< BACK</a>
+                <% Object.keys(calendarTitles).forEach(key => { %>
+                    <% if (schType === key) { %>
+                        <a class="nav-item -current" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
+                    <% } else { %>
+                        <a class="nav-item" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
+                    <% } %>
+                <% }) %>
+            </menu>
         </header>
 
 
@@ -90,20 +99,54 @@
                             let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
                         %>
                         <% let occupiedBy = checkIfBusy(new Date(`${dateKey}T${spot}:00.000Z`)) %>
-                        <% if(occupiedBy === "ME") { %>
-                            <span class="calendar-cell -occupied-by-you">YOU</span>
+                        <% if(occupiedBy.who === "ME") { %>
+                            <span class="calendar-cell -occupied -by-you">YOU
+                                <div class="tool-bar">
+                                    <svg class="delete-btn" viewBox="0 0 512 512"
+                                        data-date="<%= dateKey %>"
+                                        data-schedule="<%= occupiedBy.scheduleId %>"
+                                        data-appointment="<%= occupiedBy.appointmentId %>"
+                                        onclick="deleteScheduled(this)">
+                                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/>
+                                    </svg>
+                                </div>
+                            </span>
                         <% } else { %>
-                            <% if(occupiedBy === "NOTME") { %>
+                            <% if(occupiedBy.who === "NOTME") { %>
                                 <span class="calendar-cell -occupied">occupied</span>
                             <% } else { %>
-                                <span class="calendar-cell -empty" data-dateKey="<%= dateKey %>" data-spot="<%= spot %>">empty</span>
+                                <% if (blockedArray.includes(`${i % 7}:${spotIndex}`)) { %>
+                                    <span class="calendar-cell -closed">closed</span>
+                                <% } else { %>
+                                    <span class="calendar-cell -empty"
+                                        data-date="<%= dateKey %>T<%= spot %>:00.000Z"
+                                        data-type="<%= schType %>"
+                                        data-transmission="<%= schTransmission %>"
+                                        data-location="<%= schLocation %>"
+                                        title="add to <%= dateKey %> <%= spot %>"
+                                        onclick="addAppointment(this)">
+                                        empty
+                                    </span>
+                                <% } %>
                             <% } %>
                         <% } %>
                     <% } %>
                 <% }) %>
-
-
             </div>          <!-- student-schedule -->
+
+            <div class="limits-box">
+                <span class="title">You can schedule <span id="limits-qty">0</span> appointment(s) more</span>
+            </div>      <!-- limits-box -->
+            
+            <!-- hidden window, shows only when something updates -->
+            <div class="modal-window-wait -hidden">
+                <h3>Please wait</h3>
+                <p>working on your request...</p>
+                <svg class="wait-svg" viewBox="0 0 512 512">
+                    <path d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C201.7 512 151.2 495 109.7 466.1C95.2 455.1 91.64 436 101.8 421.5C111.9 407 131.8 403.5 146.3 413.6C177.4 435.3 215.2 448 256 448C362 448 448 362 448 256C448 149.1 362 64 256 64C202.1 64 155 85.46 120.2 120.2L151 151C166.1 166.1 155.4 192 134.1 192H24C10.75 192 0 181.3 0 168V57.94C0 36.56 25.85 25.85 40.97 40.97L74.98 74.98C121.3 28.69 185.3 0 255.1 0L256 0zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"/>
+                </svg>
+            </div>      <!-- modal-window-wait -->
+
         </section>      <!-- student-schedule -->
 
 
@@ -116,6 +159,8 @@
 
         // checkIfToday - entry point
         checkIfToday()      // entry point
+        recalculateLimits()
+
 
         function checkIfToday() {
             const today = new Date()
@@ -135,6 +180,113 @@
                 }
             })
         }
+
+
+        function recalculateLimits() {
+            const title = document.querySelector('.header-title')
+            const limitsQty = document.querySelector('#limits-qty')
+            const occupByMe = document.querySelectorAll('.-occupied.-by-you')
+
+            if (!limitsQty || !occupByMe || !title) { return 0 }
+
+            const more = parseInt(title.dataset.limit) - occupByMe.length
+            limitsQty.textContent = more
+
+            return more
+        }
+
+
+        // show wait window
+        function showWaitModalWindow() {
+            const modal = document.querySelector(".modal-window-wait")
+            const waitSvg = document.querySelector(".wait-svg")
+            if (modal) {
+                waitSvg.classList.add("-rotate")
+                modal.classList.remove("-hidden")
+            }
+        }
+
+
+        // DELETE scheduled appointment
+        async function deleteScheduled(deleteBtn) {
+            if (!deleteBtn) { return }
+            if (!confirm('This will delete a scheduled for you appointment. Are you sure?')) { return }
+            
+            const schDate = new Date(`${deleteBtn.dataset.date}T00:00Z`)
+            const today = new Date()
+
+            if (today > schDate) {
+                alert('You cannot delete past appointments')
+                return
+            }
+
+            const response = await fetch('/user/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    scheduleId: deleteBtn.dataset.schedule,
+                    appointmentId: deleteBtn.dataset.appointment,
+                    action: "DELETE SCHEDULED"
+                })
+            })
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
+            }
+        }
+
+
+        // ADD appointment
+        async function addAppointment(emptyCell) {
+            if (recalculateLimits() < 1) { return }
+            if (!emptyCell) { return }
+            if (!confirm('Would you like to add an appointment?')) { return }
+
+            const response = await fetch('/user/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    appDate: emptyCell.dataset.date,
+                    appType: emptyCell.dataset.type,
+                    appTransmission: emptyCell.dataset.transmission,
+                    appLocation: emptyCell.dataset.location,
+                    action: "ADD APPOINTMENT"
+                })
+            })
+            if (response.status != 200) {
+                const res = await response.json()
+                return alert(`Error: ${res.issue}`)
+            } else {
+                showWaitModalWindow()
+            }
+        }
+
+
+    </script>
+
+
+    <script type="module" defer>
+
+        // @NOTIFICATIONS from db
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io("/")
+
+
+        // server emits, so have to check if changes are related to this particular client
+        // @WHEN Students changed
+        socket.on('schedule-update', schedule => {
+            if (schedule) {
+                document.location.reload()
+            }
+        })
+
+        socket.on('schedule-blocked-update', blockedCell => {
+            if (blockedCell) {
+                document.location.reload()
+            }
+        })
 
     </script>
 

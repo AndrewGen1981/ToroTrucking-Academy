@@ -21,7 +21,7 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URI_USERS)
 
 // MODELS for mongoose
-const { User, Student, tools } = require('./userModel')
+const { User, Student, Schedule, tools } = require('./userModel')
 const { dataCollectionForm, getForm1Object } = require('./applicants/form1Model')
 const { applicationForm, getForm2Object } = require('./applicants/form2Model')
 const { agreementForm, getForm3Object } = require('./applicants/form3Model')
@@ -663,6 +663,83 @@ userRouter.get('/schedule', redirectToLogin, async(req, res) => {
     } catch(e) {
         return res.status(404).send(`Error: ${e.message}`)
     }
+})
+
+
+
+// without this BODY is empty when just fetching from client-side
+userRouter.use(express.json({
+    type: ['application/json', 'text/plain']
+}))
+
+userRouter.put('/schedule', redirectToLogin, async(req, res) => {
+    const { action } = req.body
+    try {
+        // delete scheduled action
+        if (action === "DELETE SCHEDULED") {
+            const { scheduleId, appointmentId } = req.body
+            if (!scheduleId) { return res.status(400).json({ issue: "Bad schedule Id" }) }
+            if (!appointmentId) { return res.status(400).json({ issue: "Bad appointment Id" }) }
+
+            const schedule = await Schedule.findById(scheduleId)
+            if (!schedule) { return res.status(404).json({ issue: `Didn't find schedule with Id ${schedule}` }) } 
+    
+            const newAppointments = schedule.appointments.filter(appointment => {
+                if (appointment._id != appointmentId) {
+                    return appointment
+                }
+            })
+    
+            schedule.appointments = newAppointments
+            await schedule.save()
+            return res.status(200).end()
+        }
+        // add to the schedule
+        if (action === "ADD APPOINTMENT") {
+            const { appDate, appType, appTransmission, appLocation } = req.body
+
+            if (appDate && appType && appTransmission && appLocation) {
+                const user = await User.findById(req.session._id).select('student')
+                if (!user) { return res.status(404).json({ issue: "User not found" }) }
+
+                const student = await Student.findById(user.student).select("schedule").populate("schedule")
+                if (!student) { return res.status(404).json({ issue: "Student not found" }) }
+
+                if (student.schedule) {
+                    // check if scheduled appointment exist, if not - add
+                    await Schedule.findByIdAndUpdate(
+                        student.schedule,
+                        { $push: { 
+                            appointments: {
+                                appDate,
+                                appType,
+                                appTransmission,
+                                appLocation,
+                            }
+                        }},
+                    )
+                } else {
+                    const schedule = await new Schedule({
+                        student: student._id,
+                        appointments: [{
+                            appDate,
+                            appType,
+                            appTransmission,
+                            appLocation,
+                        }]
+                    }).save()
+                    student.schedule = schedule._id
+                    await student.save()
+                }
+                return res.status(200).end()
+            } else { return res.status(400).json({ issue: "Not enough data to save" }) }
+        }
+
+    } catch(e) {
+        return res.status(500).json({ issue: e.message })
+    }
+
+    return res.status(400).json({ issue: "Action not found" })
 })
 
 
