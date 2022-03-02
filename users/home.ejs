@@ -29,9 +29,11 @@
 
     
     <!-- TOOLS -->
-    <% function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' } %>
-    <% function formatDateTime(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })+' - '+new Date(textDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour24: false }) : '-' } %>
-    
+    <% 
+        function formatDate(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) : '-' }
+        function formatDateTime(textDate) { return textDate ? new Date(textDate).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })+' - '+new Date(textDate).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour24: false }) : '-' }
+        function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
+    %>
 
     <header>
         <nav class="nav-menu">
@@ -297,7 +299,7 @@
                         <div class="clocks-table-cell -header">Duration</div>
                         <div class="clocks-table-cell -header -hide-if-small">Ratio</div>
 
-                        <% verClocks.map(clock => { %>
+                        <% verClocks.forEach(clock => { %>
                             <% let duration = clock.duration / (1000 * 60 *60) %>
                             <!-- Date, key -->
                             <div class="clocks-table-cell"><%= new Date(clock.date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }) %></div>
@@ -370,8 +372,8 @@
                             <% const scorArrays = [scorings.scoringsInCab, scorings.scoringsOutCab, scorings.scoringsBacking, scorings.scoringsCity] %>
                             <% const scorTitles = ['pretrip In-Cab', 'pretrip Out-Cab', 'Backing Maneuvers', 'City Driving'] %>
 
-                            <% scorArrays.map((scorArray, index) => { %>
-                                <% scorArray.map(scor => { %>
+                            <% scorArrays.forEach((scorArray, index) => { %>
+                                <% scorArray.forEach(scor => { %>
                                     <a href="/user/scoring-print?scoring=<%= scorings._id %>&scoringform=<%= scor._id %>" class="scoring-table-cell"><%= scorTitles[index] %></a>
                                     <div class="scoring-table-cell"><%= formatDateTime(scor.created) %></div>
                                     <div class="scoring-table-cell -hide-if-small"><%= scor.instructor %></div>
@@ -396,6 +398,50 @@
                 <% } %>     <!-- if there are any scorings -->
 
 
+                <!-- Schedule Appointments -->
+                <%
+                    const calendarTitles = {
+                        "city": "CITY DRIVING", 
+                        "backing1": "STRAIGHT LINE BACKING",
+                        "backing2": "OFFSET BACKING",
+                        "backing3": "ALLEY DOCK BACKING"
+                    }
+                %>
+                <% if(user.student.schedule) { %>
+                    <h3 class="block-title">Scheduled Appointments</h3>
+                    <div class="block-item">
+                        <span class="block-key">
+                            Found appointments
+                            <span class="block-value">
+                                <%= user.student.schedule.appointments.length %>
+                            </span>
+                            <a class="schedule-more" href="/user/schedule">(schedule more...)</a>
+                        </span>
+                    </div>
+                    <div class="skills-test-table">
+                        <div class="skills-test-table-cell -skills-test-header">Type</div>
+                        <div class="skills-test-table-cell -skills-test-header">Date Time</div>
+                        <div class="skills-test-table-cell -skills-test-header">Location</div>
+                        <div class="skills-test-table-cell -skills-test-header -hide-if-small">Transmission</div>
+
+                        <% user.student.schedule.appointments.forEach(appointment => { %>
+                            <div class="skills-test-table-cell"><%= calendarTitles[appointment.appType] %></div>
+                            <% 
+                                let y = appointment.appDate.getUTCFullYear()
+                                let m = leadingZero(appointment.appDate.getUTCMonth())
+                                let d = leadingZero(appointment.appDate.getUTCDate())
+                                let h = leadingZero(appointment.appDate.getUTCHours())
+                                let mins = leadingZero(appointment.appDate.getUTCMinutes())
+                                let txtDate = `${d}/${m}/${y} - ${h}:${mins}`
+                            %>
+                            <div class="skills-test-table-cell"><%= txtDate %></div>
+                            <div class="skills-test-table-cell"><%= appointment.appLocation %></div>
+                            <div class="skills-test-table-cell -hide-if-small"><%= appointment.appTransmission %></div>
+                        <% }) %>
+                    </div>      <!-- skills-test table -->
+                <% } %>     <!-- if there are any scorings -->
+
+
                 <!-- Skills Tests History -->
                 <% if(user.student.skillsTest) { %>
                     <h3 class="block-title">Scheduled Skills Test</h3>
@@ -408,7 +454,7 @@
                         <div class="skills-test-table-cell -skills-test-header">Location</div>
                         <div class="skills-test-table-cell -skills-test-header -hide-if-small">Endorsements</div>
 
-                        <% user.student.skillsTest.map(test => { %>
+                        <% user.student.skillsTest.forEach(test => { %>
                             <div class="skills-test-table-cell"><%= test.testType %></div>
                             <div class="skills-test-table-cell"><%= formatDateTime(test.scheduledDate) %></div>
                             <div class="skills-test-table-cell"><%= test.testLocation %></div>

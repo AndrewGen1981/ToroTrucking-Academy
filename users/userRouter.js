@@ -92,9 +92,14 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
         if (!user) { return res.status(404).redirect('/user/logout') }      //  logs user out if user is undefined
     
         if (user.student) {
-            user.student = await Student.findById(user.student).select('-__v -user')
-            .populate({ path: 'tuition', select: 'created isAllowed avLessonsRate lessons' })
-            .populate('scoring')
+            user.student = await Student
+            .findById(user.student)
+            .select('-__v -user')
+            .populate([
+                { path: 'tuition', select: 'created isAllowed avLessonsRate lessons' },
+                { path: 'scoring' },
+                { path: 'schedule', select: 'appointments' }
+            ])
         }
 
         // checking for income messages
@@ -631,9 +636,40 @@ userRouter.get('/scoring-print', redirectToLogin, async(req, res) => {
 })
 
 
+// schedule comtroller
+const { getCalendarDataForStudent } = require('../admin/schedule/schedule')
+
+// schedule more...
+// @GET /user/schedule
+// ?appType= backing1/backing2/backing3/city
+userRouter.get('/schedule', redirectToLogin, async(req, res) => {
+    const appType = req.query.appType || "backing1"
+    try {
+        const user = await User.findById(req.session._id)
+        .select("_id").populate([
+            { path: "agreement", select: "transmission" },
+            { path: "student", select: "status location graduate schedule" }
+        ])
+
+        if (!user) { return res.status(400).send('User not found') }
+        if (!user.student) { return res.status(400).send('Student not found') }
+        if (user.student.status != "unblock") { return res.status(404).send('Student is blocked') }
+        if (user.student.graduate != "no") { return res.status(404).send('Student graduated') }
+
+        const schTransmission = user.agreement.transmission === "Automatic Transmission" ? "AUTO" : "MANUAL"
+        const dataObj = await getCalendarDataForStudent(appType, schTransmission, user.student.location, user.student._id, 14)        
+
+        return res.render(path.join(__dirname+'/student-schedule.ejs'), dataObj)
+    } catch(e) {
+        return res.status(404).send(`Error: ${e.message}`)
+    }
+})
+
+
 
 // @ user/tuituion routes
 userRouter.use('/tuition', redirectToLogin, require('./tuition/tuitionRouter'))
+
 
 
 module.exports = userRouter

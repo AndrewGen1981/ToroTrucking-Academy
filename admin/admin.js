@@ -25,7 +25,7 @@ const pdf = require('../static/pdf/pdf')
 
 
 // @SESSION config
-const ADM_SESS_DURATION = 1000 * 60 * 60 * 3    //  3 hours
+const ADM_SESS_DURATION = 1000 * 60 * 60 * 6    //  6 hours
 
 // extracting from process.env
 const {

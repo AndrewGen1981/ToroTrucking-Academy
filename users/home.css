@@ -543,6 +543,10 @@ header::after {
 
     margin-right: 2rem;
 }
+.schedule-more {
+    font-style: italic;
+    color: var(--orange-high-desert);
+}
 
 
 @media (max-width: 1510px) {

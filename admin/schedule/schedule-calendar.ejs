@@ -25,12 +25,6 @@
             const year = startDate.getFullYear()
             const month = startDate.getMonth()
             const monday = startDate.getDate()
-            const calendarTitles = {
-                "city": "CITY DRIVING", 
-                "backing1": "STRAIGHT LINE BACKING",
-                "backing2": "OFFSET BACKING",
-                "backing3": "ALLEY DOCK BACKING"
-            }
             const calendarType = schType
             const calendarTitle = calendarTitles[schType]
 
@@ -96,7 +90,7 @@
         </header>
 
         <div class="schedule-box">
-            <section class="calendar-box" action="/admin/schedule/<%= calendarType %>" method="POST" id="<%= calendarType %>">
+            <section class="calendar-box" id="<%= calendarType %>">
                 <h2 class="calendar-title"><%= calendarTitle %></h2>
                 <div class="calendar">
                     <!-- left column -->

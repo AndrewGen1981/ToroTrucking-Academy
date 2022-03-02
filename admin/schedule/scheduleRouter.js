@@ -8,9 +8,10 @@ const admin = require('../config')
 // MODELS for mongoose
 const { Student, Schedule } = require('../../users/userModel')
 const { ScheduleBlocked } = require('./schTemplateModel')
-// headers to pass
-const spotsArray = ['08:00', '08:45', '09:30', '10:15', '11:00', '12:30', '13:15', '14:00', '14:45', '15:30', '16:15']
-const daysOfWeek = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']
+
+// schedule comtroller
+const { getCalendarData } = require('./schedule')
+
 
 
 // @GET /schedule
@@ -24,87 +25,22 @@ schRouter.get('/', async(req, res) => {
 })
 
 
-// TOOL Midleware
-async function getCalendarData(req, schType) {
-    const date = req.query.date ? new Date(req.query.date) : new Date()
-
-    const calendarTransmission = req.query.calendarTransmission || "AUTO"
-    const calendarLocation = req.query.calendarLocation || admin.LOCATION.Tacoma
-    // calendar term
-    const startDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1, 0, 0, 0))
-    const endDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 8, 0, 0, 0))
-
-    const filter = { 
-        location: calendarLocation,
-        status: "unblock",
-        graduate: "no",
-    }
-
-    const scheduleBlocked = await ScheduleBlocked.findOne({
-        schType,
-        schTransmission: calendarTransmission,
-        schLocation: calendarLocation
-    })
-    const blockedArray = scheduleBlocked ? scheduleBlocked.schBlockedDays : []
-        
-    const students = await Student.find(filter).select('key').populate([
-        { 
-            path: "user",
-            select: "dataCollection",
-            populate: {
-                path: "dataCollection",
-                select: "firstName lastName",
-            },
-        },
-        { path: 'schedule' }
-    ])
-
-    // selecting appointments for this period
-    const scheduledAppointments = []
-    students.forEach(student => {
-        if(student.schedule) {
-            student.schedule.appointments.forEach(appointment => {
-                if(appointment.appDate >= startDate && appointment.appDate <= endDate) {
-                    scheduledAppointments.push({
-                        appDate: appointment.appDate,
-                        appType: appointment.appType,
-                        appTransmission: appointment.appTransmission,
-                        appLocation: appointment.appLocation,
-                        studentNameKey: `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName} ${student.key}`,
-                        studentId: student._id,
-                        scheduleId: student.schedule._id,
-                        appointmentId: appointment._id,
-                    })
-                }
-            })
-        }
-    })
-    
-    return { 
-        students, scheduledAppointments,
-        startDate, spotsArray, daysOfWeek,
-        calendarTransmission, calendarLocation,
-        blockedArray, schType
-    }
-}
-
-
 // @GET /schedule/backing
 // schedule, query ?date="2022-02-24"&calendarTransmission="AUTO"&calendarLocation="Tacoma, WA"
 schRouter.get('/backing1', async(req, res) => {
-    const dataObj = await getCalendarData(req, "backing1")
+    const dataObj = await getCalendarData(req, "backing1", 7)
     res.render(path.join(__dirname+'/schedule-calendar.ejs'), dataObj)
 })
 schRouter.get('/backing2', async(req, res) => {
-    const dataObj = await getCalendarData(req, "backing2")
+    const dataObj = await getCalendarData(req, "backing2", 7)
     res.render(path.join(__dirname+'/schedule-calendar.ejs'), dataObj)
 })
 schRouter.get('/backing3', async(req, res) => {
-    const dataObj = await getCalendarData(req, "backing3")
+    const dataObj = await getCalendarData(req, "backing3", 7)
     res.render(path.join(__dirname+'/schedule-calendar.ejs'), dataObj)
 })
 schRouter.get('/city', async(req, res) => {
-    const dataObj = await getCalendarData(req, "city")
+    const dataObj = await getCalendarData(req, "city", 7)
     res.render(path.join(__dirname+'/schedule-calendar.ejs'), dataObj)
 })
 

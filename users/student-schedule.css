@@ -1,0 +1,43 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-item {
+    font-style: italic;
+    color: blue;
+}
+.-current {
+    background-color: bisque;
+}
+
+
+.student-schedule {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+}
+
+.calendar-dateOfWeek, .day-date {
+    text-align: center;
+}
+
+.-today {
+    background-color: lightgreen;
+}
+.-today-DOW {
+    background-color: green;
+    border-radius: 5px 5px 0 0;
+}
+.calendar-cell {
+    text-align: center;
+}
+.-occupied {
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+.-occupied-by-you {
+    background-color: lightcoral;
+}
+.-empty {
+    cursor: pointer;
+}

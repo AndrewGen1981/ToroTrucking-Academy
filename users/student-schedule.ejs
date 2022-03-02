@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA / Schedule an Appointment</title>
+
+    <link rel="shortcut icon" href="/static/images/thumb.png">
+        
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/css/fonts.css">
+    <link rel="stylesheet" href="../static/css/brix-family.css">
+
+    <!-- <link rel="stylesheet" href="../static/css/colors.css"> -->
+    <!-- <link rel="stylesheet" href="../static/css/bolt-copyright.css"> -->
+        
+    <link rel="stylesheet" href="/users/student-schedule.css">
+
+</head>
+<body>
+
+    <% if (locals.startDate && locals.spotsArray && locals.scheduledAppointments && locals.blockedArray) { %>
+
+        <%
+            const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+            const year = startDate.getFullYear()
+            const month = startDate.getMonth()
+            const monday = startDate.getDate()
+            const calendarType = schType
+            const calendarTitle = calendarTitles[schType]
+
+            function leadingZero(n) { return n < 10 ? `0${n}` : `${n}` }
+
+            function checkIfBusy(spotDate) {
+                let result = false
+                if (scheduledAppointments.length) {
+                    scheduledAppointments = scheduledAppointments.filter(appointment => {
+                        if (appointment.appDate == `${spotDate}`) {
+                            result = appointment.isItMe ? "ME" : "NOTME"
+                        } else {
+                            return appointment
+                        }
+                    })
+                }
+                return result
+            }
+
+        %>
+
+        <header>
+            <a class="nav-item -back" href="/user/home"><< BACK</a>
+            <% Object.keys(calendarTitles).forEach(key => { %>
+                <% if (schType === key) { %>
+                    <a class="nav-item -current" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
+                <% } else { %>
+                    <a class="nav-item" href="/user/schedule?appType=<%= key %>"><%= calendarTitles[key] %></a>
+                <% } %>
+            <% }) %>
+        </header>
+
+
+        <section class="student-schedule-box">
+            <div class="student-schedule">
+                <!-- Day of Week -->
+                <span class="calendar-dateOfWeek -header">Day</span>
+                <% for(let i=0; i < nDays; i++) { %>
+                    <span class="calendar-dateOfWeek"><%= daysOfWeek[i % 7] %></span>
+                <% } %>
+                <!-- Date, two weeks -->
+                <span class="day-date -header">Time / Date</span>
+                <% for(let i=0; i < nDays; i++) { %>
+                    <% 
+                        let date = new Date(Date.UTC(year, month, monday + i, 0, 0, 0))
+                        let y = date.getFullYear()
+                        let m = monthNames[date.getMonth()]
+                        let d = leadingZero(date.getDate())
+                        let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
+                    %>
+                    <span class="day-date" data-date="<%= dateKey %>"><%= `${m}.${d}.${y}` %></span>
+                <% } %>
+                <!-- Spot lines -->
+                <% spotsArray.forEach((spot, spotIndex) => { %>
+                    <span class="calendar-cell -header"><%= spot %></span>
+                    <% for(let i=0; i < nDays; i++) { %>
+                        <% 
+                            let date = new Date(Date.UTC(year, month, monday + i, 0, 0, 0))
+                            let y = date.getFullYear()
+                            let d = leadingZero(date.getDate())
+                            let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
+                        %>
+                        <% let occupiedBy = checkIfBusy(new Date(`${dateKey}T${spot}:00.000Z`)) %>
+                        <% if(occupiedBy === "ME") { %>
+                            <span class="calendar-cell -occupied-by-you">YOU</span>
+                        <% } else { %>
+                            <% if(occupiedBy === "NOTME") { %>
+                                <span class="calendar-cell -occupied">occupied</span>
+                            <% } else { %>
+                                <span class="calendar-cell -empty" data-dateKey="<%= dateKey %>" data-spot="<%= spot %>">empty</span>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                <% }) %>
+
+
+            </div>          <!-- student-schedule -->
+        </section>      <!-- student-schedule -->
+
+
+    <% } else { %>
+        <h2 class="error-message">No core data passed...</h2>
+    <% } %>
+
+    
+    <script defer>
+
+        // checkIfToday - entry point
+        checkIfToday()      // entry point
+
+        function checkIfToday() {
+            const today = new Date()
+            const DOW = document.querySelectorAll(".calendar-dateOfWeek")
+            const days = document.querySelectorAll(".day-date")
+            days.forEach((day, index) => {
+                let dayDate = new Date(`${day.dataset.date}T00:00Z`)
+                if (!isNaN(today - dayDate)) {
+                    let delta = (today - dayDate) / (24*60*60*1000)
+                    if (delta > 0 && delta < 1) {
+                        day.classList.add("-today")
+                        DOW[index].classList.add("-today-DOW")
+                    } else {
+                        day.classList.remove("-today")
+                        DOW[index].classList.remove("-today-DOW")
+                    }
+                }
+            })
+        }
+
+    </script>
+
+
+</body>
+</html>
