@@ -38,6 +38,7 @@ const PROFILES = [
     // TACOMA managers & instructors:
     { id: "Aziz0001", name: "Aziz", title:'Manager', email: "Azo2008@gmail.com", location: LOCATION.Tacoma, password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
     { id: "Mariana0001", name: "Mariana Bulgaru", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
+    { id: "Salazar0002", name: "Michelle Salazar", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
     // + Henry Easterlin ( Manager / Instructor )
     { id: "Easterlin0001", name: "Henry Easterlin", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.EASTERLIN0001_PASS, auth: AUTH.editor },
     { id: "EasterlinInst0001", name: "Henry Easterlin", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.EASTERLIN0001_PASS, auth: AUTH.instructor },
