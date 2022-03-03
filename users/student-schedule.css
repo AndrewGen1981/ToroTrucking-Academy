@@ -57,6 +57,8 @@ menu {
 
     transform: translateY(-50%);
     transition: all 0.25s linear;
+
+    z-index: 1;
 }
 
 .nav-item {
@@ -75,9 +77,20 @@ menu {
     border-radius: 4px;
     transition: all 0.25s linear;
 }
+
+/* back link moving back and forth */
+@keyframes movingBackForth {
+    from {
+        transform: translateY(-50%);
+    }
+    to {
+        transform: translateY(-50%) translateX(-10px);
+    }
+}
+
 .nav-item:not(.-current):hover .back-ico {
     fill: #ffffffc0;
-    transform: translateY(-50%) translateX(-10px);
+    animation: movingBackForth 0.7s ease-in-out infinite alternate;
 }
 
 .nav-item:not(.-current):hover {
