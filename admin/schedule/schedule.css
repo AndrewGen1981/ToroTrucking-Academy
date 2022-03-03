@@ -88,7 +88,10 @@ menu {
 
 .schedule-box {
     width: 95%;
+
+    min-width: 510px;
     max-width: 1550px;
+
     margin: 0 auto;
 
     position: relative;
@@ -291,4 +294,17 @@ menu {
 
 .-hidden {
     display: none;
+}
+
+
+@media (max-width: 685px) {
+    :root {
+        font-size: 12px;
+    }
+    .day-date {
+        font-size: 0.9rem;
+    }
+    .main-inputs input {
+        width: 31%;
+    }
 }

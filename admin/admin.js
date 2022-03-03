@@ -214,12 +214,12 @@ admRouter.get('/user/:id', redirectToLogin, ifCanReadOrInstructor, async(req, re
             { path: 'agreement' },
             {
                 path: 'student', 
-                populate: { path: 'tuition', select: '-key -email -student_id_string -__v' },  // excluding fields from query
+                populate: [
+                    { path: 'tuition', select: '-key -email -student_id_string -__v' },  // excluding fields from query
+                    { path: 'scoring', select: '-key -email -student_id_string -__v' },  // excluding fields from query
+                    { path: 'schedule', select: 'appointments' }
+                ]
             },
-            {
-                path: 'student',
-                populate: { path: 'scoring', select: '-key -email -student_id_string -__v' }   // excluding fields from query
-            }
         ])
 
         if (user === null) { return res.status(400).send(`Wrong request: ${id}`) }

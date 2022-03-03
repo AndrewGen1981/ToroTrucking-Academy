@@ -1466,7 +1466,7 @@
                     </section>
 
                     <% if(user.application.employers.length) { %>
-                        <% user.application.employers.map((employer, index) => { %>
+                        <% user.application.employers.forEach((employer, index) => { %>
                             <details class="row-item-85" id="company-details">   <!-- id is used for open details after backlink -->
                                 <summary class="field-accomplished">
                                     #<%= index + 1 %> <%= employer['employer-company'].toUpperCase() %>
@@ -1746,7 +1746,7 @@
             const spanTotal = document.querySelector('[name=agrTotal]') // span has NAME equals input's ID
 
             let sum = 0
-            costItems.map(item => {
+            costItems.forEach(item => {
                 sum += Number.isNaN(parseFloat(item.value)) ? 0 : parseFloat(item.value)
             })
 
@@ -1989,6 +1989,9 @@
             break;
             case 'scorings':
                 openIfExists('#scoring-details')
+            break;
+            case 'schedule':
+                openIfExists('#schedule-details')
             break;
             case 'payments':
                 openIfExists('#payments-details')
