@@ -103,18 +103,6 @@
 
                     <div class='field -status -header -left-color-group'>Status</div>
 
-                    <div class='field -email -header -left-color-group'>Email</div>
-                    <div class='field -email-verified -header -left-color-group'>Verified</div>
-                    
-                    <div class='field -street -header -dataCol-color-group'>Street</div>
-                    <div class='field -city -header -dataCol-color-group'>City</div>
-                    <div class='field -state -header -dataCol-color-group'>State</div>
-                    <div class='field -zip -header -dataCol-color-group'>Zip</div>
-                    <div class='field -phone -header -dataCol-color-group'>Phone</div>
-
-                    <div class='field -DOB -header -dataCol-color-group'>DOB</div>
-                    <div class='field -SSN -header -dataCol-color-group'>SSN</div>
-
                     <div class='field -class -header -agr-color-group'>Class</div>
                     <div class='field -transmission -header -agr-color-group'>Transmission</div>
                     <div class='field -visiting -header -agr-color-group'>Visiting</div>
@@ -130,9 +118,6 @@
                     
                     <div class='field -created -header -sign-color-group'>Student Since</div>
                     <div class='field -schoolSignRep -header -sign-color-group'>Agreement Signed by</div>
-                    <div class='field -schoolSignDate -header -sign-color-group'>Date of Sign</div>
-                    <div class='field -updatedAdmin -header -sign-color-group'>Agreement Updated by</div>
-                    <div class='field -updatedDate -header -sign-color-group'>Date of Update</div>
 
                     <div class='field -tuition -header -learn-color-group'>Learning</div>
 
@@ -202,20 +187,6 @@
     
                             <div class='field -status -status-<%= student.status %>'><%= student.status === 'unblock' ? 'active' : student.status %></div>
     
-                            <a class='field -email' href="mailto:<%= student.email %>"><%= student.email %></a>
-                            <% let ifVerified = student.user.token === 'verified' ? '-email-trusted' : '-email-unsafe' %>
-                            <div class='field -email-verified <%= ifVerified %>'><%= student.user.token %></div>
-    
-                            <div class='field -street'><%= student.user.dataCollection.street %></div>
-                            <div class='field -city'><%= student.user.dataCollection.city %></div>
-                            <div class='field -state'><%= student.user.dataCollection.state.substring(0, 2) %></div>
-                            <div class='field -zip'><%= student.user.dataCollection.zip %></div>
-    
-                            <a class='field -phone' href="tel:<%= student.user.dataCollection.phone %>"><%= student.user.dataCollection.phone %></a>
-    
-                            <div class='field -DOB'><%= formatDate(student.user.dataCollection.DOB) %></div>
-                            <div class='field -SSN'><%= student.user.dataCollection.SSN %></div>
-    
                             <div class='field -class'><%= student.user.agreement.class %></div>
                             <div class='field -transmission'><%= student.user.agreement.transmission.replace(' Transmission', '') %></div>
                             <div class='field -visiting'><%= student.user.agreement.visiting.replace('at least ', '').replace(' per day', '') %></div>
@@ -238,9 +209,6 @@
                             
                             <div class='field -created'><%= formatDate(student.created) %></div>
                             <div class='field -schoolSignRep'><%= student.user.agreement.schoolSignRep %></div>
-                            <div class='field -schoolSignDate'><%= formatDate(student.user.agreement.schoolSignDate) %></div>
-                            <div class='field -updatedAdmin'><%= student.user.agreement.updatedAdmin %></div>
-                            <div class='field -updatedDate'><%= formatDate(student.user.agreement.updatedDate) %></div>
     
                             <!-- TUITION RESULTS -->
                             <% if(!student.tuition) { %>

@@ -87,7 +87,7 @@
                 <section class="chart-legend">
                     <% chartData[0].scoringTypes.forEach((scrType, index) => { %>
                         <div class="instructor-box">
-                            <span class="instructor-key" style="--c:<%= getColor(index, chartData[0].instructorNames.length) %>"></span>
+                            <span class="instructor-key" style="--c:<%= getColor(index, chartData[0].scoringTypes.length) %>"></span>
                             <span class="instructor-name"><%= scrType %></span>
                         </div>
                     <% }) %>

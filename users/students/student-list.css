@@ -251,51 +251,6 @@
     color: yellow;
 }
 
-.-email {
-    --width: 15rem;
-    text-transform: lowercase;
-}
-.-email-verified {
-    --width: 5rem;
-    text-align: center;
-}
-/* .-email-trusted {
-    color: var(--good-done1);
-} */
-.-email-unsafe {
-    color: var(--bad-todo1);
-}
-.-street {
-    --width: 15rem;
-    text-transform: uppercase;
-}
-.-city {
-    --width: 9rem;
-    text-transform: uppercase;
-    text-align: center;
-}
-.-state {
-    --width: 3.5rem;
-    text-transform: uppercase;
-    text-align: center;
-}
-.-zip {
-    --width: 3.5rem;
-    text-align: center;
-}
-.-phone {
-    --width: 7rem;
-    text-transform: uppercase;
-    text-align: center;
-}
-.-DOB {
-    --width: 5.5rem;
-    text-align: center;
-}
-.-SSN {
-    --width: 5.5rem;
-    text-align: center;
-}
 
 .-class {
     --width: 8rem;

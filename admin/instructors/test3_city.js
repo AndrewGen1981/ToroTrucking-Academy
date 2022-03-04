@@ -289,7 +289,10 @@ const test3_city = [
                 item: 'Improper use of turn signals',
                 checks: [ '1', '1', '1', '1', '1' ]
             },
-
+            {
+                item: 'Maintains speed',
+                checks: [ '1', '1', '1', '1', '1' ]
+            },
         ]
     },  // end of block
 ]

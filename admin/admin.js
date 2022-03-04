@@ -113,6 +113,14 @@ function ifCanReadOrInstructor (req, res, next) {
 
     return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
 }
+function ifCanWriteOrInstructor (req, res, next) {
+    const adminId = req.session.userId
+
+    if (admin.checkAdminsAuth(adminId, 'write')) { return next() }
+    if (admin.checkAdminsAuth(adminId, 'instructor')) { return next() }
+
+    return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write or instructor" })
+}
 
 
 // LOGIN, MAIN, PROFILE ROUTES
@@ -883,7 +891,7 @@ admRouter.use('/inst', redirectToLogin, require('./instructors/instructorsRouter
 // @ admin/charts routes
 admRouter.use('/charts', redirectToLogin, ifCanRead, require('./charts/chartsRouter'))
 // @ admin/schedule
-admRouter.use('/schedule', redirectToLogin, ifCanWrite, require('./schedule/scheduleRouter'))
+admRouter.use('/schedule', redirectToLogin, ifCanWriteOrInstructor, require('./schedule/scheduleRouter'))
 
 
 

@@ -176,8 +176,6 @@ header {
 
     text-align: center;
     color: #333;
-    border: 1px solid #333;
-    border-radius: 1em;
 
     font-family: "BrixSlab-Regular";
     font-size: 14px;
@@ -214,7 +212,6 @@ header {
     width: 100%;
     height: var(--h);
     background-color: var(--c);
-    background-image: url('/static/images/scratch/tire_580-min.png');
 
     display: flex;
     align-items: center;
@@ -278,8 +275,8 @@ header {
     -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
             mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
 }
-.pie:after {
+/* .pie:after {
     inset:calc(50% - var(--b)/2);
     background:var(--c);
     transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
-}
+} */

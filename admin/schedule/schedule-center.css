@@ -50,7 +50,6 @@ header {
     border-radius: 5px;
     background-color: #ccc9bd26;
 
-    /* background-image: url('/static/images/scratch/tire_580-min.png'); */
     transition: all 0.25s linear;
 }
 .location-item:hover {
@@ -80,8 +79,9 @@ header {
     font-family: "BrixSlab-Regular";
     font-size: 1rem;
     text-decoration: none;
+    letter-spacing: 0.5px;
     
-    color: #f99921;
+    color: #333;
     background-color: #fff;
     border-radius: 2px;
 

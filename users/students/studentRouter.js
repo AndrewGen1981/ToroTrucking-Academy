@@ -133,30 +133,16 @@ studentRouter.post("/", ifCanReadOrInstructor, async (req, res) => {
 });
 
 // Student List populate constants
-const studentPopulated = "key email TTT created status location";
-const userPopulated = "token payments";
+const studentPopulated = "key TTT created status location";
 const studentListPopulate = [
-  {
-    path: "user",
-    select: "dataCollection",
-    populate: {
-      path: "dataCollection",
-      select: "firstName lastName middleName street city state zip phone DOB SSN",
-    },
-  },
-  {
-    path: "user",
-    select: userPopulated,
-    populate: {
-      path: "agreement",
-      select: "program class transmission visiting tuitionCost regisrFee supplyFee otherFee payment thirdPartyList schoolSignDate schoolSignRep updatedAdmin updatedDate",
-    },
+  { path: "user", select: "payments",
+    populate: [
+      { path: "dataCollection", select: "firstName lastName middleName" },
+      { path: "agreement", select: "program class transmission visiting tuitionCost regisrFee supplyFee otherFee payment thirdPartyList schoolSignRep" },
+    ]
   },
   { path: "tuition", select: "isAllowed avLessonsRate" },
-  {
-    path: "scoring",
-    select: "isAllowed scoringsInCab scoringsOutCab scoringsBacking scoringsCity",
-  },
+  { path: "scoring", select: "isAllowed scoringsInCab scoringsOutCab scoringsBacking scoringsCity" },
 ];
 
 // @GET admin/student/list

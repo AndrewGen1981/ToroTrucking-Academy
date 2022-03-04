@@ -13,6 +13,14 @@ const { ScheduleBlocked } = require('./schTemplateModel')
 const { getCalendarData } = require('./schedule')
 
 
+function ifCanWrite (req, res, next) {
+    // check Admin's Auth - if can WRITE
+    const adminId = req.session.userId
+    if (!admin.checkAdminsAuth(adminId, 'write')) {
+        return res.status(403).json({ issue: "Instructors cannot change schedule" })
+    } else { next() }
+}
+
 
 // @GET /schedule
 schRouter.get('/', async(req, res) => {
@@ -46,7 +54,7 @@ schRouter.get('/city', async(req, res) => {
 
 
 // @PUT /schedule
-schRouter.put('/', async(req, res) => {
+schRouter.put('/', ifCanWrite, async(req, res) => {
     const { action } = req.body
     try {
         // delete scheduled action
