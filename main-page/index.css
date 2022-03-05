@@ -74,9 +74,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content: flex-end;
     flex-wrap: nowrap;
 
-    background-image: url('/static/images/logo-badge-black.png');
+    background-image: url('/static/images/TTA_logo-min.png');
     background-repeat: no-repeat;
-    background-size: 7.5rem;
+    background-size: 20rem;
     background-position-y: center;
     background-position-x: 4rem;
 
@@ -107,6 +107,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .-inac {
     color: rgb(201, 201, 201);
     cursor: not-allowed;
+}
+.-login {
+    color: var(--orange-high-desert);
 }
 
 
@@ -169,7 +172,7 @@ header {
 }
 .enroll-now:hover {
     color: #ffffff;
-    border-radius: 2rem;
+    border-radius: 10px;
     transition: color 0.25s linear, border-radius 0.25s ease-in;
 }
 
@@ -183,7 +186,8 @@ header {
 .blog-posts-box {
     width: 61%;
     margin: 7rem auto;
-
+}
+.blog-posts-box-inner {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -278,7 +282,7 @@ ol .why-us-text {
     width: 100%;
     background-color: #ffffff;
 }
-.wdwo-title {
+.wdwo-title, .blog-post-title {
     margin: 6.67rem 0;
     width: 100%;
 
@@ -289,6 +293,9 @@ ol .why-us-text {
     text-align: center;
 
     color: #2e2e2e;
+}
+.blog-post-title {
+    margin-bottom: 2rem;
 }
 .wdwo-services-box {
     width: 61%;
