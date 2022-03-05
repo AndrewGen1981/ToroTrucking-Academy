@@ -173,10 +173,10 @@
                             <% test4Info = getInfo(student.scoring.scoringsCity, test4Info) %>
                             
                             <% function getInfoSmall(arr, NA) { return arr.length ? arr.length : NA } %>
-                            <% test1InfoSmall = getInfoSmall(student.scoring.scoringsInCab, test1Info) %>
-                            <% test2InfoSmall = getInfoSmall(student.scoring.scoringsOutCab, test2Info) %>
-                            <% test3InfoSmall = getInfoSmall(student.scoring.scoringsBacking, test3Info) %>
-                            <% test4InfoSmall = getInfoSmall(student.scoring.scoringsCity, test4Info) %>
+                            <% test1InfoSmall = getInfoSmall(student.scoring.scoringsInCab, test1InfoSmall) %>
+                            <% test2InfoSmall = getInfoSmall(student.scoring.scoringsOutCab, test2InfoSmall) %>
+                            <% test3InfoSmall = getInfoSmall(student.scoring.scoringsBacking, test3InfoSmall) %>
+                            <% test4InfoSmall = getInfoSmall(student.scoring.scoringsCity, test4InfoSmall) %>
                         <% } %>
 
                         <% if (locals.today) { %>

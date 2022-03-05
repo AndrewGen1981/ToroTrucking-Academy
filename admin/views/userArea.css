@@ -277,3 +277,110 @@ footer * {
     font-family: "BrixSlab-RegularItalic";
     color:#fff;
 }
+
+.nav-item-svg {
+    display: none;
+    width: 15px;
+    fill: #fff;
+}
+.nav-item-svg-student {
+    display: none;
+    width: 25px;
+    fill: #fff;
+}
+
+
+@media (max-width: 1150px) {
+    .schema-col-lastSESS {
+        display: none;
+    }
+}
+@media (max-width: 990px) {
+    .schema-col-email {
+        display: none;
+    }
+    .schema-col-name {
+        width: 30%;
+    }
+    .schema-col-token, .schema-col-created {
+        width: 12%;
+    }
+    .schema-col-dataCollection,
+    .schema-col-application,
+    .schema-col-agreement,
+    .schema-col-student {
+        width: 10%;
+    }
+}
+@media (max-width: 850px) {
+    :root {
+        font-size: 14px;
+    }
+    .schema-col-token, .schema-col-created {
+        width: 8%;
+    }
+    .schema-col-dataCollection,
+    .schema-col-application,
+    .schema-col-agreement,
+    .schema-col-student {
+        width: 12%;
+    }
+}
+@media (max-width: 777px) {
+    :root {
+        font-size: 13px;
+    }
+    .schema-col-token, .schema-col-created {
+        width: 8%;
+    }
+    .schema-col-dataCollection,
+    .schema-col-application,
+    .schema-col-agreement,
+    .schema-col-student {
+        width: 12%;
+    }
+    .schema-col-created {
+        display: none;
+    }
+    .schema-col-index, .schema-col-name {
+        font-size: 1rem;
+    }
+}
+@media (max-width: 585px) {
+    .schema-col-index {
+        width: 5%;
+    }
+    .schema-col-name {
+        width: 20%;
+    }
+    .schema-col-token {
+        display: none;
+    }
+    .nav-item-text {
+        display: none;
+    }
+    .nav-item-svg, .nav-item-svg-student {
+        display: block;
+    }
+}
+@media (max-width: 375px) {
+    :root {
+        --header-height: 65px;
+    }
+    .nav-text h2 {
+        font-size: 1.65rem;
+    }
+    .schema-col-index {
+        width: 3%;
+    }
+    .schema-col-name {
+        min-width: unset;
+        width: 55%;
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+    #schema-headers-users .schema-col-name {
+        display: flex;
+        flex-direction: column;
+    }
+}

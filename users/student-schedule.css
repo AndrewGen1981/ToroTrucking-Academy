@@ -11,9 +11,19 @@
     --day-color: #3333330d;
 }
 
+body, html {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 header {
     padding: 1rem 0;
     width: 100%;
+    height: fit-content;
 
     background-color: #333;
     margin-bottom: 1rem;
@@ -189,10 +199,29 @@ menu {
     border-radius: 3px;
 }
 
+.occupied-svg {
+    display: none;
+    margin: 0 auto;
+    width: 12px;
+    fill: #333;
+}
 .-closed {
     text-transform: uppercase;
     color: #fff;
     background-color: gray;
+}
+.closed-svg {
+    display: none;
+    margin: 0 auto;
+    width: 12px;
+    fill: #fff;
+}
+.empty-svg {
+    display: none;
+    margin: 0 auto;
+    width: 12px;
+    fill: #259b5e;
+    transition: all 0.5s linear;
 }
 
 .tool-bar {
@@ -267,7 +296,6 @@ menu {
     margin-bottom: 5px;
 }
 
-
 /* wait animation */
 @keyframes rotate {
     to { transform: rotate(-360deg); }
@@ -284,7 +312,67 @@ menu {
     fill: #b4dcb4;
 }
 
+.bolt-footer {
+    padding: 10px 0 !important;
+}
 
 .-hidden {
     display: none;
+}
+
+
+@media (max-width: 1150px) {
+    :root {
+        font-size: 14px;
+    }
+    .nav-item {
+        width: 105px;
+    }
+}
+@media (max-width: 1050px) {
+    .year {
+        display: none;
+    }
+}
+@media (max-width: 750px) {
+    :root {
+        font-size: 13px;
+    }
+    .occupied-text {
+        display: none;
+    }
+    .occupied-svg {
+        display: block;
+    }
+    .closed-text {
+        display: none;
+    }
+    .closed-svg {
+        display: block;
+    }
+}
+@media (max-width: 650px) {
+    .day-date.-header {
+        opacity: 0;
+    }
+    .calendar-dateOfWeek {
+        font-size: 1.3rem;
+    }
+    .empty-text {
+        display: none;
+    }
+    .empty-svg {
+        display: block;
+    }
+    .calendar-cell:hover .empty-svg {
+        transform: rotate(180deg);
+    }
+}
+@media (max-width: 540px) {
+    .calendar-dateOfWeek {
+        font-size: 1.1rem;
+    }
+    .month-date {
+        font-size: 0.7rem;
+    }
 }

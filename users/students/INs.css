@@ -269,6 +269,18 @@ font-family: "BrixSlab-BlackItalic";
         font-size: 12px;
         --header-height: 6rem;
     }
+
+    .field.-clocks.-in {
+        display: none;
+    }
+    .field.-clocks.-out {
+        display: none;
+    }
+
+    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
+        width: 15%;
+    }
+
     .ins-list-header {
         flex-direction: column;
     }
@@ -296,9 +308,6 @@ font-family: "BrixSlab-BlackItalic";
     .-key, .-TTT, .-presentStatus {
         width: 7%;
     }
-    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
-        width: 5%;
-    }
     .-bigMsg {
         display: none;
     }
@@ -313,9 +322,6 @@ font-family: "BrixSlab-BlackItalic";
     .-location {
         width: 14%;
     }
-    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
-        width: 6%;
-    }
 }
 @media (max-width: 450px) {
     :root {
@@ -329,5 +335,8 @@ font-family: "BrixSlab-BlackItalic";
     }
     #clocked-as-of {
         margin: 1px 0;
+    }
+    .-incab-scoring, .-outcab-scoring, .-backing-scoring, .-city-scoring {
+        width: 10%;
     }
 }

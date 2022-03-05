@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../static/css/brix-family.css">
         
     <link rel="stylesheet" href="/users/student-schedule.css">
+    <link rel="stylesheet" href="../static/css/bolt-copyright.css">
 
 </head>
 <body>
@@ -88,7 +89,9 @@
                         let d = leadingZero(date.getDate())
                         let dateKey = `${y}-${leadingZero(date.getMonth() + 1)}-${d}`
                     %>
-                    <span class="day-date" data-date="<%= dateKey %>"><%= `${m}.${d}.${y}` %></span>
+                    <span class="day-date" data-date="<%= dateKey %>">
+                        <span class="month-date"><%= `${m}.${d}` %></span><span class="year"><%= `.${y}` %></span>
+                    </span>
                 <% } %>
                 <!-- Spot lines -->
                 <% spotsArray.forEach((spot, spotIndex) => { %>
@@ -115,10 +118,20 @@
                             </span>
                         <% } else { %>
                             <% if(occupiedBy.who === "NOTME") { %>
-                                <span class="calendar-cell -occupied">occupied</span>
+                                <span class="calendar-cell -occupied">
+                                    <span class="occupied-text">occupied</span>
+                                    <svg class="occupied-svg" viewBox="0 0 448 512">
+                                        <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"/>
+                                    </svg>
+                                </span>
                             <% } else { %>
                                 <% if (blockedArray.includes(`${i % 7}:${spotIndex}`)) { %>
-                                    <span class="calendar-cell -closed">closed</span>
+                                    <span class="calendar-cell -closed">
+                                        <span class="closed-text">closed</span>
+                                        <svg class="closed-svg" viewBox="0 0 448 512">
+                                            <path d="M80 192V144C80 64.47 144.5 0 224 0C303.5 0 368 64.47 368 144V192H384C419.3 192 448 220.7 448 256V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V256C0 220.7 28.65 192 64 192H80zM144 192H304V144C304 99.82 268.2 64 224 64C179.8 64 144 99.82 144 144V192z"/>
+                                        </svg>
+                                    </span>
                                 <% } else { %>
                                     <span class="calendar-cell -empty"
                                         data-date="<%= dateKey %>T<%= spot %>:00.000Z"
@@ -127,7 +140,10 @@
                                         data-location="<%= schLocation %>"
                                         title="add to <%= dateKey %> <%= spot %>"
                                         onclick="addAppointment(this)">
-                                        empty
+                                        <span class="empty-text">empty</span>
+                                        <svg class="empty-svg" viewBox="0 0 512 512">
+                                            <path d="M222.7 32.15C227.7 49.08 218.1 66.9 201.1 71.94C121.8 95.55 64 169.1 64 255.1C64 362 149.1 447.1 256 447.1C362 447.1 448 362 448 255.1C448 169.1 390.2 95.55 310.9 71.94C293.9 66.9 284.3 49.08 289.3 32.15C294.4 15.21 312.2 5.562 329.1 10.6C434.9 42.07 512 139.1 512 255.1C512 397.4 397.4 511.1 256 511.1C114.6 511.1 0 397.4 0 255.1C0 139.1 77.15 42.07 182.9 10.6C199.8 5.562 217.6 15.21 222.7 32.15V32.15z"/>
+                                        </svg>
                                     </span>
                                 <% } %>
                             <% } %>
@@ -155,6 +171,16 @@
     <% } else { %>
         <h2 class="error-message">No core data passed...</h2>
     <% } %>
+
+
+    <div class="bolt-footer">
+        © 2022 designed by BOLT
+        <a href="https://www.boltcdl.com" target="_blank">
+            <svg class='bolt-ico' viewBox="0 0 320 512"><path d="M296 160H180.6l42.6-129.8C227.2 15 215.7 0 200 0H56C44 0 33.8 8.9 32.2 20.8l-32 240C-1.7 275.2 9.5 288 24 288h118.7L96.6 482.5c-3.6 15.2 8 29.5 23.3 29.5 8.4 0 16.4-4.4 20.8-12l176-304c9.3-15.9-2.2-36-20.7-36z"></path></svg>
+        </a>
+        <a href="mailto:info@boltcdl.com">info@boltcdl.com</a>
+        <span class="bolt-tel">+1253.200.4466</span>
+    </div>
 
     
     <script defer>

@@ -190,3 +190,51 @@ header {
     justify-content: center;
 }
 
+@media (max-width: 1080px) {
+    :root {
+        --chart-width: calc(var(--desktop-width) * 0.85);
+    }
+}
+@media (max-width: 900px) {
+    :root {
+        font-size: 14px;
+        --chart-width: calc(var(--desktop-width) * 0.95);
+    }
+}
+@media (max-width: 800px) {
+    :root {
+        font-size: 13px;
+    }
+    .chart-column::after {
+        min-width: unset;
+        font-size: 10px;
+    }
+}
+@media (max-width: 650px) {
+    :root {
+        font-size: 12px;
+    }
+    .chart-title {
+        margin-bottom: 3.5rem;
+    }
+    .chart-column::after {
+        margin-top: 18px;
+        transform: rotate(-90deg);
+    }
+}
+@media (max-width: 550px) {
+    .chart-title {
+        font-size: 14px;
+    }
+    .chart-column::after {
+        margin-top: 30px;
+    }
+}
+@media (max-width: 350px) {
+    .header-title {
+        font-size: 1.65rem;
+    }
+    .chart-title {
+        font-size: 12px;
+    }
+}

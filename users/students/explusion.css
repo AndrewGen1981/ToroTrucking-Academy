@@ -220,3 +220,63 @@ menu {
     height: 3rem;
     background-color: #2c2c2c !important;
 }
+
+
+@media (max-width: 1450px) {
+    .-email {
+        display: none !important;
+    }
+    .-tuitionDuration, .-totalClocks, .-monthClocks {
+        width: 7%;
+    }
+}
+@media (max-width: 1400px) {
+    .-lastSessionDate {
+        display: none !important;
+    }
+    .-tuitionStartDate, .-lastVisitedDate {
+        width: 8%;
+        text-align: center;
+    }
+}
+@media (max-width: 1165px) {
+    .-phone, .-balance {
+        display: none !important;
+    }
+    .-location {
+        width: 10%;
+    }
+    .-tuitionStartDate, .-lastVisitedDate {
+        width: 10%;
+        text-align: center;
+    }
+    .-monthClocks {
+        width: 9%;
+    }
+}
+@media (max-width: 925px) {
+    :root {
+        font-size: 13px;
+    }
+}
+@media (max-width: 850px) {
+    .-tuitionStartDate {
+        display: none !important;
+    }
+    .-fullName {
+        width: 23%;
+    }
+}
+@media (max-width: 700px) {
+    .-TTT {
+        display: none !important;
+    }
+    .-location {
+        width: 13%;
+    }
+}
+@media (max-width: 650px) {
+    :root {
+        font-size: 12px;
+    }
+}
