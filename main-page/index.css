@@ -95,22 +95,23 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     color: #ffffff;
 
     cursor: pointer;
-}
-.nav-item:not(.-inac):hover {
-    text-shadow: 0px 0px 10px #2d2d2d;
-    transition: text-shadow .2s ease-in;
-}
-.-contact {
-    color: var(--orange-high-desert);
-    cursor: default;
+    transition: all 0.25s linear;
 }
 .-inac {
     color: rgb(201, 201, 201);
     cursor: not-allowed;
 }
-.-login {
+
+.-contact, .-login {
     color: var(--orange-high-desert);
+    text-shadow: 0 0 5px #333;
+    cursor: pointer;
 }
+.nav-item-box:hover .-contact,
+.nav-item-box:hover .-login {
+    text-shadow: 0px 0px 10px #2d2d2d;
+}
+
 
 
 /* HEADER */
