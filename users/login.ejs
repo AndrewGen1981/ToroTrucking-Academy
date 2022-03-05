@@ -31,6 +31,7 @@
             </div>
 
             <div class="register-box">Don't have an account?<a href="/user/register">Register</a></div>
+            <div class="admin-prompt -hidden">Are you an Admin?</div>
             
             <section class='message-box'>
                 <% if (locals.info) { %>
@@ -49,29 +50,40 @@
                         <% }) %>
                     </ol>
                 <% } %>
+                <% if(locals.issue) { %>
+                    <div class="log-issue"><%= issue %></div>
+                <% } %>
             </section>      <!-- message box -->
 
-            <div class="sign-regist-form-box">
+            <div class="slider" onclick="toggleUserAdmin(this)">
+                <div class="slider-button"></div>
+            </div>
 
+            <div class="sign-regist-form-box">
                 <form class='sign-form-box' action="/user/login" method="POST" id="signIn">
                     <input class="sign-input" type="email" name='email' id='email' placeholder="Email" value='@' required />
                     <input class="sign-input" type="password" name='password' id='password' placeholder="Password" required />
                     <button class="sign-btn" type="submit">Log In</button>
                 </form>
-
                 <form class='regist-form-box -hidden' action="/user/passwordreset" method="POST" id="resetPassword" class='-hidden'>
                     <p class='register-box'>Let us know what is your login-email. A new generated password will be sent to the provided one.</p>
                     <input class="sign-input" type="email" name='email' placeholder="Email" value="" required />
                     <button class="sign-btn" type="submit">Send</button>
                 </form>
-
                 <div class='reset-box' onclick="toggleResetMenu(this)">reset a password</div>
-
             </div>      <!-- login-form-box -->
+
+            <div class="admin-box -hidden">
+                <form class="log-form" action="/admin/login" method="POST">
+                    <input class="sign-input" type="text" name='id' placeholder="ID" required value="admin" />
+                    <input class="sign-input" type="password" name='password' placeholder="Password" required />
+                    <button class="sign-btn" type="submit">Log in</button>
+                </form>
+            </div>
+
         </div>  <!-- login-inner -->
     </div>      <!-- login-box -->
   
-</body>
 
     <script defer>
         
@@ -97,6 +109,42 @@
             }
         }
 
+
+        function toggleUserAdmin(toggler) {
+            const userBox = document.querySelector(".sign-regist-form-box")
+            const userReg = document.querySelector(".register-box")
+            const adminBox = document.querySelector(".admin-box")
+            const adminPrompt = document.querySelector(".admin-prompt")
+
+            if (!userBox || !adminBox) { return }
+
+            toggler.classList.toggle('-to-admin')
+            userBox.classList.toggle('-hidden')
+            userReg.classList.toggle('-hidden')
+            adminBox.classList.toggle('-hidden')
+            adminPrompt.classList.toggle('-hidden')
+
+            if (toggler.classList.contains('-to-admin')) {
+                localStorage.setItem("role", "admin")
+            } else {
+                localStorage.removeItem("role")
+            }
+        }
+
+
+        function toggleToAdmin() {
+            const role = localStorage.getItem("role")
+            if (role === "admin") {
+                document.querySelector(".slider").click()
+            }
+        }
+
+
+        // entry point
+        toggleToAdmin()
+
     </script>
 
+
+</body>
 </html>

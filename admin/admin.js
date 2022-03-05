@@ -125,7 +125,11 @@ function ifCanWriteOrInstructor (req, res, next) {
 
 // LOGIN, MAIN, PROFILE ROUTES
 admRouter.get('/', redirectToHome, (req, res) => {
-    res.render(path.join(__dirname+'/admWelcome.ejs'), {
+    // res.render(path.join(__dirname+'/admWelcome.ejs'), {
+    //     id: req.session.userId,
+    //     issue: admin.ISSUES[req.query.logIssue]
+    // })
+    res.render(path.join(__basedir+'/users/login.ejs'), {
         id: req.session.userId,
         issue: admin.ISSUES[req.query.logIssue]
     })
