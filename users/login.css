@@ -101,9 +101,11 @@
 .-to-admin .slider-button {
     --col1: #00ffff;
     --col2: #006060;
-
     background-color: var(--col1);
     background: linear-gradient(270deg, var(--col1), var(--col2));
+    background: -o-linear-gradient(270deg, var(--col1), var(--col2));
+    background: -moz-linear-gradient(270deg, var(--col1), var(--col2));
+    background: -webkit-linear-gradient(270deg, var(--col1), var(--col2));
 }
 .slider.-to-admin::after {
     color: aqua;
