@@ -35,6 +35,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname+'/main-page/index.html'))
 })
 
+app.get('/cdl-courses', (req, res) => {
+    res.sendFile(path.join(__dirname+'/main-page/cdl-courses.html'))
+})
+
 app.get('/catalog', async(req, res) => {
     res.sendFile(path.join(__dirname+'/static/catalog/Toro Catalog WA 2021 Dec17.pdf'))
 })
