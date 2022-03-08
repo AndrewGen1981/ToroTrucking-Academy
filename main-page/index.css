@@ -744,12 +744,14 @@ footer {
     letter-spacing: 1px;
     color: #ffffff;
 }
-.nav-right-item {
+.nav-right-item,
+.nav-right-item a {
     font-family: "Industrial Medium";
     font-size: 0.933rem;
     line-height: 1.6rem;
     text-align: left;
     text-transform: uppercase;
+    text-decoration: none;
     color: #bbbbbb;
 
     margin-right: 2rem;
