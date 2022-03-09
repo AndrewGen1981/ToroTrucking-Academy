@@ -49,7 +49,7 @@
                 <section class="header-titles">
                     <div class="subtitle">LAUNCH A GREAT-PAYING TRUCKING CAREER TODAY</div>
                     <h1 class="title">PROFESSIONAL<br>CDL TRAINING</h1>
-                    <div class="enroll-now">inquire now</div>
+                    <div class="enroll-now" onclick="inquireNow()">inquire now</div>
                 </section>
             </header>
 
@@ -167,7 +167,65 @@
                         </div>
                     </div>  <!-- wdwo-footer -->
 
+
+                    <div class="inquire-form-box">
+                        <div class="inquire-form-left">
+                            <p class="inquire-form-info">Please fill out the form below and we will contact you with additional information and answer all your questions</p>
+                            <h3 class="inquire-title">inquire form</h3>
+                            <form class="inquire-form" action="/user/inquire" method="POST">
+                                <div class="inquire-form-inner">
+                                    <input type="text" name="inquireFirstName" placeholder="FIRST NAME" required />
+                                    <input type="text" name="inquireLastName" placeholder="LAST NAME" required />
+                                    <input type="tel" name="inquirePhone" placeholder="PHONE NUMBER" required />
+                                    <input type="email" name="inquireEmail" placeholder="EMAIL ADDRESS" required />
+                                    <input type="text" name="inquireZip" placeholder="ZIP CODE" required />
+                                    <select name="inquireCourse" required >
+                                        <option value="" disabled selected>COURSE</option>
+                                        <option value="CDL Class A">CDL Class A</option>
+                                        <option value="CDL Class B">CDL Class B</option>
+                                        <option value="Upgrade to Class A">Upgrade to Class A</option>
+                                        <option value="Endorsements">Endorsements</option>
+                                    </select>
+                                    <select name="inquireLocation" required >
+                                        <option value="" disabled selected>LOCATION PREFERENCE</option>
+                                        <option value="tacoma@torocdl.com">Tacoma: 1321 109th St. E, Tacoma, WA 98445</option>
+                                        <option value="kent@torocdl.com">Kent: 8601 218th St., Kent, WA 98031</option>
+                                        <option value="troutdale@torocdl.com">Troutdale: 2747 NW Rogers Cir., Troutdale, OR 97060</option>
+                                    </select>
+                                </div>      <!-- inquire-form-inner -->
+    
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>      <!-- inquire-form-left -->
+                        <div class="inquire-form-right">
+                            <h4 class="loc-cont-title">Contact information</h4>
+                            <div class="loc-cont-phone">Phone number: +1 (833) 867-6235</div>
+                            <div class="loc-cont-email">Email: info@torocdl.com</div>
+                            <h5 class="loc-cont-subtitle">Our Locations:</h5>
+                            <ul>
+                                <li>Tacoma:</li>
+                                <li>1321 109th St.E, Tacoma, WA 98445</li>
+                                <li>+1 253-212-9463</li>
+                                <li>tacoma@torocdl.com</li>
+                            </ul>
+                            <ul>
+                                <li>Kent:</li>
+                                <li>8601 218th St., Kent, WA 98031</li>
+                                <li>+1 253-330-5498</li>
+                                <li>kent@torocdl.com</li>
+                            </ul>
+                            <ul>
+                                <li>Troutdale:</li>
+                                <li>2747 NW Rogers Cir., Troutdale, OR 97060</li>
+                                <li>+1 503-917-4276</li>
+                                <li>troutdale@torocdl.com</li>
+                            </ul>
+                        </div>      <!-- inquire-form-right -->
+                    </div>      <!-- inquire-form -->
+
+
                     <div class="students-review">
+                        <h3 class="main-box-title">testimonials</h3>
                         <div class="review-inner">
 
                             <div class="review-top">
@@ -297,12 +355,12 @@
 
 
     <script defer>
+        // open/hide top menu on small screens
         function toggleNavMenu(ico, mainNavMenu) {
             ico.classList.toggle('-close-view')
             const toggler = mainNavMenu.style.display === 'flex' ? 'none' : 'flex'
             mainNavMenu.style.display = toggler
         }
-
 
         // observer adding
         const observer = new IntersectionObserver((entries) => {
@@ -328,6 +386,25 @@
             delay += 0.25
             wdwo[i].style.setProperty("--anim-delay", `${delay}s`);
             observer.observe(wdwo[i])
+        }
+
+        // inquireNow() - shows inquire form
+        function inquireNow() {
+            document.querySelector(".inquire-form").scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            })
+        }
+
+
+        // @ENTRY POINT
+        // inquire info before sending
+        document.querySelector(".inquire-form").addEventListener("submit", (e) => {
+            alert("Your request has been sent, we'll get in touch with you. Now the page will be reloaded. Thank you.")
+        })
+        // page can be loaded with this  query '?action=inquire', scroll to form if so
+        if ("<%= locals.action %>" === 'inquire') {
+            inquireNow()
         }
    
     </script>

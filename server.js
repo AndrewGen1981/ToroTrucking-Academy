@@ -32,7 +32,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // MAIN ROUTES
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname+'/main-page/index.html'))
+    const action = req.query.action
+    res.render(path.join(__dirname+'/main-page/index.ejs'), { action })
 })
 app.get('/cdl-courses', (req, res) => {
     res.sendFile(path.join(__dirname+'/main-page/cdl-courses.html'))

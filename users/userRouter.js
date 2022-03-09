@@ -744,6 +744,33 @@ userRouter.put('/schedule', redirectToLogin, async(req, res) => {
 
 
 
+// Inquire Form
+userRouter.post('/inquire', async(req, res) => {
+    const { inquireFirstName, inquireLastName, inquirePhone, inquireEmail, inquireZip, inquireCourse, inquireLocation } = req.body
+    if (!inquireFirstName || !inquireLastName || !inquirePhone || !inquireEmail || !inquireZip || !inquireCourse || !inquireLocation ) { return res.send('email send issue') }
+
+    let txt = `New INQUIRY received.\n`
+    txt += `Sender: ${inquireFirstName} ${inquireLastName}, zip: ${inquireZip}\n`
+    txt += `about course: ${inquireCourse}\n`
+    txt += `to location: ${inquireLocation}\n`
+    txt += `Please get in touch with person. Phone: ${inquirePhone}, email: ${inquireEmail}`
+
+    const letter = {
+        email: inquireEmail,
+        body: txt,            
+        title: "NEW INQUIRY"
+    }
+
+    try {
+        postman.sendALetter(letter)
+        return res.status(200).redirect('/')
+    } catch(e) {
+        return res.status(500).send(`Email sending issue: ${e.message}`)
+    }
+})
+
+
+
 // @ user/tuituion routes
 userRouter.use('/tuition', redirectToLogin, require('./tuition/tuitionRouter'))
 
