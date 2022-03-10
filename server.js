@@ -45,7 +45,7 @@ app.get('/resources', (req, res) => {
     res.sendFile(path.join(__dirname+'/main-page/resources.html'))
 })
 app.get('/faq', (req, res) => {
-    res.sendFile(path.join(__dirname+'/main-page/faq.html'))
+    res.sendFile(path.join(__dirname+'/main-page/FAQ.html'))
 })
 app.get('/catalog', async(req, res) => {
     res.sendFile(path.join(__dirname+'/static/catalog/Toro Catalog WA 2021 Dec17.pdf'))

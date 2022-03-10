@@ -98,6 +98,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: left;
+
+    margin-bottom: 3rem;
 }
 .instructor-box {
     width: 135px;
@@ -218,7 +220,7 @@ header {
     justify-content: center;
     
     font-family: "BrixSlab-Bold";
-    font-size: calc(var(--chart-column-width) * 0.3);
+    font-size: calc(var(--chart-column-width) * 0.25);
     color: #fff;
     text-decoration: none;
     text-shadow: 2px 2px 2px #161616;
@@ -280,3 +282,67 @@ header {
     background:var(--c);
     transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
 } */
+
+
+@media (max-width:1550px) {
+    :root {
+        --chart-width: calc(var(--desktop-width) * 0.8);
+    }
+}
+@media (max-width:1250px) {
+    :root {
+        --chart-width: calc(var(--desktop-width) * 0.9);
+    }
+    header {
+        background-image: none;
+    }
+}
+@media (max-width:950px) {
+    :root {
+        --chart-width: calc(var(--desktop-width) * 0.95);
+        font-size: 14px;
+    }
+}
+@media (max-width:750px) {
+    :root {
+        font-size: 13px;
+        --pie-width: calc(var(--chart-width) / 4);
+    }
+    .chart-legend {
+        flex-wrap: wrap;
+    }
+    .analythicsChart {
+        margin-bottom: 4rem;
+    }
+    .chart-column::after {
+        transform: rotate(-90deg);
+        text-align: left;
+        margin-top: 1rem;
+    }
+    .pie-charts-box {
+        flex-wrap: wrap;
+        height: fit-content;
+    }
+}
+@media (max-width:500px) {
+    .header-title {
+        font-size: 1.5rem;
+    }
+    .chart-title {
+        text-align: center;
+    }
+    .chart-sub-column {
+        font-size: calc(var(--chart-column-width) * 0.35);
+    }
+    .chart-column::after {
+        left: -1rem;
+    }
+    .pie {
+        font-size: 1.15rem;
+    }
+}
+@media (max-width:375px) {
+    .chart-column::after {
+        left: -2rem;
+    }
+}

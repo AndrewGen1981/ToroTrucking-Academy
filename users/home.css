@@ -530,6 +530,7 @@ header::after {
     line-height: 1.867rem;
     text-align: left;
     text-transform: uppercase;
+    text-decoration: none;
     letter-spacing: 1px;
     color: #ffffff;
 }
@@ -539,6 +540,7 @@ header::after {
     line-height: 1.6rem;
     text-align: left;
     text-transform: uppercase;
+    text-decoration: none;
     color: #bbbbbb;
 
     margin-right: 2rem;

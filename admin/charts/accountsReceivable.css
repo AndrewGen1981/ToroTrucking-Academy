@@ -304,3 +304,54 @@ header {
 }
 
 
+@media (max-width:850px) {
+    :root {
+        font-size: 14px;
+    }
+}
+@media (max-width:750px) {
+    :root {
+        font-size: 13px;
+    }
+}
+@media (max-width:660px) {
+    :root {
+        font-size: 12px;
+    }
+    .total, .total-cost, .total-paid, .total-debt, .total-weight {
+        font-size: 0.9rem;
+    }
+}
+@media (max-width:500px) {
+    .chart-title {
+        font-size: 1.35rem;
+    }
+
+    .total, .total-cost, .total-paid, .total-debt, .total-weight {
+        font-size: 0.83rem;
+    }
+    .column-text {
+        font-size: 1.2rem;
+    }
+    .pie {
+        font-size: 1.15rem;
+    }
+
+    .column-value,
+    .user-paid,
+    .total-weight, 
+    .av-cost {
+        display: none;
+    }
+    .users-table {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+}
+@media (max-width:400px) {
+    .chart-column {
+        width: 22%;
+    }
+    .pie {
+        font-size: 0.9rem;
+    }
+}
