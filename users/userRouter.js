@@ -85,6 +85,11 @@ userRouter.get('/', (req, res) => {
     res.redirect('/user/login')
 })
 
+userRouter.get('/issue', async(req, res) => {
+    res.render(path.join(__dirname+'/issue-page.ejs'), {
+        msg: "You are blocked. Refer to a school manager"
+    })
+})
 
 userRouter.get('/home', redirectToLogin, async(req, res) => {
     try {
@@ -113,6 +118,18 @@ userRouter.get('/home', redirectToLogin, async(req, res) => {
         // if Student, then show TTT and Clocks
         // if user is a student and has clocks array already, then get student clocks's array - check tools to find out what is that
         if (user.agreement && user.student) {       // only when Agreement is signed and full/part is determined AND user is a Student
+            // check if blocked
+            if (user.student.status != "unblock") {
+                return res.render(path.join(__dirname+'/issue-page.ejs'), {
+                    msg: "You are blocked. Refer to a school manager"
+                })
+            }
+            // check if graduate/withdraw
+            if (user.student.graduate != "no") {
+                return res.render(path.join(__dirname+'/issue-page.ejs'), {
+                    msg: `You status is "${user.student.enrollmentStatus}"`
+                })
+            }
             if (user.agreement.visiting && user.student.clocks) {
                 // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
                 const minVisitingRequirements = user.agreement.visiting.toLowerCase().includes("full time") ? 6 : 4

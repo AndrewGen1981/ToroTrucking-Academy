@@ -218,9 +218,68 @@ header .header-subtitle {
 
 .map-box {
     width: 100vw;
-    height: 25.677vw;
+    height: 21.094vw;
     background-size: contain;
+
+    position: relative;
 }
+.map-box::after {
+    --col1: #6ea5bf29;
+    --col2: #6ea5bfb7;
+
+    content: '';
+
+    position: absolute;
+    inset: 0;
+
+    background-color: var(--col1);
+    background: linear-gradient(270deg, var(--col1), var(--col2));
+    background: -o-linear-gradient(270deg, var(--col1), var(--col2));
+    background: -moz-linear-gradient(270deg, var(--col1), var(--col2));
+    background: -webkit-linear-gradient(270deg, var(--col1), var(--col2));
+
+    z-index: 1;
+}
+.map-box-tacoma,
+.map-box-kent,
+.map-box-troutdale {
+    --col: #333333e6;
+
+    padding: 7px;
+
+    width: 4rem;
+    height: 4rem;
+
+    fill: var(--col);
+    background-color: #545c6670;
+
+    border: 1px solid var(--col);
+    border-radius: 2rem;
+
+    transition: all 0.25s linear;
+
+    position: absolute;
+    top: 49.5%;
+    transform: translateX(-50%) translateY(-50%);
+
+    z-index: 2;
+}
+.map-box-tacoma {
+    left: 17%;
+}
+.map-box-kent {
+    left: 51.25%;
+}
+.map-box-troutdale {
+    left: 85.5%;
+}
+.map-box-tacoma:hover,
+.map-box-kent:hover,
+.map-box-troutdale:hover {
+    box-shadow: 0 0 5px 0px #2d2d2d;
+    transform: translateX(-50%) translateY(-55%) scale(1.1);
+}
+
 
 @media (min-width: 1024px) {
     /* MORE than 1024px */

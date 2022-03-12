@@ -422,6 +422,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-color: #000000;
 
     text-align: center;
+    margin-bottom: 2rem;
 }
 .center-nav a {
     width: 175px;
@@ -454,25 +455,69 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-color: #000000;
 }
 
+.videoItem {
+    padding: 5px;
+    border: 1px solid #ffffff17;
+    
+    transition: all 0.25s linear;
+}
+.videoItem:hover {
+    box-shadow: 0 0 8px 1px #ffffff26;
+}
 .videoSection {
     position: relative;
 }
-.video-num {
+
+.chart-box {
     position: absolute;
-    top: 0; left: 0;
+    top: -0.5rem; left: -0.5rem;
+
+    z-index: 10;
+}
+
+
+/* pie charts */
+.pie {
+    --w: 5rem;
+    --c: #9fc116f2;
+
+    width:var(--w);
+    aspect-ratio:1;
+    position:relative;
+    display:inline-grid;
+
+    place-content:center;
 
     font-family: "BrixSlab-ExtraLight";
-    font-size: 1.5rem;
+    font-size: 1.65rem;
 
+    border-radius: calc(var(--w));
+    background-color: #171717;
     color: #fff;
-    z-index: 10;
+
+    transition: all 0.5s linear;
+}
+.pie:before,
+.pie:after {
+    content:"";
+    position:absolute;
+    border-radius:50%;
+}
+.pie:before {
+    inset:0;
+    background:
+        radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+        conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+            mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
 }
 
 
 /* Pulse */
 @keyframes pulse {
-	25% { transform: scale(1.02) }
-    75% { transform: scale(.98) }
+    0% { transform: scale(1) }
+    50% { transform: scale(.98) }
+    100% { transform: scale(1) }
 }
 
 .videoThumb {
@@ -581,5 +626,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
     .center-subtitle {
         font-size: 0.93rem;
+    }
+    .pie {
+        --w: 4rem;
+        --b: 0.5rem !important;
     }
 }

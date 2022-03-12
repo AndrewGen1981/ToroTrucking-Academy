@@ -32,8 +32,6 @@
             <% listOfLessons.forEach( (video, index) => { %>
                 <section class="videoItem">
                     <section class='videoSection'>
-                        <span class="video-num"><%= index + 1 %>.</span>
-                        
                         <img class='videoThumb' src='//img.youtube.com/vi/<%= video %>/0.jpg' data-video='<%= video %>' onclick="videoClick(this)">
                         <input class='videoRadio' type="radio" name='video' id='<%= video %>' value='<%= video %>' />
 
@@ -48,7 +46,12 @@
                                 <% } %>
                             <% } %>
                         <% } %>
-                                            
+
+                        <% let perc = lesson ? lesson.videoProgress : 0 %>
+                        <div class="chart-box">
+                            <div class="pie" style="--p:<%= perc * 100 %>;--b:0.65rem;" title="Watching progress <%= Math.round(perc * 100) %>%"><%= index + 1 %>.</div>
+                        </div>
+
                         <section class='videoSection_info'>
                             <span class='videoWatching'>
                                 <% if (lesson) { %>

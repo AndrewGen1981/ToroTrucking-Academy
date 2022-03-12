@@ -188,15 +188,17 @@ admRouter.get('/user-area', redirectToLogin, ifCanRead, async (req, res) => {
             const allUsers = await User.find()
             .sort({ created: -1 })
             .select('-balance -__v -payments -password')
-            .populate({path: 'student', select: 'location'})
+            .populate({path: 'student', select: 'location graduate'})
             // filtering only students due to admin's lcation + all UNSET + all, who are not students yet
             const users = allUsers.filter(user => {
                 if (!user.student) {
                     return user
                 } else {
-                    let location = user.student.location
-                    if (adminProfile.location === admin.LOCATION.All || location === admin.LOCATION.Unset || location === adminProfile.location || !location) {
-                        return user
+                    if (user.student.graduate === "no") {
+                        let location = user.student.location
+                        if (adminProfile.location === admin.LOCATION.All || location === admin.LOCATION.Unset || location === adminProfile.location || !location) {
+                            return user
+                        }
                     }
                 }
             })
