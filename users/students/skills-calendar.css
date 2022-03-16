@@ -141,13 +141,24 @@ body, html {
 
 .short-name {
     padding: 0.35rem 0.3rem;
+    width: 2.2rem;
+
     font-family: "BrixSlab-Medium";
-    color: #fff;
     font-size: 0.95rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+
     border: 1px solid var(--accent-col2);
     border-radius: 1rem;
     cursor: pointer;
+    
+    transition: all 0.3s linear;
 }
+.-highlight {
+    background-color: #22a97278;
+}
+
 .full-name {
     --col1: #161737;
     --col2: transparent;

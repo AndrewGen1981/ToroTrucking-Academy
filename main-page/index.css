@@ -628,14 +628,36 @@ select[name="inquireLocation"] {
 .review-score {
     color: var(--orange-high-desert);
 }
+
+@keyframes hide {
+    0% { 
+        opacity: 1;
+        transform: translateX(0);
+        letter-spacing: normal;
+    }
+    50% { 
+        opacity: 0;
+        transform: translateX(-0.5rem) scale(1.02);
+        letter-spacing: -0.2px;
+    }
+    100% { 
+        opacity: 1;
+        transform: translateX(0);
+        letter-spacing: normal;
+    }
+}
+.-hide {
+    animation: hide 0.75s linear alternate;
+}
 .review-title {
     font-family: "Industrial Bold";
     font-size: 1.2rem;
-    line-height: 2.4rem;
     text-transform: uppercase;
     text-align: left;
 
     color: #2e2e2e;
+
+    margin-bottom: 1rem;
 }
 .review-text1, .review-text2, .review-who-grad {
     width: 100%;
@@ -691,8 +713,13 @@ select[name="inquireLocation"] {
     text-align: center;
 
     color: var(--orange-high-desert);
-
     border: 3px solid var(--orange-high-desert);
+    cursor: pointer;
+
+    transition: all 0.25s linear;
+}
+.review-load-more:hover {
+    transform: translateY(-1px);
 }
 
 

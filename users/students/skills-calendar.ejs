@@ -107,10 +107,15 @@
                                         <% if(stdt.key === studentKey) { %>
                                             <% freeSpot = false %>
                                             <!-- skillsTestLocations -->
+                                            
+                                            <% let graduate = stdt.graduate != 'no' ? '*' : '' %>
+
                                             <% let info = `${stdt.name.toUpperCase()} - ${stdt.key}\n${stdt.testLocation}\n${stdt.testType};${stdt.vehicleType};${stdt.brakes}\n${formatDateTime(stdt.testDateTime)}` %>
+                                            <% info += stdt.graduate != 'no' ? `\n* graduated: ${stdt.graduate}` : '' %>
+                                            
                                             <% let spot = getLocColor(stdt.testLocation) %>
                                             <% if(!spot) { %>
-                                                <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>">
+                                                <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" onclick="highlightName(this)" title="<%= info %>">
                                                     <span></span>
                                                     <div class="tool-bar">
                                                         <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
@@ -124,8 +129,8 @@
                                                 </span>
                                             <% } else { %>
                                                 <% if(stdt.testType === 'Initial') { %>
-                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>" style="--c:<%= spot.initialColor %>">
-                                                        <span>I</span>
+                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" onclick="highlightName(this)" title="<%= info %>" style="--c:<%= spot.initialColor %>">
+                                                        <span>I<%= graduate %></span>
                                                         <div class="tool-bar">
                                                             <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
                                                                 <svg viewBox="0 0 512 512">
@@ -137,13 +142,13 @@
                                                         </div>
                                                     </span>
                                                 <% } else { %>
-                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" title="<%= info %>" style="--c:<%= spot.retestColor %>">
+                                                    <span data-test="<%= stdt.testId %>" class="calendar-spot -occupied-spot" onclick="highlightName(this)" title="<%= info %>" style="--c:<%= spot.retestColor %>">
                                                         <% 
                                                             let retest = stdt.testType === "Retest" ? "R"
                                                             : stdt.testType === "Retest Bk & Rd" ? "B&R"
                                                             : "Rd"
                                                         %>
-                                                        <span><%= retest %></span>
+                                                        <span><%= retest %><%= graduate %></span>
                                                         <div class="tool-bar">
                                                             <div class="-tool-btn delete-btn" title="delete test scheduled" data-student="<%= stdt.studentId %>" onclick="deleteTest(this)">
                                                                 <svg viewBox="0 0 512 512">
@@ -268,6 +273,22 @@
         // withdrawStudent(withdrawBtn)
         function withdrawStudent(withdrawBtn) {
             updateStudentStatus(withdrawBtn, "Withdrew/terminated from the program")
+        }
+
+        // highlightinh a short-name on click
+        function highlightName(cellOcup) {
+            if (!cellOcup) return
+            
+            const row = cellOcup.parentElement.parentElement
+            if (!row) return
+            
+            const shortName = row.querySelector('.short-name')
+            if (!shortName) return
+
+            shortName.classList.toggle('-highlight')
+            setTimeout(() => {
+                shortName.classList.toggle('-highlight')
+            }, 3000)
         }
 
 

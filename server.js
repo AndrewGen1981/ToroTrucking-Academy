@@ -29,11 +29,12 @@ app.use(express.static(__dirname+'/'))
 app.use(express.urlencoded({ extended: true }))
 
 
+const testimonials = require('./testimonials')
 
 // MAIN ROUTES
 app.get('/', (req, res) => {
     const action = req.query.action
-    res.render(path.join(__dirname+'/main-page/index.ejs'), { action })
+    res.render(path.join(__dirname+'/main-page/index.ejs'), { action, testimonials })
 })
 app.get('/cdl-courses', (req, res) => {
     res.sendFile(path.join(__dirname+'/main-page/cdl-courses.html'))

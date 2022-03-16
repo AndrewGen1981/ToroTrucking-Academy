@@ -235,7 +235,8 @@
                                 </div>
     
                                 <section class="review-info">
-                                    <div class="review-score">★★★★☆</div>
+                                    <!-- <div class="review-score">★★★★☆</div> -->
+                                    <div class="review-score">★★★★★</div>
                                     <h3 class="review-title">"After just 4 weeks I got my cdl"</h3>
     
                                     <p class="review-text1">The overall experience of this trucking school has been extremely great.</p>
@@ -253,13 +254,14 @@
                                 </section>
                             </div>
                             
-                            <div class="review-load-more">load more</div>
+                            <% if(locals.testimonials) { %>
+                                <% const arr = JSON.stringify(testimonials) %>
+                                <div class="review-load-more" onclick='refresh(`<%= arr %>`)'>load more</div>
+                            <% } %>
 
                         </div>      <!-- review-inner -->
                     </div>     <!-- students-review -->
-
                 </section> <!-- what-do-we-offer -->
-
             </div>   <!-- main-body -->
            
             
@@ -406,7 +408,39 @@
         if ("<%= locals.action %>" === 'inquire') {
             inquireNow()
         }
-   
+        // start testimonials
+        const reviewTitle = document.querySelector('.review-title')
+        const reviewText1 = document.querySelector('.review-text1')
+        const reviewText2 = document.querySelector('.review-text2')
+        const reviewWho = document.querySelector('.review-who')
+        let testimonialIndex = 0
+
+        // testimonials carousel
+        function showTestimonial(element, msg) {
+            element.classList.toggle("-hide")
+            setTimeout(() => {
+                element.classList.toggle("-hide")
+                element.textContent = msg
+            }, 750)
+        }
+        function refresh(testimonialsArray) {
+            const testimonials = JSON.parse(testimonialsArray)
+            if (reviewTitle && reviewText1 && reviewText2 && reviewWho && !testimonialIndex) {
+                testimonialIndex = testimonialIndex + 1 < testimonials.length ? testimonialIndex + 1 : 0
+                showTestimonial(reviewTitle, `"${testimonials[testimonialIndex].title}"`)
+                showTestimonial(reviewText1, testimonials[testimonialIndex].text1 ? testimonials[testimonialIndex].text1 : "")
+                showTestimonial(reviewText2, testimonials[testimonialIndex].text2 ? testimonials[testimonialIndex].text2 : "")
+                showTestimonial(reviewWho, testimonials[testimonialIndex].student)
+                setInterval(() => {
+                    testimonialIndex = testimonialIndex + 1 < testimonials.length ? testimonialIndex + 1 : 0
+                    showTestimonial(reviewTitle, `"${testimonials[testimonialIndex].title}"`)
+                    showTestimonial(reviewText1, testimonials[testimonialIndex].text1 ? testimonials[testimonialIndex].text1 : "")
+                    showTestimonial(reviewText2, testimonials[testimonialIndex].text2 ? testimonials[testimonialIndex].text2 : "")
+                    showTestimonial(reviewWho, testimonials[testimonialIndex].student)
+                }, 10000)
+            }
+        }
+
     </script>
 
 </body>

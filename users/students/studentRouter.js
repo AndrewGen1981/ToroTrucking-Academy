@@ -549,10 +549,9 @@ studentRouter.get("/skills-calendar", ifCanWrite, async (req, res) => {
 
   try {
     // select for NON-EMPTY arrays in record ONLY!!!
-    const students = await Student.find({
-      skillsTest: { $exists: true, $ne: [] },
-    })
-      .select("key skillsTest")
+    const students = await Student
+      .find({ skillsTest: {$exists: true, $ne: []} })
+      .select("key skillsTest graduate")
       .populate({ path: "user", select: "name" });
     // check selection was successful
     if (!students) {
@@ -583,6 +582,8 @@ studentRouter.get("/skills-calendar", ifCanWrite, async (req, res) => {
             userId: student.user._id,
             key: student.key,
             name: student.user.name,
+            // graduate
+            graduate: student.graduate,
             // skills-test data
             testId: test._id,
             testLocation: test.testLocation,
@@ -609,15 +610,13 @@ studentRouter.get("/skills-calendar", ifCanWrite, async (req, res) => {
       }); //  skill-tests.map
     }); // students.map
 
-    res
-      .status(200)
-      .render(path.join(__dirname + "/skills-calendar.ejs"), {
-        minTTT,
-        days,
-        studentsKeys,
-        studentsInRange,
-        skillsTestLocations,
-      });
+    res.status(200).render(path.join(__dirname + "/skills-calendar.ejs"), {
+      minTTT,
+      days,
+      studentsKeys,
+      studentsInRange,
+      skillsTestLocations,
+    });
   } catch (e) {
     res.status(500).send(`Server issue: ${e.message}`);
   }
