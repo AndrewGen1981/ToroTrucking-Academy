@@ -21,9 +21,9 @@
     var(--skills-history-width) + var(--skills-date) + var(--empty-cell)
   );
   /* colors */
-  --headers-top-color: gray;
+  --headers-top-color: #c7c7c7;
   --headers-left-color: #dbdbdb;
-  --headers-top-left-color: #707070;
+  --headers-top-left-color: #d3d3d3;
   /* for search */
   --filter-accent: #43a84366;
   --filter-accent1: #43a843;
