@@ -1,7 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const path = require('path')
-const { Mongoose } = require('mongoose')
+// const { Mongoose } = require('mongoose')
 
 // CONFIG
 const admin = require('./config')

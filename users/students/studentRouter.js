@@ -431,10 +431,10 @@ const skillsTestLocations = require("./skills-test-config");
 studentRouter.get("/skills-test", ifCanRead, async (req, res) => {
   const minTTT = req.query.TTT || 100;
   try {
-    const students = await Student.where("TTT")
-      .gte(parseFloat(minTTT))
-      .where("status")
-      .equals("unblock")
+    const students = await Student
+      .where("TTT").gte(parseFloat(minTTT))
+      .where("status").equals("unblock")
+      .where("graduate").equals("no")   //  this prevents graduates to be shown in skills-test
       .select("key TTT created location skillsTest")
       .populate([
         {
@@ -456,8 +456,7 @@ studentRouter.get("/skills-test", ifCanRead, async (req, res) => {
           select: "balance payments",
           populate: {
             path: "agreement",
-            select:
-              "class transmission tuitionCost regisrFee supplyFee otherFee",
+            select: "class transmission tuitionCost regisrFee supplyFee otherFee",
           },
         },
         { path: "tuition", select: "avLessonsRate" },
@@ -467,13 +466,11 @@ studentRouter.get("/skills-test", ifCanRead, async (req, res) => {
         },
       ])
       .sort({ location: 1, TTT: -1 });
-    res
-      .status(200)
-      .render(path.join(__dirname + "/skills-test.ejs"), {
-        students,
-        minTTT,
-        skillsTestLocations,
-      });
+    res.status(200).render(path.join(__dirname + "/skills-test.ejs"), {
+      students,
+      minTTT,
+      skillsTestLocations,
+    });
   } catch (e) {
     res.status(500).send(`Server issue: ${e.message}`);
   }
@@ -551,6 +548,7 @@ studentRouter.get("/skills-calendar", ifCanWrite, async (req, res) => {
     // select for NON-EMPTY arrays in record ONLY!!!
     const students = await Student
       .find({ skillsTest: {$exists: true, $ne: []} })
+      .where("graduate").equals("no")     //  this prevents graduates to be shown in skills-calendar
       .select("key skillsTest graduate")
       .populate({ path: "user", select: "name" });
     // check selection was successful
