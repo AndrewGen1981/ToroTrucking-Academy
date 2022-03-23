@@ -85,11 +85,10 @@
             </div>  <!-- titles -->
 
             <% if(inStudents.length > 0) { %>
-                <% inStudents.map((student, index) => { %>
-                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>' data-dataColl='<%= student.user.dataCollection._id %>'>
-
-                        <% let name = `${student.user.dataCollection.firstName} ${student.user.dataCollection.lastName}` %>
-                        <a href='/admin/user/<%= student.user._id %>' class='field -name'><%= name %></a>
+                <% inStudents.forEach((student, index) => { %>
+                    <div class="student-list-row" id='student-row-<%= index %>' data-student='<%= student._id %>'>
+           
+                        <a href='/admin/user/<%= student.user %>' class='field -name'><%= student.fullName %></a>
 
                         <div class='field -key'><%= student.key %></div>
 

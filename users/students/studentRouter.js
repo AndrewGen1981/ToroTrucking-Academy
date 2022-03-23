@@ -61,11 +61,8 @@ async function getStudentsForINs(date, location) {
   try {
     const students = await Student
     .find(filter)
-    .select("key fullName TTT clocks location")
-    .populate([
-      { path: "user", populate: { path: "dataCollection", select: "firstName lastName" } },
-      { path: "scoring", select: "scoringsInCab scoringsOutCab scoringsBacking scoringsCity" }
-    ])
+    .select("key fullName TTT clocks location user")
+    .populate({ path: "scoring", select: "scoringsInCab scoringsOutCab scoringsBacking scoringsCity" })
     .sort("location")    //  .sort({ location: 1, key: 1 })
 
     let inStudents = []
