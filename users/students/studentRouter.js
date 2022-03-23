@@ -55,61 +55,46 @@ function ifCanReadOrInstructor(req, res, next) {
 // @Students ROUTES
 // tool to get students for INs
 async function getStudentsForINs(date, location) {
-  const studentPopulated = "key TTT clocks location";
-  const userPopulated = "dataCollection";
-  const dataCollPopulated = "firstName lastName middleName";
-  const scoringPopulated = "scoringsInCab scoringsOutCab scoringsBacking scoringsCity";
-
-  const filter = location === admin.LOCATION.All ? {} : { location };
+  const filter = location === admin.LOCATION.All ? {} : { location }
   filter.status = "unblock"
   filter.graduate = "no"
-
-  let students;
-
   try {
-    students = await Student.find(filter)
-      .select(studentPopulated)
-      .populate([
-        {
-          path: "user",
-          select: userPopulated,
-          populate: { path: "dataCollection", select: dataCollPopulated },
-        },
-        {
-          path: "scoring",
-          select: scoringPopulated,
-        },
-      ])
-      .sort({ location: 1, key: 1 });
+    const students = await Student
+    .find(filter)
+    .select("key fullName TTT clocks location")
+    .populate([
+      { path: "user", populate: { path: "dataCollection", select: "firstName lastName" } },
+      { path: "scoring", select: "scoringsInCab scoringsOutCab scoringsBacking scoringsCity" }
+    ])
+    .sort("location")    //  .sort({ location: 1, key: 1 })
+
+    let inStudents = []
+    const today = tools.getDatePrefix(date).toString()
+
+    students.forEach((student) => {
+      let todayClocks = student.clocks.filter((clock) => {
+        return clock.key == today
+      })
+      if (todayClocks.length) {
+        student.clocks = todayClocks
+        inStudents.push(student)
+      }
+    })
+    return inStudents
   } catch (e) {
-    console.log(`Error on getting students fot INs list: ${e.message}`);
-    return [];
+    console.log(`Error on getting students fot INs list: ${e.message}`)
+    return []
   }
-
-  let inStudents = [];
-  const today = tools.getDatePrefix(date).toString();
-
-  students.map((student) => {
-    let todayClocks = student.clocks.filter((clock) => {
-      return clock.key == today;
-    });
-    if (todayClocks.length) {
-      student.clocks = todayClocks;
-      inStudents.push(student);
-    }
-  });
-
-  return inStudents;
 }
-//
 
 
 // INs route is a root one
 studentRouter.get("/", ifCanReadOrInstructor, async (req, res) => {
-  const adminProfile = admin.findAdminById(req.session.userId);
-  const inStudents = await getStudentsForINs(new Date(), adminProfile.location);
-  res.render(path.join(__dirname + "/INs.ejs"), { inStudents, today: true });
-});
+  const adminProfile = admin.findAdminById(req.session.userId)
+  const inStudents = await getStudentsForINs(new Date(), adminProfile.location)
+  res.render(path.join(__dirname + "/INs.ejs"), { inStudents, today: true })
+})
+
 
 // INs route for not today's date
 studentRouter.post("/", ifCanReadOrInstructor, async (req, res) => {
@@ -250,11 +235,11 @@ studentRouter.get("/shortlist", ifCanReadOrInstructor, async (req, res) => {
 studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
   const userId = req.params.id; // receiving user _id from posting form
   try {
-    const user = await User.findById(userId); // finds a user with given _id
+    const user = await User.findById(userId).populate({ path: "dataCollection", select: "firstName lastName" })     // finds a user with given _id
     if (!user) { return res.status(404).send(`Cannot find user with id: ${userId}`) }
 
     // Only 1 student can be assigned to 1 user, let's check maybe there is already Student with given user._id
-    const existingStudent = await Student.findOne({ user: userId });
+    const existingStudent = await Student.findOne({ user: userId })
     if (existingStudent) { return res.status(500).send(`This user is a student alredy, key is ${existingStudent.key}`) }
 
     // working with Student-List cofigurations - receiving
@@ -268,7 +253,8 @@ studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
 
     // creating a new Student
     const student = await new Student({
-      key: lastStudentKey, email: user.email, user: userId,
+      key: lastStudentKey, email: user.email,
+      user: userId, fullName: `${user.firstName.trim()} ${user.lastName.trim()}`,
       location: adminProfile.location === admin.LOCATION.All ? admin.LOCATION.Unset : adminProfile.location   // assigning a location if not 'All'
     }).save()
 

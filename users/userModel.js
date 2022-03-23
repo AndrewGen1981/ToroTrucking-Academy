@@ -90,6 +90,7 @@ const studentSchema = new mongoose.Schema({
     key: { type: Number, required: true },
     email: { type: String, lowercase: true, required: true },
     created: { type: Date, default: new Date() },
+    fullName: String,       //  first & last names, makes selection faster, allows to get rid of couple 'populates'
     
     location: {type: String, default: "UNSET"},
     // 'status' is for show current status of the student
