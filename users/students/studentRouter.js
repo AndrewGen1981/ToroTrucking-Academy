@@ -251,7 +251,7 @@ studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
     // creating a new Student
     const student = await new Student({
       key: lastStudentKey, email: user.email,
-      user: userId, fullName: `${user.firstName.trim()} ${user.lastName.trim()}`,
+      user: userId, fullName: `${user.dataCollection.firstName.trim()} ${user.dataCollection.lastName.trim()}`,
       location: adminProfile.location === admin.LOCATION.All ? admin.LOCATION.Unset : adminProfile.location   // assigning a location if not 'All'
     }).save()
 
