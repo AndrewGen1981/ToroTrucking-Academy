@@ -717,7 +717,7 @@ admRouter.post('/qr-update-geo', async (req, res) => {
 admRouter.post('/clocks', redirectToLogin, ifCanWrite, async(req, res) => {
     const {studentId, userId, studentKey, studentName, visiting} = req.body
     try {
-        const student = await Student.findById(studentId).select(['email', 'TTT', 'clocks'])
+        const student = await Student.findById(studentId).select("email TTT clocks")
         if (student) {
 
             // just an Agreement perspective about full or part-time. And tools.reCalculateTTT will determine if it counts at all
@@ -737,84 +737,68 @@ admRouter.post('/clocks', redirectToLogin, ifCanWrite, async(req, res) => {
     }
 })
 
+
+// Calculating 'timeZoneHourDiff'
+// Pacific Standard Time varies between UTC-08 and UTC-07
+// this function defines exac hour difference 'America/Los_Angeles' from UTC-Z
+function timeZoneHourDiff(date) {
+    const iso = `${date.toLocaleString('en-CA', { timeZone: 'America/Los_Angeles', hour12: false }).replace(', ', 'T')}.000Z`
+    const lie = new Date(iso)
+    return -(lie - date) / 3600000
+}
+
+
 // for clocks updating
 admRouter.post('/clocks-update', redirectToLogin, ifCanWrite, async(req, res) => {
-    const { studentId, clockDate, 
-        clockIN, latIN, lonIN, locationIN, doneByAdminIN, updatedByAdminIN,
-        clockOUT, latOUT, lonOUT, locationOUT, doneByAdminOUT, updatedByAdminOUT,
+    const {
+        clockDate, studentId, 
+        clockIN, latIN, lonIN, locationIN,
+        doneByAdminIN, updatedByAdminIN,
+        clockOUT, latOUT, lonOUT, locationOUT,
+        doneByAdminOUT, updatedByAdminOUT,
     } = req.body
 
     // tool, converting strings to date with time
     function settime(dateString, timeString) {
         if (timeString.length < 6) { timeString += ':00' }
-        return new Date(`${dateString}T${timeString}-08:00`)
+        // calculating timeZone difference due to summer/winter time
+        const timeZoneDiff = timeZoneHourDiff(new Date(`${dateString}T${timeString}-08:00`))
+        return new Date(`${dateString}T${timeString}-0${timeZoneDiff}:00`)
     }
 
     const newClocks = []
     let clIN, clOUT
     let TTT = 0
 
-    if (Array.isArray(clockDate)) {
-        clockDate.map((dateString, index) => {
-            clIN = settime(dateString, clockIN[index])
-            clOUT = settime(dateString, clockOUT[index])
-          
-            if ((clOUT - clIN) > 0) {    // skip empty
-                TTT += clOUT - clIN
-                // adding clockIN
-                newClocks.push({
-                    date: clIN,
-                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
-                    lat: latIN[index],
-                    lon: lonIN[index],
-                    location: locationIN[index],
-                    doneByAdmin: doneByAdminIN[index],
-                    updatedByAdmin: updatedByAdminIN[index]
-                })
-                // adding clockOUT
-                newClocks.push({
-                    date: clOUT,
-                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
-                    lat: latOUT[index],
-                    lon: lonOUT[index],
-                    location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
-                    doneByAdmin: doneByAdminOUT[index],
-                    updatedByAdmin: updatedByAdminOUT[index]
-                })
-            }
-        })
-    } else {
-        let dateString = clockDate
-        if (dateString) {
-            clIN = settime(dateString, clockIN)
-            clOUT = settime(dateString, clockOUT)
-            
-            if ((clOUT - clIN) > 0) {    // skip empty
-                TTT += clOUT - clIN
-                // adding clockIN
-                newClocks.push({
-                    date: clIN,
-                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
-                    lat: latIN,
-                    lon: lonIN,
-                    location: locationIN,
-                    doneByAdmin: doneByAdminIN,
-                    updatedByAdmin: updatedByAdminIN
-                })
-                // adding clockOUT
-                newClocks.push({
-                    date: clOUT,
-                    key: tools.getDatePrefixZeroZone(new Date(dateString)),
-                    lat: latOUT,
-                    lon: lonOUT,
-                    location: locationOUT != 'none' ? locationOUT : locationIN,
-                    doneByAdmin: doneByAdminOUT,
-                    updatedByAdmin: updatedByAdminOUT
-                })
-            }
+    const clockDates = Array.isArray(clockDate) ? clockDate : [clockDate]
+    clockDates.forEach((dateString, index) => {
+        clIN = settime(dateString, clockIN[index])
+        clOUT = settime(dateString, clockOUT[index])
+        
+        if ((clOUT - clIN) > 0) {    // skip empty
+            TTT += clOUT - clIN
+            // adding clockIN
+            newClocks.push({
+                date: clIN,
+                key: tools.getDatePrefixZeroZone(new Date(dateString)),
+                lat: latIN[index],
+                lon: lonIN[index],
+                location: locationIN[index],
+                doneByAdmin: doneByAdminIN[index],
+                updatedByAdmin: updatedByAdminIN[index]
+            })
+            // adding clockOUT
+            newClocks.push({
+                date: clOUT,
+                key: tools.getDatePrefixZeroZone(new Date(dateString)),
+                lat: latOUT[index],
+                lon: lonOUT[index],
+                location: locationOUT[index] != 'none' ? locationOUT[index] : locationIN[index],
+                doneByAdmin: doneByAdminOUT[index],
+                updatedByAdmin: updatedByAdminOUT[index]
+            })
         }
-        // else (dateString = undefined) - admin deleted all the clocks
-    }
+    })
 
     try {
         const student = await Student.findById(studentId)
@@ -841,11 +825,13 @@ admRouter.post('/update-payments', redirectToLogin, ifCanWrite, async(req, res) 
     const arrPmtNotes = Array.isArray(paymentNotes) ? paymentNotes : [paymentNotes]
     // amount - is the main array, so go with one to create newPaymentsArray
     const newPaymentsArray = []
-    arrPmtAmounts.map((amount, index) => {
+    arrPmtAmounts.forEach((amount, index) => {
+        // calculating timeZone difference due to summer/winter time
+        let timeZoneDiff = timeZoneHourDiff(new Date(`${arrPmtDates[index]}:00-08:00`))
         if(parseFloat(amount)) {
             newPaymentsArray.push({
                 type: arrPmtTypes[index],
-                whenPaid: new Date(`${arrPmtDates[index]}:00-08:00`),
+                whenPaid: new Date(`${arrPmtDates[index]}:00-0${timeZoneDiff}:00`),
                 ammount: parseFloat(amount),
                 notes: arrPmtNotes[index]
             })
@@ -880,13 +866,12 @@ function calculateBalance(user, payments) {
         }
     }
     if (payments) {
-        payments.map(payment => {
+        payments.forEach(payment => {
             balance += payment.ammount
         })
     }
     return balance
 }
-
 
 
 
