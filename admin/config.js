@@ -70,15 +70,13 @@ const PROFILES = [
     // + Richard Dupraw manager/instructor
     { id: "Dupraw0001", name: "Richard Dupraw", title:'Manager', email: "troutdale@torocdl.com", location: LOCATION.Troutdale, password: process.env.DUPRAW0001_PASS, auth: AUTH.editor },
     { id: "DuprawInst0001", name: "Richard Dupraw", title:'Instructor', email: "troutdale@torocdl.com", location: LOCATION.Troutdale, password: process.env.DUPRAW0001_PASS, auth: AUTH.instructor },
-    // + Schrom, Ian instructor
-    { id: "SchromInst0001", name: "Ian Schrom", title:'Instructor', email: "Ianschrom@gmail.com", location: LOCATION.Troutdale, password: process.env.SCHROM0001_PASS, auth: AUTH.instructor },
     // + Woltereck, Ray instructor
     { id: "WoltereckInst0001", name: "Ray Woltereck", title:'Instructor', email: "RWoltereck@gmail.com", location: LOCATION.Troutdale, password: process.env.WOLTERECK0001_PASS, auth: AUTH.instructor },
     // + Stevens, Paul instructor
     { id: "StevensInst0001", name: "Paul Stevens", title:'Instructor', email: "pstevensjr81@gmail.com", location: LOCATION.Troutdale, password: process.env.STEVENS0001_PASS, auth: AUTH.instructor },
     // + Kyle, Sousa instructor
     { id: "SousaInst0001", name: "Kyle Sousa", title:'Instructor', email: "kyle.sousa03@gmail.com", location: LOCATION.Troutdale, password: process.env.SOUSA0001_PASS, auth: AUTH.instructor },
-    // + Stevens, Paul instructor
+    // + Carl, Fulton instructor
     { id: "FultonInst0001", name: "Carl Fulton", title:'Instructor', email: "carl80@aol.com", location: LOCATION.Troutdale, password: process.env.FULTON0001_PASS, auth: AUTH.instructor },
 
 
