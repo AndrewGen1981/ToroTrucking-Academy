@@ -222,6 +222,11 @@ a.-name {
     display: none;
 }
 
+footer {
+    font-family: "BrixSlab-Bold";
+    margin: 1rem 0 3rem 0;
+}
+
 
 /* 
 @BRIX font family

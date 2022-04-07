@@ -573,20 +573,18 @@
         const lastNames = document.querySelectorAll('.-lastName')
         const firstNames = document.querySelectorAll('.-firstName')
         const middleNames = document.querySelectorAll('.-middleName')
-        const emails = document.querySelectorAll('.-email')
 
 
         function filterColumn(input) {
             if (!input) { return }
             const filter = input.value.toLowerCase()
-            if (!rows || !lastNames || !firstNames || !middleNames || !emails) { return }
+            if (!rows || !lastNames || !firstNames || !middleNames) { return }
             if (rows.length < 2) { return }
             for (let i=1; i<rows.length; i++) {
                 
                 let toShow = lastNames[i].textContent.toLowerCase().includes(filter)
                 || firstNames[i].textContent.toLowerCase().includes(filter)
                 || middleNames[i].textContent.toLowerCase().includes(filter)
-                || emails[i].textContent.toLowerCase().includes(filter)
                 
                 rows[i].classList.toggle('-hidden', !toShow)
                 rows[i].classList.toggle('-visible', toShow && filter)
