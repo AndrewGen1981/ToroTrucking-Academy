@@ -551,6 +551,24 @@ header::after {
 }
 
 
+/* Bolt Career */
+.bolt-career-box {
+    margin: 0.5rem 0;
+    padding: 2px 4px;
+    background-color: #ef7f585e;
+    border-radius: 3px;
+}
+.bolt-text {
+    font-size: 0.93rem;
+    text-align: justify;
+    cursor: default;
+    transition: all 0.2s linear;
+}
+.bolt-text:hover {
+    transform: translateY(1px);
+}
+
+
 @media (max-width: 1510px) {
     .profile-box, .nav-bottom-box {
         width: 75%;
