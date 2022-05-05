@@ -156,10 +156,11 @@ userRouter.get('/login', redirectToHome, (req, res) => {
     // checking for income messages
     const { status, e } = req.query
     res.render(path.join(__dirname+'/login.ejs'), {
+        baseRoute: "USER",      // used for redirect if admin
         error: status === 'issue' ? getIssueMessage(e) : false,
         info: status === 'info' ? getInfoMessage(e) : false,
         isThereErrors: false,   // no errors yet
-        errors: []
+        errors: [],
     })
 })
 

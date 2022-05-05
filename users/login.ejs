@@ -81,6 +81,8 @@
                 </form>
             </div>
 
+            <a href="/admin" class="-hidden" id="admin-redirect"></a>
+
         </div>  <!-- login-inner -->
     </div>      <!-- login-box -->
   
@@ -136,6 +138,10 @@
             const role = localStorage.getItem("role")
             if (role === "admin") {
                 document.querySelector(".slider").click()
+                if ("<%= locals.baseRoute %>" === "USER") {
+                    const adminRedirectRef = document.querySelector("#admin-redirect")
+                    if (adminRedirectRef) { console.log(adminRedirectRef); adminRedirectRef.click() }
+                }
             }
         }
 
