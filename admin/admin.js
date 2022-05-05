@@ -1,13 +1,13 @@
 const express = require('express')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')     //  express-session will use mongo vs MemoryStore for datause, prevent memory leaks
 const path = require('path')
-// const { Mongoose } = require('mongoose')
 
 // CONFIG
 const admin = require('./config')
 
 // MODELS for mongoose
-const { User, Student, Schedule, tools } = require('../users/userModel')
+const { User, Student, tools } = require('../users/userModel')
 const { dataCollectionForm } = require('../users/applicants/form1Model')
 const { applicationForm } = require('../users/applicants/form2Model')
 const { agreementForm } = require('../users/applicants/form3Model')
@@ -21,18 +21,17 @@ const chart = require('./adminProfileCharts')
 
 // PDF
 const pdf = require('../static/pdf/pdf')
-// const { redirect } = require('express/lib/response')     do I need this?
 
 
 // @SESSION config
-const ADM_SESS_DURATION = 1000 * 60 * 60 * 6    //  6 hours
+const ADM_SESS_DURATION = 1000 * 60 * 60 * 12    //  12 hours
 
 // extracting from process.env
 const {
     NODE_ENV = 'development',
 
     SESS_NAME = 'ADMSID',
-    SESS_SECRET = '!GODMODE_FORADMINS',
+    SESS_SECRET = '!GODMODE_FORADMINS_NOmoreWar2022',
     SESS_LIFETIME = ADM_SESS_DURATION
 } = process.env
 
@@ -43,6 +42,8 @@ const admRouter = express.Router()
 
 // adding session configuration
 admRouter.use(session({
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI_SESSA }),        // use mongo for amdins sessions
+
     name: SESS_NAME,
     resave: false,
     saveUninitialized: false,
