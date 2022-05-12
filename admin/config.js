@@ -39,10 +39,14 @@ const PROFILES = [
     { id: "Aziz0001", name: "Aziz", title:'Manager', email: "Azo2008@gmail.com", location: LOCATION.Tacoma, password: process.env.AZIZ0001_PASS, auth: AUTH.editor },
     { id: "Mariana0001", name: "Mariana Bulgaru", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARIANA0001_PASS, auth: AUTH.editor },
     { id: "Salazar0002", name: "Michelle Salazar", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
+    // + Rick Souther, Manager
+    { id: "Souther0001", name: "Rick Souther", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SOUTHER0001_PASS, auth: AUTH.editor },
+    // + Lazaro Bernal-Chavez, instructor
+    { id: "LazaroInst0001", name: "Lazaro Bernal-Chavez", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.LAZARO0001_PASS, auth: AUTH.instructor },
+    // + Craig Chappell, instructor
+    { id: "ChappellInst0001", name: "Craig Chappell", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.CHAPPELL0001_PASS, auth: AUTH.instructor },
     // + Stephen Hewett ( Instructor )
     { id: "HewettInst0001", name: "Stephen Hewett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.HEWETT0001_PASS, auth: AUTH.instructor },
-    // + Jeffrey Mudgett ( Instructor )
-    { id: "MudgettInst0001", name: "Jeffrey Mudgett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MUDGETT0001_PASS, auth: AUTH.instructor },
     // + Uladzimar Martynau ( Instructor )
     { id: "MartynauInst0001", name: "Uladzimar Martynau", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.MARTYNAU0001_PASS, auth: AUTH.instructor },
 
