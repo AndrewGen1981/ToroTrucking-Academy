@@ -45,6 +45,8 @@ const PROFILES = [
     { id: "LazaroInst0001", name: "Lazaro Bernal-Chavez", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.LAZARO0001_PASS, auth: AUTH.instructor },
     // + Craig Chappell, instructor
     { id: "ChappellInst0001", name: "Craig Chappell", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.CHAPPELL0001_PASS, auth: AUTH.instructor },
+    // + Robert Tharge, instructor
+    { id: "ThargeInst0001", name: "Robert Tharge", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.THARGE0001_PASS, auth: AUTH.instructor },
     // + Stephen Hewett ( Instructor )
     { id: "HewettInst0001", name: "Stephen Hewett", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.HEWETT0001_PASS, auth: AUTH.instructor },
     // + Uladzimar Martynau ( Instructor )
