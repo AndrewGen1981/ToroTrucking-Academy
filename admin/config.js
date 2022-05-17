@@ -41,6 +41,7 @@ const PROFILES = [
     { id: "Salazar0002", name: "Michelle Salazar", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SALAZAR0001_PASS, auth: AUTH.editor },
     // + Rick Souther, Manager
     { id: "Souther0001", name: "Rick Souther", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SOUTHER0001_PASS, auth: AUTH.editor },
+    { id: "SoutherInst0001", name: "Rick Souther", title:'Manager', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.SOUTHER0001_PASS, auth: AUTH.instructor },
     // + Lazaro Bernal-Chavez, instructor
     { id: "LazaroInst0001", name: "Lazaro Bernal-Chavez", title:'Instructor', email: "tacoma@torocdl.com", location: LOCATION.Tacoma, password: process.env.LAZARO0001_PASS, auth: AUTH.instructor },
     // + Craig Chappell, instructor
