@@ -33,7 +33,7 @@ function getCompressedPasswordResetLetter(name, password, actionType) {
                 <p style="margin-bottom: 0.8em; font-size: 26px; font-weight: 400; color: #2e2e2ecc">Hello, <span style="font-weight: 500;color: #e47337">${name}</span></p><br>
                 <p style="margin-bottom: 0.8em; font-size: 18px; font-weight: 500; color: #2e2e2ecc">A request has been received to ${actionType} the password for your TTA account.</p>
                 <p style="margin-bottom: 0.8em; font-size: 15px; font-weight: 700; color: #2e2e2ee6; line-height: 24px; text-align: justify;text-align-last: center;">Your new password is <span style="font-size: 22px; font-weight: 500;background-color:#535b6526;color: #e47337; padding: 5px 10px; border-radius: 17px;">${password}</span>. This password is for permanent use, however you can change it at your profile page, if you’d like to.</p>
-                <p style="margin-bottom: 0.8em; font-size: 18px; font-weight: 500; color: #2e2e2ecc">If you did not initiate this request, please contact us innediately.</p><br>
+                <p style="margin-bottom: 0.8em; font-size: 18px; font-weight: 500; color: #2e2e2ecc">If you did not initiate this request, please contact us immediately.</p><br>
                 <p style="margin-bottom: 0.8em; font-size: 22px; font-weight: 400; color: #2e2e2e99">Thank you,<br>The Toro Trucking Academy Team</p>
             </div>
             <p style="margin: 0.6em 0; font-size: 12px; font-weight: 500; color: #2e2e2e99">This is an automatically generated message. Replies are not monitored or answered.</p>

@@ -16,14 +16,6 @@
 </head>
 <body>
 
-    <!-- each location has own color for Chart -->
-    <% 
-        const colorArray = ['#2900b3', '#360062', '#5d056f', '#891c6b', '#b83157', '#e1522f', '#f77c00', '#fcbf01', '#f4f988', '#b1f988', '#88f9aa' ]
-        function getColor(i, n) {
-            return colorArray[Math.round(i * (colorArray.length - 1) / (n - 1))]
-        }
-    %>
-    
     <!-- TOOLS -->
     <% const percFormat =  new Intl.NumberFormat('us-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) %>
     <% function formatToPercents(ratio) { return `${percFormat.format(Math.round(ratio * 1000) / 10)}%` } %>
@@ -35,93 +27,162 @@
         </menu>
     </header>
 
-    <div class="dummy"></div>
 
     <% if(locals.chartData || locals.chartData.length) { %>
+        
+        <!-- making table form and sorting -->
+        <%
+            let totalScoringsDone = 0
+            const instructorsMatrix = []
+            const scoringsMatrix = []
 
-        <div class="topic-group-box">
-            <section class="chart-box">
-                <h2 class="chart-title">Dynamics of scorings done <span>per instructors</span></h2>
-                <section class="chart-legend">
-                    <% chartData[0].instructorNames.forEach((instructor, index) => { %>
-                        <div class="instructor-box">
-                            <span class="instructor-key" style="--c:<%= getColor(index, chartData[0].instructorNames.length) %>"></span>
-                            <span class="instructor-name"><%= instructor %></span>
-                        </div>
-                    <% }) %>
-                </section>
-                <div class="analythicsChart">
-                    <% chartData.forEach(item => { %>
-                        <% let qty = item.scoringsDoneByInstructors.reduce((a,b) => b += a) %>
-                        <div class="chart-column" data-key="<%= item.month %>.<%= item.year %>" data-value="<%= qty %>">
-                            <% if(qty > 0) { %>
-                                <% item.instructorNames.forEach((instructorName, index) => { %>
-                                    <% if(item.scoringsDoneByInstructors[index] > 0) { %>
-                                        <% let perc = item.scoringsDoneByInstructors[index] * 100 / qty %>
-                                        <% let title = `${instructorName} - ${Math.round(perc)}%` %>
-                                        <div class="chart-sub-column" data-value="<%= item.scoringsDoneByInstructors[index] %>" style="--h:<%= perc %>%; --c:<%= getColor(index, item.instructorNames.length) %>" title="<%= title %>"><%= item.scoringsDoneByInstructors[index] %></div>
-                                    <% } %>
-                                <% }) %>
-                            <% } %>
-                        </div>
-                    <% }) %>
-                </div>  <!-- analythicsChart -->
-            </section>      <!-- chart-box -->
-            
-            <h3 class="chart-sub-title">Structure for the last month</h3>
-            <div class="pie-charts-box">
-                <%
-                    let lastMonthScorings = chartData[chartData.length - 1].scoringsDoneByInstructors
-                    let total = lastMonthScorings.reduce((a,b) => b += a) %>
-                %>
-                <% lastMonthScorings.forEach((data, index) => { %>
-                    <% let perc = total ? data / total : 0 %>
-                    <div class="pie" style="--p:<%= perc * 100 %>;--b:18px;--c:<%= getColor(index, lastMonthScorings.length) %>;"><%= formatToPercents(perc) %></div>
+            chartData.forEach(monthData => {
+                monthData.instructorIds.forEach((id, index) => {
+                    let instFound = false
+                    instructorsMatrix.forEach(instructor => {
+                        if(instructor.instructorId === id) {
+                            instructor.scoringsDoneByInstructor += monthData.scoringsDoneByInstructors[index]
+                            instructor.scoringsArray.push(monthData.scoringsDoneByInstructors[index])
+                            instFound = true
+                        }
+                    })
+                    if(!instFound) {
+                        instructorsMatrix.push({
+                            instructorId: id,
+                            instructorName: monthData.instructorNames[index],
+                            scoringsDoneByInstructor: monthData.scoringsDoneByInstructors[index],
+                            scoringsArray: [ monthData.scoringsDoneByInstructors[index] ]
+                        })
+                    }
+                })
+
+                monthData.scoringTypes.forEach((id, index) => {
+                    let scoringFound = false
+                    scoringsMatrix.forEach(scoring => {
+                        if(scoring.scoringId === id) {
+                            scoring.scoringsDoneByType += monthData.scoringsDoneByType[index]
+                            scoring.scoringsArray.push(monthData.scoringsDoneByType[index])
+                            scoringFound = true
+                        }
+                    })
+                    if(!scoringFound) {
+                        scoringsMatrix.push({
+                            scoringId: id,
+                            scoringsDoneByType: monthData.scoringsDoneByType[index],
+                            scoringsArray: [ monthData.scoringsDoneByType[index] ]
+                        })
+                    }
+                })
+
+                totalScoringsDone += monthData.scorings
+            })
+
+
+            instructorsMatrix.sort((a, b) => {
+                return b.scoringsDoneByInstructor - a.scoringsDoneByInstructor
+            })
+
+            scoringsMatrix.sort((a, b) => {
+                return b.scoringsDoneByType - a.scoringsDoneByType
+            })
+
+        %>
+
+        <!-- Dynamics of scorings done per instructors -->
+        <h2 class="table-title -hidden">
+            <span>Dynamics of scorings done</span>
+            <span class="table-title-type">per instructors</span>
+        </h2>
+
+        <section class="table-box" id="per-instructors">
+            <!-- first row: TITLE-->
+            <div class="table-titles-left"></div>
+            <div class="table-titles-right">
+                <h2 class="table-title">
+                    <span>Dynamics of scorings done</span>
+                    <span class="table-title-type">per instructors</span>
+                </h2>
+            </div>
+            <!-- second row: Headers -->
+            <div class="table-headers-left">Structure for the period</div>
+            <div class="table-headers-right">
+                <% chartData.forEach(monthData => { %>
+                    <span class="header-month"><%= monthData.month %>.<%= monthData.year %></span>
                 <% }) %>
             </div>
-        </div>      
-
-        <div class="topic-group-box">
-            <section class="chart-box">
-                <h2 class="chart-title">Dynamics of scorings done <span>per types</span></h2>
-                <section class="chart-legend">
-                    <% chartData[0].scoringTypes.forEach((scrType, index) => { %>
-                        <div class="instructor-box">
-                            <span class="instructor-key" style="--c:<%= getColor(index, chartData[0].scoringTypes.length) %>"></span>
-                            <span class="instructor-name"><%= scrType %></span>
-                        </div>
-                    <% }) %>
-                </section>
-                <div class="analythicsChart">
-                    <% chartData.forEach(item => { %>
-                        <% let qty = item.scoringsDoneByType.reduce((a,b) => b += a) %>
-                        <div class="chart-column" data-key="<%= item.month %>.<%= item.year %>" data-value="<%= qty %>">
-                            <% if(qty > 0) { %>
-                                <% item.scoringTypes.forEach((scoringType, index) => { %>
-                                    <% if(item.scoringsDoneByType[index] > 0) { %>
-                                        <% let perc = item.scoringsDoneByType[index] * 100 / qty %>
-                                        <% let title = `${scoringType} - ${Math.round(perc)}%` %>
-                                        <div class="chart-sub-column" data-value="<%= item.scoringsDoneByType[index] %>" style="--h:<%= perc %>%; --c:<%= getColor(index, item.scoringTypes.length) %>" title="<%= title %>"><%= item.scoringsDoneByType[index] %></div>
-                                    <% } %>
-                                <% }) %>
-                            <% } %>
-                        </div>
-                    <% }) %>
-                </div>  <!-- analythicsChart -->
-            </section>      <!-- chart-box -->
-            <h3 class="chart-sub-title">Structure for the last month</h3>
-            <div class="pie-charts-box">
-                <%
-                    lastMonthScorings = chartData[chartData.length - 1].scoringsDoneByType
-                    total = lastMonthScorings.reduce((a,b) => b += a) %>
-                %>
-                <% lastMonthScorings.forEach((data, index) => { %>
-                    <% let perc = total ? data / total : 0 %>
-                    <div class="pie" style="--p:<%= perc * 100 %>;--b:18px;--c:<%= getColor(index, lastMonthScorings.length) %>;"><%= formatToPercents(perc) %></div>
+            <!-- third row: Totals -->
+            <div class="table-totals-left">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0.5L5 5.5L10 0.5H0Z" fill="#AAAAAA" />
+                </svg>
+            </div>
+            <div class="table-totals-right">
+                <% chartData.forEach(monthData => { %>
+                    <span class="header-total"><%= monthData.scorings %></span>
                 <% }) %>
             </div>
-        </div> <!-- topic-group-box -->
+            <!-- forth row: Data -->
+            <% instructorsMatrix.forEach((item, index) => { %>                
+                <div class="table-row-left">
+                    <span class="inst-name"><%= item.instructorName %></span>
+                    <span class="inst-ratio" data-index="<%= index %>"><%= Math.round(item.scoringsDoneByInstructor * 1000 / totalScoringsDone) / 10  %>%</span>
+                </div>  <!-- table-row-left -->
+                <div class="table-row-right">
+                    <% item.scoringsArray.forEach(qty => { %>
+                        <span class="scoring-qty" data-value="<%= qty %>"><%= qty %></span>
+                    <% }) %>
+                </div>  <!-- table-row-right -->
+            <% }) %>
+        </section>      <!-- table-box -->
 
+
+        <!-- Dynamics of scorings done per types -->
+        <h2 class="table-title -hidden">
+            <span>Dynamics of scorings done</span>
+            <span class="table-title-type">per types</span>
+        </h2>
+
+        <section class="table-box" id="per-types">
+            <!-- first row: TITLE-->
+            <div class="table-titles-left"></div>
+            <div class="table-titles-right">
+                <h2 class="table-title">
+                    <span>Dynamics of scorings done</span>
+                    <span class="table-title-type">per types</span>
+                </h2>
+            </div>
+            <!-- second row: Headers -->
+            <div class="table-headers-left">Structure for the period</div>
+            <div class="table-headers-right">
+                <% chartData.forEach(monthData => { %>
+                    <span class="header-month"><%= monthData.month %>.<%= monthData.year %></span>
+                <% }) %>
+            </div>
+            <!-- third row: Totals -->
+            <div class="table-totals-left">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0.5L5 5.5L10 0.5H0Z" fill="#AAAAAA" />
+                </svg>
+            </div>
+            <div class="table-totals-right">
+                <% chartData.forEach(monthData => { %>
+                    <span class="header-total"><%= monthData.scorings %></span>
+                <% }) %>
+            </div>
+            <!-- forth row: Data -->
+            <% scoringsMatrix.forEach((item, index) => { %>                
+                <div class="table-row-left">
+                    <span class="inst-name"><%= item.scoringId %></span>
+                    <span class="inst-ratio" data-index="<%= index %>"><%= Math.round(item.scoringsDoneByType * 1000 / totalScoringsDone) / 10  %>%</span>
+                </div>  <!-- table-row-left -->
+                <div class="table-row-right">
+                    <% item.scoringsArray.forEach(qty => { %>
+                        <span class="scoring-qty" data-value="<%= qty %>"><%= qty %></span>
+                    <% }) %>
+                </div>  <!-- table-row-right -->
+            <% }) %>
+        </section>      <!-- table-box -->
+        
 
     <% } else { %>
         <h1>No data passed</h1>
@@ -130,30 +191,55 @@
 
     <script defer>
 
-        // @drawing chart
-        // get chart div height depending on vh
-        const charts = document.querySelectorAll(".analythicsChart")
+        // @drawing table
+        // looking for maximum values in Headers
+        const totals = document.querySelectorAll(".table-totals-right")
 
-        if (charts) {
-            charts.forEach(chart => {
-                const maxHeight = parseFloat(getComputedStyle(chart).height)
-                const cols = chart.querySelectorAll(".chart-column")
-                if (maxHeight && cols) {
-                    // find max value
-                    let max = 0
-                    for (let i=0; i<cols.length; i++) {
-                        if (parseInt(cols[i].dataset.value) > max) { max = parseInt(cols[i].dataset.value) }
-                    }
-                    if (max) {
-                        // setting values espectively to max                    
-                        for (let i=0; i<cols.length; i++) {
-                            cols[i].style.height = `${ parseInt(cols[i].dataset.value) * maxHeight / max }px`
+        if (totals) {
+            totals.forEach(tableTotal => {
+                let headerTotals = tableTotal.querySelectorAll(".header-total")
+                if (headerTotals) {
+                    let maxElement = headerTotals[0]
+                    let maxValue = parseFloat(headerTotals[0].textContent) || 0
+                    headerTotals.forEach(headerTotal => {
+                        if (parseFloat(headerTotal.textContent) > maxValue) {
+                            maxElement = headerTotal
+                            maxValue = parseFloat(headerTotal.textContent)
                         }
-                    }
+                    })
+                    maxElement.classList.add("-max-value")
                 }
             })
         }
 
+
+        // looking for maximum values in Data
+        const tables = document.querySelectorAll(".table-box")
+        if (tables) {
+            tables.forEach(table => {
+                let qtyOfCols = table.querySelectorAll(".header-total")
+                if (qtyOfCols) {
+                    const dataSpots = table.querySelectorAll(".scoring-qty")
+                    qtyOfCols.forEach((col, index) => {
+                        let i = index % qtyOfCols.length
+                        let maxElement = dataSpots[i]
+                        let maxValue = parseFloat(maxElement.textContent)
+                        while (i < dataSpots.length) {
+                            if (parseFloat(dataSpots[i].textContent) > maxValue) {
+                                maxElement = dataSpots[i]
+                                maxValue = parseFloat(maxElement.textContent)
+                            }
+                            i += qtyOfCols.length
+                        }
+                        if (maxValue > 0) {
+                            maxElement.classList.add("-max-value")
+                        }
+                    })
+                }
+            })
+        }
+
+        
     </script>
 
 </body>
