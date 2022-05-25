@@ -85,6 +85,8 @@ const PROFILES = [
     { id: "SousaInst0001", name: "Kyle Sousa", title:'Instructor', email: "kyle.sousa03@gmail.com", location: LOCATION.Troutdale, password: process.env.SOUSA0001_PASS, auth: AUTH.instructor },
     // + Carl, Fulton instructor
     { id: "FultonInst0001", name: "Carl Fulton", title:'Instructor', email: "carl80@aol.com", location: LOCATION.Troutdale, password: process.env.FULTON0001_PASS, auth: AUTH.instructor },
+    // + Kimberly Hamberg instructor
+    { id: "HambergInst0001", name: "Kimberly Hamberg", title:'Instructor', email: "Kimberly.hamberg@gmail.com", location: LOCATION.Troutdale, password: process.env.HAMBERG0001_PASS, auth: AUTH.instructor },
 
 
     // TEST INSTRUCTORS
