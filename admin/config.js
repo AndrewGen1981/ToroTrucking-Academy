@@ -62,14 +62,13 @@ const PROFILES = [
     { id: "LittletonInst0001", name: "Robert Littleton", title:'Instructor', email: "robert@torocdl.com", location: LOCATION.Kent, password: process.env.LITTLETON0001_PASS, auth: AUTH.instructor },    
     // + Tyer Newman instructor
     { id: "NewmanInst0001", name: "Tyer Newman", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.NEWMAN0001_PASS, auth: AUTH.instructor },    
-    // + Trever Perry instructor
-    { id: "PerryInst0001", name: "Trever Perry", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.PERRY0001_PASS, auth: AUTH.instructor },
     // + Omar Hussein instructor
     { id: "HusseinInst0001", name: "Omar Hussein", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.HUSSEIN0001_PASS, auth: AUTH.instructor },
     // + Ivan Garcia instructor
     { id: "GarciaInst0001", name: "Ivan Garcia", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.GARCIA0001_PASS, auth: AUTH.instructor },
-    // + Patricia Pierson instructor
-    { id: "PiersonInst0001", name: "Patricia Pierson", title:'Instructor', email: "kent@torocdl.com", location: LOCATION.Kent, password: process.env.PIERSON0001_PASS, auth: AUTH.instructor },
+    // + Juliann Huling instructor
+    { id: "HulingInst0001", name: "Juliann Huling", title:'Instructor', email: "Juliecainmarsh@gmail.com", location: LOCATION.Kent, password: process.env.HULING0001_PASS, auth: AUTH.instructor },
+    
 
 
     // Troutdale Office managers & instructors:
