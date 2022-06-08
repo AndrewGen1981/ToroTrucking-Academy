@@ -20,7 +20,7 @@
     <% const colorArray = ['black', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple'] %>
 
     <header>
-        <h1 class="header-title">Chart: Enrollments Dynamics</h1>
+        <h3 class="header-title">Chart: Enrollments Dynamics</h3>
         <menu>
             <%- include('../../static/partial/--admin-menu.ejs') %>
         </menu>
@@ -30,7 +30,7 @@
 
     <% if(locals.chartData || locals.chartData.length) { %>
         <section class="chart-box" id="passed-chart">
-            <h1 class="chart-title">Dynamics of <span>Graduate students</span> per locations</h1>
+            <h3 class="chart-title">Dynamics of <span>Graduate students</span> per locations</h3>
             <div class="analythicsChart" id="analythics-cart-passed">
                 <% chartData.map(item => { %>
                     <% let qty = item.locationPassed.reduce((a,b) => b += a) %>
@@ -52,7 +52,7 @@
 
 
         <section class="chart-box" id="failed-chart">
-            <h1 class="chart-title">Dynamics of <span>Failed students</span> per locations</h1>
+            <h3 class="chart-title">Dynamics of <span>Failed students</span> per locations</h3>
             <div class="analythicsChart" id="analythics-cart-failed">
                 <% chartData.map(item => { %>
                     <% let qty = item.locationFailed.reduce((a,b) => b += a) %>
@@ -74,7 +74,7 @@
 
 
         <section class="chart-box" id="declined-chart">
-            <h1 class="chart-title">Dynamics of <span>Declined students</span> per locations</h1>
+            <h3 class="chart-title">Dynamics of <span>Declined students</span> per locations</h3>
             <div class="analythicsChart" id="analythics-cart-declined">
                 <% chartData.map(item => { %>
                     <% let qty = item.locationDeclined.reduce((a,b) => b += a) %>
@@ -96,7 +96,7 @@
 
 
         <section class="chart-box" id="military-chart">
-            <h1 class="chart-title">Dynamics of <span>Military leave of absence</span> per locations</h1>
+            <h3 class="chart-title">Dynamics of <span>Military leave of absence</span> per locations</h3>
             <div class="analythicsChart" id="analythics-cart-military">
                 <% chartData.map(item => { %>
                     <% let qty = item.locationMilitary.reduce((a,b) => b += a) %>
@@ -116,8 +116,98 @@
             </div>  <!-- analythicsChart -->
         </section>      <!-- chart-box -->
 
+
+        <section class="chart-box -mt">
+            <h3 class="chart-title">Dynamics of <span>Skills test results</span> per locations</h3>
+            <div class="analythicsTable">
+                <!-- 1st Column -->
+                <% const item1 = chartData[0] %>
+                <div class="table-left-column">
+                    <div class="table-header">Periods</div>
+                    <div class="table-value -total">Totals</div>
+                    
+                    <div class="table-value -group">Initial</div>
+                    <% item1.locations.forEach(location => { %>
+                        <% if(location != "All" && location != "UNSET") { %>
+                            <div class="table-value -subvalue"><%= location %></div>
+                        <% } %>
+                    <% }) %>
+
+                    <div class="table-value -group">Retest *</div>
+                    <% item1.locations.forEach(location => { %>
+                        <% if(location != "All" && location != "UNSET") { %>
+                            <div class="table-value -subvalue"><%= location %></div>
+                        <% } %>
+                    <% }) %>
+
+                    <div class="table-value -group">Retest Bk & Rd</div>
+                    <% item1.locations.forEach(location => { %>
+                        <% if(location != "All" && location != "UNSET") { %>
+                            <div class="table-value -subvalue"><%= location %></div>
+                        <% } %>
+                    <% }) %>
+
+                    <div class="table-value -group">Retest Rd only</div>
+                    <% item1.locations.forEach(location => { %>
+                        <% if(location != "All" && location != "UNSET") { %>
+                            <div class="table-value -subvalue"><%= location %></div>
+                        <% } %>
+                    <% }) %>
+
+                </div>
+
+
+                <% chartData.forEach(item => { %>
+                    <% 
+                        let qtyInitial = item.locationInitial.reduce((a,b) => b += a)
+                        let qtyRetest = item.locationRetest.reduce((a,b) => b += a)
+                        let qtyRetestBKnRD = item.locationRetestBKnRD.reduce((a,b) => b += a)
+                        let qtyRetestRDonly = item.locationRetestRDonly.reduce((a,b) => b += a)
+                        let total = qtyInitial + qtyRetest + qtyRetestBKnRD + qtyRetestRDonly
+                    %>
+                    <div class="table-column">
+                        <div class="table-header"><%= item.month %>.<%= item.year %></div>
+                        <div class="table-value -total" data-tabvalue="<%= total %>"><%= total %></div>
+                        
+                        <div class="table-value -group" data-tabvalue="<%= qtyInitial %>"><%= qtyInitial %></div>
+                        <% item.locations.forEach((location, index) => { %>
+                            <% if(location != "All" && location != "UNSET") { %>
+                                <div class="table-value -subvalue" data-tabvalue="<%= item.locationInitial[index] %>"><%= item.locationInitial[index] %></div>
+                            <% } %>
+                        <% }) %>
+
+                        <div class="table-value -group" data-tabvalue="<%= qtyRetest %>"><%= qtyRetest %></div>
+                        <% item.locations.forEach((location, index) => { %>
+                            <% if(location != "All" && location != "UNSET") { %>
+                                <div class="table-value -subvalue" data-tabvalue="<%= item.locationRetest[index] %>"><%= item.locationRetest[index] %></div>
+                            <% } %>
+                        <% }) %>
+
+                        <div class="table-value -group" data-tabvalue="<%= qtyRetestBKnRD %>"><%= qtyRetestBKnRD %></div>
+                        <% item.locations.forEach((location, index) => { %>
+                            <% if(location != "All" && location != "UNSET") { %>
+                                <div class="table-value -subvalue" data-tabvalue="<%= item.locationRetestBKnRD[index] %>"><%= item.locationRetestBKnRD[index] %></div>
+                            <% } %>
+                        <% }) %>
+
+                        <div class="table-value -group" data-tabvalue="<%= qtyRetestRDonly %>"><%= qtyRetestRDonly %></div>
+                        <% item.locations.forEach((location, index) => { %>
+                            <% if(location != "All" && location != "UNSET") { %>
+                                <div class="table-value -subvalue" data-tabvalue="<%= item.locationRetestRDonly[index] %>"><%= item.locationRetestRDonly[index] %></div>
+                            <% } %>
+                        <% }) %>
+
+                    </div>
+
+
+                <% }) %>
+            </div>  <!-- analythicsTable -->
+            <div class="table-note">* "Retest" doesn't include "Retest Bk & Rd" and "Retest Rd only" skills test</div>
+        </section>      <!-- chart-box -->
+
+
     <% } else { %>
-        <h1>No data passed</h1>
+        <h3>No data passed</h3>
     <% } %>
 
 
