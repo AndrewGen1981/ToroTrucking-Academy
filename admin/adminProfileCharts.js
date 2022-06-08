@@ -166,6 +166,7 @@ async function enrollmentStatusesChart(deltaMonth) {
         let index = (month + i) % 12     // index can be greater than monthNames length
         let year = startYear + Math.trunc((month + i) / 12)
         analyticsArray.push({  // correct item names
+            indexMonth: index,
             month: monthNames[index],
             year,
             graduatedStudents: 0,   // for general statistic about all locations
@@ -203,7 +204,21 @@ async function enrollmentStatusesChart(deltaMonth) {
                     analyticsArray[i].locationMilitary[loc] += 1
                 break;
             }
-            // gathering skills test info
+        }   //  loc > -1
+    })      //  students.forEach
+
+
+    // gathering skills test info
+    const stds = await Student.find({
+        "skillsTest.scheduledDate": {
+            "$gte": startDate, 
+            "$lt": date
+        }
+    }).select("location skillsTest -_id")
+
+    stds.forEach(student => {
+        let loc = locations.indexOf(student.location)
+        if (loc > -1) {
             if (student.skillsTest) {
                 if (student.skillsTest.length) {
                     student.skillsTest.forEach(test => {
@@ -229,6 +244,8 @@ async function enrollmentStatusesChart(deltaMonth) {
             }
         }   //  loc > -1
     })      //  students.forEach
+
+
 
     return analyticsArray
 }
