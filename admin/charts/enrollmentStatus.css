@@ -55,7 +55,7 @@ header {
     margin-bottom: 2rem;
 }
 .chart-title {
-    margin: 2rem 0;
+    margin: 2rem 0 3.3rem 0;
     padding: 3px 10px;
 
     font-family: "BrixSlab-ExtraLightItalic";
@@ -269,6 +269,7 @@ header {
 }
 
 .table-value.-group {
+    display: block;
     font-weight: 700 !important;
     color: #3789EB !important;
 }

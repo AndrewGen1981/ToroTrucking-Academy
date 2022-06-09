@@ -623,6 +623,52 @@ function getShortName(name) {
 }
 
 
+
+// @GET skills-details
+// ?year=2022&month=2
+studentRouter.get("/skills-details", ifCanRead, async (req, res) => {
+  // parsing query for year and month
+  const date = new Date();
+  // start date year and month
+  let year = parseInt(req.query.year || date.getFullYear());
+  year = year > 2000 ? year : date.getFullYear();
+  
+  const month = parseInt(req.query.month || date.getMonth() + 1);
+
+  const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0)); //  00:00:00Z
+  const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59)); //  day = 0 - last day of prev.month
+
+  try {
+      const students = await Student
+      .find({ skillsTest: {$exists: true, $ne: []} })
+      .select("fullName user location skillsTest enrollmentStatus graduate")
+
+      // check selection was successful
+      if (!students) {
+          return res.status(404).send("No students found")
+      }
+
+      const graduates = []
+
+      students.forEach(student => {
+          for (i=0; i < student.skillsTest.length; i++) {
+              if(student.skillsTest[i].scheduledDate >= startDate && student.skillsTest[i].scheduledDate <= endDate) {
+                  graduates.push(student)
+                  break
+              }
+          }
+      })
+
+      graduates.sort((a, b) => a.location > b.location ? -1 : 1)
+
+      res.status(200).render(path.join(__dirname + "/skills-details.ejs"), { graduates, year, month })
+  } catch (e) {
+      res.status(500).send(`Server issue: ${e.message}`);
+  }
+})
+
+
+
 // @GET wbdrs annual report
 // ?year=2022
 studentRouter.get("/wbdrs", ifCanRead, async (req, res) => {

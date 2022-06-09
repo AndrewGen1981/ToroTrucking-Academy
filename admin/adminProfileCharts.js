@@ -209,12 +209,12 @@ async function enrollmentStatusesChart(deltaMonth) {
 
 
     // gathering skills test info
-    const stds = await Student.find({
-        "skillsTest.scheduledDate": {
-            "$gte": startDate, 
-            "$lt": date
-        }
-    }).select("location skillsTest -_id")
+    const stds = await Student
+    .find({ skillsTest: {$exists: true, $ne: []} })
+    .select("key location skillsTest -_id")
+
+    // "date" is not good as a right limit, because there some tests scheduled on dates after today
+    const endDate = new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59)); //  day = 0 - last day of prev.month
 
     stds.forEach(student => {
         let loc = locations.indexOf(student.location)
@@ -222,7 +222,7 @@ async function enrollmentStatusesChart(deltaMonth) {
             if (student.skillsTest) {
                 if (student.skillsTest.length) {
                     student.skillsTest.forEach(test => {
-                        if (test.scheduledDate > startDate && date >= test.scheduledDate) {
+                        if (test.scheduledDate >= startDate && test.scheduledDate <= endDate) {
                             let m = (test.scheduledDate.getFullYear() - startYear)*12 + test.scheduledDate.getMonth() + 1 - startMonth
                             switch (test.testType) {
                                 case "Initial":
@@ -244,8 +244,6 @@ async function enrollmentStatusesChart(deltaMonth) {
             }
         }   //  loc > -1
     })      //  students.forEach
-
-
 
     return analyticsArray
 }
