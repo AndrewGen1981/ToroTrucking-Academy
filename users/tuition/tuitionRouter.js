@@ -16,8 +16,8 @@ const fs = require('fs')
 // YouTube Lessons
 const listOfLessons = [
     // first 10
-    "PpFhqMl8uH8",    "LaChnXdNWug",
-    "1vv4ovcc4nI",    "8YT_fbC4YKM",
+    "8-UIJcafbLA",    "VJS4tBTW1Kc",
+    "CU3p0uKjzz0",    "8YT_fbC4YKM",
     "VbsTb_EQ6a4",    "Uh9Sm-3jyN8",
     "-rMifxK7W6U",    "1mni_COEQfg",
     "PGRC3JBi6_k",    "RysouiVzvl4",
