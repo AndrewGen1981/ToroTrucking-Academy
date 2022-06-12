@@ -75,7 +75,7 @@ tuitionRouter.post('/', async(req, res) => {
             } else {
                 const videoData = JSON.parse(data)
                 // modifying videoData object
-                videoData.questions.map(que => {    // shufling answers options inside question
+                videoData.questions.forEach(que => {    // shufling answers options inside question
                     if (!que.fixedOrder) {      // if not fixed order is required
                         que.answers = que.answers.sort(() => Math.random() - 0.5);   // shuffeling answers
                     }
@@ -119,7 +119,7 @@ tuitionRouter.put('/update', async(req, res) => {
 
                         //  tuition is assigned, now check if lesson exists
                         let done = false
-                        tuition.lessons.map(lesson => {
+                        tuition.lessons.forEach(lesson => {
                             if(lesson.videoID === videoId) {
                                 // updating video ratio
                                 if(lesson.videoProgress < currentRatio) {
@@ -150,7 +150,7 @@ tuitionRouter.put('/update', async(req, res) => {
                         
                         // recalc average progress
                         let score = 0
-                        tuition.lessons.map(lesson => {
+                        tuition.lessons.forEach(lesson => {
                             score += lesson.videoProgress
                             score += lesson.testProgress > 0 ? 1 : 0
                         })

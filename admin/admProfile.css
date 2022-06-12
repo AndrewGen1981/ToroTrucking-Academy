@@ -318,6 +318,17 @@ font-family: "BrixSlab-BlackItalic";
     border: 1px solid #26354430;
 }
 
+
+/* super-admin */
+.super-admin svg {
+    fill: #ffff00f3;
+    transition: all 0.2s linear;
+}
+.super-admin:hover svg {
+    transform: rotate(90deg);
+}
+
+
 @media (max-width: 1170px) {
     :root {
         --left-panel-width: 175px;

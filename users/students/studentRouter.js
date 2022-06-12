@@ -13,42 +13,24 @@ const { User, Student, StudentCONFIG, tools } = require("../userModel");
 const { Tuition } = require("../tuition/tuitionModel");
 const chart = require("../../admin/adminProfileCharts");
 
-// @Middleware
-function ifCanRead(req, res, next) {
+// @Auth check middleware
+function ifCanRead (req, res, next) {
   // check Admin's Auth - if can READ
-  const adminId = req.session.userId;
-  if (!admin.checkAdminsAuth(adminId, "read")) {
-    return res.render(
-      path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"),
-      { auth: "read" }
-    );
-  } else {
-    next();
-  }
+  if (!admin.checkAdminsAuth(req.session.adminData, 'read')) {
+      return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read" })
+  } else { next() }
 }
-function ifCanWrite(req, res, next) {
+function ifCanWrite (req, res, next) {
   // check Admin's Auth - if can WRITE
-  const adminId = req.session.userId;
-  if (!admin.checkAdminsAuth(adminId, "write")) {
-    return res.render(
-      path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"),
-      { auth: "write" }
-    );
-  } else {
-    next();
-  }
+  if (!admin.checkAdminsAuth(req.session.adminData, 'write')) {
+      return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "write" })
+  } else { next() }
 }
-function ifCanReadOrInstructor(req, res, next) {
+function ifCanReadOrInstructor (req, res, next) {
   // check Admin's Auth - if INSTRUCTOR
-  const adminId = req.session.userId;
-
-  if (admin.checkAdminsAuth(adminId, "read")) { return next() }
-  if (admin.checkAdminsAuth(adminId, "instructor")) { return next() }
-
-  return res.render(
-    path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"),
-    { auth: "read or instructor" }
-  );
+  if (admin.checkAdminsAuth(req.session.adminData, 'read')) { return next() }
+  if (admin.checkAdminsAuth(req.session.adminData, 'instructor')) { return next() }
+  return res.render(path.join(global.__basedir + "/static/general-pages/NEA/NEA.ejs"), { auth: "read or instructor" })
 }
 
 
@@ -87,7 +69,7 @@ async function getStudentsForINs(date, location) {
 
 // INs route is a root one
 studentRouter.get("/", ifCanReadOrInstructor, async (req, res) => {
-  const adminProfile = admin.findAdminById(req.session.userId)
+  const adminProfile = req.session.adminData
   const inStudents = await getStudentsForINs(new Date(), adminProfile.location)
   res.render(path.join(__dirname + "/INs.ejs"), { inStudents, today: true })
 })
@@ -102,17 +84,13 @@ studentRouter.post("/", ifCanReadOrInstructor, async (req, res) => {
   }
 
   const date = `${clockedAsOf}T00:00:00-08:00`;
-  const adminProfile = admin.findAdminById(req.session.userId);
-  const inStudents = await getStudentsForINs(
-    new Date(date),
-    adminProfile.location
-  );
-  const today =
-    tools.getDatePrefix(new Date(date)).toString() ===
-    tools.getDatePrefix(new Date()).toString();
+  const adminProfile = req.session.adminData
+  const inStudents = await getStudentsForINs(new Date(date), adminProfile.location)
+  const today = tools.getDatePrefix(new Date(date)).toString() === tools.getDatePrefix(new Date()).toString();
 
   res.render(path.join(__dirname + "/INs.ejs"), { inStudents, today, date });
 });
+
 
 // Student List populate constants
 const studentPopulated = "key TTT created status location";
@@ -130,7 +108,7 @@ const studentListPopulate = [
 // @GET admin/student/list
 studentRouter.get("/list", ifCanReadOrInstructor, async (req, res) => {
   // get admin
-  const adminProfile = admin.findAdminById(req.session.userId);
+  const adminProfile = req.session.adminData
   // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
   const defaulLocationFilter =
     adminProfile.location === admin.LOCATION.All
@@ -190,7 +168,7 @@ studentRouter.get("/shortlist", ifCanReadOrInstructor, async (req, res) => {
     const startDate = `${startYear}-${leadingZero(n1)}-01T00:00:00Z`;
     const endDate = `${endYear}-${leadingZero(n2)}-01T00:00:00Z`;
     // defining admin and searching Students
-    const adminProfile = admin.findAdminById(req.session.userId);
+    const adminProfile = req.session.adminData
     const isLocation = 
       adminProfile.location === admin.LOCATION.All ||
       location === admin.LOCATION.Unset ||
@@ -246,7 +224,7 @@ studentRouter.post("/new/:id", ifCanWrite, async (req, res) => {
     await studentConfigurations.save()
 
     // defining admin and searching Students
-    const adminProfile = admin.findAdminById(req.session.userId)
+    const adminProfile = req.session.adminData
 
     // creating a new Student
     const student = await new Student({
@@ -717,7 +695,7 @@ studentRouter.get("/wbdrs", ifCanRead, async (req, res) => {
 // @GET expulsion
 studentRouter.get("/expulsion", ifCanRead, async (req, res) => {
   try {
-    const adminProfile = admin.findAdminById(req.session.userId);
+    const adminProfile = req.session.adminData
     // filter to find Students due to LOCATION: All - can see All, else - only assigned to location + UNSET
     let filter = adminProfile.location === admin.LOCATION.All ? {} : { location: [adminProfile.location, admin.LOCATION.Unset] }
     filter.graduate = "no"
