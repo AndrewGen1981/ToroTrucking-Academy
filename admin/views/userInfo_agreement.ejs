@@ -350,7 +350,12 @@
     <!-- Payments section -->
     <% function leadZero(a) {return a.length < 2 ? `0${a}` : a} %>
     <% function getYYYYMMDD(date) { const a = new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' }).split('/'); return `${a[2]}-${leadZero(a[0])}-${leadZero(a[1])}`} %>
-    <% function getHHMMSS(time) { const a = new Date(time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }).replace(' ',':').split(':'); return `${leadZero(a[0])}:${leadZero(a[1])}` } %>
+    <% 
+        function getHHMMSS(time) {
+            const a = new Date(time).toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour12: false }).replace(' ',':').split(':');
+            return `${leadZero(a[0])}:${leadZero(a[1])}`
+        }
+    %>
 
     <form action="/admin/update-payments" id="update-payments" method="post">
         <input type="hidden" name="userId" value="<%= user._id %>">
@@ -367,7 +372,7 @@
                 <p class='-table-header'>Action</p>
                 
                 <% if(user.payments) { %>
-                    <% user.payments.map((payment, index) => { %>
+                    <% user.payments.forEach((payment, index) => { %>
 
                         <select name="paymentType" id="paymentType<%= index %>" data-was="<%= payment.type %>" onchange="changeTypeIco(this)">
                             <optgroup label="Personal">
