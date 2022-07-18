@@ -348,6 +348,58 @@ menu span, menu a {
     text-transform: none;
 }
 
+
+/* Steps Table */
+.steps-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.steps-table {
+    width: 85%;
+    display: grid;
+    grid-template-columns: 1fr 3rem 1fr 1fr;
+    gap: 3px;
+}
+.steps-update {
+    padding: 5px 0;
+
+    width: 15%;
+    max-width: 150px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 500;
+    font-size: 0.87rem;
+    text-transform: lowercase;
+
+    border: 1px solid #777;
+    border-radius: 1rem;
+
+    cursor: not-allowed;
+}
+.steps-can-update {
+    text-decoration: underline;
+    color: #4377B5;
+    border-color: #3789EB;
+    cursor: pointer;
+}
+.steps-table input {
+    accent-color: #3789EB;
+    width: 1.33rem;
+    height: 1.33rem;
+}
+.steps-table input.-changed {
+    accent-color: #A2D092;
+}
+.steps-table .check-box {
+    display: flex;
+    align-items: center;
+}
+
+
 /* TUITION */
 .-top-align {
     align-items: flex-start;
